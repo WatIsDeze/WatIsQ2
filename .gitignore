@@ -1,0 +1,10 @@
+CMakeCache.txt
+CMakeFiles
+/src/build/
+*.suo
+*.db
+*.opendb
+*.db-shm
+*.db-wal
+.vs
+*.user
