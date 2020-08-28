@@ -90,7 +90,7 @@ list(APPEND EGL_LINKER_FLAGS ${CMAKE_DL_LIBS})
 # Set CGAME Source Files.
 ###
 set(EGL_SRC_CGAME
-    ${EGL_SRCDIR_CGAME}/gmenu/menu_id_1.c
+#    ${EGL_SRCDIR_CGAME}/gmenu/menu_id_1.c
     
     ${EGL_SRCDIR_CGAME}/menu/m_local.h
     ${EGL_SRCDIR_CGAME}/menu/m_main.c 

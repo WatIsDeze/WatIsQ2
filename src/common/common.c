@@ -677,7 +677,7 @@ void Com_Init (int argc, char **argv)
 #endif
 
 	// Init information variables
-	verString = Q_VarArgs ("EGL v%s: %s %s-%s", EGL_VERSTR, __DATE__, BUILDSTRING, CPUSTRING);
+	verString = Q_VarArgs ("WatIsQ2 v%s: %s %s-%s", WATISQ2_VERSTR, __DATE__, BUILDSTRING, CPUSTRING);
 	Cvar_Register ("cl_version", verString, CVAR_READONLY);
 	Cvar_Register ("version", verString, CVAR_SERVERINFO|CVAR_READONLY);
 	Cvar_Register ("vid_ref", verString, CVAR_READONLY);
@@ -707,7 +707,7 @@ void Com_Init (int argc, char **argv)
 #endif
 
 	Com_Printf (0, "========= Common Initialization ========\n");
-	Com_Printf (0, "EGL v%s by Echon\nhttp://egl.quakedev.com/\n", EGL_VERSTR);
+	Com_Printf (0, "WatIsQ2 v%s by WatIsDeze\nhttps://github.com/WatIsDeze/WatIsQ2\n", WATISQ2_VERSTR);
 	Com_Printf (0, "Compiled: "__DATE__" @ "__TIME__"\n");
 	Com_Printf (0, "----------------------------------------\n");
 

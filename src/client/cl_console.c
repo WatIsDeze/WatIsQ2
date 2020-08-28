@@ -860,7 +860,7 @@ void CL_DrawConsole (void)
 	R_DrawPic (clMedia.consoleMaterial, 0, 0, -(cls.refConfig.vidHeight - cls.refConfig.vidHeight*frac), cls.refConfig.vidWidth, cls.refConfig.vidHeight, 0, 0, 1, 1, conColor);
 
 	// Version
-	Q_snprintfz (version, sizeof (version), "EGL v%s", EGL_VERSTR);
+	Q_snprintfz (version, sizeof (version), "WatIsQ2 v%s", WATISQ2_VERSTR);
 	R_DrawString (NULL, cls.refConfig.vidWidth - (strlen(version) * charSize[0]) - 2,
 				cl_console.visLines - charSize[1],
 				0, 0, FS_SHADOW, version, Q_colorCyan);

@@ -36,7 +36,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #include "memory.h"
 #include "parse.h"
 
-#define EGL_VERSTR			"0.3.1"
+#define WATISQ2_VERSTR			"0.1"
 #define BASE_MODDIRNAME		"baseq2"
 
 #define USE_CURL	1

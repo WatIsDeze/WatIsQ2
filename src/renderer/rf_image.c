@@ -377,7 +377,7 @@ static void R_WriteJPG (FILE *f, byte *buffer, int width, int height, int qualit
 	jpeg_set_defaults (&cinfo);
 	jpeg_set_quality (&cinfo, quality, TRUE);
 	jpeg_start_compress (&cinfo, qTrue);	// start compression
-	jpeg_write_marker (&cinfo, JPEG_COM, (byte *) "EGL v" EGL_VERSTR, (uint32) strlen ("EGL v" EGL_VERSTR));
+	jpeg_write_marker (&cinfo, JPEG_COM, (byte *) "WatIsQ2 v" WATISQ2_VERSTR, (uint32) strlen ("WatIsQ2 v" WATISQ2_VERSTR));
 
 	// Feed scanline data
 	w3 = cinfo.image_width * 3;

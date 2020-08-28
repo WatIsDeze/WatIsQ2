@@ -2,6 +2,10 @@
 #include "../menu/m_local.h"
 
 //
+// This was an attempt at implementing a client/server menu selection system.
+//
+//
+//
 //
 //
 // NOTE: THIS FILE IS PROTOTYPING, IT HAS TO BE CLEANED UP BY SPLITTING IN SEPARATE FILES.

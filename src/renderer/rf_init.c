@@ -200,8 +200,8 @@ static void R_GfxInfo_f (void)
 {
 	Com_Printf (0, "----------------------------------------\n");
 
-	Com_Printf (0, "EGL v%s:\n" "GL_PFD: c(%d-bits) a(%d-bits) z(%d-bit) s(%d-bit)\n",
-				EGL_VERSTR,
+	Com_Printf (0, "WatIsQ2 v%s:\n" "GL_PFD: c(%d-bits) a(%d-bits) z(%d-bit) s(%d-bit)\n",
+				WATISQ2_VERSTR,
 				ri.cColorBits, ri.cAlphaBits, ri.cDepthBits, ri.cStencilBits);
 
 	Com_Printf (0, "Renderer Class: %s\n", R_RendererClass ());
@@ -278,8 +278,8 @@ R_RendererMsg_f
 */
 static void R_RendererMsg_f (void)
 {
-	Cbuf_AddText (Q_VarArgs ("say [EGL v%s]: [%s: %s v%s] GL_PFD[c%d/a%d/z%d/s%d] RES[%dx%dx%d]\n",
-		EGL_VERSTR,
+	Cbuf_AddText (Q_VarArgs ("say [WatIsQ2 v%s]: [%s: %s v%s] GL_PFD[c%d/a%d/z%d/s%d] RES[%dx%dx%d]\n",
+		WATISQ2_VERSTR,
 		ri.vendorString, ri.rendererString, ri.versionString,
 		ri.cColorBits, ri.cAlphaBits, ri.cDepthBits, ri.cStencilBits,
 		ri.config.vidWidth, ri.config.vidHeight, ri.config.vidBitDepth));
@@ -293,8 +293,8 @@ R_VersionMsg_f
 */
 static void R_VersionMsg_f (void)
 {
-	Cbuf_AddText (Q_VarArgs ("say [EGL v%s (%s-%s) by Echon] [http://egl.quakedev.com/]\n",
-		EGL_VERSTR, BUILDSTRING, CPUSTRING));
+	Cbuf_AddText (Q_VarArgs ("say [WatIsQ2 v%s (%s-%s) by WatIsDeze] [https://github.com/WatIsDeze/WatIsQ2/]\n",
+		WATISQ2_VERSTR, BUILDSTRING, CPUSTRING));
 }
 
 /*
