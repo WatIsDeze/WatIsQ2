@@ -469,6 +469,7 @@ static qBool R_SetMode (void)
 	}
 
 	Com_Printf (PRNT_ERROR, "...could not revert to safe mode\n");
+	
 	return qFalse;
 }
 

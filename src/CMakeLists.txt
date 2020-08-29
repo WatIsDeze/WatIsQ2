@@ -348,6 +348,7 @@ if(UNIX)
         ${EGL_SRCDIR_UNIX}/unix_main.c 
         ${EGL_SRCDIR_UNIX}/unix_snd_cd.c 
         ${EGL_SRCDIR_UNIX}/unix_udp.c
+        ${EGL_SRCDIR_UNIX}/sdl_main.c 
         ${EGL_SRCDIR_UNIX}/x11_main.c 
         ${EGL_SRCDIR_UNIX}/x11_utils.c
     )

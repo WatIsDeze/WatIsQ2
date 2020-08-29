@@ -30,11 +30,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #include <unistd.h>
 #include <signal.h>
 #include <dlfcn.h>
+#include <SDL/SDL.h>
 
 #include "../renderer/r_local.h"
 #include "../client/cl_local.h"
 #include "unix_glimp.h"
 #include "unix_local.h"
+#include "sdl_main.h"
 
 static qBool    vid_queueRestart;
 static qBool    vid_isActive;
@@ -66,12 +68,12 @@ GLimp_EndFrame
 Responsible for doing a swapbuffers and possibly for other stuff as yet to be determined.
 Probably better not to make this a GLimp function and instead do a call to GLimp_SwapBuffers.
 
-Only error check if active, and don't swap if not active an you're in fullscreen
+TODO: Only error check if active, and don't swap if not active an you're in fullscreen
 =================
 */
 void GLimp_EndFrame (void)
 {
-	X11_SwapBuffers ();
+	SDLGL_SwapBuffers ();
 }
 
 /*
@@ -251,7 +253,7 @@ GLimp_Shutdown
 */
 void GLimp_Shutdown (qBool full)
 {
-	X11_DestroyGLContext ();
+	GLSDL_Shutdown();
 }
 
 
@@ -264,25 +266,7 @@ qBool GLimp_Init (void)
 {
 	GLimp_Shutdown (qFalse);
 
-	if (X11_CreateGLContext ()) {
-		if (X11_GetGLAttribute (GLX_RGBA)) {
-			ri.cColorBits = X11_GetGLAttribute (GLX_RED_SIZE) + X11_GetGLAttribute (GLX_GREEN_SIZE) + X11_GetGLAttribute (GLX_BLUE_SIZE);
-			ri.cAlphaBits = X11_GetGLAttribute (GLX_ALPHA_SIZE);
-		}
-		else {
-			// Indexed colors
-			ri.cColorBits = ri.cAlphaBits = 0;
-		}
-
-		ri.cDepthBits = X11_GetGLAttribute (GLX_DEPTH_SIZE);
-		ri.cStencilBits = X11_GetGLAttribute (GLX_STENCIL_SIZE);
-
-		// Grab mouse input
-		X11_SetKMGrab (qFalse, qTrue);
-		return qTrue;
-	}
-
-	return qFalse;
+	return GLSDL_Init();
 }
 
 
@@ -306,7 +290,7 @@ qBool GLimp_AttemptMode (qBool fullScreen, int width, int height)
 	
 	// Attempt fullscreen if desired
 	if (fullScreen) {
-		if (X11_SetVideoMode (width, height, qTrue))
+		if (GLSDL_CreateWindow(width, height, qTrue))
 			return qTrue;
 
 		Com_Printf (PRNT_ERROR, "...fullscreen mode failed\n");
@@ -315,7 +299,7 @@ qBool GLimp_AttemptMode (qBool fullScreen, int width, int height)
 
 	// Otherwise, attempt windowed mode
 	Com_Printf (0, "...attempting windowed mode\n");
-	if (X11_SetVideoMode (width, height, qFalse))
+	if (GLSDL_CreateWindow (width, height, qFalse))
 		return qTrue;
 
 	Com_Printf (PRNT_ERROR, "...windowed mode failed\n");
