@@ -916,15 +916,15 @@ void Snd_Init (void)
 		return;
 	}
 
-	// Initialize sound
+	// First try to initialize OpenAL.
 	initTime = Sys_UMilliseconds ();
 	if (ALSnd_Init ()) {
 		snd_isAL = qTrue;
-	}
-	else {
+	} else {
 		Com_Printf (PRNT_ERROR, "Snd_Init: Failed to initialize OpenAL!\n");
 	}
 
+	// If OpenAL initialization failed, try SDL DMA.
 	if (!snd_isAL) {
 		if (!DMASnd_Init())
 			return;
