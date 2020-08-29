@@ -28,7 +28,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #ifndef __UNIX_GLIMP_H__
 #define __UNIX_GLIMP_H__
 
-#define APPLICATION "WatIsQ2" WATISQ2_VERSTR
+#define APPLICATION "WatIsQ2 - [" WATISQ2_VERSTR "]"
 
 typedef struct glxState_s {
 	qBool		active;

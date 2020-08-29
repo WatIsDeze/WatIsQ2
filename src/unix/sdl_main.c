@@ -57,8 +57,9 @@ cVar_t		*vid_fullscreen;    // Fullscreen or windowed.
 //==================================================================//
 static int     mouse_buttonstate = 0;
 static int     mouse_oldbuttonstate = 0;
-int	mx, my;
 static float old_windowed_mouse;
+int xMove, yMove;
+qBool isWindowGrabbed = qFalse;
 qBool mouse_active = qFalse;
 qBool	mouse_avail = qTrue;
 
@@ -96,16 +97,16 @@ static void IN_DeactivateMouse( void )
 
 static void IN_ActivateMouse( void )
 {
-
 	if (!mouse_avail)
 		return;
 
 	if (!mouse_active) {
-		mx = my = 0; // don't spazz
+		xMove = yMove = 0; // don't spazz
 		_windowed_mouse = NULL;
 		old_windowed_mouse = 0;
 		mouse_active = qTrue;
 	}
+
 }
 
 void IN_Activate(qBool active)
@@ -239,7 +240,8 @@ void KBD_Close(void);
 int XLateKey(unsigned int keysym)
 {
 	int key;
-
+	char	buf[64];
+	
 	key = 0;
 	switch(keysym) {
 	case SDLK_KP9:			key = K_KP_PGUP; break;
@@ -319,7 +321,14 @@ int XLateKey(unsigned int keysym)
 
 	default: /* assuming that the other sdl keys are mapped to ascii */
 		if (keysym < 128)
+		{
 			key = keysym;
+
+		if (key >= 'A' && key<= 'Z')
+			key |= 32;
+		if (key > 26)
+			return key;
+		}
 		break;
 	}
 
@@ -328,126 +337,127 @@ int XLateKey(unsigned int keysym)
 
 static unsigned char KeyStates[SDLK_LAST];
 
-void GetEvent(SDL_Event *event)
-{
-	unsigned int key;
-
-	switch(event->type) {
-	case SDL_MOUSEBUTTONDOWN:
-		if (event->button.button == 4) {
-			keyq[keyq_head].key = K_MWHEELUP;
-			keyq[keyq_head].down = qTrue;
-			keyq_head = (keyq_head + 1) & 63;
-			keyq[keyq_head].key = K_MWHEELUP;
-			keyq[keyq_head].down = qFalse;
-			keyq_head = (keyq_head + 1) & 63;
-		} else if (event->button.button == 5) {
-			keyq[keyq_head].key = K_MWHEELDOWN;
-			keyq[keyq_head].down = qTrue;
-			keyq_head = (keyq_head + 1) & 63;
-			keyq[keyq_head].key = K_MWHEELDOWN;
-			keyq[keyq_head].down = qFalse;
-			keyq_head = (keyq_head + 1) & 63;
-		}
-		break;
-	case SDL_MOUSEBUTTONUP:
-		break;
-	case SDL_KEYDOWN:
-		if ( (KeyStates[SDLK_LALT] || KeyStates[SDLK_RALT]) &&
-			(event->key.keysym.sym == SDLK_RETURN) ) {
-			cVar_t	*_fullscreen;
-
-			SDL_WM_ToggleFullScreen(sdlwnd);
-
-			if (sdlwnd->flags & SDL_FULLSCREEN) {
-				Cvar_SetValue( "vid_fullscreen", 1, qFalse );
-			} else {
-				Cvar_SetValue( "vid_fullscreen", 0, qFalse );
-			}
-
-			_fullscreen = Cvar_Exists( "vid_fullscreen" );
-			_fullscreen->modified = qFalse;	// we just changed it with SDL.
-
-			break; /* ignore this key */
-		}
-
-		if ( (KeyStates[SDLK_LCTRL] || KeyStates[SDLK_RCTRL]) &&
-			(event->key.keysym.sym == SDLK_g) ) {
-			SDL_GrabMode gm = SDL_WM_GrabInput(SDL_GRAB_QUERY);
-			/*	
-			SDL_WM_GrabInput((gm == SDL_GRAB_ON) ? SDL_GRAB_OFF : SDL_GRAB_ON);
-			gm = SDL_WM_GrabInput(SDL_GRAB_QUERY);
-			*/
-			Cvar_SetValue( "_windowed_mouse", (gm == SDL_GRAB_ON) ? /*1*/ 0 : /*0*/ 1, qFalse );
-
-			break; /* ignore this key */
-		}
-
-		KeyStates[event->key.keysym.sym] = 1;
-
-		key = XLateKey(event->key.keysym.sym);
-		if (key) {
-			keyq[keyq_head].key = key;
-			keyq[keyq_head].down = qTrue;
-			keyq_head = (keyq_head + 1) & 63;
-		}
-		break;
-	case SDL_KEYUP:
-		if (KeyStates[event->key.keysym.sym]) {
-			KeyStates[event->key.keysym.sym] = 0;
-
-			key = XLateKey(event->key.keysym.sym);
-			if (key) {
-				keyq[keyq_head].key = key;
-				keyq[keyq_head].down = qFalse;
-				keyq_head = (keyq_head + 1) & 63;
-			}
-		}
-		break;
-	case SDL_QUIT:
-        Cbuf_AddText("quit");
-		Cbuf_Execute();
-		break;
-	}
-
-}
 void SDLGL_HandleEvents(void)
 {
 	SDL_Event event;
-	static int KBD_Update_Flag;
+	int buttonStates;
 
-	if (KBD_Update_Flag == 1)
-		return;
+	// Reset xMove and yMove
+	xMove = yMove = 0;
 
-	KBD_Update_Flag = 1;
+	// PollEvents.
+    while (SDL_PollEvent(&event)) {
+		switch(event.type) {
+			case SDL_ACTIVEEVENT: {
+				if ( event.active.state & SDL_APPACTIVE ) {
+					if ( event.active.gain ) {
+						IN_Activate(qTrue);
+					} else {
+						IN_Activate(qFalse);
+					}
+				}
+			}
+			case SDL_MOUSEBUTTONDOWN:
+				if (event.button.button == 4) {
+					keyq[keyq_head].key = K_MWHEELUP;
+					keyq[keyq_head].down = qTrue;
+					keyq_head = (keyq_head + 1) & 63;
+					keyq[keyq_head].key = K_MWHEELUP;
+					keyq[keyq_head].down = qFalse;
+					keyq_head = (keyq_head + 1) & 63;
+				} else if (event.button.button == 5) {
+					keyq[keyq_head].key = K_MWHEELDOWN;
+					keyq[keyq_head].down = qTrue;
+					keyq_head = (keyq_head + 1) & 63;
+					keyq[keyq_head].key = K_MWHEELDOWN;
+					keyq[keyq_head].down = qFalse;
+					keyq_head = (keyq_head + 1) & 63;
+				}
+				break;
+			case SDL_MOUSEBUTTONUP:
+				break;
+			case SDL_MOUSEMOTION:
+					xMove = event.motion.xrel;
+					yMove = event.motion.yrel;
+				break;
+			case SDL_KEYDOWN:
+				if ( (KeyStates[SDLK_LALT] || KeyStates[SDLK_RALT]) &&
+					(event.key.keysym.sym == SDLK_RETURN) ) {
+					cVar_t	*_fullscreen;
 
-	// get events from x server
-	int bstate;
+					SDL_WM_ToggleFullScreen(sdlwnd);
 
-    while (SDL_PollEvent(&event))
-        GetEvent(&event);
-		if (event.type == SDL_MOUSEMOTION) {
-			mx = event.motion.x;
-			my = event.motion.y;
-		}
+					if (sdlwnd->flags & SDL_FULLSCREEN) {
+						Cvar_SetValue( "vid_fullscreen", 1, qFalse );
+					} else {
+						Cvar_SetValue( "vid_fullscreen", 0, qFalse );
+					}
 
-    //if (!mx && !my)
-        //SDL_GetRelativeMouseState(&mx, &my);
-		Com_Printf(PRNT_CONSOLE, "%d %dn", &mx, &my);
+					_fullscreen = Cvar_Exists( "vid_fullscreen" );
+					_fullscreen->modified = qFalse;	// we just changed it with SDL.
 
+					break; /* ignore this key */
+				}
+
+				if ( (KeyStates[SDLK_LCTRL] || KeyStates[SDLK_RCTRL]) &&
+					(event.key.keysym.sym == SDLK_g) ) {
+					SDL_GrabMode gm = SDL_WM_GrabInput(SDL_GRAB_QUERY);
+					/*	
+					SDL_WM_GrabInput((gm == SDL_GRAB_ON) ? SDL_GRAB_OFF : SDL_GRAB_ON);
+					gm = SDL_WM_GrabInput(SDL_GRAB_QUERY);
+					*/
+					Cvar_SetValue( "_windowed_mouse", (gm == SDL_GRAB_ON) ? /*1*/ 0 : /*0*/ 1, qFalse );
+
+					break; /* ignore this key */
+				}
+
+				KeyStates[event.key.keysym.sym] = 1;
+
+				int key = XLateKey(event.key.keysym.sym);
+				if (key) {
+					keyq[keyq_head].key = key;
+					keyq[keyq_head].down = qTrue;
+					keyq_head = (keyq_head + 1) & 63;
+				}
+				break;
+			case SDL_KEYUP:
+				if (KeyStates[event.key.keysym.sym]) {
+					KeyStates[event.key.keysym.sym] = 0;
+
+					key = XLateKey(event.key.keysym.sym);
+					if (key) {
+						keyq[keyq_head].key = key;
+						keyq[keyq_head].down = qFalse;
+						keyq_head = (keyq_head + 1) & 63;
+					}
+				}
+				break;
+			case SDL_QUIT:
+				Cbuf_AddText("quit");
+				Cbuf_Execute();
+				break;
+		}	
+	
+	}
+	
+	// Fetch mouse delta motion.
+   	//SDL_GetRelativeMouseState(&xMove, &yMove);
+
+	// Fetch mouse button states.
     mouse_buttonstate = 0;
-    bstate = SDL_GetMouseState(NULL, NULL);
-    if (SDL_BUTTON(1) & bstate)
+    buttonStates = SDL_GetMouseState(NULL, NULL);
+    if (SDL_BUTTON(1) & buttonStates)
         mouse_buttonstate |= (1 << 0);
-    if (SDL_BUTTON(3) & bstate) /* quake2 has the right button be mouse2 */
+    if (SDL_BUTTON(3) & buttonStates) /* quake2 has the right button be mouse2 */
         mouse_buttonstate |= (1 << 1);
-    if (SDL_BUTTON(2) & bstate) /* quake2 has the middle button be mouse3 */
+    if (SDL_BUTTON(2) & buttonStates) /* quake2 has the middle button be mouse3 */
         mouse_buttonstate |= (1 << 2);
-    if (SDL_BUTTON(6) & bstate)
+    if (SDL_BUTTON(6) & buttonStates)
         mouse_buttonstate |= (1 << 3);
-    if (SDL_BUTTON(7) & bstate)
+    if (SDL_BUTTON(7) & buttonStates)
         mouse_buttonstate |= (1 << 4);
 
+	// Determine windowed mouse.
     if(!_windowed_mouse)
         _windowed_mouse = Cvar_Register("_windowed_mouse", "1", CVAR_ARCHIVE);
 
@@ -462,15 +472,26 @@ void SDLGL_HandleEvents(void)
             SDL_WM_GrabInput(SDL_GRAB_ON);
         }
     }
+
+	// Execute mouse events.
     IN_MouseEvent();
 
+	// Loop and execute all key events.
     while (keyq_head != keyq_tail)
     {
         Key_Event (keyq[keyq_tail].key, keyq[keyq_tail].down, Sys_Milliseconds());
         keyq_tail = (keyq_tail + 1) & 63;
     }
 
-	KBD_Update_Flag = 0;
+	// Move the client mouse.
+	CL_MoveMouse(xMove, yMove);
+
+	// Warp mouse back to center.
+	//if (isWindowGrabbed) {// && (xMove != 0 || yMove != 0)) {
+		SDL_EventState(SDL_MOUSEMOTION, SDL_IGNORE);
+		SDL_WarpMouse(ri.config.vidWidth / 2, ri.config.vidHeight / 2);
+		SDL_EventState(SDL_MOUSEMOTION, SDL_ENABLE);
+	//}
 }
 
 void KBD_Close(void)
@@ -524,7 +545,7 @@ IN_Shutdown
 */
 void IN_Shutdown (void)
 {
-	Cmd_RemoveCommand ("force_centerview", NULL);
+	
 }
 
 
@@ -546,15 +567,7 @@ IN_Move
 */
 void IN_Move (userCmd_t *cmd)
 {
-	// Set keyboard and mouse grab
-	// FIXME: Move to IN_Frame ? Win32 toggles inputs in there (for consistency sake)
-	if (Key_GetDest() == KD_CONSOLE) {
-            SDL_WM_GrabInput(SDL_GRAB_OFF);
-		return;
-	}
 
-	if (!keybd_grabbed && x11display.gl_win)
-	    SDL_WM_GrabInput(SDL_GRAB_ON);
 }
 
 
@@ -565,13 +578,15 @@ IN_Frame
 */
 void IN_Frame (void)
 {
-    if (sdlwnd)
+    if (!sdlwnd)
         return;
-	//if (!x11display.dpy)
-	//	return;
 
-	// Reset the time remaining to avoid the screensaver while playing
-	//XResetScreenSaver (x11display.dpy);
-	//X11_HandleEvents ();
-    SDLGL_HandleEvents();
+	// Ungrab the mouse from window in case we are in the console or in a menu.
+	if (Key_GetDest() == KD_CONSOLE || Key_GetDest() == KD_MENU) {
+		isWindowGrabbed = qFalse;	
+		SDL_WM_GrabInput(SDL_GRAB_OFF);
+	} else {
+		isWindowGrabbed = qTrue;
+		SDL_WM_GrabInput(SDL_GRAB_ON);
+	}
 }

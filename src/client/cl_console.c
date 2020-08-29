@@ -339,7 +339,7 @@ void CL_ConsolePrintf (comPrint_t flags, const char *txt)
 
 	// Chat console
 	if (flags & PRNT_CHATHUD) {
-		CL_PrintToConsole (&cl_chatConsole, flags, txt);
+		//CL_PrintToConsole (&cl_chatConsole, flags, txt);
 
 		cl_console.orMask = 0;
 		cl_chatConsole.orMask = 0;
