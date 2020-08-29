@@ -182,6 +182,7 @@ qBool	DMASnd_Init (void);
 void	DMASnd_Shutdown (void);
 
 void	DMASnd_StopAllSounds (void);
+void	DMASnd_PaintChannels (int endTime);
 void	DMASnd_RawSamples (int samples, int rate, int width, int channels, byte *data);
 
 void	DMASnd_Update (refDef_t *rd);

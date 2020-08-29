@@ -918,14 +918,13 @@ void Snd_Init (void)
 
 	// Initialize sound
 	initTime = Sys_UMilliseconds ();
-	if (s_initSound->intVal == 2) {
-		if (ALSnd_Init ()) {
-			snd_isAL = qTrue;
-		}
-		else {
-			Com_Printf (PRNT_ERROR, "Snd_Init: Failed to initialize OpenAL!\n");
-		}
+	if (ALSnd_Init ()) {
+		snd_isAL = qTrue;
 	}
+	else {
+		Com_Printf (PRNT_ERROR, "Snd_Init: Failed to initialize OpenAL!\n");
+	}
+
 	if (!snd_isAL) {
 		if (!DMASnd_Init())
 			return;

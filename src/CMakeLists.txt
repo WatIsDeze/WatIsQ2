@@ -399,7 +399,8 @@ if(${BUILD_EGL})
             )
     target_link_libraries(EGL
         ${EGL_LINKER_FLAGS} 
-        ${SDL_LIBRARY} 
+        ${SDL_LIBRARIES} 
+        SDL
         ${OPENAL_LIBRARY} 
         ${PNG_LIBRARIES} 
         ${JPEG_LIBRARIES} 

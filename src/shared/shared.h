@@ -86,7 +86,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 #elif defined __unix__
 #  define GL_DRIVERNAME		"libGL.so.1"
-#  define AL_DRIVERNAME		"libopenal.so.0"
+#  define AL_DRIVERNAME		"libopenal.so"
 #  define GL_FORCEFINISH
 
 #  define NO_RETURN __attribute__((noreturn))

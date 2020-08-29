@@ -24,41 +24,29 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "../client/snd_local.h"
 #include "unix_local.h"
 
+#include <SDL/SDL.h>
+
+static qBool s_inited = qFalse;
+
 cVar_t	*s_bits;
 cVar_t	*s_speed;
 cVar_t	*s_channels;
 cVar_t	*s_system;
 
-typedef enum sndSystem_s {
-	SNDSYS_NONE,
+void Snd_Memset (void* dest, const int val, const size_t count)
+{
+	memset(dest,val,count);
+}
 
-	SNDSYS_ALSA,
-	SNDSYS_OSS,
-	SNDSYS_SDL,
-} sndSystem_t;
-
-static const char	*s_sysStrings[] = {
-	"None",
-
-	"ALSA",
-	"OSS",
-	"SDL",
-
-	NULL
-};
-
-#define S_DEFAULTSYS	SNDSYS_SDL
-
-static sndSystem_t		s_curSystem;
-
-/*
-=======================================================================
-
-	UNIX SOUND BACKEND
-
-    This attempts access to ALSA, OSS, and SDL audio systems.
-=======================================================================
-*/
+static void sdl_audio_callback (void *unused, Uint8 * stream, int len)
+{
+	if (s_inited) {
+		snd_audioDMA.buffer = stream;
+		snd_audioDMA.samplePos += len / (snd_audioDMA.sampleBits / 4);
+		// Check for samplepos overflow?
+		DMASnd_PaintChannels (snd_audioDMA.samplePos);
+	}
+}
 
 /*
 ==============
@@ -67,56 +55,90 @@ SndImp_Init
 */
 qBool SndImp_Init (void)
 {
-	sndSystem_t		oldSystem;
-	qBool			success;
+	SDL_AudioSpec desired, obtained;
+	
+	if(s_inited)
+		return qTrue;
 
-	// Register variables
 	if (!s_bits) {
-		s_bits			= Cvar_Register ("s_bits",			"16",					CVAR_ARCHIVE);
-		s_speed			= Cvar_Register ("s_speed",			"0",					CVAR_ARCHIVE);
-		s_channels		= Cvar_Register ("s_channels",		"2",					CVAR_ARCHIVE);
-		s_system		= Cvar_Register ("s_system",		s_sysStrings[S_DEFAULTSYS],		CVAR_ARCHIVE);
+		s_bits = Cvar_Register("sndbits", "16", CVAR_ARCHIVE);
+		s_speed = Cvar_Register("sndspeed", "0", CVAR_ARCHIVE);
+		s_channels = Cvar_Register("sndchannels", "2", CVAR_ARCHIVE);
+		//snddevice = Cvar_Get("snddevice", "/dev/dsp", CVAR_ARCHIVE);
 	}
 
-	// Find the target system
-	oldSystem = s_curSystem;
-	if (!Q_stricmp (s_system->string, "alsa"))
-		s_curSystem = SNDSYS_ALSA;
-	else if (!Q_stricmp (s_system->string, "oss"))
-		s_curSystem = SNDSYS_OSS;
-	else if (!Q_stricmp (s_system->string, "sdl"))
-		s_curSystem = SNDSYS_SDL;
-	else {
-		Com_Printf (PRNT_ERROR, "SndImp_Init: Invalid s_system selection, defaulting to '%s'\n", s_sysStrings[S_DEFAULTSYS]);
-		s_curSystem = S_DEFAULTSYS;
+	if (!SDL_WasInit(SDL_INIT_EVERYTHING)) {
+		if (SDL_Init(SDL_INIT_AUDIO) < 0) {
+			Com_Printf(PRNT_ERROR, "Couldn't init SDL audio: %s\n", SDL_GetError ());
+			return qFalse;
+		}
+	} else if (!SDL_WasInit(SDL_INIT_AUDIO)) {
+		if (SDL_InitSubSystem(SDL_INIT_AUDIO) < 0) {
+			Com_Printf(PRNT_ERROR, "Couldn't init SDL audio: %s\n", SDL_GetError ());
+			return qFalse;
+		}
+	}
+	
+
+	/* Set up the desired format */
+	switch (s_bits->intVal) {
+		case 8:
+			desired.format = AUDIO_U8;
+			break;
+		default:
+			Com_Printf(PRNT_ERROR, "Unknown number of audio bits: %i, trying with 16\n", s_bits->intVal);
+		case 16:
+			desired.format = AUDIO_S16SYS;
+			break;
+	}
+	
+	if(s_speed->intVal)
+		desired.freq = s_speed->intVal;
+	else
+		desired.freq = 22050;
+
+    // just pick a sane default.
+    if (desired.freq <= 11025)
+        desired.samples = 256;
+    else if (desired.freq <= 22050)
+        desired.samples = 512;
+    else if (desired.freq <= 44100)
+        desired.samples = 1024;
+    else
+        desired.samples = 2048;  // (*shrug*)
+	
+	desired.channels = s_channels->intVal;
+	if (desired.channels < 1 || desired.channels > 2)
+		desired.channels = 2;
+
+	desired.callback = sdl_audio_callback;
+	
+	/* Open the audio device */
+	if (SDL_OpenAudio (&desired, &obtained) < 0) {
+		Com_Printf(PRNT_ERROR, "SDL_OpenAudio() failed: %s\n", SDL_GetError ());
+		if (SDL_WasInit(SDL_INIT_EVERYTHING) == SDL_INIT_AUDIO)
+			SDL_Quit();
+		else
+			SDL_QuitSubSystem(SDL_INIT_AUDIO);
+		return qFalse;
 	}
 
-mark0:
-	// Initialize the target system
-	success = qFalse;
-	switch (s_curSystem) {
-	case SNDSYS_ALSA:
-		// FIXME
-		break;
+	/* Fill the audio DMA information block */
+	snd_audioDMA.sampleBits = (obtained.format & 0xFF);
+	snd_audioDMA.speed = obtained.freq;
+	snd_audioDMA.channels = obtained.channels;
+	snd_audioDMA.samples = obtained.samples * snd_audioDMA.channels;
+	snd_audioDMA.samplePos = 0;
+	snd_audioDMA.submissionChunk = 1;
+	snd_audioDMA.buffer = NULL;
 
-	case SNDSYS_OSS:
-		success = OSS_Init ();
-		break;
+    Com_Printf(PRNT_ERROR, "Starting SDL audio callback...\n");
+    SDL_PauseAudio(0);  // start callback.
 
-	case SNDSYS_SDL:
-		// FIXME
-		break;
-	}
+    Com_Printf(PRNT_ERROR, "SDL audio initialized.\n");
 
-	// If failed, fall-back
-	if (!success && s_curSystem > SNDSYS_ALSA) {
-		Com_Printf (PRNT_WARNING, "%s failed, attempting next system\n", s_sysStrings[s_curSystem]);
-		s_curSystem--;
-		goto mark0;
-	}
-
-	// Done
-	return success;
+	s_inited = qTrue;
+	return qTrue;
 }
 
 
@@ -127,22 +149,17 @@ SndImp_Shutdown
 */
 void SndImp_Shutdown (void)
 {
-	switch (s_curSystem) {
-	case SNDSYS_ALSA:
-		// FIXME
-		break;
+	if (!s_inited)
+		return;
 
-	case SNDSYS_OSS:
-		OSS_Shutdown ();
-		break;
+	SDL_PauseAudio(1);
+	SDL_CloseAudio ();
+	s_inited = qFalse;
 
-	case SNDSYS_SDL:
-		// FIXME
-		break;
-	}
-
-	// Should never reach here
-	return qFalse;
+	if (SDL_WasInit(SDL_INIT_EVERYTHING) == SDL_INIT_AUDIO)
+		SDL_Quit();
+	else
+		SDL_QuitSubSystem(SDL_INIT_AUDIO);
 }
 
 
@@ -153,21 +170,10 @@ SndImp_GetDMAPos
 */
 int SndImp_GetDMAPos (void)
 {
-	switch (s_curSystem) {
-	case SNDSYS_ALSA:
-		// FIXME
-		return qFalse;
+	if(!s_inited)
+		return 0;
 
-	case SNDSYS_OSS:
-		return OSS_GetDMAPos ();
-
-	case SNDSYS_SDL:
-		// FIXME
-		return qFalse;
-	}
-
-	// Should never reach here
-	return 0;
+	return snd_audioDMA.samplePos;
 }
 
 
@@ -178,19 +184,7 @@ SndImp_BeginPainting
 */
 void SndImp_BeginPainting (void)
 {
-	switch (s_curSystem) {
-	case SNDSYS_ALSA:
-		// FIXME
-		break;
 
-	case SNDSYS_OSS:
-		OSS_BeginPainting ();
-		break;
-
-	case SNDSYS_SDL:
-		// FIXME
-		break;
-	}
 }
 
 
@@ -203,17 +197,5 @@ Send sound to device if buffer isn't really the DMA buffer
 */
 void SndImp_Submit (void)
 {
-	switch (s_curSystem) {
-	case SNDSYS_ALSA:
-		// FIXME
-		break;
 
-	case SNDSYS_OSS:
-		OSS_Submit ();
-		break;
-
-	case SNDSYS_SDL:
-		// FIXME
-		break;
-	}
 }

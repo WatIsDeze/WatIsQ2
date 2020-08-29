@@ -633,7 +633,7 @@ static void DMASnd_PaintChannelFrom16 (channel_t *ch, sfxCache_t *sc, int count,
 DMASnd_PaintChannels
 ================
 */
-static void DMASnd_PaintChannels (int endTime)
+void DMASnd_PaintChannels (int endTime)
 {
 	channel_t	*ch;
 	sfxCache_t	*sc;
