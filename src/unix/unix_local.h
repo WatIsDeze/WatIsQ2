@@ -26,20 +26,3 @@ extern cVar_t	*s_speed;
 extern cVar_t	*s_channels;
 extern cVar_t	*s_system;
 
-/*
-=======================================================================
-
-	FUNCTION PROTOTYPES
-
-=======================================================================
-*/
-
-//
-// unix_snd_oss.c
-//
-
-qBool		OSS_Init (void);
-void		OSS_Shutdown (void);
-int			OSS_GetDMAPos (void);
-void		OSS_BeginPainting (void);
-void		OSS_Submit (void);

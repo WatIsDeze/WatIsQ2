@@ -267,6 +267,7 @@ set(EGL_SRC_ENGINE
     ${EGL_SRCDIR_CLIENT}/snd_dma.c 
     ${EGL_SRCDIR_CLIENT}/snd_main.c
     ${EGL_SRCDIR_CLIENT}/snd_openal.c
+    ${EGL_SRCDIR_CLIENT}/snd_sdl.c
 
     ${EGL_SRCDIR_COMMON}/alias.c
     ${EGL_SRCDIR_COMMON}/cbuf.c 
@@ -345,11 +346,7 @@ if(UNIX)
         ${EGL_SRCDIR_UNIX}/unix_console.c    
         ${EGL_SRCDIR_UNIX}/unix_glimp.c
         ${EGL_SRCDIR_UNIX}/unix_main.c 
-        ${EGL_SRCDIR_UNIX}/unix_snd_alsa.c 
         ${EGL_SRCDIR_UNIX}/unix_snd_cd.c 
-        ${EGL_SRCDIR_UNIX}/unix_snd_main.c 
-        ${EGL_SRCDIR_UNIX}/unix_snd_oss.c
-        ${EGL_SRCDIR_UNIX}/unix_snd_sdl.c
         ${EGL_SRCDIR_UNIX}/unix_udp.c
         ${EGL_SRCDIR_UNIX}/x11_main.c 
         ${EGL_SRCDIR_UNIX}/x11_utils.c

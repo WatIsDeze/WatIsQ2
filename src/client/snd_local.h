@@ -137,6 +137,11 @@ extern playSound_t				snd_playSounds[MAX_PLAYSOUNDS];
 extern playSound_t				snd_freePlays;
 extern playSound_t				snd_pendingPlays;
 
+extern cVar_t	*s_bits;
+extern cVar_t	*s_speed;
+extern cVar_t	*s_channels;
+extern cVar_t	*s_system;
+
 extern cVar_t	*s_show;
 extern cVar_t	*s_loadas8bit;
 extern cVar_t	*s_volume;

@@ -18,13 +18,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 //
-// unix_snd_main.c
+// snd_sdl.c 
 //
 
-#include "../client/snd_local.h"
-#include "unix_local.h"
-
 #include <SDL/SDL.h>
+#include "snd_local.h"
 
 static qBool s_inited = qFalse;
 
