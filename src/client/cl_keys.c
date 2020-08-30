@@ -27,7 +27,7 @@ static keyDest_t	cl_keyDest;
 
 static qBool		key_shiftDown = qFalse;
 static qBool		key_capsLockOn = qFalse;
-qBool				key_insertOn = qTrue;
+qBool				key_insertOn = qFalse;
 
 int					key_anyKeyDown;
 
@@ -580,6 +580,7 @@ static void Key_CompleteCommand (void)
 Key_Message
 ====================
 */
+
 static void Key_Message (int key)
 {
 	size_t	charCount, i;
@@ -752,18 +753,22 @@ pasteIntoMessage:
 		if (key_insertOn) {
 			// Can't do strcpy to move string to right
 			i = strlen (key_chatBuffer[key_chatEditLine]) - 1;
-
+			
 			if (i == MAXCMDLINE-2) 
 				i--;
 
-			for ( ; i>=key_chatCursorPos ; i--)
-				key_chatBuffer[key_chatEditLine][i + 1] = key_chatBuffer[key_chatEditLine][i];
+			if (i > 1) {
+				for ( ; i>=key_chatCursorPos ; i--) {
+					key_chatBuffer[key_chatEditLine][i + 1] = key_chatBuffer[key_chatEditLine][i];
+				}
+			}
 		}
-
 		// Only null terminate if at the end
 		i = key_chatBuffer[key_chatEditLine][key_chatCursorPos];
+
 		key_chatBuffer[key_chatEditLine][key_chatCursorPos] = key;
 		key_chatCursorPos++;
+
 		if (!i) {
 			for (i=key_chatCursorPos ; i<MAXCMDLINE ; i++)
 				key_chatBuffer[key_chatEditLine][i] = '\0';

@@ -466,10 +466,12 @@ void SDLGL_HandleEvents(void)
 
         if (!_windowed_mouse->intVal) {
             /* ungrab the pointer */
+			isWindowGrabbed = qFalse;
             SDL_WM_GrabInput(SDL_GRAB_OFF);
         } else {
+			isWindowGrabbed = qTrue;
             /* grab the pointer */
-            SDL_WM_GrabInput(SDL_GRAB_ON);
+            SDL_WM_GrabInput(SDL_GRAB_OFF);
         }
     }
 
@@ -487,11 +489,11 @@ void SDLGL_HandleEvents(void)
 	CL_MoveMouse(xMove, yMove);
 
 	// Warp mouse back to center.
-	//if (isWindowGrabbed) {// && (xMove != 0 || yMove != 0)) {
+	if (isWindowGrabbed) {// && (xMove != 0 || yMove != 0)) {
 		SDL_EventState(SDL_MOUSEMOTION, SDL_IGNORE);
-		SDL_WarpMouse(ri.config.vidWidth / 2, ri.config.vidHeight / 2);
+		//SDL_WarpMouse(ri.config.vidWidth / 2, ri.config.vidHeight / 2);
 		SDL_EventState(SDL_MOUSEMOTION, SDL_ENABLE);
-	//}
+	}
 }
 
 void KBD_Close(void)
@@ -587,6 +589,6 @@ void IN_Frame (void)
 		SDL_WM_GrabInput(SDL_GRAB_OFF);
 	} else {
 		isWindowGrabbed = qTrue;
-		SDL_WM_GrabInput(SDL_GRAB_ON);
+		SDL_WM_GrabInput(SDL_GRAB_OFF);
 	}
 }
