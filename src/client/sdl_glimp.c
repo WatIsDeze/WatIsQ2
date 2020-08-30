@@ -33,15 +33,19 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #include <SDL/SDL.h>
 
 #include "../renderer/r_local.h"
-#include "../client/cl_local.h"
-#include "unix_glimp.h"
-#include "unix_local.h"
+#include "cl_local.h"
+#include "sdl_glimp.h"
+#ifdef _WIN32
+#include "../win32/win_local.h"
+#else
+#include "../unix/unix_local.h"
+#endif
 #include "sdl_main.h"
 
 static qBool    vid_queueRestart;
 static qBool    vid_isActive;
 
-glxState_t glxState = {.OpenGLLib = NULL};
+glState_t glState = {.OpenGLLib = NULL};
 
 /*
 =============================================================================
@@ -106,20 +110,20 @@ ListRemaps_f
 Console command to list all keys mapped to AUX%d
 ============
 */
-static void ListRemaps_f (void)
-{
-	int	i, a;
-	char	*k;
+// static void ListRemaps_f (void)
+// {
+// 	int	i, a;
+// 	char	*k;
 
-	Com_Printf (0, "Remapped keys:\n");
-	for (i=0 ; ; i++) {
-		k = X11_GetAuxKeyRemapName (i, &a);
-		if (!k)
-			break;
+// 	Com_Printf (0, "Remapped keys:\n");
+// 	for (i=0 ; ; i++) {
+// 		k = X11_GetAuxKeyRemapName (i, &a);
+// 		if (!k)
+// 			break;
 
-		Com_Printf (0, "AUX%-2d = %s\n", a-K_AUX1+1, k);
-	}
-}
+// 		Com_Printf (0, "AUX%-2d = %s\n", a-K_AUX1+1, k);
+// 	}
+// }
 
 
 /*
@@ -211,7 +215,7 @@ void VID_Init (refConfig_t *outConfig)
 
 	// Add some console commands that we want to handle
 	Cmd_AddCommand ("vid_restart", VID_Restart_f, "Restarts refresh and media");
-	Cmd_AddCommand ("listremaps", ListRemaps_f, "Lists what keys are remapped to AUX* bindings");
+	//Cmd_AddCommand ("listremaps", ListRemaps_f, "Lists what keys are remapped to AUX* bindings");
 
 	// Start the graphics mode and load refresh DLL
 	vid_isActive = qFalse;
@@ -234,8 +238,8 @@ void VID_Shutdown (void)
 		vid_isActive = qFalse;
 	}
 
-	Cmd_RemoveCommand ("vid_restart", NULL);
-	Cmd_RemoveCommand ("listremaps", NULL);
+	//Cmd_RemoveCommand ("vid_restart", NULL);
+	//Cmd_RemoveCommand ("listremaps", NULL);
 }
 
 /*
@@ -315,7 +319,8 @@ GLimp_GetGammaRamp
 */
 qBool GLimp_GetGammaRamp (uint16 *ramp)
 {
-	return SCR_GetGammaRamp (ramp);
+	//return SCR_GetGammaRamp (ramp);
+	qFalse;
 }
 
 
@@ -326,5 +331,5 @@ GLimp_SetGammaRamp
 */
 void GLimp_SetGammaRamp (uint16 *ramp)
 {
-	SCR_SetGammaRamp (ramp);
+	//SCR_SetGammaRamp (ramp);
 }

@@ -253,7 +253,7 @@ void Sys_Quit (qBool error)
 	if (!dedicated->intVal)
 		CL_ClientShutdown (error);
 
-  X11_Shutdown ();
+ // X11_Shutdown ();
 #endif
   Com_Shutdown ();
   fcntl (0, F_SETFL, fcntl (0, F_GETFL, 0) & ~FNDELAY);
@@ -813,7 +813,7 @@ static void signal_handler (int sig)
 
 #ifndef DEDICATED_ONLY
 	GLimp_Shutdown ();
-	X11_Shutdown ();
+//	X11_Shutdown ();
 #endif
 
 	exit (sig);

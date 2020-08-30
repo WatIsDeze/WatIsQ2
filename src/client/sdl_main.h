@@ -21,7 +21,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // sdl_main.h
 //
 
+#ifndef __SDL_MAIN_H__
+#define __SDL_MAIN_H__
+
 qBool GLSDL_Init();
 qBool GLSDL_CreateWindow(int width, int height, qBool fullscreen);
 void GLSDL_SwapBuffers();
 void GLSDL_Shutdown();
+
+#endif

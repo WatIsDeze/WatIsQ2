@@ -34,11 +34,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #ifdef _WIN32
 
 # include "../renderer/r_local.h"
-# include "../win32/win_glimp.h"
+# include "../client/sdl_glimpl.h"
 
-# define LOGPROC	(glwState.oglLogFP)
-# define GL_GPA(a)	(void *)GetProcAddress (glwState.hInstOpenGL, a)
-# define SIG(x)		fprintf (glwState.oglLogFP, x "\n")
+# define LOGPROC	(glState.oglLogFP)
+# define GL_GPA(a)	(void *)GetProcAddress (glState.hInstOpenGL, a)
+# define SIG(x)		fprintf (glState.oglLogFP, x "\n")
 
 #elif defined __unix__
 
@@ -46,11 +46,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 # include <GL/gl.h>
 # include <GL/glx.h>
 # include "../renderer/r_local.h"
-# include "../unix/unix_glimp.h"
+#include "../client/sdl_glimp.h"
 
-# define LOGPROC	(glxState.oglLogFP)
-# define GL_GPA(a)	(void *)dlsym (glxState.OpenGLLib, a)
-# define SIG(x)		fprintf (glxState.oglLogFP, x "\n")
+# define LOGPROC	(glState.oglLogFP)
+# define GL_GPA(a)	(void *)dlsym (glState.OpenGLLib, a)
+# define SIG(x)		fprintf (glState.oglLogFP, x "\n")
 
 #endif
 
@@ -3876,9 +3876,9 @@ void QGL_Shutdown (void)
 	}
 #elif defined __unix__
 	/* Not unloading because of the XCloseDisplay related bug, it will hopefully be fixed someday
-	if (glxState.OpenGLLib)
-		dlclose (glxState.OpenGLLib);
-	glxState.OpenGLLib = NULL;
+	if (glState.OpenGLLib)
+		dlclose (glState.OpenGLLib);
+	glState.OpenGLLib = NULL;
 	*/
 #endif
 
@@ -4340,9 +4340,9 @@ qBool QGL_Init (const char *dllName)
 	}
 #elif defined __unix__
 	// This is here because of a bug with XCloseDisplay
-	if (glxState.OpenGLLib)
-		dlclose (glxState.OpenGLLib);
-	if ((glxState.OpenGLLib = dlopen (dllName, RTLD_LAZY|RTLD_GLOBAL)) == 0) {
+	if (glState.OpenGLLib)
+		dlclose (glState.OpenGLLib);
+	if ((glState.OpenGLLib = dlopen (dllName, RTLD_LAZY|RTLD_GLOBAL)) == 0) {
 		cVar_t	*basedir;
 		char	fn[MAX_OSPATH];
 		char	*path;
@@ -4353,7 +4353,7 @@ qBool QGL_Init (const char *dllName)
 		Q_snprintfz (fn, MAX_OSPATH, "%s/%s", path, dllName);
 
 		Com_Printf (0, "QGL_Init: LoadLibrary ( \"%s\" )", fn);
-		if ((glxState.OpenGLLib = dlopen (fn, RTLD_LAZY)) == 0 ) {
+		if ((glState.OpenGLLib = dlopen (fn, RTLD_LAZY)) == 0 ) {
 			Com_Printf (0, "%s\n", dlerror());
 			return qFalse;
 		}
@@ -6201,8 +6201,8 @@ void *QGL_GetProcAddress (const char *procName)
 #ifdef _WIN32
 	return qwglGetProcAddress ((LPCSTR) procName);
 #elif defined __unix__
-	if (glxState.OpenGLLib)
-		return (void *)dlsym (glxState.OpenGLLib, procName);
+	if (glState.OpenGLLib)
+		return (void *)dlsym (glState.OpenGLLib, procName);
 
 	return NULL;
 #endif

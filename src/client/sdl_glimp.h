@@ -18,26 +18,22 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
 
 //
-// unix_glimp.h
+// sdl_glimp.h
 //
 
-#ifndef __unix__
-#  error You should not be including this file on this platform
-#endif // __unix__
-
-#ifndef __UNIX_GLIMP_H__
-#define __UNIX_GLIMP_H__
+#ifndef __SDL_GLIMP_H__
+#define __SDL_GLIMP_H__
 
 #define APPLICATION "WatIsQ2 - [" WATISQ2_VERSTR "]"
 
-typedef struct glxState_s {
+typedef struct glState_s {
 	qBool		active;
 
 	void		*OpenGLLib;		// OpenGL library handle
 
 	FILE		*oglLogFP;		// for gl_log logging
-} glxState_t;
+} glState_t;
 
-extern glxState_t	glxState;
+extern glState_t	glState;
 
-#endif	// __UNIX_GLIMP_H__
+#endif	// __SDL_GLIMP_H__

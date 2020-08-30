@@ -25,24 +25,21 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "../common/common.h"
 #include "../common/cmd.h"
-#include "x11_linux.h"
-#include "unix_glimp.h"
-#include "unix_local.h"
+#include "sdl_glimp.h"
+#include "../client/cl_local.h"
+#include "../renderer/r_local.h"
+#ifdef _WIN32
+#include "../win32/win_local.h"
+#else
+#include "../unix/unix_local.h"
+#endif
 #include "sdl_main.h"
 
-SDL_Surface *sdlwnd;
-
-int p_mouse_x, p_mouse_y;
-
-static qBool mouse_grabbed = qFalse;
-static qBool keybd_grabbed = qFalse;
-static qBool dgamouse = qFalse;
-static int   grab_screenmode = -1;
-
-static cVar_t *in_dgamouse;
-
-cVar_t *in_mouse;
-static cVar_t	*_windowed_mouse;
+// SDL related.
+SDL_Surface *sdlwnd;			// SDL Window surface.
+qBool isWindowGrabbed = qFalse;	// Is the window grabbed, or not?
+qBool mouseActive = qFalse;		// Is the mouse active?
+qBool mouseAvailable = qTrue;	// Mouse available?
 
 // Console variables that we need to access from this module
 cVar_t		*vid_xpos;			// X coordinate of window position
@@ -50,73 +47,31 @@ cVar_t		*vid_ypos;			// Y coordinate of window position
 cVar_t		*vid_fullscreen;    // Fullscreen or windowed.
 
 
-//==================================================================//
-//																	//
-//		Mouse														//
-//																	//
-//==================================================================//
-static int     mouse_buttonstate = 0;
-static int     mouse_oldbuttonstate = 0;
+// No clue what these are for, or used to be for. (Maybe for backwards compatibility?)
+static cVar_t *in_dgamouse;
+static cVar_t *in_mouse;
+
+// Windowed mouse?
+static cVar_t	*_windowed_mouse;
 static float old_windowed_mouse;
-int xMove, yMove;
-qBool isWindowGrabbed = qFalse;
-qBool mouse_active = qFalse;
-qBool	mouse_avail = qTrue;
 
-void IN_MouseEvent (void)
+// Mouse button states.
+static int mouseButtonState = 0;		// Current frame button states.
+static int mouseOldButtonState = 0;		// Previous frame button states.
+static int mouseDeltaX = 0; // X Delta mouse movement value.
+static int mouseDeltaY = 0; // Y Delta mouse movement value.
+
+// Keyboard button states.
+struct
 {
-	int		i;
+	int key;	// Which key?
+	int down;	// For how many ms.
+} keyq[64];
+int keyq_head=0; //
+int keyq_tail=0;
 
-	if (!mouse_avail)
-		return;
+static unsigned char KeyStates[SDLK_LAST];
 
-// perform button actions
-	for (i=0 ; i<5 ; i++)
-	{
-		if ( (mouse_buttonstate & (1<<i)) && !(mouse_oldbuttonstate & (1<<i)) )
-			Key_Event (K_MOUSE1 + i, qTrue, Sys_Milliseconds());
-
-		if ( !(mouse_buttonstate & (1<<i)) && (mouse_oldbuttonstate & (1<<i)) )
-				Key_Event (K_MOUSE1 + i, qFalse, Sys_Milliseconds());
-	}
-
-	mouse_oldbuttonstate = mouse_buttonstate;
-}
-
-
-static void IN_DeactivateMouse( void )
-{
-	if (!mouse_avail)
-		return;
-
-	if (mouse_active) {
-		/* uninstall_grabs(); */
-		mouse_active = qFalse;
-	}
-}
-
-static void IN_ActivateMouse( void )
-{
-	if (!mouse_avail)
-		return;
-
-	if (!mouse_active) {
-		xMove = yMove = 0; // don't spazz
-		_windowed_mouse = NULL;
-		old_windowed_mouse = 0;
-		mouse_active = qTrue;
-	}
-
-}
-
-void IN_Activate(qBool active)
-{
-    /*	if (active || vidmode_active) */
-    if (active)
-		IN_ActivateMouse();
-	else
-		IN_DeactivateMouse();
-}
 
 //==================================================================//
 //																	//
@@ -219,24 +174,68 @@ void SDLGL_SwapBuffers() {
     SDL_GL_SwapBuffers();
 }
 
+
+//==================================================================//
+//																	//
+//		Mouse														//
+//																	//
+//==================================================================//
+void IN_MouseEvent (void)
+{
+	int		i;
+
+	if (!mouseAvailable)
+		return;
+
+	for (i=0 ; i<5 ; i++)
+	{
+		if ( (mouseButtonState & (1<<i)) && !(mouseOldButtonState & (1<<i)) )
+			Key_Event (K_MOUSE1 + i, qTrue, Sys_Milliseconds());
+
+		if ( !(mouseButtonState & (1<<i)) && (mouseOldButtonState & (1<<i)) )
+				Key_Event (K_MOUSE1 + i, qFalse, Sys_Milliseconds());
+	}
+
+	mouseOldButtonState = mouseButtonState;
+}
+
+static void IN_DeactivateMouse( void )
+{
+	if (!mouseAvailable)
+		return;
+
+	if (mouseActive) {
+		mouseActive = qFalse;
+	}
+}
+static void IN_ActivateMouse( void )
+{
+	if (!mouseAvailable)
+		return;
+
+	if (!mouseActive) {
+		mouseDeltaX = mouseDeltaY = 0; // don't spazz
+		_windowed_mouse = NULL;
+		old_windowed_mouse = 0;
+		mouseActive = qTrue;
+	}
+
+}
+void IN_Activate(qBool active)
+{
+    /*	if (active || vidmode_active) */
+    if (active)
+		IN_ActivateMouse();
+	else
+		IN_DeactivateMouse();
+}
+
+
 //==================================================================//
 //																	//
 //		KEYBOARD													//
 //																	//
 //==================================================================//
-struct
-{
-	int key;
-	int down;
-} keyq[64];
-int keyq_head=0;
-int keyq_tail=0;
-
-static unsigned char KeyStates[SDLK_LAST];
-
-static cVar_t	*_windowed_mouse;
-void KBD_Close(void);
-
 int XLateKey(unsigned int keysym)
 {
 	int key;
@@ -335,15 +334,14 @@ int XLateKey(unsigned int keysym)
 	return key;
 }
 
-static unsigned char KeyStates[SDLK_LAST];
-
 void SDLGL_HandleEvents(void)
 {
 	SDL_Event event;
-	int buttonStates;
+	int _tempMouseButtonStates;
 
-	// Reset xMove and yMove
-	xMove = yMove = 0;
+	// Reset mouse deltas.
+	mouseDeltaX = 0;
+	mouseDeltaY = 0;
 
 	// PollEvents.
     while (SDL_PollEvent(&event)) {
@@ -377,8 +375,8 @@ void SDLGL_HandleEvents(void)
 			case SDL_MOUSEBUTTONUP:
 				break;
 			case SDL_MOUSEMOTION:
-					xMove = event.motion.xrel;
-					yMove = event.motion.yrel;
+					mouseDeltaX = event.motion.xrel;
+					mouseDeltaY = event.motion.yrel;
 				break;
 			case SDL_KEYDOWN:
 				if ( (KeyStates[SDLK_LALT] || KeyStates[SDLK_RALT]) &&
@@ -406,8 +404,8 @@ void SDLGL_HandleEvents(void)
 					SDL_WM_GrabInput((gm == SDL_GRAB_ON) ? SDL_GRAB_OFF : SDL_GRAB_ON);
 					gm = SDL_WM_GrabInput(SDL_GRAB_QUERY);
 					*/
-					Cvar_SetValue( "_windowed_mouse", (gm == SDL_GRAB_ON) ? /*1*/ 0 : /*0*/ 1, qFalse );
-
+					Cvar_SetValue( "_windowed_mouse", (gm != SDL_GRAB_ON) ? /*1*/ 0 : /*0*/ 1, qFalse );
+					SDL_WM_GrabInput(gm != SDL_GRAB_ON ? SDL_GRAB_ON : SDL_GRAB_OFF);
 					break; /* ignore this key */
 				}
 
@@ -440,22 +438,19 @@ void SDLGL_HandleEvents(void)
 	
 	}
 	
-	// Fetch mouse delta motion.
-   	//SDL_GetRelativeMouseState(&xMove, &yMove);
-
 	// Fetch mouse button states.
-    mouse_buttonstate = 0;
-    buttonStates = SDL_GetMouseState(NULL, NULL);
-    if (SDL_BUTTON(1) & buttonStates)
-        mouse_buttonstate |= (1 << 0);
-    if (SDL_BUTTON(3) & buttonStates) /* quake2 has the right button be mouse2 */
-        mouse_buttonstate |= (1 << 1);
-    if (SDL_BUTTON(2) & buttonStates) /* quake2 has the middle button be mouse3 */
-        mouse_buttonstate |= (1 << 2);
-    if (SDL_BUTTON(6) & buttonStates)
-        mouse_buttonstate |= (1 << 3);
-    if (SDL_BUTTON(7) & buttonStates)
-        mouse_buttonstate |= (1 << 4);
+    mouseButtonState = 0;
+    _tempMouseButtonStates = SDL_GetMouseState(NULL, NULL);
+    if (SDL_BUTTON(1) & _tempMouseButtonStates)
+        mouseButtonState |= (1 << 0);
+    if (SDL_BUTTON(3) & _tempMouseButtonStates) /* quake2 has the right button be mouse2 */
+        mouseButtonState |= (1 << 1);
+    if (SDL_BUTTON(2) & _tempMouseButtonStates) /* quake2 has the middle button be mouse3 */
+        mouseButtonState |= (1 << 2);
+    if (SDL_BUTTON(6) & _tempMouseButtonStates)
+        mouseButtonState |= (1 << 3);
+    if (SDL_BUTTON(7) & _tempMouseButtonStates)
+        mouseButtonState |= (1 << 4);
 
 	// Determine windowed mouse.
     if(!_windowed_mouse)
@@ -471,7 +466,7 @@ void SDLGL_HandleEvents(void)
         } else {
 			isWindowGrabbed = qTrue;
             /* grab the pointer */
-            SDL_WM_GrabInput(SDL_GRAB_OFF);
+            SDL_WM_GrabInput(SDL_GRAB_ON);
         }
     }
 
@@ -486,12 +481,12 @@ void SDLGL_HandleEvents(void)
     }
 
 	// Move the client mouse.
-	CL_MoveMouse(xMove, yMove);
+	CL_MoveMouse(mouseDeltaX, mouseDeltaY);
 
 	// Warp mouse back to center.
 	if (isWindowGrabbed) {// && (xMove != 0 || yMove != 0)) {
 		SDL_EventState(SDL_MOUSEMOTION, SDL_IGNORE);
-		//SDL_WarpMouse(ri.config.vidWidth / 2, ri.config.vidHeight / 2);
+		SDL_WarpMouse(ri.config.vidWidth / 2, ri.config.vidHeight / 2);
 		SDL_EventState(SDL_MOUSEMOTION, SDL_ENABLE);
 	}
 }
@@ -511,7 +506,6 @@ void KBD_Close(void)
 
 =============================================================================
 */
-
 /*
 =============
 Force_CenterView_f
@@ -522,7 +516,6 @@ void Force_CenterView_f (void)
 	cl.viewAngles[PITCH] = 0;
 }
 
-
 /*
 =============
 IN_Init
@@ -530,6 +523,9 @@ IN_Init
 */
 void IN_Init (void)
 {
+	//
+	// TODO: Figure out what these are for, compatibility? lol.
+	//
 	// Compatibility variables
 	in_mouse	= Cvar_Register ("in_mouse", "1", CVAR_ARCHIVE);
 
@@ -580,15 +576,16 @@ IN_Frame
 */
 void IN_Frame (void)
 {
-    if (!sdlwnd)
+    if (!sdlwnd) {
         return;
-
-	// Ungrab the mouse from window in case we are in the console or in a menu.
-	if (Key_GetDest() == KD_CONSOLE || Key_GetDest() == KD_MENU) {
-		isWindowGrabbed = qFalse;	
-		SDL_WM_GrabInput(SDL_GRAB_OFF);
 	} else {
-		isWindowGrabbed = qTrue;
-		SDL_WM_GrabInput(SDL_GRAB_OFF);
+		// Ungrab the mouse from window in case we are in the console or in a menu.
+		if (Key_GetDest() == KD_CONSOLE || Key_GetDest() == KD_MENU) {
+			isWindowGrabbed = qFalse;	
+			SDL_WM_GrabInput(SDL_GRAB_OFF);
+		} else {
+			isWindowGrabbed = qTrue;
+			SDL_WM_GrabInput(SDL_GRAB_ON);
+		}
 	}
 }

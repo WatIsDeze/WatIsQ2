@@ -495,7 +495,7 @@ int Sys_FindFiles (char *path, char *pattern, char **fileList, int maxFiles, int
 ==============================================================================
 */
 
-# ifdef _M_X64
+# ifdef _M_X64 || __x86_64__
 #  define LIBARCH		"x64"
 # else
 #  define LIBARCH		"x86"

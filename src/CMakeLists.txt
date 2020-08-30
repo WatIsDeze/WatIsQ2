@@ -58,7 +58,7 @@ set(EGL_SRCDIR_UNIX ${EGL_SRCDIR_ROOT_DIR}/unix)
 set(EGL_SRCDIR_WIN32_DIR ${EGL_SRCDIR_ROOT_DIR}/win32)
 
 # Required libraries to build the different components of the binaries. Find
-find_package(SDL2 REQUIRED)
+find_package(SDL REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(OpenAL REQUIRED)
 find_package(ZLIB REQUIRED)
@@ -263,7 +263,9 @@ set(EGL_SRC_ENGINE
     ${EGL_SRCDIR_CLIENT}/gui_init.c
     ${EGL_SRCDIR_CLIENT}/gui_keys.c 
     ${EGL_SRCDIR_CLIENT}/gui_main.c 
-    ${EGL_SRCDIR_CLIENT}/gui_vars.c 
+    ${EGL_SRCDIR_CLIENT}/gui_vars.c
+    ${EGL_SRCDIR_CLIENT}/sdl_main.c 
+    ${EGL_SRCDIR_CLIENT}/sdl_glimp.c
     ${EGL_SRCDIR_CLIENT}/snd_dma.c 
     ${EGL_SRCDIR_CLIENT}/snd_main.c
     ${EGL_SRCDIR_CLIENT}/snd_openal.c
@@ -343,14 +345,10 @@ set(EGL_SRC_ENGINE
 # Append the proper Operating System specific code to the executable file its sources.
 if(UNIX)
     list(APPEND EGL_SRC_ENGINE
-        ${EGL_SRCDIR_UNIX}/unix_console.c    
-        ${EGL_SRCDIR_UNIX}/unix_glimp.c
+        ${EGL_SRCDIR_UNIX}/unix_console.c
         ${EGL_SRCDIR_UNIX}/unix_main.c 
         ${EGL_SRCDIR_UNIX}/unix_snd_cd.c 
         ${EGL_SRCDIR_UNIX}/unix_udp.c
-        ${EGL_SRCDIR_UNIX}/sdl_main.c 
-        ${EGL_SRCDIR_UNIX}/x11_main.c 
-        ${EGL_SRCDIR_UNIX}/x11_utils.c
     )
 elseif(WIN32)
     list(APPEND EGL_SRC_ENGINE 
@@ -395,17 +393,32 @@ if(${BUILD_EGL})
     set_target_properties(EGL PROPERTIES
             RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/
             )
-    target_link_libraries(EGL
-        ${EGL_LINKER_FLAGS} 
-        ${SDL_LIBRARIES} 
-        SDL
-        ${OPENAL_LIBRARY} 
-        ${PNG_LIBRARIES} 
-        ${JPEG_LIBRARIES} 
-        ${ZLIB_LIBRARIES} 
-        ${UNZIP_LIBRARIES} 
-        ${X11_LIBRARIES}
-    
-    )# ws2_32 winmm)
+    if(UNIX)
+        target_link_libraries(EGL
+            ${EGL_LINKER_FLAGS} 
+            ${SDL_LIBRARY} 
+            ${OPENAL_LIBRARY} 
+            ${PNG_LIBRARIES} 
+            ${JPEG_LIBRARIES} 
+            ${ZLIB_LIBRARIES} 
+            ${UNZIP_LIBRARIES} 
+            ${X11_LIBRARIES}
+        )# ws2_32 winmm)
+    elseif(WIN32)
+        target_link_libraries(EGL
+            ${EGL_LINKER_FLAGS} 
+            ${SDL_LIBRARY} 
+            ${OPENAL_LIBRARY} 
+            ${PNG_LIBRARIES} 
+            ${JPEG_LIBRARIES} 
+            ${ZLIB_LIBRARIES} 
+            ${UNZIP_LIBRARIES} 
+            ${X11_LIBRARIES}
+            ws2_32
+            winmm
+        )
+    else()
+        
+    endif()
 endif()
 
