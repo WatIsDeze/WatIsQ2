@@ -185,8 +185,8 @@ static void SCR_DrawGoggles (void)
 {
 //	static float alienIRColor[] = {0.5f, 0.5f, 1, 1};
 
-	if (!(cg.refDef.rdFlags & RDF_IRGOGGLES))
-		return;
+//	if (!(cg.refDef.rdFlags & RDF_IRGOGGLES))
+//		return;
 	if (!cg_advInfrared->intVal)
 		return;
 

@@ -154,7 +154,7 @@ qBool GLSDL_CreateWindow(int width, int height, qBool fullscreen) {
 	SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY,
 			SDL_DEFAULT_REPEAT_INTERVAL);
 
-	//SDL_ShowCursor(0);
+	SDL_ShowCursor(0);
 
     return qTrue;
 }
@@ -580,7 +580,7 @@ void IN_Frame (void)
         return;
 	} else {
 		// Ungrab the mouse from window in case we are in the console or in a menu.
-		if (Key_GetDest() == KD_CONSOLE || Key_GetDest() == KD_MENU) {
+		if (Key_GetDest() == KD_CONSOLE) {// || Key_GetDest() == KD_MENU) {
 			isWindowGrabbed = qFalse;	
 			SDL_WM_GrabInput(SDL_GRAB_OFF);
 		} else {
