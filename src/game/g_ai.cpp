@@ -783,14 +783,16 @@ qBool ai_checkattack (edict_t *self, float dist)
 		{
 			if ((level.time - self->enemy->teleport_time) > 5.0)
 			{
-				if (self->goalentity == self->enemy)
+				if (self->goalentity == self->enemy) {
 					if (self->movetarget)
 						self->goalentity = self->movetarget;
 					else
 						self->goalentity = NULL;
+				}
 				self->monsterinfo.aiflags &= ~AI_SOUND_TARGET;
-				if (self->monsterinfo.aiflags & AI_TEMP_STAND_GROUND)
+				if (self->monsterinfo.aiflags & AI_TEMP_STAND_GROUND) {
 					self->monsterinfo.aiflags &= ~(AI_STAND_GROUND | AI_TEMP_STAND_GROUND);
+				}
 			}
 			else
 			{
@@ -916,7 +918,7 @@ void ai_run (edict_t *self, float dist)
 	vec3_t		v;
 	edict_t		*tempgoal;
 	edict_t		*save;
-	qBool	new;
+	qBool	_new;
 	edict_t		*marker;
 	float		d1, d2;
 	trace_t		tr;
@@ -986,7 +988,7 @@ void ai_run (edict_t *self, float dist)
 	tempgoal = G_Spawn();
 	self->goalentity = tempgoal;
 
-	new = false;
+	_new = false;
 
 	if (!(self->monsterinfo.aiflags & AI_LOST_SIGHT))
 	{
@@ -994,7 +996,7 @@ void ai_run (edict_t *self, float dist)
 //		dprint("lost sight of player, last seen at "); dprint(vtos(self.last_sighting)); dprint("\n");
 		self->monsterinfo.aiflags |= (AI_LOST_SIGHT | AI_PURSUIT_LAST_SEEN);
 		self->monsterinfo.aiflags &= ~(AI_PURSUE_NEXT | AI_PURSUE_TEMP);
-		new = true;
+		_new = true;
 	}
 
 	if (self->monsterinfo.aiflags & AI_PURSUE_NEXT)
@@ -1011,7 +1013,7 @@ void ai_run (edict_t *self, float dist)
 			self->monsterinfo.aiflags &= ~AI_PURSUE_TEMP;
 			marker = NULL;
 			Vec3Copy (self->monsterinfo.saved_goal, self->monsterinfo.last_sighting);
-			new = true;
+			_new = true;
 		}
 		else if (self->monsterinfo.aiflags & AI_PURSUIT_LAST_SEEN)
 		{
@@ -1031,7 +1033,7 @@ void ai_run (edict_t *self, float dist)
 //			dprint("heading is "); dprint(ftos(self.ideal_yaw)); dprint("\n");
 
 //			debug_drawline(self.origin, self.last_sighting, 52);
-			new = true;
+			_new = true;
 		}
 	}
 
@@ -1045,7 +1047,7 @@ void ai_run (edict_t *self, float dist)
 
 	Vec3Copy (self->monsterinfo.last_sighting, self->goalentity->s.origin);
 
-	if (new)
+	if (_new)
 	{
 //		gi.dprintf("checking for course correction\n");
 
