@@ -183,9 +183,9 @@ qBool ComparePlanes (const vec3_t p1normal, float p1dist, const vec3_t p2normal,
 	&& fabs (p1normal[1] - p2normal[1]) < PLANE_NORMAL_EPSILON
 	&& fabs (p1normal[2] - p2normal[2]) < PLANE_NORMAL_EPSILON
 	&& fabs (p1dist - p2dist) < PLANE_DIST_EPSILON)
-		return qTrue;
+		return true;
 
-	return qFalse;
+	return false;
 }
 
 

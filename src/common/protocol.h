@@ -278,26 +278,26 @@ typedef struct netAdr_s {
 
 // Compares with the port
 #define NET_CompareAdr(a,b)					\
-(a.naType != b.naType) ? qFalse :			\
-(a.naType == NA_LOOPBACK) ? qTrue :			\
+(a.naType != b.naType) ? false :			\
+(a.naType == NA_LOOPBACK) ? true :			\
 (a.naType == NA_IP) ?						\
 	((a.ip[0] == b.ip[0]) &&				\
 	(a.ip[1] == b.ip[1]) &&					\
 	(a.ip[2] == b.ip[2]) &&					\
 	(a.ip[3] == b.ip[3]) &&					\
-	(a.port == b.port)) ? qTrue : qFalse	\
-	: qFalse
+	(a.port == b.port)) ? true : false	\
+	: false
 
 // Compares without the port
 #define NET_CompareBaseAdr(a,b)				\
-(a.naType != b.naType) ? qFalse :			\
-(a.naType == NA_LOOPBACK) ? qTrue :			\
+(a.naType != b.naType) ? false :			\
+(a.naType == NA_LOOPBACK) ? true :			\
 (a.naType == NA_IP) ?						\
 	((a.ip[0] == b.ip[0]) &&				\
 	(a.ip[1] == b.ip[1]) &&					\
 	(a.ip[2] == b.ip[2]) &&					\
-	(a.ip[3] == b.ip[3])) ? qTrue : qFalse	\
-	: qFalse
+	(a.ip[3] == b.ip[3])) ? true : false	\
+	: false
 
 // Converts from sockaddr_in to netAdr_t
 #define NET_SockAdrToNetAdr(s,a)			\
@@ -307,7 +307,7 @@ typedef struct netAdr_s {
 
 // Checks if an address is a loopback address
 #ifdef _WIN32
-# define NET_IsLocalAddress(adr) ((adr.naType == NA_LOOPBACK) ? qTrue : qFalse)
+# define NET_IsLocalAddress(adr) ((adr.naType == NA_LOOPBACK) ? true : false)
 #else
 qBool		NET_IsLocalAddress (netAdr_t adr);
 #endif

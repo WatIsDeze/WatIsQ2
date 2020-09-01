@@ -76,12 +76,12 @@ static void SV_EmitPacketEntities (clientFrame_t *from, clientFrame_t *to, netMs
 		if (newNum == oldNum) {
 			/*
 			** delta update from old position
-			** because the force parm is qFalse, this will not result
+			** because the force parm is false, this will not result
 			** in any bytes being emited if the entity has not changed at all
 			** note that players are always 'newentities', this updates their oldorigin always
 			** and prevents warping
 			*/
-			MSG_WriteDeltaEntity (msg, oldEnt, newEnt, qFalse, newEnt->number <= maxclients->intVal);
+			MSG_WriteDeltaEntity (msg, oldEnt, newEnt, false, newEnt->number <= maxclients->intVal);
 			oldIndex++;
 			newIndex++;
 			continue;
@@ -89,7 +89,7 @@ static void SV_EmitPacketEntities (clientFrame_t *from, clientFrame_t *to, netMs
 
 		if (newNum < oldNum) {
 			// This is a new entity, send it from the baseline
-			MSG_WriteDeltaEntity (msg, &sv.baseLines[newNum], newEnt, qTrue, qTrue);
+			MSG_WriteDeltaEntity (msg, &sv.baseLines[newNum], newEnt, true, true);
 			newIndex++;
 			continue;
 		}
@@ -581,7 +581,7 @@ void SV_RecordDemoMessage (void)
 		if (ent->inUse && ent->s.number
 		&& (ent->s.modelIndex || ent->s.effects || ent->s.sound || ent->s.event)
 		&& !(ent->svFlags & SVF_NOCLIENT))
-			MSG_WriteDeltaEntity (&buf, &nostate, &ent->s, qFalse, qTrue);
+			MSG_WriteDeltaEntity (&buf, &nostate, &ent->s, false, true);
 
 		e++;
 		ent = EDICT_NUM(e);

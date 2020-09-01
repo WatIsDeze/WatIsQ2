@@ -261,12 +261,12 @@ void CL_WriteDemoPacketEntities (const frame_t *from, frame_t *to, netMsg_t *msg
 		if (newNum == oldNum) {
 			/*
 			** delta update from old position
-			** because the force parm is qFalse, this will not result
+			** because the force parm is false, this will not result
 			** in any bytes being emited if the entity has not changed at all
 			** note that players are always 'newentities', this updates their oldorigin always
 			** and prevents warping
 			*/
-			MSG_WriteDeltaEntity (msg, oldEnt, newEnt, qFalse, newEnt->number <= cl.maxClients);
+			MSG_WriteDeltaEntity (msg, oldEnt, newEnt, false, newEnt->number <= cl.maxClients);
 			oldIndex++;
 			newIndex++;
 			continue;
@@ -274,14 +274,14 @@ void CL_WriteDemoPacketEntities (const frame_t *from, frame_t *to, netMsg_t *msg
 
 		if (newNum < oldNum) {
 			// This is a new entity, send it from the baseline
-			MSG_WriteDeltaEntity (msg, (entityStateOld_t *)&cl_baseLines[newNum], newEnt, qTrue, qTrue);
+			MSG_WriteDeltaEntity (msg, (entityStateOld_t *)&cl_baseLines[newNum], newEnt, true, true);
 			newIndex++;
 			continue;
 		}
 
 		if (newNum > oldNum) {
 			// This old entity isn't present in the new message
-			MSG_WriteDeltaEntity (msg, oldEnt, NULL, qTrue, qFalse);
+			MSG_WriteDeltaEntity (msg, oldEnt, NULL, true, false);
 			oldIndex++;
 			continue;
 		}
@@ -367,10 +367,10 @@ qBool CL_StartDemoRecording (char *name)
 	FS_CreatePath (name);
 	FS_OpenFile (name, &cls.demoFile, FS_MODE_WRITE_BINARY);
 	if (!cls.demoFile) {
-		return qFalse;
+		return false;
 	}
 
-	cls.demoRecording = qTrue;
+	cls.demoRecording = true;
 
 	if (cls.serverProtocol == ENHANCED_PROTOCOL_VERSION) {
 		MSG_WriteByte (&cls.netChan.message, CLC_SETTING);
@@ -379,7 +379,7 @@ qBool CL_StartDemoRecording (char *name)
 	}
 
 	// Don't start saving messages until a non-delta compressed message is received
-	cls.demoWaiting = qTrue;
+	cls.demoWaiting = true;
 
 	// Write out messages to hold the startup information
 	MSG_Init (&buf, buf_data, sizeof (buf_data));
@@ -428,7 +428,7 @@ qBool CL_StartDemoRecording (char *name)
 		}
 
 		MSG_WriteByte (&buf, SVC_SPAWNBASELINE);		
-		MSG_WriteDeltaEntity (&buf, &nullstate, ent, qTrue, qTrue);
+		MSG_WriteDeltaEntity (&buf, &nullstate, ent, true, true);
 	}
 
 	MSG_WriteByte (&buf, SVC_STUFFTEXT);
@@ -440,7 +440,7 @@ qBool CL_StartDemoRecording (char *name)
 	FS_Write (buf.data, buf.curSize, cls.demoFile);
 
 	// The rest of the demo file will be individual frames
-	return qTrue;
+	return true;
 }
 
 
@@ -466,5 +466,5 @@ void CL_StopDemoRecording (void)
 
 	// Finish up
 	cls.demoFile = 0;
-	cls.demoRecording = qFalse;
+	cls.demoRecording = false;
 }

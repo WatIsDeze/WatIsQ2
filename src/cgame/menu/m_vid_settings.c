@@ -84,48 +84,48 @@ static void VIDSettingsMenu_ApplyValues (void *unused)
 	float	gamma;
 
 	if (m_vidSettingsMenu.mode_list.curValue != 0) {
-		cgi.Cvar_SetValue ("gl_mode",			m_vidSettingsMenu.mode_list.curValue-1, qTrue);
-		cgi.Cvar_SetValue ("vid_width",			0, qTrue);
-		cgi.Cvar_SetValue ("vid_height",		0, qTrue);
+		cgi.Cvar_SetValue ("gl_mode",			m_vidSettingsMenu.mode_list.curValue-1, true);
+		cgi.Cvar_SetValue ("vid_width",			0, true);
+		cgi.Cvar_SetValue ("vid_height",		0, true);
 	}
 
-	if (m_vidSettingsMenu.tm_list.curValue == 1)		cgi.Cvar_Set ("gl_texturemode", "GL_LINEAR_MIPMAP_LINEAR", qTrue);
-	else if (m_vidSettingsMenu.tm_list.curValue == 0)	cgi.Cvar_Set ("gl_texturemode", "GL_LINEAR_MIPMAP_NEAREST", qTrue);
+	if (m_vidSettingsMenu.tm_list.curValue == 1)		cgi.Cvar_Set ("gl_texturemode", "GL_LINEAR_MIPMAP_LINEAR", true);
+	else if (m_vidSettingsMenu.tm_list.curValue == 0)	cgi.Cvar_Set ("gl_texturemode", "GL_LINEAR_MIPMAP_NEAREST", true);
 
-	if (m_vidSettingsMenu.bitd_list.curValue == 0)		cgi.Cvar_Set ("gl_bitdepth", "0", qTrue);
-	else if (m_vidSettingsMenu.bitd_list.curValue == 1)	cgi.Cvar_Set ("gl_bitdepth", "16", qTrue);
-	else if (m_vidSettingsMenu.bitd_list.curValue == 2)	cgi.Cvar_Set ("gl_bitdepth", "32", qTrue);
+	if (m_vidSettingsMenu.bitd_list.curValue == 0)		cgi.Cvar_Set ("gl_bitdepth", "0", true);
+	else if (m_vidSettingsMenu.bitd_list.curValue == 1)	cgi.Cvar_Set ("gl_bitdepth", "16", true);
+	else if (m_vidSettingsMenu.bitd_list.curValue == 2)	cgi.Cvar_Set ("gl_bitdepth", "32", true);
 
-	cgi.Cvar_SetValue ("gl_stencilbuffer",		m_vidSettingsMenu.stencilbuf_list.curValue, qTrue);
+	cgi.Cvar_SetValue ("gl_stencilbuffer",		m_vidSettingsMenu.stencilbuf_list.curValue, true);
 
-	if (m_vidSettingsMenu.dispfreq_list.curValue == 1)			cgi.Cvar_Set ("r_displayFreq", "60", qTrue);
-	else if (m_vidSettingsMenu.dispfreq_list.curValue == 2)		cgi.Cvar_Set ("r_displayFreq", "65", qTrue);
-	else if (m_vidSettingsMenu.dispfreq_list.curValue == 3)		cgi.Cvar_Set ("r_displayFreq", "70", qTrue);
-	else if (m_vidSettingsMenu.dispfreq_list.curValue == 4)		cgi.Cvar_Set ("r_displayFreq", "75", qTrue);
-	else if (m_vidSettingsMenu.dispfreq_list.curValue == 5)		cgi.Cvar_Set ("r_displayFreq", "80", qTrue);
-	else if (m_vidSettingsMenu.dispfreq_list.curValue == 6)		cgi.Cvar_Set ("r_displayFreq", "85", qTrue);
-	else if (m_vidSettingsMenu.dispfreq_list.curValue == 7)		cgi.Cvar_Set ("r_displayFreq", "90", qTrue);
-	else if (m_vidSettingsMenu.dispfreq_list.curValue == 8)		cgi.Cvar_Set ("r_displayFreq", "95", qTrue);
-	else if (m_vidSettingsMenu.dispfreq_list.curValue == 9)		cgi.Cvar_Set ("r_displayFreq", "100", qTrue);
-	else if (m_vidSettingsMenu.dispfreq_list.curValue == 10)	cgi.Cvar_Set ("r_displayFreq", "105", qTrue);
-	else if (m_vidSettingsMenu.dispfreq_list.curValue == 11)	cgi.Cvar_Set ("r_displayFreq", "110", qTrue);
-	else if (m_vidSettingsMenu.dispfreq_list.curValue == 12)	cgi.Cvar_Set ("r_displayFreq", "115", qTrue);
-	else if (m_vidSettingsMenu.dispfreq_list.curValue == 13)	cgi.Cvar_Set ("r_displayFreq", "120", qTrue);
-	else														cgi.Cvar_Set ("r_displayFreq", "0", qTrue);
+	if (m_vidSettingsMenu.dispfreq_list.curValue == 1)			cgi.Cvar_Set ("r_displayFreq", "60", true);
+	else if (m_vidSettingsMenu.dispfreq_list.curValue == 2)		cgi.Cvar_Set ("r_displayFreq", "65", true);
+	else if (m_vidSettingsMenu.dispfreq_list.curValue == 3)		cgi.Cvar_Set ("r_displayFreq", "70", true);
+	else if (m_vidSettingsMenu.dispfreq_list.curValue == 4)		cgi.Cvar_Set ("r_displayFreq", "75", true);
+	else if (m_vidSettingsMenu.dispfreq_list.curValue == 5)		cgi.Cvar_Set ("r_displayFreq", "80", true);
+	else if (m_vidSettingsMenu.dispfreq_list.curValue == 6)		cgi.Cvar_Set ("r_displayFreq", "85", true);
+	else if (m_vidSettingsMenu.dispfreq_list.curValue == 7)		cgi.Cvar_Set ("r_displayFreq", "90", true);
+	else if (m_vidSettingsMenu.dispfreq_list.curValue == 8)		cgi.Cvar_Set ("r_displayFreq", "95", true);
+	else if (m_vidSettingsMenu.dispfreq_list.curValue == 9)		cgi.Cvar_Set ("r_displayFreq", "100", true);
+	else if (m_vidSettingsMenu.dispfreq_list.curValue == 10)	cgi.Cvar_Set ("r_displayFreq", "105", true);
+	else if (m_vidSettingsMenu.dispfreq_list.curValue == 11)	cgi.Cvar_Set ("r_displayFreq", "110", true);
+	else if (m_vidSettingsMenu.dispfreq_list.curValue == 12)	cgi.Cvar_Set ("r_displayFreq", "115", true);
+	else if (m_vidSettingsMenu.dispfreq_list.curValue == 13)	cgi.Cvar_Set ("r_displayFreq", "120", true);
+	else														cgi.Cvar_Set ("r_displayFreq", "0", true);
 
-	cgi.Cvar_SetValue ("vid_fullscreen",	m_vidSettingsMenu.fullscreen_toggle.curValue, qTrue);
-	cgi.Cvar_SetValue ("viewsize",			m_vidSettingsMenu.screensize_slider.curValue * 10, qTrue);
+	cgi.Cvar_SetValue ("vid_fullscreen",	m_vidSettingsMenu.fullscreen_toggle.curValue, true);
+	cgi.Cvar_SetValue ("viewsize",			m_vidSettingsMenu.screensize_slider.curValue * 10, true);
 
 	/*
 	** invert sense so greater = brighter, and scale to a range of 0.5 to 1.3
 	*/
 	gamma = (0.8 - ((m_vidSettingsMenu.brightness_slider.curValue * 0.1) - 0.5)) + 0.5;
-	cgi.Cvar_SetValue ("vid_gamma",		gamma, qTrue);
+	cgi.Cvar_SetValue ("vid_gamma",		gamma, true);
 
-	cgi.Cvar_SetValue ("vid_gammapics",	m_vidSettingsMenu.gammapics_toggle.curValue, qTrue);
+	cgi.Cvar_SetValue ("vid_gammapics",	m_vidSettingsMenu.gammapics_toggle.curValue, true);
 
-	cgi.Cvar_SetValue ("gl_picmip",		3 - m_vidSettingsMenu.texqual_slider.curValue, qTrue);
-	cgi.Cvar_SetValue ("gl_finish",		m_vidSettingsMenu.finish_toggle.curValue, qTrue);
+	cgi.Cvar_SetValue ("gl_picmip",		3 - m_vidSettingsMenu.texqual_slider.curValue, true);
+	cgi.Cvar_SetValue ("gl_finish",		m_vidSettingsMenu.finish_toggle.curValue, true);
 
 	cgi.Cbuf_AddText ("vid_restart\n");
 }
@@ -138,7 +138,7 @@ VIDSettingsMenu_SetValues
 */
 static void VIDSettingsMenu_SetValues (void)
 {
-	cgi.Cvar_SetValue ("gl_mode",		clamp (cgi.Cvar_GetIntegerValue ("gl_mode"), 0, 12), qTrue);
+	cgi.Cvar_SetValue ("gl_mode",		clamp (cgi.Cvar_GetIntegerValue ("gl_mode"), 0, 12), true);
 	if (cgi.Cvar_GetIntegerValue ("vid_width") && cgi.Cvar_GetIntegerValue ("vid_height"))
 		m_vidSettingsMenu.mode_list.curValue	= 0;
 	else
@@ -152,7 +152,7 @@ static void VIDSettingsMenu_SetValues (void)
 	else if (cgi.Cvar_GetFloatValue ("gl_bitdepth") == 16)	m_vidSettingsMenu.bitd_list.curValue = 1;
 	else if (cgi.Cvar_GetFloatValue ("gl_bitdepth") == 32)	m_vidSettingsMenu.bitd_list.curValue = 2;
 
-	cgi.Cvar_SetValue ("gl_stencilbuffer",		clamp (cgi.Cvar_GetIntegerValue ("gl_stencilbuffer"), 0, 1), qTrue);
+	cgi.Cvar_SetValue ("gl_stencilbuffer",		clamp (cgi.Cvar_GetIntegerValue ("gl_stencilbuffer"), 0, 1), true);
 	m_vidSettingsMenu.stencilbuf_list.curValue	= cgi.Cvar_GetIntegerValue ("gl_stencilbuffer");
 
 	if (cgi.Cvar_GetFloatValue ("r_displayFreq") == 60)			m_vidSettingsMenu.dispfreq_list.curValue = 1;
@@ -170,21 +170,21 @@ static void VIDSettingsMenu_SetValues (void)
 	else if (cgi.Cvar_GetFloatValue ("r_displayFreq") == 120)	m_vidSettingsMenu.dispfreq_list.curValue = 13;
 	else														m_vidSettingsMenu.dispfreq_list.curValue = 0;
 
-	cgi.Cvar_SetValue ("vid_fullscreen",			clamp (cgi.Cvar_GetIntegerValue ("vid_fullscreen"), 0, 1), qTrue);
+	cgi.Cvar_SetValue ("vid_fullscreen",			clamp (cgi.Cvar_GetIntegerValue ("vid_fullscreen"), 0, 1), true);
 	m_vidSettingsMenu.fullscreen_toggle.curValue	= cgi.Cvar_GetIntegerValue ("vid_fullscreen");
 
-	cgi.Cvar_SetValue ("viewsize",					clamp (cgi.Cvar_GetIntegerValue ("viewsize"), 40, 100), qTrue);
+	cgi.Cvar_SetValue ("viewsize",					clamp (cgi.Cvar_GetIntegerValue ("viewsize"), 40, 100), true);
 	m_vidSettingsMenu.screensize_slider.curValue	= cgi.Cvar_GetIntegerValue ("viewsize") * 0.1; // kthx view menu?
 
-	cgi.Cvar_SetValue ("vid_gamma",					clamp (cgi.Cvar_GetFloatValue ("vid_gamma"), 0.5, 1.3), qTrue);
+	cgi.Cvar_SetValue ("vid_gamma",					clamp (cgi.Cvar_GetFloatValue ("vid_gamma"), 0.5, 1.3), true);
 	m_vidSettingsMenu.brightness_slider.curValue	= (1.3 - cgi.Cvar_GetFloatValue ("vid_gamma") + 0.5) * 10;
 
-	cgi.Cvar_SetValue ("vid_gammapics",			clamp (cgi.Cvar_GetIntegerValue ("vid_gammapics"), 0, 1), qTrue);
+	cgi.Cvar_SetValue ("vid_gammapics",			clamp (cgi.Cvar_GetIntegerValue ("vid_gammapics"), 0, 1), true);
 	m_vidSettingsMenu.gammapics_toggle.curValue	= cgi.Cvar_GetIntegerValue ("vid_gammapics");
 
 	m_vidSettingsMenu.texqual_slider.curValue		= 3 - cgi.Cvar_GetIntegerValue ("gl_picmip");
 
-	cgi.Cvar_SetValue ("gl_finish",				clamp (cgi.Cvar_GetIntegerValue ("gl_finish"), 0, 1), qTrue);
+	cgi.Cvar_SetValue ("gl_finish",				clamp (cgi.Cvar_GetIntegerValue ("gl_finish"), 0, 1), true);
 	m_vidSettingsMenu.finish_toggle.curValue	= cgi.Cvar_GetIntegerValue ("gl_finish");
 }
 
@@ -375,7 +375,7 @@ static void VIDSettingsMenu_Init (void)
 	UI_AddItem (&m_vidSettingsMenu.frameWork,		&m_vidSettingsMenu.reset_action);
 	UI_AddItem (&m_vidSettingsMenu.frameWork,		&m_vidSettingsMenu.cancel_action);
 
-	UI_FinishFramework (&m_vidSettingsMenu.frameWork, qTrue);
+	UI_FinishFramework (&m_vidSettingsMenu.frameWork, true);
 }
 
 

@@ -27,7 +27,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 =============
 M_CheckBottom
 
-Returns qFalse if any part of the bottom of the entity is off an edge that
+Returns false if any part of the bottom of the entity is off an edge that
 is not a staircase.
 
 =============
@@ -58,7 +58,7 @@ qBool M_CheckBottom (edict_t *ent)
 		}
 
 	c_yes++;
-	return qTrue;		// we got out easy
+	return true;		// we got out easy
 
 realcheck:
 	c_no++;
@@ -74,7 +74,7 @@ realcheck:
 	trace = gi.trace (start, vec3Origin, vec3Origin, stop, ent, MASK_MONSTERSOLID);
 
 	if (trace.fraction == 1.0)
-		return qFalse;
+		return false;
 	mid = bottom = trace.endPos[2];
 	
 // the corners must be within 16 of the midpoint	
@@ -89,11 +89,11 @@ realcheck:
 			if (trace.fraction != 1.0 && trace.endPos[2] > bottom)
 				bottom = trace.endPos[2];
 			if (trace.fraction == 1.0 || mid - trace.endPos[2] > STEPSIZE)
-				return qFalse;
+				return false;
 		}
 
 	c_yes++;
-	return qTrue;
+	return true;
 }
 
 
@@ -103,7 +103,7 @@ SV_movestep
 
 Called by monster program code.
 The move will be adjusted for slopes and stairs, but if the move isn't
-possible, no move is done, qFalse is returned, and
+possible, no move is done, false is returned, and
 pr_global_struct->trace_normal is set to the normal of the blocking wall
 =============
 */
@@ -167,7 +167,7 @@ qBool SV_movestep (edict_t *ent, vec3_t move, qBool relink)
 					test[2] = trace.endPos[2] + ent->mins[2] + 1;
 					contents = gi.pointcontents(test);
 					if (contents & MASK_WATER)
-						return qFalse;
+						return false;
 				}
 			}
 
@@ -181,7 +181,7 @@ qBool SV_movestep (edict_t *ent, vec3_t move, qBool relink)
 					test[2] = trace.endPos[2] + ent->mins[2] + 1;
 					contents = gi.pointcontents(test);
 					if (!(contents & MASK_WATER))
-						return qFalse;
+						return false;
 				}
 			}
 
@@ -193,14 +193,14 @@ qBool SV_movestep (edict_t *ent, vec3_t move, qBool relink)
 					gi.linkentity (ent);
 					G_TouchTriggers (ent);
 				}
-				return qTrue;
+				return true;
 			}
 			
 			if (!ent->enemy)
 				break;
 		}
 		
-		return qFalse;
+		return false;
 	}
 
 // push down from a step height above the wished position
@@ -216,14 +216,14 @@ qBool SV_movestep (edict_t *ent, vec3_t move, qBool relink)
 	trace = gi.trace (neworg, ent->mins, ent->maxs, end, ent, MASK_MONSTERSOLID);
 
 	if (trace.allSolid)
-		return qFalse;
+		return false;
 
 	if (trace.startSolid)
 	{
 		neworg[2] -= stepsize;
 		trace = gi.trace (neworg, ent->mins, ent->maxs, end, ent, MASK_MONSTERSOLID);
 		if (trace.allSolid || trace.startSolid)
-			return qFalse;
+			return false;
 	}
 
 
@@ -236,7 +236,7 @@ qBool SV_movestep (edict_t *ent, vec3_t move, qBool relink)
 		contents = gi.pointcontents(test);
 
 		if (contents & MASK_WATER)
-			return qFalse;
+			return false;
 	}
 
 	if (trace.fraction == 1)
@@ -251,10 +251,10 @@ qBool SV_movestep (edict_t *ent, vec3_t move, qBool relink)
 				G_TouchTriggers (ent);
 			}
 			ent->groundentity = NULL;
-			return qTrue;
+			return true;
 		}
 	
-		return qFalse;		// walked off an edge
+		return false;		// walked off an edge
 	}
 
 // check point traces down for dangling corners
@@ -270,10 +270,10 @@ qBool SV_movestep (edict_t *ent, vec3_t move, qBool relink)
 				gi.linkentity (ent);
 				G_TouchTriggers (ent);
 			}
-			return qTrue;
+			return true;
 		}
 		Vec3Copy (oldorg, ent->s.origin);
-		return qFalse;
+		return false;
 	}
 
 	if ( ent->flags & FL_PARTIALGROUND )
@@ -289,7 +289,7 @@ qBool SV_movestep (edict_t *ent, vec3_t move, qBool relink)
 		gi.linkentity (ent);
 		G_TouchTriggers (ent);
 	}
-	return qTrue;
+	return true;
 }
 
 
@@ -364,7 +364,7 @@ qBool SV_StepDirection (edict_t *ent, float yaw, float dist)
 	move[2] = 0;
 
 	Vec3Copy (ent->s.origin, oldorigin);
-	if (SV_movestep (ent, move, qFalse))
+	if (SV_movestep (ent, move, false))
 	{
 		delta = ent->s.angles[YAW] - ent->ideal_yaw;
 		if (delta > 45 && delta < 315)
@@ -373,11 +373,11 @@ qBool SV_StepDirection (edict_t *ent, float yaw, float dist)
 		}
 		gi.linkentity (ent);
 		G_TouchTriggers (ent);
-		return qTrue;
+		return true;
 	}
 	gi.linkentity (ent);
 	G_TouchTriggers (ent);
-	return qFalse;
+	return false;
 }
 
 /*
@@ -499,11 +499,11 @@ qBool SV_CloseEnough (edict_t *ent, edict_t *goal, float dist)
 	for (i=0 ; i<3 ; i++)
 	{
 		if (goal->absMin[i] > ent->absMax[i] + dist)
-			return qFalse;
+			return false;
 		if (goal->absMax[i] < ent->absMin[i] - dist)
-			return qFalse;
+			return false;
 	}
-	return qTrue;
+	return true;
 }
 
 
@@ -544,7 +544,7 @@ qBool M_walkmove (edict_t *ent, float yaw, float dist)
 	vec3_t	move;
 	
 	if (!ent->groundentity && !(ent->flags & (FL_FLY|FL_SWIM)))
-		return qFalse;
+		return false;
 
 	yaw = yaw*M_PI*2 / 360;
 	
@@ -552,5 +552,5 @@ qBool M_walkmove (edict_t *ent, float yaw, float dist)
 	move[1] = sin(yaw)*dist;
 	move[2] = 0;
 
-	return SV_movestep(ent, move, qTrue);
+	return SV_movestep(ent, move, true);
 }

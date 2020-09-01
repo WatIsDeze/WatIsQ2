@@ -218,16 +218,16 @@ static void R_Q2BSP_ClipPoly (int nump, vec4_t vecs, int stage, refFragment_t *f
 		return;
 	}
 
-	front = back = qFalse;
+	front = back = false;
 	plane = &r_fragmentPlanes[stage];
 	for (i=0, v=vecs ; i<nump ; i++ , v+=4) {
 		d = PlaneDiff (v, plane);
 		if (d > LARGE_EPSILON) {
-			front = qTrue;
+			front = true;
 			sides[i] = SIDE_FRONT;
 		}
 		else if (d < -LARGE_EPSILON) {
-			back = qTrue;
+			back = true;
 			sides[i] = SIDE_BACK;
 		}
 		else
@@ -414,18 +414,18 @@ static void R_Q3BSP_WindingClipFragment (vec3_t *wVerts, int numVerts, refFragme
 	verts = wVerts;
 
 	for (stage=0, plane=r_fragmentPlanes ; stage<6 ; stage++, plane++) {
-		for (i=0, v=verts[0], front=qFalse ; i<numv ; i++, v+=3) {
+		for (i=0, v=verts[0], front=false ; i<numv ; i++, v+=3) {
 			d = PlaneDiff (v, plane);
 
 			if (d > LARGE_EPSILON) {
-				front = qTrue;
+				front = true;
 				sides[i] = SIDE_FRONT;
 			}
 			else if (d < -LARGE_EPSILON) {
 				sides[i] = SIDE_BACK;
 			}
 			else {
-				front = qTrue;
+				front = true;
 				sides[i] = SIDE_ON;
 			}
 			dists[i] = d;
@@ -735,12 +735,12 @@ qBool R_CreateDecal (refDecal_t *d, struct material_s *material, vec4_t subUVs, 
 	int				j;
 
 	if (!d)
-		return qFalse;
+		return false;
 
 	// See if there's room and it's valid
 	if (!size || Vec3Compare (direction, vec3Origin)) {
 		Com_DevPrintf (PRNT_WARNING, "WARNING: attempted to create a decal with an invalid %s\n", !size ? "size" : "direction");
-		return qFalse;
+		return false;
 	}
 
 	// Negativity check
@@ -759,7 +759,7 @@ qBool R_CreateDecal (refDecal_t *d, struct material_s *material, vec4_t subUVs, 
 	clipFragments = r_clippedFragments;
 	numFragments = R_GetClippedFragments (origin, size, axis);
 	if (!numFragments)
-		return qFalse;	// No valid fragments
+		return false;	// No valid fragments
 
 	// Find the total allocation size
 	totalIndexes = 0;
@@ -872,7 +872,7 @@ qBool R_CreateDecal (refDecal_t *d, struct material_s *material, vec4_t subUVs, 
 	// Calculate radius
 	d->radius = RadiusFromBounds (mins, maxs);
 	assert (d->radius);
-	return qTrue;
+	return true;
 }
 
 
@@ -886,9 +886,9 @@ Releases decal memory for index and vertex data.
 qBool R_FreeDecal (refDecal_t *d)
 {
 	if (!d || !d->poly.vertices)
-		return qFalse;
+		return false;
 
 	Mem_Free (d->poly.vertices);
 	d->poly.vertices = NULL;
-	return qTrue;
+	return true;
 }

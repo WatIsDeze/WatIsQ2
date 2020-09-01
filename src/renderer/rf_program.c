@@ -109,7 +109,7 @@ static qBool R_UploadProgram (char *name, GLenum target, const char *buffer, GLs
 	qglBindProgramARB (target, *progNum);
 	if (!*progNum) {
 		Program_Printf (PRNT_ERROR, "R_UploadProgram: could not allocate a progNum!\n");
-		return qFalse;
+		return false;
 	}
 
 	// Upload
@@ -144,12 +144,12 @@ static qBool R_UploadProgram (char *name, GLenum target, const char *buffer, GLs
 		Program_Printf (PRNT_ERROR, "GL_PROGRAM_ERROR_STRING: %s\n", errorString);
 
 		qglDeleteProgramsARB (1, progNum);
-		return qFalse;
+		return false;
 	}
 
 	qglGetProgramivARB (target, GL_PROGRAM_INSTRUCTIONS_ARB, upInstructions);
 	qglGetProgramivARB (target, GL_PROGRAM_UNDER_NATIVE_LIMITS_ARB, upNative);
-	return qTrue;
+	return true;
 }
 
 /*
@@ -461,7 +461,7 @@ void R_ProgramInit (void)
 
 	// Load *.vfp programs
 	Com_Printf (0, "Looking for *.vfp programs...\n");
-	numFiles = FS_FindFiles ("programs", "*programs/*.vfp", "vfp", fileList, MAX_PROGRAMS, qTrue, qTrue);
+	numFiles = FS_FindFiles ("programs", "*programs/*.vfp", "vfp", fileList, MAX_PROGRAMS, true, true);
 	for (i=0 ; i<numFiles ; i++) {
 		// Fix the path
 		Com_NormalizePath (fixedName, sizeof (fixedName), fileList[i]);
@@ -473,15 +473,15 @@ void R_ProgramInit (void)
 		name++;	// Skip the initial '/'
 
 		// Base dir program?
-		baseDir = (strstr (fileList[i], BASE_MODDIRNAME "/")) ? qTrue : qFalse;
+		baseDir = (strstr (fileList[i], BASE_MODDIRNAME "/")) ? true : false;
 
-		R_ParseProgramFile (name, baseDir, qTrue, qTrue);
+		R_ParseProgramFile (name, baseDir, true, true);
 	}
 	FS_FreeFileList (fileList, numFiles);
 
 	// Load *.vp programs
 	Com_Printf (0, "Looking for *.vp programs...\n");
-	numFiles = FS_FindFiles ("programs", "*programs/*.vp", "vp", fileList, MAX_PROGRAMS, qTrue, qTrue);
+	numFiles = FS_FindFiles ("programs", "*programs/*.vp", "vp", fileList, MAX_PROGRAMS, true, true);
 	for (i=0 ; i<numFiles ; i++) {
 		// Fix the path
 		Com_NormalizePath (fixedName, sizeof (fixedName), fileList[i]);
@@ -493,15 +493,15 @@ void R_ProgramInit (void)
 		name++;	// Skip the initial '/'
 
 		// Base dir program?
-		baseDir = (strstr (fileList[i], BASE_MODDIRNAME "/")) ? qTrue : qFalse;
+		baseDir = (strstr (fileList[i], BASE_MODDIRNAME "/")) ? true : false;
 
-		R_ParseProgramFile (name, baseDir, qTrue, qFalse);
+		R_ParseProgramFile (name, baseDir, true, false);
 	}
 	FS_FreeFileList (fileList, numFiles);
 
 	// Load *.fp programs
 	Com_Printf (0, "Looking for *.fp programs...\n");
-	numFiles = FS_FindFiles ("programs", "*programs/*.fp", "fp", fileList, MAX_PROGRAMS, qTrue, qTrue);
+	numFiles = FS_FindFiles ("programs", "*programs/*.fp", "fp", fileList, MAX_PROGRAMS, true, true);
 	for (i=0 ; i<numFiles ; i++) {
 		// Fix the path
 		Com_NormalizePath (fixedName, sizeof (fixedName), fileList[i]);
@@ -513,9 +513,9 @@ void R_ProgramInit (void)
 		name++;	// Skip the initial '/'
 
 		// Base dir program?
-		baseDir = (strstr (fileList[i], BASE_MODDIRNAME "/")) ? qTrue : qFalse;
+		baseDir = (strstr (fileList[i], BASE_MODDIRNAME "/")) ? true : false;
 
-		R_ParseProgramFile (name, baseDir, qFalse, qTrue);
+		R_ParseProgramFile (name, baseDir, false, true);
 	}
 	FS_FreeFileList (fileList, numFiles);
 

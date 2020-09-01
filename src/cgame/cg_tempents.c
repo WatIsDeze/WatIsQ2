@@ -719,7 +719,7 @@ static void CG_AddLasers (void)
 				l->ent.frame + ((l->ent.frame * 0.1f) * (rand () & 1)),
 				l->ent.frame + ((l->ent.frame * 0.1f) * (rand () & 1)),
 				PT_BEAM,						0,
-				0,								qFalse,
+				0,								false,
 				PART_STYLE_BEAM,
 				0);
 		}
@@ -762,7 +762,7 @@ static void CG_ParseLaser (int colors)
 				0.30f,								-2.1f,
 				4 + (0.4f * (rand () & 1)),			4 + (0.4f * (rand () & 1)),
 				PT_BEAM,							0,
-				0,									qFalse,
+				0,									false,
 				PART_STYLE_BEAM,
 				0);
 			return;
@@ -928,17 +928,17 @@ void CG_ParseTempEnt (void)
 
 		if (type == TE_GRENADE_EXPLOSION_WATER) {
 			cgi.Snd_StartSound (pos, 0, CHAN_AUTO, cgMedia.sfx.waterExplo, 1, ATTN_NORM, 0);
-			CG_ExplosionParticles (pos, 1, qFalse, qTrue);
+			CG_ExplosionParticles (pos, 1, false, true);
 		}
 		else {
 			cgi.Snd_StartSound (pos, 0, CHAN_AUTO, cgMedia.sfx.grenadeExplo, 1, ATTN_NORM, 0);
-			CG_ExplosionParticles (pos, 1, qFalse, qFalse);
+			CG_ExplosionParticles (pos, 1, false, false);
 		}
 		break;
 
 	case TE_PLASMA_EXPLOSION:
 		cgi.MSG_ReadPos (pos);
-		CG_ExplosionParticles (pos, 1, qFalse, qFalse);
+		CG_ExplosionParticles (pos, 1, false, false);
 		cgi.Snd_StartSound (pos, 0, CHAN_AUTO, cgMedia.sfx.rocketExplo, 1, ATTN_NORM, 0);
 		break;
 	
@@ -950,7 +950,7 @@ void CG_ParseTempEnt (void)
 		cgi.MSG_ReadPos (pos);
 
 		if (type != TE_EXPLOSION1_BIG && type != TE_EXPLOSION1_NP)
-			CG_ExplosionParticles (pos, 1, qFalse, (type == TE_ROCKET_EXPLOSION_WATER));
+			CG_ExplosionParticles (pos, 1, false, (type == TE_ROCKET_EXPLOSION_WATER));
 
 		if (type == TE_ROCKET_EXPLOSION_WATER)
 			cgi.Snd_StartSound (pos, 0, CHAN_AUTO, cgMedia.sfx.waterExplo, 1, ATTN_NORM, 0);
@@ -1046,11 +1046,11 @@ void CG_ParseTempEnt (void)
 
 		if (type == TE_ROCKET_EXPLOSION_WATER) {
 			cgi.Snd_StartSound (pos, 0, CHAN_AUTO, cgMedia.sfx.waterExplo, 1, ATTN_NORM, 0);
-			CG_ExplosionParticles (pos, 1, qFalse, qTrue);
+			CG_ExplosionParticles (pos, 1, false, true);
 		}
 		else {
 			cgi.Snd_StartSound (pos, 0, CHAN_AUTO, cgMedia.sfx.rocketExplo, 1, ATTN_NORM, 0);
-			CG_ExplosionParticles (pos, 1, qFalse, qFalse);
+			CG_ExplosionParticles (pos, 1, false, false);
 		}
 		break;
 

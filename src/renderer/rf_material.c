@@ -178,10 +178,10 @@ static qBool Mat_ParseString (parse_t *ps, char **target)
 	char	*token;
 
 	if (!PS_ParseToken (ps, PSF_TO_LOWER, &token) || token[0] == '}')
-		return qFalse;
+		return false;
 
 	*target = token;
-	return qTrue;
+	return true;
 }
 
 #define Mat_ParseFloat(ps,target)	PS_ParseDataType((ps),0,PSDT_FLOAT,(target),1)
@@ -200,7 +200,7 @@ static qBool Mat_ParseWave (material_t *mat, parse_t *ps, char *fileName, materi
 	if (!Mat_ParseString (ps, &str)) {
 		Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 		Mat_Printf (PRNT_ERROR, "ERROR: unable to parse wave type\n");
-		return qFalse;
+		return false;
 	}
 
 	if (!strcmp (str, "sin"))
@@ -220,10 +220,10 @@ static qBool Mat_ParseWave (material_t *mat, parse_t *ps, char *fileName, materi
 	if (!PS_ParseDataType (ps, 0, PSDT_FLOAT, func->args, 4)) {
 		Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 		Mat_Printf (PRNT_ERROR, "ERROR: missing/invalid wave arguments!\n");
-		return qFalse;
+		return false;
 	}
 
-	return qTrue;
+	return true;
 }
 
 
@@ -241,13 +241,13 @@ static qBool Mat_ParseVector (material_t *mat, parse_t *ps, char *fileName, floa
 	uint32	i;
 
 	if (!size) {
-		return qTrue;
+		return true;
 	}
 	else if (size == 1) {
 		if (!Mat_ParseFloat (ps, &vec[0])) {
 			Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 			Mat_Printf (PRNT_ERROR, "ERROR: missing/invalid vector parameters!\n");
-			return qFalse;
+			return false;
 		}
 	}
 
@@ -255,22 +255,22 @@ static qBool Mat_ParseVector (material_t *mat, parse_t *ps, char *fileName, floa
 	if (!Mat_ParseString (ps, &str)) {
 		Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 		Mat_Printf (PRNT_ERROR, "ERROR: unable to parse vector!\n");
-		return qFalse;
+		return false;
 	}
 	if (!strcmp (str, "(")) {
-		inBrackets = qTrue;
+		inBrackets = true;
 		if (!Mat_ParseString (ps, &str)) {
 			Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 			Mat_Printf (PRNT_ERROR, "ERROR: missing/invalid vector parameters!\n");
-			return qFalse;
+			return false;
 		}
 	}
 	else if (str[0] == '(') {
-		inBrackets = qTrue;
+		inBrackets = true;
 		str = &str[1];
 	}
 	else {
-		inBrackets = qFalse;
+		inBrackets = false;
 	}
 
 	// Parse vector
@@ -279,14 +279,14 @@ static qBool Mat_ParseVector (material_t *mat, parse_t *ps, char *fileName, floa
 		if (!Mat_ParseFloat (ps, &vec[i])) {
 			Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 			Mat_Printf (PRNT_ERROR, "ERROR: missing/invalid vector parameters!\n");
-			return qFalse;
+			return false;
 		}
 	}
 
 	if (!Mat_ParseString (ps, &str)) {
 		Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 		Mat_Printf (PRNT_ERROR, "ERROR: missing/invalid parameters!\n");
-		return qFalse;
+		return false;
 	}
 
 	// Final parameter (and possibly bracket)
@@ -300,12 +300,12 @@ static qBool Mat_ParseVector (material_t *mat, parse_t *ps, char *fileName, floa
 			if (!Mat_ParseString (ps, &str)) {
 				Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 				Mat_Printf (PRNT_ERROR, "ERROR: missing vector end-bracket!\n");
-				return qFalse;
+				return false;
 			}
 		}
 	}
 
-	return qTrue;
+	return true;
 }
 
 
@@ -344,11 +344,11 @@ static qBool MatPass_AnimFrequency (material_t *mat, matPass_t *pass, parse_t *p
 	if (!Mat_ParseInt (ps, &pass->animFPS)) {
 		Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 		Mat_Printf (PRNT_ERROR, "ERROR: animFrequency with no parameters\n");
-		return qFalse;
+		return false;
 	}
 
 	pass->flags |= MAT_PASS_ANIMMAP;
-	return qTrue;
+	return true;
 }
 
 static qBool MatPass_AnimMap (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
@@ -361,7 +361,7 @@ static qBool MatPass_AnimMap (material_t *mat, matPass_t *pass, parse_t *ps, cha
 	if (!Mat_ParseInt (ps, &pass->animFPS)) {
 		Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 		Mat_Printf (PRNT_ERROR, "ERROR: missing animMap framerate!\n");
-		return qFalse;
+		return false;
 	}
 
 	pass->flags |= MAT_PASS_ANIMMAP;
@@ -376,7 +376,7 @@ static qBool MatPass_AnimMap (material_t *mat, matPass_t *pass, parse_t *ps, cha
 
 				Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 				Mat_Printf (PRNT_ERROR, "ERROR: animMap with no images!\n");
-				return qFalse;
+				return false;
 			}
 			break;
 		}
@@ -385,7 +385,7 @@ static qBool MatPass_AnimMap (material_t *mat, matPass_t *pass, parse_t *ps, cha
 			Mat_PrintPos (PRNT_WARNING, mat, r_numCurrPasses, ps, fileName);
 			Mat_Printf (PRNT_WARNING, "WARNING: too many animation frames, ignoring\n");
 			PS_SkipLine (ps);
-			return qTrue;
+			return true;
 		}
 
 		if (strlen(str)+1 >= MAX_QPATH) {
@@ -397,7 +397,7 @@ static qBool MatPass_AnimMap (material_t *mat, matPass_t *pass, parse_t *ps, cha
 		pass->animNames[pass->animNumNames++] = Mem_PoolStrDup (str, ri.matSysPool, 0);
 	}
 
-	return qTrue;
+	return true;
 }
 
 static qBool MatPass_MapExt (material_t *mat, matPass_t *pass, parse_t *ps, texFlags_t addTexFlags, qBool allowColorTokens, char *fileName)
@@ -409,14 +409,14 @@ static qBool MatPass_MapExt (material_t *mat, matPass_t *pass, parse_t *ps, texF
 		Mat_PrintPos (PRNT_WARNING, mat, r_numCurrPasses, ps, fileName);
 		Mat_Printf (PRNT_WARNING, "WARNING: too many animation frames, ignoring\n");
 		PS_SkipLine (ps);
-		return qTrue;
+		return true;
 	}
 
 	// Parse the first parameter
 	if (!Mat_ParseString (ps, &str)) {
 		Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 		Mat_Printf (PRNT_ERROR, "ERROR: map with no parameters\n");
-		return qFalse;
+		return false;
 	}
 
 	if (!strcmp (str, "$lightmap")) {
@@ -444,7 +444,7 @@ static qBool MatPass_MapExt (material_t *mat, matPass_t *pass, parse_t *ps, texF
 			if (!Mat_ParseString(ps, &str)) {
 				Mat_PrintPos(PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 				Mat_Printf(PRNT_ERROR, "ERROR: missing/invalid map parameters\n");
-				return qFalse;
+				return false;
 			}
 
 			pass->animTexFlags[pass->animNumNames] |= tokenFlags;
@@ -459,32 +459,32 @@ static qBool MatPass_MapExt (material_t *mat, matPass_t *pass, parse_t *ps, texF
 
 	pass->animTexFlags[pass->animNumNames] |= addTexFlags;
 	pass->animNames[pass->animNumNames++] = Mem_PoolStrDup (str, ri.matSysPool, 0);
-	return qTrue;
+	return true;
 }
 
 static qBool MatPass_Map (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
 {
-	return MatPass_MapExt (mat, pass, ps, 0, qTrue, fileName);
+	return MatPass_MapExt (mat, pass, ps, 0, true, fileName);
 }
 
 static qBool MatPass_AlphaMap (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
 {
-	return MatPass_MapExt(mat, pass, ps, IF_NORGB, qFalse, fileName);
+	return MatPass_MapExt(mat, pass, ps, IF_NORGB, false, fileName);
 }
 
 static qBool MatPass_ClampMap (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
 {
-	return MatPass_MapExt (mat, pass, ps, IF_CLAMP_ALL, qTrue, fileName);
+	return MatPass_MapExt (mat, pass, ps, IF_CLAMP_ALL, true, fileName);
 }
 
 static qBool MatPass_GreyMap(material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
 {
-	return MatPass_MapExt(mat, pass, ps, IF_GREYSCALE, qTrue, fileName);
+	return MatPass_MapExt(mat, pass, ps, IF_GREYSCALE, true, fileName);
 }
 
 static qBool MatPass_RGBMap (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
 {
-	return MatPass_MapExt(mat, pass, ps, IF_NOALPHA, qFalse, fileName);
+	return MatPass_MapExt(mat, pass, ps, IF_NOALPHA, false, fileName);
 }
 
 static qBool MatPass_CubeMap (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
@@ -495,13 +495,13 @@ static qBool MatPass_CubeMap (material_t *mat, matPass_t *pass, parse_t *ps, cha
 		Mat_PrintPos (PRNT_WARNING, mat, r_numCurrPasses, ps, fileName);
 		Mat_Printf (PRNT_WARNING, "WARNING: too many animation frames, ignoring\n");
 		PS_SkipLine (ps);
-		return qTrue;
+		return true;
 	}
 
 	if (!Mat_ParseString (ps, &str)) {
 		Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 		Mat_Printf (PRNT_ERROR, "ERROR: cubeMap with no parameters\n");
-		return qFalse;
+		return false;
 	}
 
 	if (ri.config.extTexCubeMap) {
@@ -521,7 +521,7 @@ static qBool MatPass_CubeMap (material_t *mat, matPass_t *pass, parse_t *ps, cha
 	}
 
 	pass->animNames[pass->animNumNames++] = Mem_PoolStrDup (str, ri.matSysPool, 0);
-	return qTrue;
+	return true;
 }
 
 static qBool MatPass_FragmentMap (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
@@ -533,27 +533,27 @@ static qBool MatPass_FragmentMap (material_t *mat, matPass_t *pass, parse_t *ps,
 	if (!ri.config.extFragmentProgram) {
 		Mat_PrintPos (PRNT_WARNING, mat, r_numCurrPasses, ps, fileName);
 		Mat_Printf (PRNT_WARNING, "WARNING: fragmentMap used and extension not available\n");
-		return qFalse;
+		return false;
 	}
 
 	// Parse the index
 	if (!Mat_ParseInt (ps, &index)) {
 		Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 		Mat_Printf (PRNT_ERROR, "ERROR: fragmentMap with no parameters\n");
-		return qFalse;
+		return false;
 	}
 
 	if (index < 0) {
 		Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 		Mat_Printf (PRNT_ERROR, "ERROR: invalid fragmentMap index '%i'!\n", index);
-		return qFalse;
+		return false;
 	}
 	if (index >= pass->animNumNames) {
 		if (index+1 > MAX_MATERIAL_ANIM_FRAMES || index+1 > ri.config.maxTexUnits) {
 			Mat_PrintPos (PRNT_WARNING, mat, r_numCurrPasses, ps, fileName);
 			Mat_Printf (PRNT_WARNING, "WARNING: too many fragmentMap images, ignoring\n");
 			PS_SkipLine (ps);
-			return qTrue;
+			return true;
 		}
 		pass->animNumNames = index+1;
 	}
@@ -564,7 +564,7 @@ static qBool MatPass_FragmentMap (material_t *mat, matPass_t *pass, parse_t *ps,
 		if (!Mat_ParseString (ps, &str)) {
 			Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 			Mat_Printf (PRNT_ERROR, "ERROR: missing/invalid fragmentMap parameters!\n");
-			return qFalse;
+			return false;
 		}
 
 		if (!strcmp (str, "clamp"))
@@ -573,7 +573,7 @@ static qBool MatPass_FragmentMap (material_t *mat, matPass_t *pass, parse_t *ps,
 			if (!ri.config.extTexCubeMap) {
 				Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 				Mat_Printf (PRNT_ERROR, "ERROR: cubeMap used and extension not available!\n");
-				return qFalse;
+				return false;
 			}
 			pass->animTexFlags[index] |= IT_CUBEMAP|IF_CLAMP_ALL;
 		}
@@ -601,7 +601,7 @@ static qBool MatPass_FragmentMap (material_t *mat, matPass_t *pass, parse_t *ps,
 	}
 
 	pass->animNames[index] = Mem_PoolStrDup (str, ri.matSysPool, 0);
-	return qTrue;
+	return true;
 }
 
 static qBool MatPass_FragmentProgram (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
@@ -612,18 +612,18 @@ static qBool MatPass_FragmentProgram (material_t *mat, matPass_t *pass, parse_t 
 	if (!ri.config.extFragmentProgram) {
 		Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 		Mat_Printf (PRNT_ERROR, "ERROR: fragmentProgram used and extension not available\n");
-		return qFalse;
+		return false;
 	}
 
 	if (!Mat_ParseString (ps, &str)) {
 		Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 		Mat_Printf (PRNT_ERROR, "ERROR: fragmentProgram with no parameters\n");
-		return qFalse;
+		return false;
 	}
 
 	Q_strncpyz (pass->fragProgName, str, sizeof (pass->fragProgName));
 	pass->flags |= MAT_PASS_FRAGMENTPROGRAM;
-	return qTrue;
+	return true;
 }
 
 static qBool MatPass_VertexProgram (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
@@ -634,18 +634,18 @@ static qBool MatPass_VertexProgram (material_t *mat, matPass_t *pass, parse_t *p
 	if (!ri.config.extVertexProgram) {
 		Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 		Mat_Printf (PRNT_ERROR, "ERROR: vertexProgram used and extension not available\n");
-		return qFalse;
+		return false;
 	}
 
 	if (!Mat_ParseString (ps, &str)) {
 		Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 		Mat_Printf (PRNT_ERROR, "ERROR: vertexProgram with no parameters\n");
-		return qFalse;
+		return false;
 	}
 
 	Q_strncpyz (pass->vertProgName, str, sizeof (pass->vertProgName));
 	pass->flags |= MAT_PASS_VERTEXPROGRAM;
-	return qTrue;
+	return true;
 }
 
 static qBool MatPass_Program (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
@@ -656,19 +656,19 @@ static qBool MatPass_Program (material_t *mat, matPass_t *pass, parse_t *ps, cha
 	if (!ri.config.extFragmentProgram || !ri.config.extVertexProgram) {
 		Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 		Mat_Printf (PRNT_ERROR, "ERROR: program used and extensions not available\n");
-		return qFalse;
+		return false;
 	}
 
 	if (!Mat_ParseString (ps, &str)) {
 		Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 		Mat_Printf (PRNT_ERROR, "ERROR: program with no parameters\n");
-		return qFalse;
+		return false;
 	}
 
 	Q_strncpyz (pass->vertProgName, str, sizeof (pass->vertProgName));
 	Q_strncpyz (pass->fragProgName, str, sizeof (pass->fragProgName));
 	pass->flags |= MAT_PASS_VERTEXPROGRAM|MAT_PASS_FRAGMENTPROGRAM;
-	return qTrue;
+	return true;
 }
 
 static qBool MatPass_RGBGen (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
@@ -678,16 +678,16 @@ static qBool MatPass_RGBGen (material_t *mat, matPass_t *pass, parse_t *ps, char
 	if (!Mat_ParseString (ps, &str)) {
 		Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 		Mat_Printf (PRNT_ERROR, "ERROR: rgbGen with no parameters\n");
-		return qFalse;
+		return false;
 	}
 
 	if (!strcmp (str, "identitylighting")) {
 		pass->rgbGen.type = RGB_GEN_IDENTITY_LIGHTING;
-		return qTrue;
+		return true;
 	}
 	else if (!strcmp (str, "identity")) {
 		pass->rgbGen.type = RGB_GEN_IDENTITY;
-		return qTrue;
+		return true;
 	}
 	else if (!strcmp (str, "wave")) {
 		pass->rgbGen.type = RGB_GEN_COLORWAVE;
@@ -699,39 +699,39 @@ static qBool MatPass_RGBGen (material_t *mat, matPass_t *pass, parse_t *ps, char
 		pass->rgbGen.type = RGB_GEN_COLORWAVE;
 		if (!Mat_ParseVector (mat, ps, fileName, pass->rgbGen.fArgs, 3)
 		|| !Mat_ParseWave (mat, ps, fileName, &pass->rgbGen.func))
-			return qFalse;
+			return false;
 		pass->rgbGen.bArgs[0] = FloatToByte (pass->rgbGen.fArgs[0]);
 		pass->rgbGen.bArgs[1] = FloatToByte (pass->rgbGen.fArgs[1]);
 		pass->rgbGen.bArgs[2] = FloatToByte (pass->rgbGen.fArgs[2]);
-		return qTrue;
+		return true;
 	}
 	else if (!strcmp (str, "entity")) {
 		pass->rgbGen.type = RGB_GEN_ENTITY;
-		return qTrue;
+		return true;
 	}
 	else if (!strcmp (str, "oneminusentity")) {
 		pass->rgbGen.type = RGB_GEN_ONE_MINUS_ENTITY;
-		return qTrue;
+		return true;
 	}
 	else if (!strcmp (str, "vertex")) {
 		pass->rgbGen.type = RGB_GEN_VERTEX;
-		return qTrue;
+		return true;
 	}
 	else if (!strcmp (str, "oneminusvertex")) {
 		pass->rgbGen.type = RGB_GEN_ONE_MINUS_VERTEX;
-		return qTrue;
+		return true;
 	}
 	else if (!strcmp (str, "oneminusexactvertex")) {
 		pass->rgbGen.type = RGB_GEN_ONE_MINUS_EXACT_VERTEX;
-		return qTrue;
+		return true;
 	}
 	else if (!strcmp (str, "lightingdiffuse")) {
 		pass->rgbGen.type = RGB_GEN_LIGHTING_DIFFUSE;
-		return qTrue;
+		return true;
 	}
 	else if (!strcmp (str, "exactvertex")) {
 		pass->rgbGen.type = RGB_GEN_EXACT_VERTEX;
-		return qTrue;
+		return true;
 	}
 	else if (!strcmp (str, "const") || !strcmp (str, "constant")) {
 		float	div;
@@ -744,19 +744,19 @@ static qBool MatPass_RGBGen (material_t *mat, matPass_t *pass, parse_t *ps, char
 
 		pass->rgbGen.type = RGB_GEN_CONST;
 		if (!Mat_ParseVector (mat, ps, fileName, color, 3))
-			return qFalse;
+			return false;
 		ColorNormalizef (color, pass->rgbGen.fArgs);
 		Vec3Scale (pass->rgbGen.fArgs, div, pass->rgbGen.fArgs);
 
 		pass->rgbGen.bArgs[0] = FloatToByte (pass->rgbGen.fArgs[0]);
 		pass->rgbGen.bArgs[1] = FloatToByte (pass->rgbGen.fArgs[1]);
 		pass->rgbGen.bArgs[2] = FloatToByte (pass->rgbGen.fArgs[2]);
-		return qTrue;
+		return true;
 	}
 
 	Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 	Mat_Printf (PRNT_ERROR, "ERROR: invalid rgbGen value: '%s'\n", str);
-	return qFalse;
+	return false;
 }
 
 static qBool MatPass_AlphaGen (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
@@ -767,23 +767,23 @@ static qBool MatPass_AlphaGen (material_t *mat, matPass_t *pass, parse_t *ps, ch
 	if (!Mat_ParseString (ps, &str)) {
 		Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 		Mat_Printf (PRNT_ERROR, "ERROR: alphaGen with no parameters\n");
-		return qFalse;
+		return false;
 	}
 
 	if (!strcmp (str, "identity")) {
 		pass->alphaGen.type = ALPHA_GEN_IDENTITY;
-		return qTrue;
+		return true;
 	}
 	else if (!strcmp (str, "const") || !strcmp (str, "constant")) {
 		if (!Mat_ParseFloat (ps, &f)) {
 			Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 			Mat_Printf (PRNT_ERROR, "ERROR: missing/invalid parameters\n");
-			return qFalse;
+			return false;
 		}
 
 		pass->alphaGen.type = ALPHA_GEN_CONST;
 		pass->alphaGen.args[0] = fabs (f);
-		return qTrue;
+		return true;
 	}
 	else if (!strcmp (str, "wave")) {
 		pass->alphaGen.type = ALPHA_GEN_WAVE;
@@ -793,7 +793,7 @@ static qBool MatPass_AlphaGen (material_t *mat, matPass_t *pass, parse_t *ps, ch
 		if (!Mat_ParseFloat (ps, &f)) {
 			Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 			Mat_Printf (PRNT_ERROR, "ERROR: missing/invalid parameters\n");
-			return qFalse;
+			return false;
 		}
 
 		pass->alphaGen.type = ALPHA_GEN_PORTAL;
@@ -801,30 +801,30 @@ static qBool MatPass_AlphaGen (material_t *mat, matPass_t *pass, parse_t *ps, ch
 		if (!pass->alphaGen.args[0])
 			pass->alphaGen.args[0] = 256;
 		pass->alphaGen.args[0] = 1.0f / pass->alphaGen.args[0];
-		return qTrue;
+		return true;
 	}
 	else if (!strcmp (str, "vertex")) {
 		pass->alphaGen.type = ALPHA_GEN_VERTEX;
-		return qTrue;
+		return true;
 	}
 	else if (!strcmp (str, "oneminusvertex")) {
 		pass->alphaGen.type = ALPHA_GEN_ONE_MINUS_VERTEX;
-		return qTrue;
+		return true;
 	}
 	else if (!strcmp (str, "entity")) {
 		pass->alphaGen.type = ALPHA_GEN_ENTITY;
-		return qTrue;
+		return true;
 	}
 	else if (!strcmp (str, "lightingspecular")) {
 		pass->alphaGen.type = ALPHA_GEN_SPECULAR;
-		return qTrue;
+		return true;
 	}
 	else if (!strcmp (str, "dot")) {
 		if (!Mat_ParseFloat (ps, &f)
 		|| !Mat_ParseFloat (ps, &g)) {
 			Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 			Mat_Printf (PRNT_ERROR, "ERROR: missing/invalid parameters\n");
-			return qFalse;
+			return false;
 		}
 
 		pass->alphaGen.type = ALPHA_GEN_DOT;
@@ -832,14 +832,14 @@ static qBool MatPass_AlphaGen (material_t *mat, matPass_t *pass, parse_t *ps, ch
 		pass->alphaGen.args[1] = fabs (g);
 		if (!pass->alphaGen.args[1])
 			pass->alphaGen.args[1] = 1.0f;
-		return qTrue;
+		return true;
 	}
 	else if (!strcmp (str, "oneminusdot")) {
 		if (!Mat_ParseFloat (ps, &f)
 		|| !Mat_ParseFloat (ps, &g)) {
 			Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 			Mat_Printf (PRNT_ERROR, "ERROR: missing/invalid parameters\n");
-			return qFalse;
+			return false;
 		}
 
 		pass->alphaGen.type = ALPHA_GEN_ONE_MINUS_DOT;
@@ -847,12 +847,12 @@ static qBool MatPass_AlphaGen (material_t *mat, matPass_t *pass, parse_t *ps, ch
 		pass->alphaGen.args[1] = fabs (g);
 		if (!pass->alphaGen.args[1])
 			pass->alphaGen.args[1] = 1.0f;
-		return qTrue;
+		return true;
 	}
 
 	Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 	Mat_Printf (PRNT_ERROR, "ERROR: invalid alphaGen value: '%s'\n", str);
-	return qFalse;
+	return false;
 }
 
 static qBool MatPass_AlphaFunc (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
@@ -862,25 +862,25 @@ static qBool MatPass_AlphaFunc (material_t *mat, matPass_t *pass, parse_t *ps, c
 	if (!Mat_ParseString (ps, &str)) {
 		Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 		Mat_Printf (PRNT_ERROR, "ERROR: alphaFunc with no parameters\n");
-		return qFalse;
+		return false;
 	}
 
 	if (!strcmp (str, "gt0")) {
 		pass->alphaFunc = ALPHA_FUNC_GT0;
-		return qTrue;
+		return true;
 	}
 	else if (!strcmp (str, "lt128")) {
 		pass->alphaFunc = ALPHA_FUNC_LT128;
-		return qTrue;
+		return true;
 	}
 	else if (!strcmp (str, "ge128")) {
 		pass->alphaFunc = ALPHA_FUNC_GE128;
-		return qTrue;
+		return true;
 	}
 
 	Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 	Mat_Printf (PRNT_ERROR, "ERROR: invalid alphaFunc value: '%s'\n", str);
-	return qFalse;
+	return false;
 }
 
 static qBool MatPass_BlendFunc (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
@@ -890,7 +890,7 @@ static qBool MatPass_BlendFunc (material_t *mat, matPass_t *pass, parse_t *ps, c
 	if (!Mat_ParseString (ps, &str)) {
 		Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 		Mat_Printf (PRNT_ERROR, "ERROR: blendFunc with no parameters\n");
-		return qFalse;
+		return false;
 	}
 
 	if (!strcmp (str, "add")
@@ -964,7 +964,7 @@ static qBool MatPass_BlendFunc (material_t *mat, matPass_t *pass, parse_t *ps, c
 	}
 
 	pass->flags |= MAT_PASS_BLEND;
-	return qTrue;
+	return true;
 }
 
 static qBool MatPass_DepthFunc (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
@@ -974,25 +974,25 @@ static qBool MatPass_DepthFunc (material_t *mat, matPass_t *pass, parse_t *ps, c
 	if (!Mat_ParseString (ps, &str)) {
 		Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 		Mat_Printf (PRNT_ERROR, "ERROR: depthFunc with no parameters\n");
-		return qFalse;
+		return false;
 	}
 
 	if (!strcmp (str, "equal")) {
 		pass->depthFunc = GL_EQUAL;
-		return qTrue;
+		return true;
 	}
 	else if (!strcmp (str, "lequal")) {
 		pass->depthFunc = GL_LEQUAL;
-		return qTrue;
+		return true;
 	}
 	else if (!strcmp (str, "gequal")) {
 		pass->depthFunc = GL_GEQUAL;
-		return qTrue;
+		return true;
 	}
 
 	Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 	Mat_Printf (PRNT_ERROR, "ERROR: invalid depthFunc value: '%s'\n", str);
-	return qFalse;
+	return false;
 }
 
 static qBool MatPass_TcGen (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
@@ -1002,40 +1002,40 @@ static qBool MatPass_TcGen (material_t *mat, matPass_t *pass, parse_t *ps, char 
 	if (!Mat_ParseString (ps, &str)) {
 		Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 		Mat_Printf (PRNT_ERROR, "ERROR: tcGen with no parameters\n");
-		return qFalse;
+		return false;
 	}
 
 	if (!strcmp (str, "base")) {
 		pass->tcGen = TC_GEN_BASE;
-		return qTrue;
+		return true;
 	}
 	else if (!strcmp (str, "lightmap")) {
 		pass->tcGen = TC_GEN_LIGHTMAP;
-		return qTrue;
+		return true;
 	}
 	else if (!strcmp (str, "environment")) {
 		pass->tcGen = TC_GEN_ENVIRONMENT;
-		return qTrue;
+		return true;
 	}
 	else if (!strcmp (str, "vector")) {
 		pass->tcGen = TC_GEN_VECTOR;
 		if (!Mat_ParseVector (mat, ps, fileName, pass->tcGenVec[0], 4)
 		|| !Mat_ParseVector (mat, ps, fileName, pass->tcGenVec[1], 4))
-			return qFalse;
-		return qTrue;
+			return false;
+		return true;
 	}
 	else if (!strcmp (str, "reflection")) {
 		pass->tcGen = TC_GEN_REFLECTION;
-		return qTrue;
+		return true;
 	}
 	else if (!strcmp (str, "warp")) {
 		pass->tcGen = TC_GEN_WARP;
-		return qTrue;
+		return true;
 	}
 
 	Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 	Mat_Printf (PRNT_ERROR, "ERROR: invalid tcGen value: '%s'\n", str);
-	return qFalse;
+	return false;
 }
 
 static qBool MatPass_TcMod (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
@@ -1049,7 +1049,7 @@ static qBool MatPass_TcMod (material_t *mat, matPass_t *pass, parse_t *ps, char 
 		Mat_PrintPos (PRNT_WARNING, mat, r_numCurrPasses, ps, fileName);
 		Mat_Printf (PRNT_WARNING, "WARNING: too many tcMods, ignoring\n");
 		PS_SkipLine (ps);
-		return qTrue;
+		return true;
 	}
 
 	tcMod = &r_currTcMods[r_numCurrPasses][r_currPasses[r_numCurrPasses].numTCMods];
@@ -1057,14 +1057,14 @@ static qBool MatPass_TcMod (material_t *mat, matPass_t *pass, parse_t *ps, char 
 	if (!Mat_ParseString (ps, &str)) {
 		Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 		Mat_Printf (PRNT_ERROR, "ERROR: tcMod with no parameters\n");
-		return qFalse;
+		return false;
 	}
 
 	if (!strcmp (str, "rotate")) {
 		if (!Mat_ParseFloat (ps, &val)) {
 			Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 			Mat_Printf (PRNT_ERROR, "ERROR: missing/invalid tcMod rotate parameters!\n");
-			return qFalse;
+			return false;
 		}
 
 		tcMod->args[0] = -val / 360.0f;
@@ -1072,25 +1072,25 @@ static qBool MatPass_TcMod (material_t *mat, matPass_t *pass, parse_t *ps, char 
 			Mat_PrintPos (PRNT_WARNING, mat, r_numCurrPasses, ps, fileName);
 			Mat_Printf (PRNT_WARNING, "WARNING: invalid tcMod rotate: '%f', ignoring\n", val);
 			PS_SkipLine (ps);
-			return qTrue;
+			return true;
 		}
 		tcMod->type = TC_MOD_ROTATE;
 	}
 	else if (!strcmp (str, "scale")) {
 		tcMod->type = TC_MOD_SCALE;
 		if (!Mat_ParseVector (mat, ps, fileName, tcMod->args, 2))
-			return qFalse;
+			return false;
 	}
 	else if (!strcmp (str, "scroll")) {
 		tcMod->type = TC_MOD_SCROLL;
 		if (!Mat_ParseVector (mat, ps, fileName, tcMod->args, 2))
-			return qFalse;
+			return false;
 	}
 	else if (!strcmp (str, "stretch")) {
 		materialFunc_t	func;
 
 		if (!Mat_ParseWave (mat, ps, fileName, &func))
-			return qFalse;
+			return false;
 
 		tcMod->args[0] = func.type;
 		for (i=1 ; i<5 ; i++) {
@@ -1100,68 +1100,68 @@ static qBool MatPass_TcMod (material_t *mat, matPass_t *pass, parse_t *ps, char 
 	}
 	else if (!strcmp (str, "transform")) {
 		if (!Mat_ParseVector (mat, ps, fileName, tcMod->args, 6))
-			return qFalse;
+			return false;
 		tcMod->args[4] = tcMod->args[4] - floor(tcMod->args[4]);
 		tcMod->args[5] = tcMod->args[5] - floor(tcMod->args[5]);
 		tcMod->type = TC_MOD_TRANSFORM;
 	}
 	else if (!strcmp (str, "turb")) {
 		if (!Mat_ParseVector (mat, ps, fileName, tcMod->args, 4))
-			return qFalse;
+			return false;
 		tcMod->type = TC_MOD_TURB;
 	}
 	else {
 		Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 		Mat_Printf (PRNT_ERROR, "ERROR: invalid tcMod value: '%s'\n", str);
-		return qFalse;
+		return false;
 	}
 
 	r_currPasses[r_numCurrPasses].numTCMods++;
-	return qTrue;
+	return true;
 }
 
 static qBool MatPass_MaskColor (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
 {
-	pass->maskRed = qTrue;
-	pass->maskGreen = qTrue;
-	pass->maskBlue = qTrue;
-	return qTrue;
+	pass->maskRed = true;
+	pass->maskGreen = true;
+	pass->maskBlue = true;
+	return true;
 }
 
 static qBool MatPass_MaskRed (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
 {
-	pass->maskRed = qTrue;
-	return qTrue;
+	pass->maskRed = true;
+	return true;
 }
 
 static qBool MatPass_MaskGreen (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
 {
-	pass->maskGreen = qTrue;
-	return qTrue;
+	pass->maskGreen = true;
+	return true;
 }
 
 static qBool MatPass_MaskBlue (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
 {
-	pass->maskBlue = qTrue;
-	return qTrue;
+	pass->maskBlue = true;
+	return true;
 }
 
 static qBool MatPass_MaskAlpha (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
 {
-	pass->maskAlpha = qTrue;
-	return qTrue;
+	pass->maskAlpha = true;
+	return true;
 }
 
 static qBool MatPass_NoGamma (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
 {
 	pass->passTexFlags |= IF_NOGAMMA;
-	return qTrue;
+	return true;
 }
 
 static qBool MatPass_NoIntens (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
 {
 	pass->passTexFlags |= IF_NOINTENS;
-	return qTrue;
+	return true;
 }
 
 static qBool MatPass_NoMipmap (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
@@ -1171,88 +1171,88 @@ static qBool MatPass_NoMipmap (material_t *mat, matPass_t *pass, parse_t *ps, ch
 	if (!Mat_ParseString (ps, &str)) {
 		Mat_DevPrintPos (PRNT_WARNING, mat, r_numCurrPasses, ps, fileName);
 		Mat_DevPrintf (PRNT_WARNING, "WARNING: noMipMap with no type specified, assuming linear\n");
-		return qTrue;
+		return true;
 	}
 
 	if (!strcmp (str, "linear")) {
 		pass->passTexFlags |= IF_NOMIPMAP_LINEAR;
-		return qTrue;
+		return true;
 	}
 	else if (!strcmp (str, "nearest")) {
 		pass->passTexFlags |= IF_NOMIPMAP_NEAREST;
-		return qTrue;
+		return true;
 	}
 
 	Mat_PrintPos (PRNT_WARNING, mat, r_numCurrPasses, ps, fileName);
 	Mat_Printf (PRNT_WARNING, "WARNING: invalid noMipMap value: '%s', assuming linear\n", str);
 	pass->passTexFlags |= IF_NOMIPMAP_LINEAR;
-	return qTrue;
+	return true;
 }
 
 static qBool MatPass_NoPicmip (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
 {
 	pass->passTexFlags |= IF_NOPICMIP;
-	return qTrue;
+	return true;
 }
 
 static qBool MatPass_NoCompress (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
 {
 	pass->passTexFlags |= IF_NOCOMPRESS;
-	return qTrue;
+	return true;
 }
 
 static qBool MatPass_TcClamp (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
 {
 	pass->passTexFlags |= IF_CLAMP_ALL;
-	return qTrue;
+	return true;
 }
 
 static qBool MatPass_TcClampS (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
 {
 	pass->passTexFlags |= IF_CLAMP_S;
-	return qTrue;
+	return true;
 }
 
 static qBool MatPass_TcClampT (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
 {
 	pass->passTexFlags |= IF_CLAMP_T;
-	return qTrue;
+	return true;
 }
 
 static qBool MatPass_SizeBase (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
 {
 	mat->sizeBase = r_numCurrPasses;
-	return qTrue;
+	return true;
 }
 
 static qBool MatPass_Detail (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
 {
 	pass->flags |= MAT_PASS_DETAIL;
-	return qTrue;
+	return true;
 }
 
 static qBool MatPass_NotDetail (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
 {
 	pass->flags |= MAT_PASS_NOTDETAIL;
-	return qTrue;
+	return true;
 }
 
 static qBool MatPass_DepthWrite (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
 {
 	pass->flags |= MAT_PASS_DEPTHWRITE;
 	mat->flags |= MAT_DEPTHWRITE;
-	return qTrue;
+	return true;
 }
 
 static qBool MatBase_Flare (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
 {
 	mat->flags |= MAT_FLARE;
-	return qTrue;
+	return true;
 }
 
 static qBool MatPass_Emissive (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
 {
-	return qTrue;
+	return true;
 }
 
 // ==========================================================================
@@ -1324,7 +1324,7 @@ static const int r_numMaterialPassKeys = sizeof (r_materialPassKeys) / sizeof (r
 static qBool MatBase_BackSided (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
 {
 	mat->cullType = MAT_CULL_BACK;
-	return qTrue;
+	return true;
 }
 
 static qBool MatBase_Cull (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
@@ -1334,31 +1334,31 @@ static qBool MatBase_Cull (material_t *mat, matPass_t *pass, parse_t *ps, char *
 	if (!Mat_ParseString (ps, &str)) {
 		Mat_PrintPos (PRNT_ERROR, mat, 0, ps, fileName);
 		Mat_Printf (PRNT_ERROR, "ERROR: cull with no parameters\n");
-		return qFalse;
+		return false;
 	}
 
 	if (!strcmp (str, "disable")
 	|| !strcmp (str, "none")
 	|| !strcmp (str, "twosided")) {
 		mat->cullType = MAT_CULL_NONE;
-		return qTrue;
+		return true;
 	}
 	else if (!strcmp (str, "back")
 	|| !strcmp (str, "backside")
 	|| !strcmp (str, "backsided")) {
 		mat->cullType = MAT_CULL_BACK;
-		return qTrue;
+		return true;
 	}
 	else if (!strcmp (str, "front")
 	|| !strcmp (str, "frontside")
 	|| !strcmp (str, "frontsided")) {
 		mat->cullType = MAT_CULL_FRONT;
-		return qTrue;
+		return true;
 	}
 
 	Mat_PrintPos (PRNT_ERROR, mat, 0, ps, fileName);
 	Mat_Printf (PRNT_ERROR, "ERROR: invalid cull value: '%s'\n", str);
-	return qFalse;
+	return false;
 }
 
 static qBool MatBase_DeformVertexes (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
@@ -1370,7 +1370,7 @@ static qBool MatBase_DeformVertexes (material_t *mat, matPass_t *pass, parse_t *
 		Mat_PrintPos (PRNT_WARNING, mat, r_numCurrPasses, ps, fileName);
 		Mat_Printf (PRNT_WARNING, "WARNING: too many deformVertexes, ignoring\n");
 		PS_SkipLine (ps);
-		return qTrue;
+		return true;
 	}
 
 	deformv = &r_currDeforms[mat->numDeforms];
@@ -1378,21 +1378,21 @@ static qBool MatBase_DeformVertexes (material_t *mat, matPass_t *pass, parse_t *
 	if (!Mat_ParseString (ps, &str)) {
 		Mat_PrintPos (PRNT_ERROR, mat, 0, ps, fileName);
 		Mat_Printf (PRNT_ERROR, "ERROR: deformVertexes with no parameters\n");
-		return qFalse;
+		return false;
 	}
 
 	if (!strcmp (str, "wave")) {
 		if (!Mat_ParseFloat (ps, &deformv->args[0])) {
 			Mat_PrintPos (PRNT_ERROR, mat, 0, ps, fileName);
 			Mat_Printf (PRNT_ERROR, "ERROR: missing/invalid deformVertexes wave parameters!\n");
-			return qFalse;
+			return false;
 		}
 
 		deformv->type = DEFORMV_WAVE;
 		if (deformv->args[0])
 			deformv->args[0] = 1.0f / deformv->args[0];
 		if (!Mat_ParseWave (mat, ps, fileName, &deformv->func))
-			return qFalse;
+			return false;
 	}
 	else if (!strcmp (str, "normal")) {
 		deformv->type = DEFORMV_NORMAL;
@@ -1400,20 +1400,20 @@ static qBool MatBase_DeformVertexes (material_t *mat, matPass_t *pass, parse_t *
 		|| !Mat_ParseFloat (ps, &deformv->args[1])) {
 			Mat_PrintPos (PRNT_ERROR, mat, 0, ps, fileName);
 			Mat_Printf (PRNT_ERROR, "ERROR: missing/invalid deformVertexes normal parameters!\n");
-			return qFalse;
+			return false;
 		}
 	}
 	else if (!strcmp (str, "bulge")) {
 		deformv->type = DEFORMV_BULGE;
 		if (!Mat_ParseVector (mat, ps, fileName, deformv->args, 3))
-			return qFalse;
+			return false;
 		mat->flags |= MAT_DEFORMV_BULGE;
 	}
 	else if (!strcmp (str, "move")) {
 		deformv->type = DEFORMV_MOVE;
 		if (!Mat_ParseVector (mat, ps, fileName, deformv->args, 3)
 		|| !Mat_ParseWave (mat, ps, fileName, &deformv->func))
-			return qFalse;
+			return false;
 	}
 	else if (!strcmp (str, "autosprite")) {
 		deformv->type = DEFORMV_AUTOSPRITE;
@@ -1432,11 +1432,11 @@ static qBool MatBase_DeformVertexes (material_t *mat, matPass_t *pass, parse_t *
 	else {
 		Mat_PrintPos (PRNT_ERROR, mat, 0, ps, fileName);
 		Mat_Printf (PRNT_ERROR, "ERROR: invalid deformVertexes value: '%s'\n", str);
-		return qFalse;
+		return false;
 	}
 
 	mat->numDeforms++;
-	return qTrue;
+	return true;
 }
 
 static qBool MatBase_Subdivide (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
@@ -1447,7 +1447,7 @@ static qBool MatBase_Subdivide (material_t *mat, matPass_t *pass, parse_t *ps, c
 	if (!Mat_ParseString (ps, &str)) {
 		Mat_PrintPos (PRNT_ERROR, mat, 0, ps, fileName);
 		Mat_Printf (PRNT_ERROR, "ERROR: subdivide with no parameters\n");
-		return qFalse;
+		return false;
 	}
 
 	mat->subdivide = atoi (str);
@@ -1471,13 +1471,13 @@ static qBool MatBase_Subdivide (material_t *mat, matPass_t *pass, parse_t *ps, c
 	}
 
 	mat->flags |= MAT_SUBDIVIDE;
-	return qTrue;
+	return true;
 }
 
 static qBool MatBase_EntityMergable (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
 {
 	mat->flags |= MAT_ENTITY_MERGABLE;
-	return qTrue;
+	return true;
 }
 
 static qBool MatBase_DepthRange (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
@@ -1488,16 +1488,16 @@ static qBool MatBase_DepthRange (material_t *mat, matPass_t *pass, parse_t *ps, 
 	|| !Mat_ParseFloat (ps, &mat->depthFar)) {
 		Mat_PrintPos (PRNT_ERROR, mat, 0, ps, fileName);
 		Mat_Printf (PRNT_ERROR, "ERROR: missing/invalid depthRange parameters!\n");
-		return qFalse;
+		return false;
 	}
-	return qTrue;
+	return true;
 }
 
 static qBool MatBase_DepthWrite (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
 {
 	mat->flags |= MAT_DEPTHWRITE;
 	mat->addPassFlags |= MAT_PASS_DEPTHWRITE;
-	return qTrue;
+	return true;
 }
 
 static qBool MatBase_FogParms (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
@@ -1507,7 +1507,7 @@ static qBool MatBase_FogParms (material_t *mat, matPass_t *pass, parse_t *ps, ch
 
 	// Parse color
 	if (!Mat_ParseVector (mat, ps, fileName, color, 3))
-		return qFalse;
+		return false;
 	ColorNormalizef (color, ncolor);
 	mat->fogColor[0] = FloatToByte (ncolor[0]);
 	mat->fogColor[1] = FloatToByte (ncolor[1]);
@@ -1518,26 +1518,26 @@ static qBool MatBase_FogParms (material_t *mat, matPass_t *pass, parse_t *ps, ch
 	if (!Mat_ParseFloat (ps, &fogDist)) {
 		Mat_PrintPos (PRNT_ERROR, mat, 0, ps, fileName);
 		Mat_Printf (PRNT_ERROR, "ERROR: missing fogparms distance!\n");
-		return qFalse;
+		return false;
 	}
 	mat->fogDist = (double)fogDist;
 	if (mat->fogDist <= 0.1)
 		mat->fogDist = 128.0;
 	mat->fogDist = 1.0 / mat->fogDist;
 
-	return qTrue;
+	return true;
 }
 
 static qBool MatBase_PolygonOffset (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
 {
 	mat->flags |= MAT_POLYGONOFFSET;
-	return qTrue;
+	return true;
 }
 
 static qBool MatBase_Portal (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
 {
 	mat->sortKey = MAT_SORT_PORTAL;
-	return qTrue;
+	return true;
 }
 
 static qBool MatBase_SkyParms (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
@@ -1547,25 +1547,25 @@ static qBool MatBase_SkyParms (material_t *mat, matPass_t *pass, parse_t *ps, ch
 
 	mat->flags |= MAT_SKY;
 	mat->sortKey = MAT_SORT_SKY;
-	return qTrue;
+	return true;
 }
 
 static qBool MatBase_NoCompress (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
 {
 	mat->addTexFlags |= IF_NOCOMPRESS;
-	return qTrue;
+	return true;
 }
 
 static qBool MatBase_NoLerp (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
 {
 	mat->flags |= MAT_NOLERP;
-	return qTrue;
+	return true;
 }
 
 static qBool MatBase_NoMark (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
 {
 	mat->flags |= MAT_NOMARK;
-	return qTrue;
+	return true;
 }
 
 static qBool MatBase_NoMipMaps (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
@@ -1576,34 +1576,34 @@ static qBool MatBase_NoMipMaps (material_t *mat, matPass_t *pass, parse_t *ps, c
 		Mat_DevPrintPos (PRNT_WARNING, mat, r_numCurrPasses, ps, fileName);
 		Mat_DevPrintf (PRNT_WARNING, "WARNING: noMipMaps with no parameters, assuming linear\n");
 		mat->addTexFlags |= IF_NOMIPMAP_LINEAR;
-		return qTrue;
+		return true;
 	}
 
 	if (!strcmp (str, "linear")) {
 		mat->addTexFlags |= IF_NOMIPMAP_LINEAR;
-		return qTrue;
+		return true;
 	}
 	else if (!strcmp (str, "nearest")) {
 		mat->addTexFlags |= IF_NOMIPMAP_NEAREST;
-		return qTrue;
+		return true;
 	}
 
 	Mat_DevPrintPos (PRNT_WARNING, mat, r_numCurrPasses, ps, fileName);
 	Mat_DevPrintf (PRNT_WARNING, "WARNING: invalid noMipMaps value, assuming linear\n");
 	mat->addTexFlags |= IF_NOMIPMAP_LINEAR;
-	return qTrue;
+	return true;
 }
 
 static qBool MatBase_NoPicMips (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
 {
 	mat->addTexFlags |= IF_NOPICMIP;
-	return qTrue;
+	return true;
 }
 
 static qBool MatBase_NoShadow (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
 {
 	mat->flags |= MAT_NOSHADOW;
-	return qTrue;
+	return true;
 }
 
 static qBool MatBase_SortKey (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
@@ -1613,7 +1613,7 @@ static qBool MatBase_SortKey (material_t *mat, matPass_t *pass, parse_t *ps, cha
 	if (!Mat_ParseString (ps, &str)) {
 		Mat_PrintPos (PRNT_ERROR, mat, 0, ps, fileName);
 		Mat_Printf (PRNT_ERROR, "ERROR: sortKey with no parameters\n");
-		return qFalse;
+		return false;
 	}
 
 	if (!strcmp (str, "sky"))
@@ -1651,11 +1651,11 @@ static qBool MatBase_SortKey (material_t *mat, matPass_t *pass, parse_t *ps, cha
 		if (mat->sortKey < 0 || mat->sortKey >= MAT_SORT_MAX) {
 			Mat_PrintPos (PRNT_ERROR, mat, 0, ps, fileName);
 			Mat_Printf (PRNT_ERROR, "ERROR: invalid sortKey value: '%i'", mat->sortKey);
-			return qFalse;
+			return false;
 		}
 	}
 
-	return qTrue;
+	return true;
 }
 
 static qBool MatBase_SurfParams (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
@@ -1665,7 +1665,7 @@ static qBool MatBase_SurfParams (material_t *mat, matPass_t *pass, parse_t *ps, 
 	if (!Mat_ParseString (ps, &str)) {
 		Mat_PrintPos (PRNT_ERROR, mat, 0, ps, fileName);
 		Mat_Printf (PRNT_ERROR, "ERROR: surfParams with no parameters\n");
-		return qFalse;
+		return false;
 	}
 
 	if (mat->surfParams < 0)
@@ -1684,10 +1684,10 @@ static qBool MatBase_SurfParams (material_t *mat, matPass_t *pass, parse_t *ps, 
 	else {
 		Mat_PrintPos (PRNT_ERROR, mat, 0, ps, fileName);
 		Mat_Printf (PRNT_ERROR, "ERROR: invalid surfParam value: '%s'", str);
-		return qFalse;
+		return false;
 	}
 
-	return qTrue;
+	return true;
 }
 
 static qBool MatBase_SurfaceParm (material_t *mat, matPass_t *pass, parse_t *ps, char *fileName)
@@ -1695,14 +1695,14 @@ static qBool MatBase_SurfaceParm (material_t *mat, matPass_t *pass, parse_t *ps,
 	char		*str;
 
 	if (!Mat_ParseString (ps, &str))
-		return qTrue;
+		return true;
 
 	if (!strcmp (str, "nolightmap")) {
-		r_materialChecks[MATCK_NOLIGHTMAP] = qTrue;
+		r_materialChecks[MATCK_NOLIGHTMAP] = true;
 	}
 
 	PS_SkipLine (ps);
-	return qTrue;
+	return true;
 }
 
 // ==========================================================================
@@ -1865,12 +1865,12 @@ static void R_MaterialFeatures (material_t *mat)
 	}
 
 	// Determine if triangle normals are necessary
-	trNormals = qTrue;
+	trNormals = true;
 	for (i=0 ; i<mat->numDeforms ; i++) {
 		switch (mat->deforms[i].type) {
 		case DEFORMV_BULGE:
 		case DEFORMV_WAVE:
-			trNormals = qFalse;
+			trNormals = false;
 		case DEFORMV_NORMAL:
 			mat->features |= MF_NORMALS;
 			break;
@@ -1879,7 +1879,7 @@ static void R_MaterialFeatures (material_t *mat)
 			break;
 
 		default:
-			trNormals = qFalse;
+			trNormals = false;
 			break;
 		}
 	}
@@ -2130,7 +2130,7 @@ static void R_FinishMaterial (material_t *mat, char *fileName)
 		// Check if this pass can possibly accumulate
 		pass->canAccumulate = (pass->alphaFunc == ALPHA_FUNC_NONE
 			&& pass->rgbGen.type == RGB_GEN_IDENTITY
-			&& pass->alphaGen.type == ALPHA_GEN_IDENTITY) ? qTrue : qFalse;
+			&& pass->alphaGen.type == ALPHA_GEN_IDENTITY) ? true : false;
 	}
 
 	// Set features
@@ -2325,7 +2325,7 @@ static qBool R_MaterialParseTok (material_t *mat, matPass_t *pass, parse_t *ps, 
 		if (strchr (key->keyWord, '*') && !key->func) {
 			if (Q_WildcardMatch (key->keyWord, keyName, 1)) {
 				PS_SkipLine (ps);
-				return qTrue;
+				return true;
 			}
 		}
 
@@ -2336,13 +2336,13 @@ static qBool R_MaterialParseTok (material_t *mat, matPass_t *pass, parse_t *ps, 
 		// This is for keys that compilers and editors use
 		if (!key->func) {
 			PS_SkipLine (ps);
-			return qTrue;
+			return true;
 		}
 
 		// Failed to parse line
 		if (!key->func (mat, pass, ps, fileName)) {
 			PS_SkipLine (ps);
-			return qFalse;
+			return false;
 		}
 
 		// Report any extra parameters
@@ -2350,18 +2350,18 @@ static qBool R_MaterialParseTok (material_t *mat, matPass_t *pass, parse_t *ps, 
 			Mat_PrintPos (PRNT_WARNING, mat, r_numCurrPasses, ps, fileName);
 			Mat_Printf (PRNT_WARNING, "WARNING: extra trailing parameters after key: '%s'\n", keyName);
 			PS_SkipLine (ps);
-			return qTrue;
+			return true;
 		}
 
 		// Parsed fine
-		return qTrue;
+		return true;
 	}
 
 	// Not found
 	Mat_PrintPos (PRNT_ERROR, mat, r_numCurrPasses, ps, fileName);
 	Mat_Printf (PRNT_ERROR, "ERROR: unrecognized key: '%s'\n", keyName);
 	PS_SkipLine (ps);
-	return qFalse;
+	return false;
 }
 
 static void R_ParseMaterialFile (char *fixedName, matPathType_t pathType)
@@ -2398,8 +2398,8 @@ static void R_ParseMaterialFile (char *fixedName, matPathType_t pathType)
 	}
 
 	// Start parsing
-	inMaterial = qFalse;
-	inPass = qFalse;
+	inMaterial = false;
+	inPass = false;
 
 	mat = NULL;
 	pass = NULL;
@@ -2410,7 +2410,7 @@ static void R_ParseMaterialFile (char *fixedName, matPathType_t pathType)
 			switch (token[0]) {
 			case '{':
 				if (!inPass) {
-					inPass = qTrue;
+					inPass = true;
 					pass = R_NewPass (mat, ps);
 					if (!pass)
 						Mat_SkipBlock (mat, ps, fixedName, token);
@@ -2419,12 +2419,12 @@ static void R_ParseMaterialFile (char *fixedName, matPathType_t pathType)
 
 			case '}':
 				if (inPass) {
-					inPass = qFalse;
+					inPass = false;
 					R_FinishPass (mat, pass);
 					break;
 				}
 
-				inMaterial = qFalse;
+				inMaterial = false;
 				R_FinishMaterial (mat, fixedName);
 				break;
 
@@ -2442,7 +2442,7 @@ static void R_ParseMaterialFile (char *fixedName, matPathType_t pathType)
 		else {
 			switch (token[0]) {
 			case '{':
-				inMaterial = qTrue;
+				inMaterial = true;
 				break;
 
 			default:
@@ -2512,7 +2512,7 @@ static void R_ReadyMaterial (material_t *mat)
 			// Fragment program
 			if (pass->flags & MAT_PASS_FRAGMENTPROGRAM) {
 				if (!pass->fragProgPtr) {
-					pass->fragProgPtr = R_RegisterProgram (pass->fragProgName, qTrue);
+					pass->fragProgPtr = R_RegisterProgram (pass->fragProgName, true);
 
 					if (!pass->fragProgPtr) {
 						Mat_Printf (PRNT_WARNING, "WARNING: Material '%s' can't find/load fragment program '%s' for pass #%i (anim #%i)\n",
@@ -2525,7 +2525,7 @@ static void R_ReadyMaterial (material_t *mat)
 			// Vertex program
 			if (pass->flags & MAT_PASS_VERTEXPROGRAM) {
 				if (!pass->vertProgPtr) {
-					pass->vertProgPtr = R_RegisterProgram (pass->vertProgName, qFalse);
+					pass->vertProgPtr = R_RegisterProgram (pass->vertProgName, false);
 
 					if (!pass->vertProgPtr) {
 						Mat_Printf (PRNT_WARNING, "WARNING: Material '%s' can't find/load vertex program '%s' for pass #%i (anim #%i)\n",
@@ -2678,7 +2678,7 @@ static material_t *R_RegisterMaterial (char *name, qBool forceDefault, matRegTyp
 		pass->rgbGen.type = RGB_GEN_LIGHTING_DIFFUSE;
 		pass->alphaGen.type = ALPHA_GEN_ENTITY;
 		pass->tcGen = TC_GEN_BASE;
-		pass->canAccumulate = qFalse;
+		pass->canAccumulate = false;
 		R_PassStateBits (pass);
 		break;
 
@@ -2702,7 +2702,7 @@ static material_t *R_RegisterMaterial (char *name, qBool forceDefault, matRegTyp
 		pass->rgbGen.type = RGB_GEN_EXACT_VERTEX;
 		pass->alphaGen.type = ALPHA_GEN_VERTEX;
 		pass->tcGen = TC_GEN_BASE;
-		pass->canAccumulate = qFalse;
+		pass->canAccumulate = false;
 		R_PassStateBits (pass);
 		break;
 
@@ -2726,7 +2726,7 @@ static material_t *R_RegisterMaterial (char *name, qBool forceDefault, matRegTyp
 		pass->rgbGen.type = RGB_GEN_EXACT_VERTEX;
 		pass->alphaGen.type = ALPHA_GEN_VERTEX;
 		pass->tcGen = TC_GEN_BASE;
-		pass->canAccumulate = qFalse;
+		pass->canAccumulate = false;
 		R_PassStateBits (pass);
 		break;
 
@@ -2750,7 +2750,7 @@ static material_t *R_RegisterMaterial (char *name, qBool forceDefault, matRegTyp
 		pass->depthFunc = GL_LEQUAL;
 		pass->rgbGen.type = RGB_GEN_IDENTITY;
 		pass->alphaGen.type = ALPHA_GEN_IDENTITY;
-		pass->canAccumulate = qTrue;
+		pass->canAccumulate = true;
 		R_PassStateBits (pass);
 		break;
 
@@ -2814,7 +2814,7 @@ static material_t *R_RegisterMaterial (char *name, qBool forceDefault, matRegTyp
 			else {
 				pass->alphaGen.type = ALPHA_GEN_IDENTITY;
 			}
-			pass->canAccumulate = qFalse;
+			pass->canAccumulate = false;
 			R_PassStateBits (pass);
 
 			// Add flowing if it's got the flag
@@ -2856,7 +2856,7 @@ static material_t *R_RegisterMaterial (char *name, qBool forceDefault, matRegTyp
 			pass->blendMode = GL_REPLACE;
 			pass->rgbGen.type = RGB_GEN_IDENTITY;
 			pass->alphaGen.type = ALPHA_GEN_IDENTITY;
-			pass->canAccumulate = qTrue;
+			pass->canAccumulate = true;
 			R_PassStateBits (pass);
 
 			pass = &mat->passes[1];
@@ -2871,7 +2871,7 @@ static material_t *R_RegisterMaterial (char *name, qBool forceDefault, matRegTyp
 			pass->blendMode = GL_MODULATE;
 			pass->rgbGen.type = RGB_GEN_IDENTITY;
 			pass->alphaGen.type = ALPHA_GEN_IDENTITY;
-			pass->canAccumulate = qTrue;
+			pass->canAccumulate = true;
 			R_PassStateBits (pass);
 
 			// Add flowing if it's got the flag
@@ -2914,7 +2914,7 @@ static material_t *R_RegisterMaterial (char *name, qBool forceDefault, matRegTyp
 			pass->blendMode = GL_REPLACE;
 			pass->rgbGen.type = RGB_GEN_IDENTITY;
 			pass->alphaGen.type = ALPHA_GEN_IDENTITY;
-			pass->canAccumulate = qTrue;
+			pass->canAccumulate = true;
 			R_PassStateBits (pass);
 
 			// Add flowing if it's got the flag
@@ -2951,7 +2951,7 @@ static material_t *R_RegisterMaterial (char *name, qBool forceDefault, matRegTyp
 		pass->depthFunc = GL_LEQUAL;
 		pass->rgbGen.type = RGB_GEN_VERTEX;
 		pass->alphaGen.type = ALPHA_GEN_IDENTITY;
-		pass->canAccumulate = qFalse;
+		pass->canAccumulate = false;
 		R_PassStateBits (pass);
 		break;
 
@@ -2976,7 +2976,7 @@ static material_t *R_RegisterMaterial (char *name, qBool forceDefault, matRegTyp
 		pass->depthFunc = GL_LEQUAL;
 		pass->rgbGen.type = RGB_GEN_VERTEX;
 		pass->alphaGen.type = ALPHA_GEN_IDENTITY;
-		pass->canAccumulate = qFalse;
+		pass->canAccumulate = false;
 		R_PassStateBits (pass);
 		break;
 
@@ -2999,7 +2999,7 @@ static material_t *R_RegisterMaterial (char *name, qBool forceDefault, matRegTyp
 		pass->blendMode = GL_REPLACE;
 		pass->rgbGen.type = RGB_GEN_IDENTITY;
 		pass->alphaGen.type = ALPHA_GEN_IDENTITY;
-		pass->canAccumulate = qTrue;
+		pass->canAccumulate = true;
 		R_PassStateBits (pass);
 
 		pass = &mat->passes[1];
@@ -3014,7 +3014,7 @@ static material_t *R_RegisterMaterial (char *name, qBool forceDefault, matRegTyp
 		pass->blendMode = GL_MODULATE;
 		pass->rgbGen.type = RGB_GEN_IDENTITY;
 		pass->alphaGen.type = ALPHA_GEN_IDENTITY;
-		pass->canAccumulate = qTrue;
+		pass->canAccumulate = true;
 		R_PassStateBits (pass);
 		break;
 	}
@@ -3026,42 +3026,42 @@ static material_t *R_RegisterMaterial (char *name, qBool forceDefault, matRegTyp
 
 material_t *R_RegisterPic (char *name)
 {
-	return R_RegisterMaterial (name, qFalse, MAT_RT_PIC, -1);
+	return R_RegisterMaterial (name, false, MAT_RT_PIC, -1);
 }
 
 material_t *R_RegisterPoly (char *name)
 {
-	return R_RegisterMaterial (name, qFalse, MAT_RT_POLY, -1);
+	return R_RegisterMaterial (name, false, MAT_RT_POLY, -1);
 }
 
 material_t *R_RegisterSkin (char *name)
 {
-	return R_RegisterMaterial (name, qFalse, MAT_RT_ALIAS, -1);
+	return R_RegisterMaterial (name, false, MAT_RT_ALIAS, -1);
 }
 
 material_t *R_RegisterSky (char *name)
 {
-	return R_RegisterMaterial (name, qFalse, MAT_RT_SKYBOX, -1);
+	return R_RegisterMaterial (name, false, MAT_RT_SKYBOX, -1);
 }
 
 material_t *R_RegisterTexture (char *name, matSurfParams_t surfParams)
 {
-	return R_RegisterMaterial (name, qFalse, MAT_RT_BSP, surfParams);
+	return R_RegisterMaterial (name, false, MAT_RT_BSP, surfParams);
 }
 
 material_t *R_RegisterFlare (char *name)
 {
-	return R_RegisterMaterial (name, qFalse, MAT_RT_BSP_FLARE, -1);
+	return R_RegisterMaterial (name, false, MAT_RT_BSP_FLARE, -1);
 }
 
 material_t *R_RegisterTextureLM (char *name)
 {
-	return R_RegisterMaterial (name, qFalse, MAT_RT_BSP_LM, -1);
+	return R_RegisterMaterial (name, false, MAT_RT_BSP_LM, -1);
 }
 
 material_t *R_RegisterTextureVertex (char *name)
 {
-	return R_RegisterMaterial (name, qFalse, MAT_RT_BSP_VERTEX, -1);
+	return R_RegisterMaterial (name, false, MAT_RT_BSP_VERTEX, -1);
 }
 
 
@@ -3185,7 +3185,7 @@ void R_MaterialInit (void)
 	r_numMaterialErrors = 0;
 	r_numMaterialWarnings = 0;
 
-	numFiles = FS_FindFiles ("scripts", "*scripts/*.shd", "shd", fileList, MAX_MATERIALS, qTrue, qFalse);
+	numFiles = FS_FindFiles ("scripts", "*scripts/*.shd", "shd", fileList, MAX_MATERIALS, true, false);
 	for (i=0 ; i<numFiles ; i++) {
 		// Fix the path
 		Com_NormalizePath (fixedName, sizeof (fixedName), fileList[i]);
@@ -3206,7 +3206,7 @@ void R_MaterialInit (void)
 	}
 	FS_FreeFileList (fileList, numFiles);
 
-	numFiles = FS_FindFiles ("scripts", "*scripts/*.shader", "shader", fileList, MAX_MATERIALS, qTrue, qFalse);
+	numFiles = FS_FindFiles ("scripts", "*scripts/*.shader", "shader", fileList, MAX_MATERIALS, true, false);
 	for (i=0 ; i<numFiles ; i++) {
 		// Fix the path
 		Com_NormalizePath (fixedName, sizeof (fixedName), fileList[i]);
@@ -3228,12 +3228,12 @@ void R_MaterialInit (void)
 	FS_FreeFileList (fileList, numFiles);
 
 	// Material counterparts
-	r_cinMaterial = R_RegisterMaterial (ri.cinTexture->name, qTrue, MAT_RT_PIC, -1);
-	r_noMaterial = R_RegisterMaterial (ri.noTexture->name, qTrue, MAT_RT_BSP, -1);
-	r_noMaterialLightmap = R_RegisterMaterial (ri.noTexture->name, qTrue, MAT_RT_BSP, MAT_SURF_LIGHTMAP);
-	r_noMaterialSky = R_RegisterMaterial (ri.noTexture->name, qTrue, MAT_RT_SKYBOX, -1);
-	r_whiteMaterial = R_RegisterMaterial (ri.whiteTexture->name, qTrue, MAT_RT_PIC, -1);
-	r_blackMaterial = R_RegisterMaterial (ri.blackTexture->name, qTrue, MAT_RT_PIC, -1);
+	r_cinMaterial = R_RegisterMaterial (ri.cinTexture->name, true, MAT_RT_PIC, -1);
+	r_noMaterial = R_RegisterMaterial (ri.noTexture->name, true, MAT_RT_BSP, -1);
+	r_noMaterialLightmap = R_RegisterMaterial (ri.noTexture->name, true, MAT_RT_BSP, MAT_SURF_LIGHTMAP);
+	r_noMaterialSky = R_RegisterMaterial (ri.noTexture->name, true, MAT_RT_SKYBOX, -1);
+	r_whiteMaterial = R_RegisterMaterial (ri.whiteTexture->name, true, MAT_RT_PIC, -1);
+	r_blackMaterial = R_RegisterMaterial (ri.blackTexture->name, true, MAT_RT_PIC, -1);
 
 	r_cinMaterial->flags |= MAT_NOFLUSH;
 	r_noMaterial->flags |= MAT_NOFLUSH;

@@ -291,7 +291,7 @@ RB_LoadTexMatrix
 void RB_LoadTexMatrix (mat4x4_t m)
 {
 	qglLoadMatrixf (m);
-	rb_glState.texMatIdentity[rb_glState.texUnit] = qFalse;
+	rb_glState.texMatIdentity[rb_glState.texUnit] = false;
 }
 
 
@@ -304,7 +304,7 @@ void RB_LoadIdentityTexMatrix (void)
 {
 	if (!rb_glState.texMatIdentity[rb_glState.texUnit]) {
 		qglLoadIdentity ();
-		rb_glState.texMatIdentity[rb_glState.texUnit] = qTrue;
+		rb_glState.texMatIdentity[rb_glState.texUnit] = true;
 	}
 }
 
@@ -364,7 +364,7 @@ RB_SetupGL2D
 void RB_SetupGL2D (void)
 {
 	// State
-	rb_glState.in2D = qTrue;
+	rb_glState.in2D = true;
 	rb_glState.stateBits1 &= ~SB1_DEPTHMASK_ON;
 	qglDepthMask (GL_FALSE);
 
@@ -389,7 +389,7 @@ RB_SetupGL3D
 void RB_SetupGL3D (void)
 {
 	// State
-	rb_glState.in2D = qFalse;
+	rb_glState.in2D = false;
 	rb_glState.stateBits1 |= SB1_DEPTHMASK_ON;
 	qglDepthMask (GL_TRUE);
 
@@ -482,7 +482,7 @@ void RB_SetDefaultState (void)
 	for (i=MAX_TEXUNITS-1 ; i>=0 ; i--) {
 		rb_glState.texBound[i] = NULL;
 		rb_glState.texEnvModes[i] = 0;
-		rb_glState.texMatIdentity[i] = qTrue;
+		rb_glState.texMatIdentity[i] = true;
 		if (i >= ri.config.maxTexUnits)
 			continue;
 

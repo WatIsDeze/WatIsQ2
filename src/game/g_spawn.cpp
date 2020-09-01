@@ -423,7 +423,7 @@ static char *ED_ParseEdict (char *data, edict_t *ent)
 	char	keyName[256];
 	char	*token;
 
-	init = qFalse;
+	init = false;
 	memset (&st, 0, sizeof(st));
 
 	// Go through all the dictionary pairs
@@ -444,7 +444,7 @@ static char *ED_ParseEdict (char *data, edict_t *ent)
 		if (token[0] == '}')
 			Com_Error (ERR_FATAL, "ED_ParseEntity: closing brace without data");
 
-		init = qTrue;	
+		init = true;	
 
 		// Keynames with a leading underscore are used for utility comments,
 		// and are immediately discarded by quake
@@ -797,7 +797,7 @@ void SP_worldspawn (edict_t *ent)
 {
 	ent->movetype = MOVETYPE_PUSH;
 	ent->solid = SOLID_BSP;
-	ent->inUse = qTrue;			// since the world doesn't use G_Spawn()
+	ent->inUse = true;			// since the world doesn't use G_Spawn()
 	ent->s.modelIndex = 1;		// world model is always index 1
 
 	//---------------

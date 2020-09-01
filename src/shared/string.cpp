@@ -66,7 +66,7 @@ Q_ColorCharCount
 qBool Q_IsColorString (const char *p)
 {
 	if (!*p || (*p & 127) != COLOR_ESCAPE)
-		return qFalse;
+		return false;
 
 	switch (p[1] & 127) {
 	case '0':	case '1':	case '2':	case '3':	case '4':
@@ -75,10 +75,10 @@ qBool Q_IsColorString (const char *p)
 	case 'r':	case 'R':	// S_STYLE_RETURN
 	case 's':	case 'S':	// S_STYLE_SHADOW
 	case '^':				// COLOR_ESCAPE
-		return qTrue;
+		return true;
 	}
 
-	return qFalse;
+	return false;
 }
 
 
@@ -123,13 +123,13 @@ Q_ColorCharOffset
 size_t Q_ColorCharOffset (const char *s, size_t charCount)
 {
 	const char	*start = s;
-	qBool		skipNext = qFalse;
+	qBool		skipNext = false;
 
 	for ( ; *s && charCount ; s++) {
 		if (skipNext)
-			skipNext = qFalse;
+			skipNext = false;
 		else if (Q_IsColorString (s)) {
-			skipNext = qTrue;
+			skipNext = true;
 		}
 		else
 			charCount--;

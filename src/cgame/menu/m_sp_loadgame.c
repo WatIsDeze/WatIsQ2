@@ -57,12 +57,12 @@ void Create_Savestrings (void)
 		f = fopen (name, "rb");
 		if (!f) {
 			Q_strncpyz (ui_saveStrings[i], "<EMPTY>", sizeof (ui_saveStrings[i]));
-			ui_saveValid[i] = qFalse;
+			ui_saveValid[i] = false;
 		}
 		else {
 			fread (ui_saveStrings[i], 1, sizeof (ui_saveStrings[i]), f);
 			fclose (f);
-			ui_saveValid[i] = qTrue;
+			ui_saveValid[i] = true;
 		}
 	}
 }
@@ -115,7 +115,7 @@ static void LoadGameMenu_Init (void)
 
 	UI_AddItem (&m_loadGameMenu.frameWork,	&m_loadGameMenu.back_action);
 
-	UI_FinishFramework (&m_loadGameMenu.frameWork, qTrue);
+	UI_FinishFramework (&m_loadGameMenu.frameWork, true);
 }
 
 

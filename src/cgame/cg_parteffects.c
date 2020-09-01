@@ -46,7 +46,7 @@ static qBool CG_FindExplosionDir (vec3_t origin, float radius, vec3_t endPos, ve
 		Vec3MA (origin, radius * 0.9f, planes[i], tempDir);
 		Vec3MA (origin, radius * 0.1f, planes[(i+3)%6], tempOrg);
 
-		CG_PMTrace (&tr, tempOrg, NULL, NULL, tempDir, qFalse);
+		CG_PMTrace (&tr, tempOrg, NULL, NULL, tempDir, false);
 		if (tr.allSolid || tr.fraction == 1.0f)
 			continue;
 
@@ -61,10 +61,10 @@ static qBool CG_FindExplosionDir (vec3_t origin, float radius, vec3_t endPos, ve
 		// FIXME: why does this "fix" decal normals on xdmt4? Something to do with the fragment planes...
 		byte dirByte = DirToByte (dir);
 		ByteToDir (dirByte, dir);
-		return qTrue;
+		return true;
 	}
 
-	return qFalse;
+	return false;
 }
 
 /*
@@ -97,7 +97,7 @@ void CG_BlasterBlueParticles (vec3_t org, vec3_t dir)
 		1,									0,
 		7 + (frand() * 0.5f),
 		DT_BLASTER_BLUEMARK,				DF_USE_BURNLIFE|DF_ALPHACOLOR,
-		0,									qFalse,
+		0,									false,
 		0,									frand () * 360);
 
 	// Burn mark
@@ -110,7 +110,7 @@ void CG_BlasterBlueParticles (vec3_t org, vec3_t dir)
 		0.9f + (crand() * 0.1f),			0.9f + (crand() * 0.1f),
 		5 + (frand() * 0.5f),
 		DT_BLASTER_BURNMARK,				DF_ALPHACOLOR,
-		0,									qFalse,
+		0,									false,
 		0,									frand () * 360.0f);
 
 	// Smoke
@@ -129,7 +129,7 @@ void CG_BlasterBlueParticles (vec3_t org, vec3_t dir)
 			0.9f + (frand() * 0.1f),			-1.0f / (0.6f + (cg.smokeLingerScale * 0.1f) + (frand() * 0.1f)),
 			5 + crand (),						16 + (crand () * 8),
 			pRandGlowSmoke (),					PF_ALPHACOLOR,
-			NULL,								qFalse,
+			NULL,								false,
 			PART_STYLE_QUAD,
 			frand () * 360);
 	}
@@ -150,7 +150,7 @@ void CG_BlasterBlueParticles (vec3_t org, vec3_t dir)
 			0.9f + (frand () * 0.1f),			-1.0f / (1 + frand () * 0.3f),
 			11 + (frand () * -10.75f),			0.1f + (frand () * 0.5f),
 			PT_BLASTER_BLUE,					PF_SCALED|PF_GRAVITY|PF_ALPHACOLOR|PF_NOCLOSECULL,
-			pBounceThink,						qTrue,
+			pBounceThink,						true,
 			PART_STYLE_QUAD,
 			0);
 	}
@@ -179,7 +179,7 @@ void CG_BlasterGoldParticles (vec3_t org, vec3_t dir)
 		1,									0,
 		7 + (frand() * 0.5f),
 		DT_BLASTER_REDMARK,					DF_USE_BURNLIFE|DF_ALPHACOLOR,
-		0,									qFalse,
+		0,									false,
 		0,									frand () * 360);
 
 	// Burn mark
@@ -192,7 +192,7 @@ void CG_BlasterGoldParticles (vec3_t org, vec3_t dir)
 		0.9f + (crand() * 0.1f),			0.9f + (crand() * 0.1f),
 		5 + (frand() * 0.5f),
 		DT_BLASTER_BURNMARK,				DF_ALPHACOLOR,
-		0,									qFalse,
+		0,									false,
 		0,									frand () * 360);
 
 	// Smoke
@@ -212,7 +212,7 @@ void CG_BlasterGoldParticles (vec3_t org, vec3_t dir)
 			0.9f + (frand() * 0.1f),			-1.0f / (0.8f + (cg.smokeLingerScale * 0.1f) + (frand() * 0.1f)),
 			5 + crand (),						16 + (crand () * 8),
 			pRandGlowSmoke (),					PF_ALPHACOLOR,
-			NULL,								qFalse,
+			NULL,								false,
 			PART_STYLE_QUAD,
 			frand () * 360);
 	}
@@ -233,7 +233,7 @@ void CG_BlasterGoldParticles (vec3_t org, vec3_t dir)
 			0.9f + (frand () * 0.1f),			-1.0f / (1 + frand () * 0.3f),
 			11 + (frand () * -10.75f),			0.1f + (frand () * 0.5f),
 			PT_BLASTER_RED,						PF_SCALED|PF_GRAVITY|PF_ALPHACOLOR|PF_NOCLOSECULL,
-			pBounceThink,						qTrue,
+			pBounceThink,						true,
 			PART_STYLE_QUAD,
 			0);
 	}
@@ -261,7 +261,7 @@ void CG_BlasterGreenParticles (vec3_t org, vec3_t dir)
 		1,									0,
 		5 + (frand() * 0.5f),
 		DT_BLASTER_GREENMARK,				DF_USE_BURNLIFE|DF_ALPHACOLOR,
-		0,									qFalse,
+		0,									false,
 		0,									frand () * 360);
 
 	// Burn mark
@@ -274,7 +274,7 @@ void CG_BlasterGreenParticles (vec3_t org, vec3_t dir)
 		0.9f + (crand() * 0.1f),			0.9f + (crand() * 0.1f),
 		4 + (frand() * 0.5f),
 		DT_BLASTER_BURNMARK,				DF_ALPHACOLOR,
-		0,									qFalse,
+		0,									false,
 		0,									frand () * 360);
 
 	// Smoke
@@ -293,7 +293,7 @@ void CG_BlasterGreenParticles (vec3_t org, vec3_t dir)
 			0.9f + (frand() * 0.1f),			-1.0f / (0.8f + (cg.smokeLingerScale * 0.1f) + (frand() * 0.1f)),
 			5 + crand (),						16 + (crand () * 8),
 			pRandGlowSmoke (),					PF_ALPHACOLOR,
-			NULL,								qFalse,
+			NULL,								false,
 			PART_STYLE_QUAD,
 			frand () * 360);
 	}
@@ -314,7 +314,7 @@ void CG_BlasterGreenParticles (vec3_t org, vec3_t dir)
 			0.9f + (frand() * 0.1f),			-0.4f / (0.3f + (frand () * 0.3f)),
 			10 + (frand() * -9.75f),			0.1f + (frand() * 0.5f),
 			PT_BLASTER_GREEN,					PF_SCALED|PF_GRAVITY|PF_ALPHACOLOR|PF_NOCLOSECULL,
-			pBounceThink,						qTrue,
+			pBounceThink,						true,
 			PART_STYLE_QUAD,
 			0);
 	}
@@ -346,7 +346,7 @@ void CG_BlasterGreyParticles (vec3_t org, vec3_t dir)
 			0.9f + (frand() * 0.1f),			-1.0f / (0.8f + (cg.smokeLingerScale * 0.1f) + (frand() * 0.1f)),
 			5 + crand (),						15 + (crand () * 8),
 			pRandGlowSmoke (),					PF_ALPHACOLOR,
-			NULL,								qFalse,
+			NULL,								false,
 			PART_STYLE_QUAD,
 			frand () * 360);
 	}
@@ -366,7 +366,7 @@ void CG_BlasterGreyParticles (vec3_t org, vec3_t dir)
 			0.9f + (frand() * 0.1f),			-1.0f / (0.8f + (frand () * 0.3f)),
 			10 + (frand() * -9.75f),			0.1f + (frand() * 0.5f),
 			PT_FLARE,							PF_SCALED|PF_GRAVITY|PF_NOCLOSECULL,
-			pBounceThink,						qTrue,
+			pBounceThink,						true,
 			PART_STYLE_QUAD,
 			0);
 	}
@@ -404,7 +404,7 @@ void CG_BleedEffect (vec3_t org, vec3_t dir, int count)
 			1.0f,								-0.5f / (0.4f + (frand () * 0.3f)),
 			9 + (crand () * 2),					14 + (crand () * 3),
 			PT_BLDSPURT,						PF_SCALED|PF_ALPHACOLOR|PF_NOCLOSECULL,
-			NULL,								qFalse,
+			NULL,								false,
 			PART_STYLE_QUAD,
 			frand () * 360);
 	}
@@ -425,7 +425,7 @@ void CG_BleedEffect (vec3_t org, vec3_t dir, int count)
 			1.0f,								-0.5f / (0.4f + (frand () * 0.3f)),
 			10 + (crand () * 2),				14 + (crand () * 3),
 			PT_BLDSPURT2,						PF_SCALED|PF_ALPHACOLOR|PF_NOCLOSECULL,
-			NULL,								qFalse,
+			NULL,								false,
 			PART_STYLE_QUAD,
 			frand () * 360);
 	}
@@ -472,7 +472,7 @@ void CG_BleedEffect (vec3_t org, vec3_t dir, int count)
 			1.0f,								-0.5f / (0.4f + (frand () * 0.9f)),
 			0.25f + (frand () * 0.9f),			0.35f + (frand () * 0.5f),
 			pRandBloodDrip (),					flags,
-			pBloodDripThink,					qTrue,
+			pBloodDripThink,					true,
 			PART_STYLE_DIRECTION,
 			PMAXBLDDRIPLEN*0.5f + (frand () * PMAXBLDDRIPLEN));
 	}
@@ -524,7 +524,7 @@ void CG_BleedGreenEffect (vec3_t org, vec3_t dir, int count)
 			1.0f,								-0.5f / (0.4f + (frand () * 0.3f)),
 			1.25f + (frand () * 0.2f),			1.35f + (frand () * 0.2f),
 			pRandGrnBloodDrip (),				flags,
-			pBloodDripThink,					qTrue,
+			pBloodDripThink,					true,
 			PART_STYLE_DIRECTION,
 			PMAXBLDDRIPLEN);
 	}
@@ -556,7 +556,7 @@ void CG_BubbleEffect (vec3_t origin)
 		0.9f + (crand () * 0.1f),		-1.0f / (3 + (frand () * 0.2f)),
 		0.1f + frand (),				0.1f + frand (),
 		PT_WATERBUBBLE,					PF_SHADE|PF_LAVAONLY|PF_SLIMEONLY|PF_WATERONLY|PF_NOCLOSECULL,
-		0,								qFalse,
+		0,								false,
 		PART_STYLE_QUAD,
 		0);
 }
@@ -589,7 +589,7 @@ void CG_ExplosionBFGEffect (vec3_t org)
 			0.75f + (crand () * 0.1f),		-1.0f / (0.25f + cg.smokeLingerScale + (crand () * 0.1f)),
 			35 + (crand () * 15),			140 + (crand () * 30),
 			pRandGlowSmoke (),				0,
-			pSmokeThink,					qTrue,
+			pSmokeThink,					true,
 			PART_STYLE_QUAD,
 			frand () * 361);
 	}
@@ -607,7 +607,7 @@ void CG_ExplosionBFGEffect (vec3_t org)
 			1.0f,							-0.8f / (0.8f + (frand () * 0.3f)),
 			11 + (crand () * 10.5f),		0.6f + (crand () * 0.5f),
 			PT_BFG_DOT,						PF_SCALED|PF_GRAVITY|PF_ALPHACOLOR|PF_NOCLOSECULL,
-			pBounceThink,					qTrue,
+			pBounceThink,					true,
 			PART_STYLE_QUAD,
 			0);
 	}
@@ -631,7 +631,7 @@ void CG_FlareEffect (vec3_t origin, int type, float orient, float size, float si
 		alpha,							alphavel,
 		size,							sizevel,
 		type,							PF_SCALED|PF_ALPHACOLOR|PF_NOCLOSECULL,
-		pFlareThink,					qTrue,
+		pFlareThink,					true,
 		PART_STYLE_QUAD,
 		orient);
 }
@@ -657,7 +657,7 @@ void CG_ItemRespawnEffect (vec3_t org)
 			1.0f,							-1.0f / (1.0f + (frand () * 0.3f)),
 			4,								2,
 			PT_ITEMRESPAWN,					PF_SCALED|PF_ALPHACOLOR|PF_NOCLOSECULL,
-			0,								qFalse,
+			0,								false,
 			PART_STYLE_QUAD,
 			0);
 	}
@@ -690,7 +690,7 @@ void CG_LogoutEffect (vec3_t org, int type)
 				1.0f,								-1.0f / (1.0f + (frand () * 0.3f)),
 				3,									1,
 				PT_GENERIC_GLOW,					PF_SCALED|PF_ALPHACOLOR|PF_NOCLOSECULL,
-				0,									qFalse,
+				0,									false,
 				PART_STYLE_QUAD,
 				0);
 		}
@@ -711,7 +711,7 @@ void CG_LogoutEffect (vec3_t org, int type)
 				1.0f,								-1.0f / (1.0f + (frand () * 0.3f)),
 				3,									1,
 				PT_GENERIC_GLOW,					PF_SCALED|PF_ALPHACOLOR|PF_NOCLOSECULL,
-				0,									qFalse,
+				0,									false,
 				PART_STYLE_QUAD,
 				0);
 		}
@@ -732,7 +732,7 @@ void CG_LogoutEffect (vec3_t org, int type)
 				1.0f,								-1.0f / (1.0f + (frand () * 0.3f)),
 				3,									1,
 				PT_GENERIC_GLOW,					PF_SCALED|PF_ALPHACOLOR|PF_NOCLOSECULL,
-				0,									qFalse,
+				0,									false,
 				PART_STYLE_QUAD,
 				0);
 		}
@@ -771,7 +771,7 @@ void CG_ParticleEffect (vec3_t org, vec3_t dir, int color, int count)
 				0.9f + (crand () * 0.1f),			0.8f,
 				d,
 				dRandSlashMark (),					DF_ALPHACOLOR,
-				0,									qFalse,
+				0,									false,
 				0,									frand () * 360);
 
 			for (i=0 ; i<count ; i++) {
@@ -791,7 +791,7 @@ void CG_ParticleEffect (vec3_t org, vec3_t dir, int color, int count)
 					1.0f,								-1.0f / (0.5f + (frand () * 0.3f)),
 					0.5f,								0.6f,
 					PT_GENERIC_GLOW,					PF_SCALED|PF_ALPHACOLOR,
-					0,									qFalse,
+					0,									false,
 					PART_STYLE_QUAD,
 					0);
 			}
@@ -834,7 +834,7 @@ void CG_ParticleEffect (vec3_t org, vec3_t dir, int color, int count)
 				1,									-1.0f / (0.5f + (frand () * 0.3f)),
 				1,									1,
 				PT_GENERIC,							PF_SCALED,
-				0,									qFalse,
+				0,									false,
 				PART_STYLE_QUAD,
 				0);
 		}
@@ -872,7 +872,7 @@ void CG_ParticleEffect2 (vec3_t org, vec3_t dir, int color, int count)
 				1,									-1.0f / (0.5f + (frand () * 0.3f)),
 				1,									1,
 				PT_GENERIC,							PF_SCALED,
-				0,									qFalse,
+				0,									false,
 				PART_STYLE_QUAD,
 				0);
 		}
@@ -905,7 +905,7 @@ void CG_ParticleEffect3 (vec3_t org, vec3_t dir, int color, int count)
 			1.0f,								-1.0f / (0.5f + (frand () * 0.3f)),
 			1,									1,
 			PT_GENERIC,							PF_SCALED,
-			0,									qFalse,
+			0,									false,
 			PART_STYLE_QUAD,
 			0);
 	}
@@ -946,7 +946,7 @@ void CG_ParticleSmokeEffect (vec3_t org, vec3_t dir, int color, int count, int m
 			0.9f + (crand () * 0.1f),		-1.0f / (0.5f + (cg.smokeLingerScale * 5.0f) + (frand () * 0.3f)),
 			5 + (frand () * 4),				10 + (frand () * 4),
 			pRandSmoke (),					PF_SHADE,
-			pSmokeThink,					qTrue,
+			pSmokeThink,					true,
 			PART_STYLE_QUAD,
 			frand () * 360);
 	}
@@ -972,7 +972,7 @@ void CG_RicochetEffect (vec3_t org, vec3_t dir, int count)
 		0.9f + (crand () * 0.1f),			0.8f,
 		4 + crand (),
 		DT_BULLET,							DF_ALPHACOLOR,
-		0,									qFalse,
+		0,									false,
 		0,									frand () * 360);
 
 	// Dots
@@ -993,7 +993,7 @@ void CG_RicochetEffect (vec3_t org, vec3_t dir, int count)
 			1.0f,								-1.0f / (0.5f + (frand() * 0.2f)),
 			0.5f,								0.6f,
 			PT_GENERIC,							PF_SCALED|PF_NOCLOSECULL,
-			0,									qFalse,
+			0,									false,
 			PART_STYLE_QUAD,
 			0);
 	}
@@ -1025,7 +1025,7 @@ void CG_RocketFireParticles (vec3_t org, vec3_t dir)
 		0.4f,							-1.0f / (1.75f + (crand () * 0.25f)),
 		65 + (crand () * 10),			450 + (crand () * 10),
 		pRandSmoke (),					PF_SHADE,
-		pSmokeThink,					qTrue,
+		pSmokeThink,					true,
 		PART_STYLE_QUAD,
 		frand () * 360);
 }
@@ -1059,7 +1059,7 @@ void CG_SparkEffect (vec3_t org, vec3_t dir, int color, int colorvel, int count,
 			1,									-1.0f / (0.175f + (frand() * 0.05f)),
 			0.4f,								0.4f,
 			PT_SPARK,							PF_ALPHACOLOR,
-			pRicochetSparkThink,				qTrue,
+			pRicochetSparkThink,				true,
 			PART_STYLE_DIRECTION,
 			16 + (crand () * 4));
 	}
@@ -1078,7 +1078,7 @@ void CG_SparkEffect (vec3_t org, vec3_t dir, int color, int colorvel, int count,
 			0.9f + (crand () * 0.1f),			-1.0f / (1.5f + (cg.smokeLingerScale * 0.5f) + (crand() * 0.2f)),
 			(4 + (frand () * 3)) * smokeScale,	(12 + (crand () * 3)) * smokeScale,
 			pRandSmoke (),						PF_SHADE|PF_NOCLOSECULL,
-			pFastSmokeThink,					qTrue,
+			pFastSmokeThink,					true,
 			PART_STYLE_QUAD,
 			frand () * 360);
 	}
@@ -1097,7 +1097,7 @@ void CG_SparkEffect (vec3_t org, vec3_t dir, int color, int colorvel, int count,
 			0.9f + (crand () * 0.1f),			-1.0f / (1.25f + (cg.smokeLingerScale * 0.5f) + (crand() * 0.2f)),
 			(4 + (frand () * 3)) * smokeScale,	(12 + (crand () * 3)) * smokeScale,
 			pRandSmoke (),						PF_SHADE|PF_NOCLOSECULL,
-			pFastSmokeThink,					qTrue,
+			pFastSmokeThink,					true,
 			PART_STYLE_QUAD,
 			frand () * 360);
 	}
@@ -1130,7 +1130,7 @@ void CG_SplashParticles (vec3_t org, vec3_t dir, int color, int count, qBool glo
 		0.5f + (crand () * 0.1f),			-1.0f / (1.9f + (frand () * 0.1f)),
 		7 + (crand () * 2),					24 + (crand () * 3),
 		PT_WATERRIPPLE,						PF_SCALED,
-		NULL,								qFalse,
+		NULL,								false,
 		PART_STYLE_ANGLED,
 		0);
 
@@ -1149,7 +1149,7 @@ void CG_SplashParticles (vec3_t org, vec3_t dir, int color, int count, qBool glo
 		0.9f + (crand () * 0.1f),			-1.0f / (0.5f + (frand () * 0.1f)),
 		2 + crand (),						15 + (crand () * 2),
 		PT_WATERRING,						PF_SCALED,
-		NULL,								qFalse,
+		NULL,								false,
 		PART_STYLE_ANGLED,
 		0);
 
@@ -1168,7 +1168,7 @@ void CG_SplashParticles (vec3_t org, vec3_t dir, int color, int count, qBool glo
 		0.5f + (crand () * 0.1f),			-1.0f / (0.2f + (frand () * 0.1f)),
 		5 + (crand () * 2),					25 + (crand () * 3),
 		PT_WATERIMPACT,						PF_SCALED,
-		NULL,								qFalse,
+		NULL,								false,
 		PART_STYLE_ANGLED,
 		0);
 
@@ -1189,7 +1189,7 @@ void CG_SplashParticles (vec3_t org, vec3_t dir, int color, int count, qBool glo
 			5 + (crand () * 5),					35 + (crand () * 5),
 			glow ? PT_WATERMIST_GLOW : PT_WATERMIST,
 			PF_SCALED|PF_GRAVITY|PF_NOCLOSECULL,
-			0,									qFalse,
+			0,									false,
 			PART_STYLE_QUAD,
 			frand () * 360);
 	}
@@ -1208,7 +1208,7 @@ void CG_SplashParticles (vec3_t org, vec3_t dir, int color, int count, qBool glo
 		1.0f,								-1.0f / (0.2f + (frand() * 0.2f)),
 		9,									9,
 		glow ? PT_WATERPLUME_GLOW : PT_WATERPLUME,		0,
-		NULL,								qFalse,
+		NULL,								false,
 		PART_STYLE_DIRECTION,
 		0);
 
@@ -1232,7 +1232,7 @@ void CG_SplashParticles (vec3_t org, vec3_t dir, int color, int count, qBool glo
 			0.7f + (frand () * 0.3f),			-1.0f / (0.5f + (frand () * 0.3f)),
 			1.5f + crand (),					0.15 + (crand () * 0.125f),
 			PT_WATERDROPLET,					PF_GRAVITY|PF_AIRONLY|PF_NOCLOSECULL,
-			pDropletThink,						qTrue,
+			pDropletThink,						true,
 			PART_STYLE_QUAD,
 			frand () * 360);
 	}
@@ -1250,7 +1250,7 @@ void CG_SplashEffect (vec3_t org, vec3_t dir, int color, int count)
 		CG_SparkEffect (org, dir, 12, 12, count, 1, 4);
 		break;
 	case SPLASH_BLUE_WATER:
-		CG_SplashParticles (org, dir, 0x09, count, qFalse);
+		CG_SplashParticles (org, dir, 0x09, count, false);
 		break;
 	case SPLASH_BROWN_WATER:
 		CG_ParticleEffect (org, dir, clrtbl[color], count);
@@ -1259,10 +1259,10 @@ void CG_SplashEffect (vec3_t org, vec3_t dir, int color, int count)
 		if (cg.currGameMod == GAME_MOD_GLOOM)
 			CG_GloomDroneEffect (org, dir);
 		else
-			CG_SplashParticles (org, dir, clrtbl[color], count, qTrue);
+			CG_SplashParticles (org, dir, clrtbl[color], count, true);
 		break;
 	case SPLASH_LAVA:
-		CG_SplashParticles (org, dir, clrtbl[color], count, qTrue);
+		CG_SplashParticles (org, dir, clrtbl[color], count, true);
 		break;
 	case SPLASH_BLOOD:
 		CG_BleedEffect (org, dir, count);
@@ -1302,7 +1302,7 @@ void CG_BigTeleportParticles (vec3_t org)
 			1.0f,							-0.3f / (0.2f + (frand () * 0.3f)),
 			10,								3,
 			PT_FLAREGLOW,					PF_SCALED|PF_NOCLOSECULL,
-			0,								qFalse,
+			0,								false,
 			PART_STYLE_QUAD,
 			0);
 	}
@@ -1340,7 +1340,7 @@ void CG_BlasterTip (vec3_t start, vec3_t end)
 			0.9f + (frand() * 0.1f),			-1.0f / (0.25f + (cg.smokeLingerScale * 0.1f) + (frand() * 0.1f)),
 			2 + crand (),						12 + (crand () * 2),
 			pRandGlowSmoke (),					PF_ALPHACOLOR,
-			NULL,								qFalse,
+			NULL,								false,
 			PART_STYLE_QUAD,
 			frand () * 360);
 	}
@@ -1369,7 +1369,7 @@ void CG_BlasterTip (vec3_t start, vec3_t end)
 			1.0f,								-15,
 			3 + frand (),						1.5f + frand (),
 			PT_BLASTER_RED,						PF_NOCLOSECULL,
-			0,									qFalse,
+			0,									false,
 			PART_STYLE_QUAD,
 			0);
 	}
@@ -1405,7 +1405,7 @@ void CG_ExplosionParticles (vec3_t org, float scale, qBool exploOnly, qBool inWa
 			0.9f,								-1.5f / (0.6f + (crand () * 0.15f)),
 			0.3f,								0.4f,
 			PT_SPARK,							0,
-			pSparkGrowThink,					qTrue,
+			pSparkGrowThink,					true,
 			PART_STYLE_DIRECTION,
 			(16 + (crand () * 4)) * scale);
 	}
@@ -1427,7 +1427,7 @@ void CG_ExplosionParticles (vec3_t org, float scale, qBool exploOnly, qBool inWa
 				0.9f + (crand () * 0.1f),		-1.0f / (1 + (frand () * 0.2f)),
 				0.1f + frand (),				0.1f + frand (),
 				PT_WATERBUBBLE,					PF_SHADE|PF_LAVAONLY|PF_SLIMEONLY|PF_WATERONLY,
-				0,								qFalse,
+				0,								false,
 				PART_STYLE_QUAD,
 				0);
 		}
@@ -1446,7 +1446,7 @@ void CG_ExplosionParticles (vec3_t org, float scale, qBool exploOnly, qBool inWa
 		1.0f,								-3 + (crand () * 0.1f) + (scale * 0.33f),
 		(40 + (crand () * 5)) * scale,		(130 + (crand () * 10)) * scale,
 		PT_EXPLO1,							PF_NOCLOSECULL,
-		pExploAnimThink,					qTrue,
+		pExploAnimThink,					true,
 		PART_STYLE_QUAD,
 		crand () * 12);
 
@@ -1462,7 +1462,7 @@ void CG_ExplosionParticles (vec3_t org, float scale, qBool exploOnly, qBool inWa
 			1.0f,								-3.15f + (crand () * 0.1f) + (scale * 0.33f),
 			(2 + crand ()) * scale,				(155 + (crand () * 10)) * scale,
 			i?PT_EXPLOEMBERS1:PT_EXPLOEMBERS2,	PF_NOCLOSECULL,
-			0,									qFalse,
+			0,									false,
 			PART_STYLE_QUAD,
 			crand () * 360);
 	}
@@ -1481,7 +1481,7 @@ void CG_ExplosionParticles (vec3_t org, float scale, qBool exploOnly, qBool inWa
 		1.0f,								-4.5f + (crand () * 0.1f) + (scale * 0.33f),
 		(2 + crand ()) * scale,				(130 + (crand () * 10)) * scale,
 		PT_EXPLOFLASH,						PF_NOCLOSECULL,
-		0,									qFalse,
+		0,									false,
 		PART_STYLE_QUAD,
 		crand () * 360);
 
@@ -1500,7 +1500,7 @@ void CG_ExplosionParticles (vec3_t org, float scale, qBool exploOnly, qBool inWa
 			0.75f + (crand () * 0.1f),		-1.0f / (2.0f + (cg.smokeLingerScale * 3.0f) + (crand () * 0.2f)),
 			(40 + (crand () * 5)) * scale,	(100 + (crand () * 10)) * scale,
 			pRandSmoke (),					PF_SHADE,
-			pSmokeThink,					qTrue,
+			pSmokeThink,					true,
 			PART_STYLE_QUAD,
 			frand () * 361);
 	}
@@ -1529,7 +1529,7 @@ void CG_ExplosionParticles (vec3_t org, float scale, qBool exploOnly, qBool inWa
 			0.75f + (crand () * 0.1f),		-1.0f / (1.5f + cg.smokeLingerScale + (crand () * 0.2f)),
 			(30 + (crand () * 5)) * scale,	(100 + (crand () * 10)) * scale,
 			pRandSmoke (),					PF_SHADE,
-			pSmokeThink,					qTrue,
+			pSmokeThink,					true,
 			PART_STYLE_QUAD,
 			frand () * 361);
 	}
@@ -1548,7 +1548,7 @@ void CG_ExplosionParticles (vec3_t org, float scale, qBool exploOnly, qBool inWa
 			0.9f,								-1.5f / (0.5f + (crand () * 0.15f)),
 			0.3f,								0.4f,
 			PT_SPARK,							0,
-			pSparkGrowThink,					qTrue,
+			pSparkGrowThink,					true,
 			PART_STYLE_DIRECTION,
 			(16 + (crand () * 4)) * scale);
 	}
@@ -1562,7 +1562,7 @@ void CG_ExplosionParticles (vec3_t org, float scale, qBool exploOnly, qBool inWa
 		0.9f + (crand () * 0.1f),			0.8f,
 		(35 + (frand () * 5)) * scale,
 		dRandExploMark (),					DF_ALPHACOLOR,
-		0,									qFalse,
+		0,									false,
 		0,									frand () * 360);
 
 	// Only do these for small effects
@@ -1581,7 +1581,7 @@ void CG_ExplosionParticles (vec3_t org, float scale, qBool exploOnly, qBool inWa
 				0.7f + (crand () * 0.1f),			-1.0f / (0.1f + (frand () * 0.05f)),
 				5 + (crand () * 2),					(60 + (crand () * 5)) * scale,
 				PT_EXPLOWAVE,						PF_SCALED,
-				NULL,								qFalse,
+				NULL,								false,
 				PART_STYLE_ANGLED,
 				0);
 		}
@@ -1600,7 +1600,7 @@ void CG_ExplosionParticles (vec3_t org, float scale, qBool exploOnly, qBool inWa
 				0.6f + (crand () * 0.1f),			-1.0f / (1.65f + (cg.smokeLingerScale * 5.0f) + (crand () * 0.2f)),
 				(60 + (crand () * 5)) * scale,		(80 + (crand () * 10)) * scale,
 				pRandSmoke (),						PF_SHADE,
-				pSmokeThink,						qTrue,
+				pSmokeThink,						true,
 				PART_STYLE_ANGLED,
 				frand () * 361);
 		}
@@ -1635,7 +1635,7 @@ void CG_ExplosionBFGParticles (vec3_t org)
 			0.75f + (crand () * 0.1f),		-1.0f / (0.25f + cg.smokeLingerScale + (crand () * 0.1f)),
 			35 + (crand () * 15),			140 + (crand () * 30),
 			pRandGlowSmoke (),				0,
-			pSmokeThink,					qTrue,
+			pSmokeThink,					true,
 			PART_STYLE_QUAD,
 			frand () * 361);
 	}
@@ -1654,7 +1654,7 @@ void CG_ExplosionBFGParticles (vec3_t org)
 			1.0f,							-0.8f / (0.8f + (frand () * 0.3f)),
 			11 + (crand () * 10.5f),		0.1f + (frand () * 0.5f),
 			PT_BFG_DOT,						PF_SCALED|PF_GRAVITY|PF_NOCLOSECULL,
-			pBounceThink,					qTrue,
+			pBounceThink,					true,
 			PART_STYLE_QUAD,
 			0);
 	}
@@ -1672,7 +1672,7 @@ void CG_ExplosionBFGParticles (vec3_t org)
 		0.9f + (crand () * 0.1f),			0.8f,
 		40 + (crand () * 3) - 8,
 		DT_BFG_BURNMARK,					DF_ALPHACOLOR,
-		NULL,								qFalse,
+		NULL,								false,
 		0,									frand () * 360);
 
 	// Glow mark
@@ -1684,7 +1684,7 @@ void CG_ExplosionBFGParticles (vec3_t org)
 		1.0f,								0,
 		40 + (crand () * 3) - 8,
 		DT_BFG_GLOWMARK,					DF_USE_BURNLIFE|DF_ALPHACOLOR,
-		NULL,								qFalse,
+		NULL,								false,
 		0,									frand () * 360);
 }
 
@@ -1709,7 +1709,7 @@ void CG_ExplosionColorParticles (vec3_t org)
 			1.0f,							-0.4f / (0.6f + (frand () * 0.2f)),
 			1.0f,							1.0f,
 			PT_GENERIC,						PF_SCALED|PF_NOCLOSECULL,
-			0,								qFalse,
+			0,								false,
 			PART_STYLE_QUAD,
 			0);
 	}
@@ -1763,7 +1763,7 @@ void CG_FlyParticles (vec3_t origin, int count)
 			1,								-100,
 			1.5f,							1.5f,
 			PT_FLY,							PF_NOCLOSECULL,
-			0,								qFalse,
+			0,								false,
 			PART_STYLE_QUAD,
 			0);
 	}
@@ -1828,7 +1828,7 @@ void CG_ForceWall (vec3_t start, vec3_t end, int color)
 				1.0f,							-1.0f / (3.0f + (frand () * 0.5f)),
 				1.0f,							1.0f,
 				PT_GENERIC,						PF_SCALED,
-				0,								qFalse,
+				0,								false,
 				PART_STYLE_QUAD,
 				0);
 		}
@@ -1863,7 +1863,7 @@ void CG_MonsterPlasma_Shell (vec3_t origin)
 			1.0,							PART_INSTANT,
 			1.0,							1.0,
 			PT_GENERIC,						PF_SCALED,
-			0,								qFalse,
+			0,								false,
 			PART_STYLE_QUAD,
 			0);
 	}
@@ -1901,7 +1901,7 @@ void CG_PhalanxTip (vec3_t start, vec3_t end)
 			0.9f + (frand() * 0.1f),			-1.0f / (0.25f + (cg.smokeLingerScale * 0.1f) + (frand() * 0.1f)),
 			5 + crand (),						16 + (crand () * 8),
 			pRandGlowSmoke (),					PF_ALPHACOLOR,
-			NULL,								qFalse,
+			NULL,								false,
 			PART_STYLE_QUAD,
 			frand () * 360);
 	}
@@ -1930,7 +1930,7 @@ void CG_PhalanxTip (vec3_t start, vec3_t end)
 			1.0,								-15,
 			5 + (frand () * 4),					3 + (frand () * 2.5f),
 			PT_PHALANXTIP,						0,
-			0,									qFalse,
+			0,									false,
 			PART_STYLE_QUAD,
 			0);
 	}
@@ -1956,7 +1956,7 @@ void CG_PhalanxTip (vec3_t start, vec3_t end)
 					0.9f,								-3.5f,
 					2 + (frand () * 0.5f),				0.5f + (frand () * 0.5f),
 					PT_GENERIC,							PF_NOCLOSECULL,
-					0,									qFalse,
+					0,									false,
 					PART_STYLE_QUAD,
 					0);
 			}
@@ -1985,7 +1985,7 @@ void CG_TeleportParticles (vec3_t org)
 			0.9f + (frand () * 0.25f),		-0.3f / (0.1f + (frand () * 0.1f)),
 			10 + (frand () * 0.25f),		0.5f + (frand () * 0.25f),
 			PT_FLAREGLOW,					PF_SCALED|PF_GRAVITY|PF_NOCLOSECULL,
-			pBounceThink,					qTrue,
+			pBounceThink,					true,
 			PART_STYLE_QUAD,
 			0);
 	}
@@ -2012,7 +2012,7 @@ void CG_TeleporterParticles (entityState_t *ent)
 			1.0f,								-0.6f + (crand () * 0.1f),
 			2 + (frand () * 0.5f),				1 + (crand () * 0.5f),
 			PT_GENERIC_GLOW,					PF_SCALED|PF_NOCLOSECULL,
-			0,									qFalse,
+			0,									false,
 			PART_STYLE_QUAD,
 			0);
 	}
@@ -2044,7 +2044,7 @@ void CG_TrackerShell (vec3_t origin)
 			1.0,							PART_INSTANT,
 			1.0f,							1.0f,
 			PT_GENERIC,						PF_SCALED,
-			0,								qFalse,
+			0,								false,
 			PART_STYLE_QUAD,
 			0);
 	}
@@ -2089,7 +2089,7 @@ void CG_TrapParticles (refEntity_t *ent)
 			1.0f,							-1.0f / (0.45f + (frand () * 0.2f)),
 			5.0f,							1.0f,
 			PT_GENERIC,						PF_SCALED,
-			0,								qFalse,
+			0,								false,
 			PART_STYLE_QUAD,
 			0);
 	}
@@ -2121,7 +2121,7 @@ void CG_TrapParticles (refEntity_t *ent)
 					1.0f,							-1.0f / (0.3f + (frand () * 0.15f)),
 					2.0f,							1.0f,
 					PT_GENERIC,						PF_SCALED,
-					0,								qFalse,
+					0,								false,
 					PART_STYLE_QUAD,
 					0);
 			}
@@ -2157,7 +2157,7 @@ void CG_WidowSplash (vec3_t org)
 			1.0f,							-0.8f / (0.5f + (frand () * 0.3f)),
 			1.0f,							1.0f,
 			PT_GENERIC,						PF_SCALED,
-			0,								qFalse,
+			0,								false,
 			PART_STYLE_QUAD,
 			0);
 	}

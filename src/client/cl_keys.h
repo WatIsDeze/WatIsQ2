@@ -28,7 +28,7 @@ typedef struct keyInfo_s {
         char    *bind;                  // action the key is bound to
         qBool   down;                   // key up events are sent even if in console mode
         int             repeated;               // if > 1, it is autorepeating
-        qBool   console;                // if qTrue, can't be typed while in the console
+        qBool   console;                // if true, can't be typed while in the console
         int             shiftValue;             // key to map to if shift held down when this key is pressed
 } keyInfo_t;
 

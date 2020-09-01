@@ -25,9 +25,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 static keyDest_t	cl_keyDest;
 
-static qBool		key_shiftDown = qFalse;
-static qBool		key_capsLockOn = qFalse;
-qBool				key_insertOn = qFalse;
+static qBool		key_shiftDown = false;
+static qBool		key_capsLockOn = false;
+qBool				key_insertOn = false;
 
 int					key_anyKeyDown;
 
@@ -292,7 +292,7 @@ static qBool Key_SubComplete (char *source, char *dest, size_t size, qBool doAli
 	key_completePartial[j] = '\0';
 	key_completeLen = strlen (key_completePartial);
 	if (!key_completeLen)
-		return qFalse;
+		return false;
 
 	// Collect shortest match and total match count
 	key_totalMatches = 0;
@@ -314,12 +314,12 @@ static qBool Key_SubComplete (char *source, char *dest, size_t size, qBool doAli
 	case 0:
 		// No matches
 		Com_Printf (0, "No sub-matches...\n");
-		return qFalse;
+		return false;
 
 	case 1:
 		// Found an exact match
 		Q_strncpyz (dest+startPos, key_shortMatch, size);
-		return qTrue;
+		return true;
 	}
 
 	// Cut off where partial matching stops
@@ -350,7 +350,7 @@ static qBool Key_SubComplete (char *source, char *dest, size_t size, qBool doAli
 
 	// Place completion
 	Q_strncpyz (dest+startPos, key_shortMatch, size);
-	return qTrue;
+	return true;
 }
 
 static qBool Key_FileSubComplete (char *source, char *dest, size_t size, char *path, char *filter, char *ext, qBool recurse, qBool stripExt)
@@ -374,10 +374,10 @@ static qBool Key_FileSubComplete (char *source, char *dest, size_t size, char *p
 	key_completeLen = strlen (key_completePartial);
 
 	// Collect the list
-	numFiles = FS_FindFiles (path, filter, ext, fileList, FS_MAX_FINDFILES, qFalse, recurse);
+	numFiles = FS_FindFiles (path, filter, ext, fileList, FS_MAX_FINDFILES, false, recurse);
 	if (!numFiles) {
 		Com_Printf (0, "No sub-matches...\n");
-		return qFalse;
+		return false;
 	}
 
 	// Find the number of partial matches
@@ -405,7 +405,7 @@ static qBool Key_FileSubComplete (char *source, char *dest, size_t size, char *p
 	case 0:
 		// No matches
 		Com_Printf (0, "No sub-matches...\n");
-		return qFalse;
+		return false;
 
 	case 1:
 		// Exact match
@@ -413,7 +413,7 @@ static qBool Key_FileSubComplete (char *source, char *dest, size_t size, char *p
 			Com_StripExtension (dest, size, key_shortMatch);
 		else
 			Q_strncpyz (dest, key_shortMatch, size);
-		return qTrue;
+		return true;
 	}
 
 	// Print the list
@@ -438,7 +438,7 @@ static qBool Key_FileSubComplete (char *source, char *dest, size_t size, char *p
 		Com_StripExtension (dest, size, key_shortMatch);
 	else
 		Q_strncpyz (dest, key_shortMatch, size);
-	return qTrue;
+	return true;
 }
 
 static void Key_CompleteCommand (void)
@@ -469,7 +469,7 @@ static void Key_CompleteCommand (void)
 	|| !Q_strnicmp (&source[startPos], "devmap ", 7)) {
 		p = strchr (&source[startPos], ' ');
 		if (p && p+1) {
-			if (Key_FileSubComplete (p+1, p+1, size-startPos, "maps", "maps/*.bsp", "bsp", qFalse, qTrue))
+			if (Key_FileSubComplete (p+1, p+1, size-startPos, "maps", "maps/*.bsp", "bsp", false, true))
 				*cursorPos = strlen(source);
 		}
 		return;
@@ -477,7 +477,7 @@ static void Key_CompleteCommand (void)
 	else if (!Q_strnicmp (&source[startPos], "demomap ", 8)) {
 		p = strchr (&source[startPos], ' ');
 		if (p && p+1) {
-			if (Key_FileSubComplete (p+1, p+1, size-startPos, "demos", "demos/*.dm2", "dm2", qFalse, qTrue))
+			if (Key_FileSubComplete (p+1, p+1, size-startPos, "demos", "demos/*.dm2", "dm2", false, true))
 				*cursorPos = strlen(source);
 		}
 		return;
@@ -492,7 +492,7 @@ static void Key_CompleteCommand (void)
 	|| !Q_strnicmp (&source[startPos], "reset ", 6)) {
 		p = strchr (&source[startPos], ' ');
 		if (p && p+1) {
-			if (Key_SubComplete (p+1, p+1, size-startPos, qFalse, qFalse, qTrue))
+			if (Key_SubComplete (p+1, p+1, size-startPos, false, false, true))
 				*cursorPos = strlen(source);
 		}
 		return;
@@ -500,7 +500,7 @@ static void Key_CompleteCommand (void)
 	else if (!Q_strnicmp (&source[startPos], "rcon ", 5)) {
 		p = strchr (&source[startPos], ' ');
 		if (p && p+1) {
-			if (Key_SubComplete (p+1, p+1, size-startPos, qFalse, qTrue, qFalse))
+			if (Key_SubComplete (p+1, p+1, size-startPos, false, true, false))
 				*cursorPos = strlen(source);
 		}
 		return;
@@ -988,12 +988,12 @@ pasteIntoMessage:
 
 	case K_HOME:
 	case K_KP_HOME:
-		CL_SetConsoleDisplay (qTrue);
+		CL_SetConsoleDisplay (true);
 		return;
 
 	case K_END:
 	case K_KP_END:
-		CL_SetConsoleDisplay (qFalse);
+		CL_SetConsoleDisplay (false);
 		return;
 	}
 
@@ -1221,7 +1221,7 @@ void Key_Event (keyNum_t keyNum, qBool isDown, uint32 time)
 #ifdef _WIN32 // FIXME
 	key_capsLockOn = In_GetKeyState (K_CAPSLOCK);
 #else
-	key_capsLockOn = qFalse;
+	key_capsLockOn = false;
 #endif
 
 	// Console key is hardcoded, so the user can never unbind it
@@ -1357,7 +1357,7 @@ void Key_ClearStates (void)
 	key_anyKeyDown = 0;
 	for (i=0 ; i<K_MAXKEYS ; i++) {
 		if (key_keyInfo[i].down || key_keyInfo[i].repeated)
-			Key_Event (i, qFalse, 0);
+			Key_Event (i, false, 0);
 
 		key_keyInfo[i].down = 0;
 		key_keyInfo[i].repeated = 0;
@@ -1440,7 +1440,7 @@ Key_IsDown
 qBool Key_IsDown (keyNum_t keyNum)
 {
 	if (keyNum < 0 || keyNum >= K_MAXKEYS)
-		return qFalse;
+		return false;
 	if (keyNum == K_SHIFT)
 		return (key_keyInfo[K_SHIFT].down || key_keyInfo[K_LSHIFT].down || key_keyInfo[K_RSHIFT].down);
 
@@ -1600,52 +1600,52 @@ void Key_Init (void)
 	// ASCII chars are allowed in the console
 	//
 	for (i=32 ; i<128 ; i++)
-		key_keyInfo[i].console = qTrue;
+		key_keyInfo[i].console = true;
 
 	//
 	// Other keys allowed to be typed in the console
 	//
-	key_keyInfo[K_ENTER			].console = qTrue;
-	key_keyInfo[K_KP_ENTER		].console = qTrue;
-	key_keyInfo[K_TAB			].console = qTrue;
-	key_keyInfo[K_LEFTARROW		].console = qTrue;
-	key_keyInfo[K_KP_LEFTARROW	].console = qTrue;
-	key_keyInfo[K_RIGHTARROW	].console = qTrue;
-	key_keyInfo[K_KP_RIGHTARROW	].console = qTrue;
-	key_keyInfo[K_UPARROW		].console = qTrue;
-	key_keyInfo[K_KP_UPARROW	].console = qTrue;
-	key_keyInfo[K_DOWNARROW		].console = qTrue;
-	key_keyInfo[K_KP_DOWNARROW	].console = qTrue;
-	key_keyInfo[K_BACKSPACE		].console = qTrue;
-	key_keyInfo[K_HOME			].console = qTrue;
-	key_keyInfo[K_KP_HOME		].console = qTrue;
-	key_keyInfo[K_END			].console = qTrue;
-	key_keyInfo[K_KP_END		].console = qTrue;
-	key_keyInfo[K_PGUP			].console = qTrue;
-	key_keyInfo[K_KP_PGUP		].console = qTrue;
-	key_keyInfo[K_PGDN			].console = qTrue;
-	key_keyInfo[K_KP_PGDN		].console = qTrue;
+	key_keyInfo[K_ENTER			].console = true;
+	key_keyInfo[K_KP_ENTER		].console = true;
+	key_keyInfo[K_TAB			].console = true;
+	key_keyInfo[K_LEFTARROW		].console = true;
+	key_keyInfo[K_KP_LEFTARROW	].console = true;
+	key_keyInfo[K_RIGHTARROW	].console = true;
+	key_keyInfo[K_KP_RIGHTARROW	].console = true;
+	key_keyInfo[K_UPARROW		].console = true;
+	key_keyInfo[K_KP_UPARROW	].console = true;
+	key_keyInfo[K_DOWNARROW		].console = true;
+	key_keyInfo[K_KP_DOWNARROW	].console = true;
+	key_keyInfo[K_BACKSPACE		].console = true;
+	key_keyInfo[K_HOME			].console = true;
+	key_keyInfo[K_KP_HOME		].console = true;
+	key_keyInfo[K_END			].console = true;
+	key_keyInfo[K_KP_END		].console = true;
+	key_keyInfo[K_PGUP			].console = true;
+	key_keyInfo[K_KP_PGUP		].console = true;
+	key_keyInfo[K_PGDN			].console = true;
+	key_keyInfo[K_KP_PGDN		].console = true;
 
-	key_keyInfo[K_SHIFT			].console = qTrue;
-	key_keyInfo[K_LSHIFT		].console = qTrue;
-	key_keyInfo[K_RSHIFT		].console = qTrue;
+	key_keyInfo[K_SHIFT			].console = true;
+	key_keyInfo[K_LSHIFT		].console = true;
+	key_keyInfo[K_RSHIFT		].console = true;
 
-	key_keyInfo[K_INS			].console = qTrue;
-	key_keyInfo[K_DEL			].console = qTrue;
-	key_keyInfo[K_KP_INS		].console = qTrue;
-	key_keyInfo[K_KP_DEL		].console = qTrue;
-	key_keyInfo[K_KP_SLASH		].console = qTrue;
-	key_keyInfo[K_KP_PLUS		].console = qTrue;
-	key_keyInfo[K_KP_MINUS		].console = qTrue;
-	key_keyInfo[K_KP_FIVE		].console = qTrue;
+	key_keyInfo[K_INS			].console = true;
+	key_keyInfo[K_DEL			].console = true;
+	key_keyInfo[K_KP_INS		].console = true;
+	key_keyInfo[K_KP_DEL		].console = true;
+	key_keyInfo[K_KP_SLASH		].console = true;
+	key_keyInfo[K_KP_PLUS		].console = true;
+	key_keyInfo[K_KP_MINUS		].console = true;
+	key_keyInfo[K_KP_FIVE		].console = true;
 
-	key_keyInfo[K_MWHEELUP		].console = qTrue;
-	key_keyInfo[K_MWHEELDOWN	].console = qTrue;
-	key_keyInfo[K_MWHEELLEFT	].console = qTrue;
-	key_keyInfo[K_MWHEELRIGHT	].console = qTrue;
+	key_keyInfo[K_MWHEELUP		].console = true;
+	key_keyInfo[K_MWHEELDOWN	].console = true;
+	key_keyInfo[K_MWHEELLEFT	].console = true;
+	key_keyInfo[K_MWHEELRIGHT	].console = true;
 
-	key_keyInfo['`'				].console = qFalse;
-	key_keyInfo['~'				].console = qFalse;
+	key_keyInfo['`'				].console = false;
+	key_keyInfo['~'				].console = false;
 
 	//
 	// Set what a key looks like when shift is held

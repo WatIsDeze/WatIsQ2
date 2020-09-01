@@ -46,7 +46,7 @@ static m_quitMenu_t		m_quitMenu;
 qBool m_quitAfterCredits;
 static void QuitCredits (void *unused)
 {
-	m_quitAfterCredits = qTrue;
+	m_quitAfterCredits = true;
 	UI_CreditsMenu_f ();
 }
 
@@ -81,7 +81,7 @@ static void QuitMenu_Init (void)
 	UI_AddItem (&m_quitMenu.frameWork,		&m_quitMenu.yes_action);
 	UI_AddItem (&m_quitMenu.frameWork,		&m_quitMenu.no_action);
 
-	UI_FinishFramework (&m_quitMenu.frameWork, qTrue);
+	UI_FinishFramework (&m_quitMenu.frameWork, true);
 }
 
 

@@ -477,7 +477,7 @@ void WriteGame (char *filename, qBool autosave)
 
 	game.autosaved = autosave;
 	fwrite (&game, sizeof(game), 1, f);
-	game.autosaved = qFalse;
+	game.autosaved = false;
 
 	for (i=0 ; i<game.maxclients ; i++)
 		WriteClient (f, &game.clients[i]);
@@ -753,7 +753,7 @@ void ReadLevel (char *filename)
 	{
 		ent = &g_edicts[i+1];
 		ent->client = game.clients + i;
-		ent->client->pers.connected = qFalse;
+		ent->client->pers.connected = false;
 	}
 
 	// do any load time things at this point

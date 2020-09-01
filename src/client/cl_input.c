@@ -239,11 +239,11 @@ static void IN_LookdownUp_f (void)		{ CL_KeyUp (&btn_lookDown); }
 // Only like this because it was done like this in win32 input...
 static void IN_MLookDown_f (void)
 {
-	in_mLooking = qTrue;
+	in_mLooking = true;
 }
 static void IN_MLookUp_f (void)
 {
-	in_mLooking = qFalse;
+	in_mLooking = false;
 	if (!freelook->intVal && lookspring->intVal)
 		IN_CenterView_f ();
 }
@@ -553,7 +553,7 @@ void CL_RefreshCmd (void)
 
 	// Send packet immediately on important events
 	if (btn_attack.state & 2 || btn_use.state & 2)
-		cls.forcePacket = qTrue;
+		cls.forcePacket = true;
 }
 
 
@@ -622,7 +622,7 @@ void CL_SendCmd (void)
 
 	// Send a userinfo update if needed
 	if (com_userInfoModified) {
-		com_userInfoModified = qFalse;
+		com_userInfoModified = false;
 		MSG_WriteByte (&cls.netChan.message, CLC_USERINFO);
 		MSG_WriteString (&cls.netChan.message, Cvar_BitInfo (CVAR_USERINFO));
 	}

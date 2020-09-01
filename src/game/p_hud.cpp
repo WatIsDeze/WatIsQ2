@@ -32,7 +32,7 @@ INTERMISSION
 void MoveClientToIntermission (edict_t *ent)
 {
 	if (deathmatch->floatVal || coop->floatVal)
-		ent->client->showscores = qTrue;
+		ent->client->showscores = true;
 	Vec3Copy (level.intermission_origin, ent->s.origin);
 	ent->client->ps.pMove.origin[0] = level.intermission_origin[0]*8;
 	ent->client->ps.pMove.origin[1] = level.intermission_origin[1]*8;
@@ -48,7 +48,7 @@ void MoveClientToIntermission (edict_t *ent)
 	ent->client->invincible_framenum = 0;
 	ent->client->breather_framenum = 0;
 	ent->client->enviro_framenum = 0;
-	ent->client->grenade_blew_up = qFalse;
+	ent->client->grenade_blew_up = false;
 	ent->client->grenade_time = 0;
 
 	ent->viewheight = 0;
@@ -64,7 +64,7 @@ void MoveClientToIntermission (edict_t *ent)
 	if (deathmatch->floatVal || coop->floatVal)
 	{
 		DeathmatchScoreboardMessage (ent, NULL);
-		gi.unicast (ent, qTrue);
+		gi.unicast (ent, true);
 	}
 
 }
@@ -77,7 +77,7 @@ void BeginIntermission (edict_t *targ)
 	if (level.intermissiontime)
 		return;		// already activated
 
-	game.autosaved = qFalse;
+	game.autosaved = false;
 
 	// respawn any dead clients
 	for (i=0 ; i<maxclients->floatVal ; i++)
@@ -259,7 +259,7 @@ Note that it isn't that hard to overflow the 1400 byte message limit!
 void DeathmatchScoreboard (edict_t *ent)
 {
 	DeathmatchScoreboardMessage (ent, ent->enemy);
-	gi.unicast (ent, qTrue);
+	gi.unicast (ent, true);
 }
 
 
@@ -272,19 +272,19 @@ Display the scoreboard
 */
 void Cmd_Score_f (edict_t *ent)
 {
-	ent->client->showinventory = qFalse;
-	ent->client->showhelp = qFalse;
+	ent->client->showinventory = false;
+	ent->client->showhelp = false;
 
 	if (!deathmatch->floatVal && !coop->floatVal)
 		return;
 
 	if (ent->client->showscores)
 	{
-		ent->client->showscores = qFalse;
+		ent->client->showscores = false;
 		return;
 	}
 
-	ent->client->showscores = qTrue;
+	ent->client->showscores = true;
 	DeathmatchScoreboard (ent);
 }
 
@@ -329,7 +329,7 @@ void HelpComputer (edict_t *ent)
 
 	gi.WriteByte (SVC_LAYOUT);
 	gi.WriteString (string);
-	gi.unicast (ent, qTrue);
+	gi.unicast (ent, true);
 }
 
 
@@ -349,16 +349,16 @@ void Cmd_Help_f (edict_t *ent)
 		return;
 	}
 
-	ent->client->showinventory = qFalse;
-	ent->client->showscores = qFalse;
+	ent->client->showinventory = false;
+	ent->client->showscores = false;
 
 	if (ent->client->showhelp && (ent->client->pers.game_helpchanged == game.helpchanged))
 	{
-		ent->client->showhelp = qFalse;
+		ent->client->showhelp = false;
 		return;
 	}
 
-	ent->client->showhelp = qTrue;
+	ent->client->showhelp = true;
 	ent->client->pers.helpchanged = 0;
 	HelpComputer (ent);
 }

@@ -390,8 +390,8 @@ static void CM_Q3BSP_ClipBoxToBrush (cbrush_t *brush)
 
 	cm_numBrushTraces++;
 
-	getOut = qFalse;
-	startOut = qFalse;
+	getOut = false;
+	startOut = false;
 	leadSide = NULL;
 
 	for (i=0, side=&cm_q3_brushSides[brush->firstBrushSide] ; i<brush->numSides ; side++, i++) {
@@ -444,9 +444,9 @@ static void CM_Q3BSP_ClipBoxToBrush (cbrush_t *brush)
 		}
 
 		if (d2 > 0)
-			getOut = qTrue;	// Endpoint is not in solid
+			getOut = true;	// Endpoint is not in solid
 		if (d1 > 0)
-			startOut = qTrue;
+			startOut = true;
 
 		// If completely in front of face, no intersection
 		if (d1 > 0 && d2 >= d1)
@@ -475,9 +475,9 @@ static void CM_Q3BSP_ClipBoxToBrush (cbrush_t *brush)
 
 	if (!startOut) {
 		// Original point was inside brush
-		cm_q3_currentTrace.startSolid = qTrue;
+		cm_q3_currentTrace.startSolid = true;
 		if (!getOut)
-			cm_q3_currentTrace.allSolid = qTrue;
+			cm_q3_currentTrace.allSolid = true;
 		return;
 	}
 
@@ -617,7 +617,7 @@ static void CM_Q3BSP_TestBoxInBrush (cbrush_t *brush)
 	}
 
 	// Inside this brush
-	cm_q3_currentTrace.startSolid = cm_q3_currentTrace.allSolid = qTrue;
+	cm_q3_currentTrace.startSolid = cm_q3_currentTrace.allSolid = true;
 	cm_q3_currentTrace.fraction = 0;
 	cm_q3_currentTrace.contents = brush->contents;
 }
@@ -814,7 +814,7 @@ trace_t CM_Q3BSP_BoxTrace (vec3_t start, vec3_t end, vec3_t mins, vec3_t maxs, i
 	cm_numTraces++;			// For statistics, may be zeroed
 
 	// Fill in a default trace
-	cm_q3_currentTrace.allSolid = qFalse;
+	cm_q3_currentTrace.allSolid = false;
 	cm_q3_currentTrace.contents = 0;
 	Vec3Clear (cm_q3_currentTrace.endPos);
 	cm_q3_currentTrace.ent = NULL;
@@ -823,7 +823,7 @@ trace_t CM_Q3BSP_BoxTrace (vec3_t start, vec3_t end, vec3_t mins, vec3_t maxs, i
 	Vec3Clear (cm_q3_currentTrace.plane.normal);
 	cm_q3_currentTrace.plane.signBits = 0;
 	cm_q3_currentTrace.plane.type = 0;
-	cm_q3_currentTrace.startSolid = qFalse;
+	cm_q3_currentTrace.startSolid = false;
 	cm_q3_currentTrace.surface = &cm_q3_nullSurface;
 
 	if (!cm_q3_numNodes)	// map not loaded
@@ -872,11 +872,11 @@ trace_t CM_Q3BSP_BoxTrace (vec3_t start, vec3_t end, vec3_t mins, vec3_t maxs, i
 
 	// Check for point special case
 	if (mins[0] == 0 && mins[1] == 0 && mins[2] == 0 && maxs[0] == 0 && maxs[1] == 0 && maxs[2] == 0) {
-		cm_q3_traceIsPoint = qTrue;
+		cm_q3_traceIsPoint = true;
 		Vec3Clear (cm_q3_traceExtents);
 	}
 	else {
-		cm_q3_traceIsPoint = qFalse;
+		cm_q3_traceIsPoint = false;
 		cm_q3_traceExtents[0] = -mins[0] > maxs[0] ? -mins[0] : maxs[0];
 		cm_q3_traceExtents[1] = -mins[1] > maxs[1] ? -mins[1] : maxs[1];
 		cm_q3_traceExtents[2] = -mins[2] > maxs[2] ? -mins[2] : maxs[2];
@@ -919,9 +919,9 @@ void CM_Q3BSP_TransformedBoxTrace (trace_t *out, vec3_t start, vec3_t end, vec3_
 
 	// Rotate start and end into the models frame of reference
 	if (headNode != cm_q3_boxHeadNode && (angles[0] || angles[1] || angles[2]))
-		rotated = qTrue;
+		rotated = true;
 	else
-		rotated = qFalse;
+		rotated = false;
 
 	if (rotated) {
 		Angles_Vectors (angles, forward, right, up);
@@ -1013,9 +1013,9 @@ static qBool CM_Q3BSP_AddAreaPortal (int portalNum, int area, int otherArea)
 	careaportal_t	*ap;
 
 	if (portalNum >= MAX_Q3BSP_CM_AREAPORTALS)
-		return qFalse;
+		return false;
 	if (!area || area > cm_q3_numAreas || !otherArea || otherArea > cm_q3_numAreas)
-		return qFalse;
+		return false;
 
 	ap = &cm_q3_areaPortals[portalNum];
 	ap->area = area;
@@ -1028,7 +1028,7 @@ static qBool CM_Q3BSP_AddAreaPortal (int portalNum, int area, int otherArea)
 	a->areaPortals[a->numAreaPortals++] = portalNum;
 
 	cm_q3_numAreaPortals++;
-	return qTrue;
+	return true;
 }
 
 
@@ -1118,13 +1118,13 @@ CM_Q3BSP_AreasConnected
 qBool CM_Q3BSP_AreasConnected (int area1, int area2)
 {
 	if (cm_noAreas->intVal)
-		return qTrue;
+		return true;
 	if (area1 > cm_q3_numAreas || area2 > cm_q3_numAreas)
 		Com_Error (ERR_DROP, "CM_AreasConnected: area > cm_q3_numAreas");
 
 	if (cm_q3_areas[area1].floodNum == cm_q3_areas[area2].floodNum)
-		return qTrue;
-	return qFalse;
+		return true;
+	return false;
 }
 
 
@@ -1192,14 +1192,14 @@ qBool CM_Q3BSP_HeadnodeVisible (int nodeNum, byte *visBits)
 		leafNum = -1-nodeNum;
 		cluster = cm_q3_leafs[leafNum].cluster;
 		if (cluster == -1)
-			return qFalse;
+			return false;
 		if (visBits[cluster>>3] & (1<<(cluster&7)))
-			return qTrue;
-		return qFalse;
+			return true;
+		return false;
 	}
 
 	node = &cm_q3_nodes[nodeNum];
 	if (CM_HeadnodeVisible(node->children[0], visBits))
-		return qTrue;
+		return true;
 	return CM_HeadnodeVisible(node->children[1], visBits);
 }

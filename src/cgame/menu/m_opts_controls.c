@@ -273,7 +273,7 @@ static void KeyBindingFunc (void *self)
 	if (keyNums[1] != -1)
 		M_UnbindCommand (m_bindNames[a->generic.localData[0]][0]);
 
-	uiState.cursorLock = qTrue;
+	uiState.cursorLock = true;
 	cgi.Snd_StartLocalSound (uiMedia.sounds.menuIn, 1);
 
 	m_controlsMenu.frameWork.statusBar = "Press a button for this action";
@@ -363,7 +363,7 @@ static void ControlsMenu_AddItems (void)
 	UI_AddItem (&m_controlsMenu.frameWork,			&m_controlsMenu.back_action);
 
 	m_controlsMenu.frameWork.statusBar = "[ENTER] to change, [BACKSPACE] to clear";
-	UI_FinishFramework (&m_controlsMenu.frameWork, qTrue);
+	UI_FinishFramework (&m_controlsMenu.frameWork, true);
 }
 
 
@@ -886,7 +886,7 @@ static struct sfx_s *ControlsMenu_Key (uiFrameWork_t *fw, keyNum_t keyNum)
 		}
 		
 		m_controlsMenu.frameWork.statusBar = "[ENTER] to change, [BACKSPACE] to clear";
-		uiState.cursorLock = qFalse;
+		uiState.cursorLock = false;
 		return uiMedia.sounds.menuOut;
 	}
 

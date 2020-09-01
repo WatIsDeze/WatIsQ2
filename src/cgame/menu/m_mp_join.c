@@ -142,15 +142,15 @@ static qBool UI_DupeCheckServerList (char *adr, qBool status)
 
 		if (sortedServers[i].netAddress && !strcmp (sortedServers[i].netAddress, adr)) {
 			if (sortedServers[i].statusPacket && status)
-				return qTrue;
+				return true;
 			else if (status) {
 				UI_FreeServer (&sortedServers[i]);
-				return qFalse;
+				return false;
 			}
 		}
 	}
 
-	return qFalse;
+	return false;
 }
 
 
@@ -185,19 +185,19 @@ qBool UI_ParseServerInfo (char *adr, char *info)
 	serverItem_t	*server;
 
 	if (!cg.menuOpen || !m_joinServerMenu.frameWork.initialized)
-		return qFalse;
+		return false;
 	if (!info || !info[0])
-		return qFalse;
+		return false;
 	if (!adr || !adr[0])
-		return qFalse;
+		return false;
 
 	// kill the retarded '_'
 	info[strlen(info)-1] = '\0';
 
 	if (totalServers >= MAX_LOCAL_SERVERS)
-		return qTrue;
-	if (UI_DupeCheckServerList (adr, qFalse))
-		return qTrue;
+		return true;
+	if (UI_DupeCheckServerList (adr, false))
+		return true;
 
 	server = &sortedServers[totalServers];
 	UI_FreeServer (server);
@@ -267,7 +267,7 @@ qBool UI_ParseServerInfo (char *adr, char *info)
 	server->ping = cgi.Sys_Milliseconds () - pingTime;
 	server->pingString = CG_TagStrDup (Q_VarArgs ("%ims", server->ping), CGTAG_MENU);
 
-	server->statusPacket = qFalse;
+	server->statusPacket = false;
 
 	// print information
 	Com_Printf (0, "%s %s ", server->hostName, server->mapName);
@@ -275,9 +275,9 @@ qBool UI_ParseServerInfo (char *adr, char *info)
 
 	// refresh menu
 	// do after printing so that sorting doesn't throw the pointers off
-	JoinServerMenu_Init (qTrue);
+	JoinServerMenu_Init (true);
 
-	return qTrue;
+	return true;
 }
 
 
@@ -297,18 +297,18 @@ qBool UI_ParseServerStatus (char *adr, char *info)
 	char			shortName[MAX_HOSTNAME_LEN];
 
 	if (!cg.menuOpen || !m_joinServerMenu.frameWork.initialized)
-		return qFalse;
+		return false;
 	if (!info || !info[0])
-		return qFalse;
+		return false;
 	if (!adr || !adr[0])
-		return qFalse;
+		return false;
 	if (!strchr (info, '\\'))
-		return qFalse;
+		return false;
 
 	if (totalServers >= MAX_LOCAL_SERVERS)
-		return qTrue;
-	if (UI_DupeCheckServerList (adr, qTrue))
-		return qTrue;
+		return true;
+	if (UI_DupeCheckServerList (adr, true))
+		return true;
 
 	server = &sortedServers[totalServers];
 	UI_FreeServer (server);
@@ -344,7 +344,7 @@ qBool UI_ParseServerStatus (char *adr, char *info)
 	// Check if it's valid
 	if (!server->mapName[0] && !server->maxPlayers && !server->gameName[0] && !server->hostName[0]) {
 		UI_FreeServer (server);
-		return qFalse;
+		return false;
 	}
 
 	server->playersStr = CG_TagStrDup (Q_VarArgs ("%i/%i", server->numPlayers, server->maxPlayers), CGTAG_MENU);
@@ -353,7 +353,7 @@ qBool UI_ParseServerStatus (char *adr, char *info)
 	server->ping = cgi.Sys_Milliseconds () - pingTime;
 	server->pingString = CG_TagStrDup (Q_VarArgs ("%ims", server->ping), CGTAG_MENU);
 
-	server->statusPacket = qTrue;
+	server->statusPacket = true;
 
 	// Print information
 	Com_Printf (0, "%s %s ", server->hostName, server->mapName);
@@ -361,9 +361,9 @@ qBool UI_ParseServerStatus (char *adr, char *info)
 
 	// Refresh menu
 	// Do after printing so that sorting doesn't throw the pointers off
-	JoinServerMenu_Init (qTrue);
+	JoinServerMenu_Init (true);
 
-	return qTrue;
+	return true;
 }
 
 // ==========================================================================
@@ -414,7 +414,7 @@ static void SearchLocalGamesFunc (void *item)
 	char	name[32];
 
 	UI_FreeServerList ();
-	JoinServerMenu_Init (qTrue);
+	JoinServerMenu_Init (true);
 
 	UI_DrawTextBox (midrow, midcol, UIFT_SCALEMED, 36, 4);
 	cgi.R_DrawString (NULL, midrow + (UIFT_SIZEMED*2), midcol + UIFT_SIZEMED, UIFT_SCALEMED, UIFT_SCALEMED, 0,		"       --- PLEASE WAIT! ---       ",	Q_colorGreen);
@@ -425,9 +425,9 @@ static void SearchLocalGamesFunc (void *item)
 	cgi.R_EndFrame ();		// the text box won't show up unless we do a buffer swap
 
 	if (item == &m_joinServerMenu.bookServersAction)
-		cgi.Cvar_VariableSetValue (ui_jsMenuPage, JS_PAGE_ADDRBOOK, qTrue);
+		cgi.Cvar_VariableSetValue (ui_jsMenuPage, JS_PAGE_ADDRBOOK, true);
 	else if (item == &m_joinServerMenu.localServersAction)
-		cgi.Cvar_VariableSetValue (ui_jsMenuPage, JS_PAGE_LAN, qTrue);
+		cgi.Cvar_VariableSetValue (ui_jsMenuPage, JS_PAGE_LAN, true);
 
 	switch (ui_jsMenuPage->intVal) {
 	case JS_PAGE_LAN:
@@ -451,7 +451,7 @@ static void SearchLocalGamesFunc (void *item)
 		}
 	}
 
-	JoinServerMenu_Init (qTrue);
+	JoinServerMenu_Init (true);
 }
 
 // ==========================================================================
@@ -507,18 +507,18 @@ static int hostNameInvSortCmp (const void *_a, const void *_b)
 }
 static void Sort_HostNameFunc (void *item)
 {
-	cgi.Cvar_VariableSetValue (ui_jsSortItem, 0, qTrue);
+	cgi.Cvar_VariableSetValue (ui_jsSortItem, 0, true);
 
 	// sort
 	if (item)
-		cgi.Cvar_VariableSetValue (ui_jsSortMethod, ui_jsSortMethod->intVal ? 0 : 1, qTrue);
+		cgi.Cvar_VariableSetValue (ui_jsSortMethod, ui_jsSortMethod->intVal ? 0 : 1, true);
 	switch (ui_jsSortMethod->intVal) {
 		case 0:		qsort (sortedServers, totalServers, sizeof (serverItem_t), hostNameSortCmp);		break;
 		default:	qsort (sortedServers, totalServers, sizeof (serverItem_t), hostNameInvSortCmp);		break;
 	}
 
 	if (item)
-		JoinServerMenu_Init (qFalse);
+		JoinServerMenu_Init (false);
 }
 
 
@@ -549,18 +549,18 @@ static int gameNameInvSortCmp (const void *_a, const void *_b)
 }
 static void Sort_GameNameFunc (void *item)
 {
-	cgi.Cvar_VariableSetValue (ui_jsSortItem, 1, qTrue);
+	cgi.Cvar_VariableSetValue (ui_jsSortItem, 1, true);
 
 	// sort
 	if (item)
-		cgi.Cvar_VariableSetValue (ui_jsSortMethod, ui_jsSortMethod->intVal ? 0 : 1, qTrue);
+		cgi.Cvar_VariableSetValue (ui_jsSortMethod, ui_jsSortMethod->intVal ? 0 : 1, true);
 	switch (ui_jsSortMethod->intVal) {
 		case 0:		qsort (sortedServers, totalServers, sizeof (serverItem_t), gameNameSortCmp);		break;
 		default:	qsort (sortedServers, totalServers, sizeof (serverItem_t), gameNameInvSortCmp);		break;
 	}
 
 	if (item)
-		JoinServerMenu_Init (qFalse);
+		JoinServerMenu_Init (false);
 }
 
 
@@ -591,18 +591,18 @@ static int mapNameInvSortCmp (const void *_a, const void *_b)
 }
 static void Sort_MapNameFunc (void *item)
 {
-	cgi.Cvar_VariableSetValue (ui_jsSortItem, 2, qTrue);
+	cgi.Cvar_VariableSetValue (ui_jsSortItem, 2, true);
 
 	// sort
 	if (item)
-		cgi.Cvar_VariableSetValue (ui_jsSortMethod, ui_jsSortMethod->intVal ? 0 : 1, qTrue);
+		cgi.Cvar_VariableSetValue (ui_jsSortMethod, ui_jsSortMethod->intVal ? 0 : 1, true);
 	switch (ui_jsSortMethod->intVal) {
 		case 0:		qsort (sortedServers, totalServers, sizeof (serverItem_t), mapNameSortCmp);	break;
 		default:	qsort (sortedServers, totalServers, sizeof (serverItem_t), mapNameInvSortCmp);	break;
 	}
 
 	if (item)
-		JoinServerMenu_Init (qFalse);
+		JoinServerMenu_Init (false);
 }
 
 
@@ -641,18 +641,18 @@ static int playerInvSortCmp (const void *_a, const void *_b)
 }
 static void Sort_PlayerCntFunc (void *item)
 {
-	cgi.Cvar_VariableSetValue (ui_jsSortItem, 3, qTrue);
+	cgi.Cvar_VariableSetValue (ui_jsSortItem, 3, true);
 
 	// sort
 	if (item)
-		cgi.Cvar_VariableSetValue (ui_jsSortMethod, ui_jsSortMethod->intVal ? 0 : 1, qTrue);
+		cgi.Cvar_VariableSetValue (ui_jsSortMethod, ui_jsSortMethod->intVal ? 0 : 1, true);
 	switch (ui_jsSortMethod->intVal) {
 		case 0:		qsort (sortedServers, totalServers, sizeof (serverItem_t), playerSortCmp);	break;
 		default:	qsort (sortedServers, totalServers, sizeof (serverItem_t), playerInvSortCmp);	break;
 	}
 
 	if (item)
-		JoinServerMenu_Init (qFalse);
+		JoinServerMenu_Init (false);
 }
 
 
@@ -691,18 +691,18 @@ static int pingInvSortCmp (const void *_a, const void *_b)
 }
 static void Sort_PingFunc (void *item)
 {
-	cgi.Cvar_VariableSetValue (ui_jsSortItem, 4, qTrue);
+	cgi.Cvar_VariableSetValue (ui_jsSortItem, 4, true);
 
 	// sort
 	if (item)
-		cgi.Cvar_VariableSetValue (ui_jsSortMethod, ui_jsSortMethod->intVal ? 0 : 1, qTrue);
+		cgi.Cvar_VariableSetValue (ui_jsSortMethod, ui_jsSortMethod->intVal ? 0 : 1, true);
 	switch (ui_jsSortMethod->intVal) {
 		case 0:		qsort (sortedServers, totalServers, sizeof (serverItem_t), pingSortCmp);	break;
 		default:	qsort (sortedServers, totalServers, sizeof (serverItem_t), pingInvSortCmp);	break;
 	}
 
 	if (item)
-		JoinServerMenu_Init (qFalse);
+		JoinServerMenu_Init (false);
 }
 
 // ==========================================================================
@@ -865,7 +865,7 @@ static void JoinServerMenu_Init (qBool sort)
 	UI_AddItem (&m_joinServerMenu.frameWork,			&m_joinServerMenu.refreshAction);
 	UI_AddItem (&m_joinServerMenu.frameWork,			&m_joinServerMenu.playAction);
 
-	UI_FinishFramework (&m_joinServerMenu.frameWork, qTrue);
+	UI_FinishFramework (&m_joinServerMenu.frameWork, true);
 }
 
 

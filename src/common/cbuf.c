@@ -177,7 +177,7 @@ void Cbuf_Execute (void)
 			if (!dedicated->intVal)
 				CL_ForcePacket ();
 #endif
-			com_cmdWait = qFalse;
+			com_cmdWait = false;
 			break;
 		}
 	}

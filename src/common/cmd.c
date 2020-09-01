@@ -152,7 +152,7 @@ char *Cmd_MacroExpandString (char *text)
 	char	temporary[MAX_STRING_CHARS];
 	char	*token, *start;
 
-	inquote = qFalse;
+	inquote = false;
 	scan = text;
 
 	len = strlen (scan);
@@ -258,7 +258,7 @@ void Cmd_TokenizeString (char *text, qBool macroExpand)
 			// Strip off any trailing whitespace
 			l = strlen (com_cmdArgs) - 1;
 
-			while (qTrue)
+			while (true)
 			{
 				if (com_cmdArgs[l] <= ' ')
 					com_cmdArgs[l] = 0;
@@ -297,7 +297,7 @@ void Cmd_ExecuteString (char *text)
 	cmdFunc_t	*cmd;
 	aliasCmd_t	*alias;
 
-	Cmd_TokenizeString (text, qTrue);
+	Cmd_TokenizeString (text, true);
 			
 	// Execute the command line
 	if (!Cmd_Argc ())
@@ -392,7 +392,7 @@ void *_Cmd_AddCommand (qBool cGame, char *name, void (*function) (void), const c
 	cmd->function = function;
 	cmd->description = description;
 	cmd->cGame = cGame;
-	cmd->inUse = qTrue;
+	cmd->inUse = true;
 
 	// Link it into the hash tree
 	cmd->hashNext = com_cmdHashTree[cmd->hashValue];
@@ -613,7 +613,7 @@ This allows commands like: bind g "impulse 5 ; +attack ; wait ; -attack ; impuls
 */
 static void Cmd_Wait_f (void)
 {
-	com_cmdWait = qTrue;
+	com_cmdWait = true;
 }
 
 /*

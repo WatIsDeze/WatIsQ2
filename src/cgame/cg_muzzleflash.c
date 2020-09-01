@@ -84,17 +84,17 @@ void CG_ParseMuzzleFlash (void)
 	Vec3MA (dl->origin, 18, fv, dl->origin);
 	Vec3MA (dl->origin, 16, rv, dl->origin);
 
-	pl->muzzleOn = qTrue;
+	pl->muzzleOn = true;
 	pl->muzzType = -1;
-	pl->muzzVWeap = qFalse;
+	pl->muzzVWeap = false;
 	pl->muzzType = flashNum;
 	if (silenced) {
-		pl->muzzSilenced = qTrue;
+		pl->muzzSilenced = true;
 		volume = 0.2f;
 		dl->radius = 100 + (frand () * 32);
 	}
 	else {
-		pl->muzzSilenced = qFalse;
+		pl->muzzSilenced = false;
 		volume = 1;
 		dl->radius = 200 + (frand () * 32);
 	}

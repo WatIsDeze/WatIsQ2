@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ============
 CanDamage
 
-Returns qTrue if the inflictor can directly damage the target.  Used for
+Returns true if the inflictor can directly damage the target.  Used for
 explosions and melee attacks.
 ============
 */
@@ -41,46 +41,46 @@ qBool CanDamage (edict_t *targ, edict_t *inflictor)
 		Vec3Scale (dest, 0.5, dest);
 		trace = gi.trace (inflictor->s.origin, vec3Origin, vec3Origin, dest, inflictor, MASK_SOLID);
 		if (trace.fraction == 1.0)
-			return qTrue;
+			return true;
 		if (trace.ent == targ)
-			return qTrue;
-		return qFalse;
+			return true;
+		return false;
 	}
 	
 	trace = gi.trace (inflictor->s.origin, vec3Origin, vec3Origin, targ->s.origin, inflictor, MASK_SOLID);
 	if (trace.fraction == 1.0)
-		return qTrue;
+		return true;
 
 	Vec3Copy (targ->s.origin, dest);
 	dest[0] += 15.0;
 	dest[1] += 15.0;
 	trace = gi.trace (inflictor->s.origin, vec3Origin, vec3Origin, dest, inflictor, MASK_SOLID);
 	if (trace.fraction == 1.0)
-		return qTrue;
+		return true;
 
 	Vec3Copy (targ->s.origin, dest);
 	dest[0] += 15.0;
 	dest[1] -= 15.0;
 	trace = gi.trace (inflictor->s.origin, vec3Origin, vec3Origin, dest, inflictor, MASK_SOLID);
 	if (trace.fraction == 1.0)
-		return qTrue;
+		return true;
 
 	Vec3Copy (targ->s.origin, dest);
 	dest[0] -= 15.0;
 	dest[1] += 15.0;
 	trace = gi.trace (inflictor->s.origin, vec3Origin, vec3Origin, dest, inflictor, MASK_SOLID);
 	if (trace.fraction == 1.0)
-		return qTrue;
+		return true;
 
 	Vec3Copy (targ->s.origin, dest);
 	dest[0] -= 15.0;
 	dest[1] -= 15.0;
 	trace = gi.trace (inflictor->s.origin, vec3Origin, vec3Origin, dest, inflictor, MASK_SOLID);
 	if (trace.fraction == 1.0)
-		return qTrue;
+		return true;
 
 
-	return qFalse;
+	return false;
 }
 
 
@@ -371,7 +371,7 @@ qBool CheckTeamDamage (edict_t *targ, edict_t *attacker)
 {
 		//FIXME make the next line real and uncomment this block
 		// if ((ability to damage a teammate == OFF) && (targ's team == attacker's team))
-	return qFalse;
+	return false;
 }
 
 void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir, vec3_t point, vec3_t normal, int damage, int knockback, int dflags, int mod)

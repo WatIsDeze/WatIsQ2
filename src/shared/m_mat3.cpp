@@ -82,19 +82,19 @@ qBool Matrix3_Compare (mat3x3_t a, mat3x3_t b)
 	if (a[0][0] != b[0][0]
 	|| a[0][1] != b[0][1]
 	|| a[0][2] != b[0][2])
-		return qFalse;
+		return false;
 
 	if (a[1][0] != b[1][0]
 	|| a[1][1] != b[1][1]
 	|| a[1][2] != b[1][2])
-		return qFalse;
+		return false;
 
 	if (a[2][0] != b[2][0]
 	|| a[2][1] != b[2][1]
 	|| a[2][2] != b[2][2])
-		return qFalse;
+		return false;
 
-	return qTrue;
+	return true;
 }
 
 

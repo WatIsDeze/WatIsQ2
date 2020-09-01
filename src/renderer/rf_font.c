@@ -312,7 +312,7 @@ R_CheckFont
 void R_CheckFont (void)
 {
 	// Load console characters
-	r_defaultFont->modified = qFalse;
+	r_defaultFont->modified = false;
 
 	// Load the font
 	ri.media.defaultFont = R_RegisterFont (r_defaultFont->string);
@@ -408,8 +408,8 @@ size_t R_DrawString (font_t *font, float x, float y, float xScale, float yScale,
 	float		startX;
 	vec4_t		strColor;
 	qBool		isShadowed;
-	qBool		skipNext = qFalse;
-	qBool		inColorCode = qFalse;
+	qBool		skipNext = false;
+	qBool		inColorCode = false;
 	material_t	*mat;
 	vec2_t		ftSize;
 
@@ -442,13 +442,13 @@ size_t R_DrawString (font_t *font, float x, float y, float xScale, float yScale,
 			num |= 128;
 
 		if (skipNext) {
-			skipNext = qFalse;
+			skipNext = false;
 		}
 		else if ((num & 127) == COLOR_ESCAPE && *(string+1)) {
 			switch (string[1] & 127) {
 			case COLOR_ESCAPE:
 				string++;
-				skipNext = qTrue;
+				skipNext = true;
 				continue;
 
 			case 'i':	case 'I':
@@ -458,7 +458,7 @@ size_t R_DrawString (font_t *font, float x, float y, float xScale, float yScale,
 
 			case 'r':	case 'R':
 				isShadowed = (flags & FS_SHADOW);
-				inColorCode = qFalse;
+				inColorCode = false;
 				Vec3Copy (Q_colorWhite, strColor);
 				string += 2;
 				continue;
@@ -478,7 +478,7 @@ size_t R_DrawString (font_t *font, float x, float y, float xScale, float yScale,
 			case COLOR_WHITE:
 			case COLOR_GREY:
 				Vec3Copy (Q_strColorTable[Q_StrColorIndex (string[1])], strColor);
-				inColorCode = qTrue;
+				inColorCode = true;
 				string += 2;
 				continue;
 			}

@@ -145,7 +145,7 @@ SV_UpdateTitle
 */
 void SV_UpdateTitle (void)
 {
-	hostname->modified = qFalse;
+	hostname->modified = false;
 
 	if (Com_ServerState() == SS_GAME) {
 		Sys_SetConsoleTitle (Q_VarArgs ("EGL Server: %s (port %i)", Cvar_GetStringValue ("hostname"), Cvar_GetIntegerValue ("port")));
@@ -501,7 +501,7 @@ gotNewClient:
 	newcl->state = SVCS_CONNECTED;
 
 	MSG_Init (&newcl->datagram, newcl->datagramBuff, sizeof (newcl->datagramBuff));
-	newcl->datagram.allowOverflow = qTrue;
+	newcl->datagram.allowOverflow = true;
 
 	newcl->lastMessage = svs.realTime - ((timeout->floatVal - 5) * 1000);	// don't timeout
 	newcl->lastConnect = svs.realTime;
@@ -575,7 +575,7 @@ static void SV_ConnectionlessPacket (void)
 
 	s = MSG_ReadStringLine (&sv_netMessage);
 
-	Cmd_TokenizeString (s, qFalse);
+	Cmd_TokenizeString (s, false);
 
 	c = Cmd_Argv (0);
 	Com_DevPrintf (0, "Packet %s : %s\n", NET_AdrToString (&sv_netFrom), c);

@@ -176,7 +176,7 @@ static void OptionsMenu_Init (void)
 
 	UI_AddItem (&m_optionsMenu.frameWork,		&m_optionsMenu.back_action);
 
-	UI_FinishFramework (&m_optionsMenu.frameWork, qTrue);
+	UI_FinishFramework (&m_optionsMenu.frameWork, true);
 }
 
 

@@ -92,7 +92,7 @@ void R_DrawPic (material_t *mat, float matTime, float x, float y, int w, int h, 
 		features |= MF_NONBATCHED;
 
 	RB_PushMesh (&rb_2DMesh, features);
-	RB_RenderMeshBuffer (&rb_2DMBuffer, qFalse);
+	RB_RenderMeshBuffer (&rb_2DMBuffer, false);
 }
 
 /*

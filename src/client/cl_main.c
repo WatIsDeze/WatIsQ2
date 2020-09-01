@@ -109,7 +109,7 @@ qBool CL_ForwardCmdToServer (void)
 
 	cmd = Cmd_Argv (0);
 	if (Com_ClientState () <= CA_CONNECTED || *cmd == '-' || *cmd == '+')
-		return qFalse;
+		return false;
 
 	MSG_WriteByte (&cls.netChan.message, CLC_STRINGCMD);
 	MSG_WriteStringCat (&cls.netChan.message, cmd);
@@ -118,8 +118,8 @@ qBool CL_ForwardCmdToServer (void)
 		MSG_WriteStringCat (&cls.netChan.message, Cmd_Args ());
 	}
 
-	cls.forcePacket = qTrue;
-	return qTrue;
+	cls.forcePacket = true;
+	return true;
 }
 
 
@@ -148,7 +148,7 @@ static void CL_SendConnectPacket (int useProtocol)
 
 	port = Cvar_GetIntegerValue ("qport");
 
-	com_userInfoModified = qFalse;
+	com_userInfoModified = false;
 
 	// Decide on the maximum message length and protocol version to try
 	if (Com_ServerState() == SS_DEMO) {
@@ -278,7 +278,7 @@ void CL_ClearState (void)
 
 	// Clear the demo buffer
 	MSG_Init (&cl.demoBuffer, cl.demoFrame, sizeof (cl.demoFrame));
-	cl.demoBuffer.allowOverflow = qTrue;
+	cl.demoBuffer.allowOverflow = true;
 }
 
 
@@ -342,7 +342,7 @@ done:
 		CL_CGModule_MainMenu ();
 
 #ifdef CL_HTTPDL
-	CL_HTTPDL_CancelDownloads (qTrue);
+	CL_HTTPDL_CancelDownloads (true);
 	cls.download.httpReferer[0] = '\0';
 #endif
 
@@ -350,8 +350,8 @@ done:
 	cls.serverName[0] = '\0';
 	cls.serverProtocol = 0;
 
-	Cvar_Set ("$mapname", "", qTrue);
-	Cvar_Set ("$game", "", qTrue);
+	Cvar_Set ("$mapname", "", true);
+	Cvar_Set ("$game", "", true);
 
 	// Swap games if needed
 	Cvar_GetLatchedVars (CVAR_LATCH_SERVER);
@@ -446,7 +446,7 @@ static void CL_ClientConnect_CP (void)
 
 	Key_SetDest (KD_GAME);
 	CL_SetState (CA_CONNECTED);
-	cls.forcePacket = qTrue;
+	cls.forcePacket = true;
 }
 
 
@@ -573,7 +573,7 @@ static void CL_ConnectionlessPacket (void)
 	assert (MSG_ReadLong (&cls.netMessage) == -1);	// Skip the -1
 
 	cmd = MSG_ReadStringLine (&cls.netMessage);
-	Cmd_TokenizeString (cmd, qFalse);
+	Cmd_TokenizeString (cmd, false);
 
 	cmd = Cmd_Argv (0);
 
@@ -588,7 +588,7 @@ static void CL_ConnectionlessPacket (void)
 	}
 	else if (!strcmp (cmd, "print")) {
 		// Print command from somewhere
-		isPrint = qTrue;
+		isPrint = true;
 		printStr = MSG_ReadString (&cls.netMessage);
 		if (CL_CGModule_ParseServerStatus (NET_AdrToString (&cls.netFrom), printStr))
 			return;
@@ -596,7 +596,7 @@ static void CL_ConnectionlessPacket (void)
 	}
 	else {
 		printStr = NULL;
-		isPrint = qFalse;
+		isPrint = false;
 	}
 
 	// Only allow the following from current connected server and last destination client sent an rcon to
@@ -685,7 +685,7 @@ void CL_MediaInit (void)
 	if (Com_ClientState () == CA_UNINITIALIZED)
 		return;
 
-	clMedia.initialized = qTrue;
+	clMedia.initialized = true;
 
 	// Free all sounds
 	Snd_FreeSounds ();
@@ -715,7 +715,7 @@ void CL_MediaShutdown (void)
 	if (!clMedia.initialized)
 		return;
 
-	clMedia.initialized = qFalse;
+	clMedia.initialized = false;
 
 	// Shutdown CGame
 	CL_CGameAPI_Shutdown ();
@@ -755,7 +755,7 @@ CL_ForcePacket
 */
 void CL_ForcePacket (void)
 {
-	cls.forcePacket = qTrue;
+	cls.forcePacket = true;
 }
 
 
@@ -841,7 +841,7 @@ static void CL_ReadPackets (void)
 
 		// Force a packet update if a reliable was recieved
 		if (cls.netChan.gotReliable && Com_ClientState() == CA_CONNECTED)
-			cls.forcePacket = qTrue;
+			cls.forcePacket = true;
 
 		CL_ParseServerMessage ();
 
@@ -855,7 +855,7 @@ static void CL_ReadPackets (void)
 		if (++cl.timeOutCount > 5) {
 			// Timeoutcount saves debugger
 			Com_Printf (PRNT_WARNING, "Server connection timed out.\n");
-			CL_Disconnect (qTrue);
+			CL_Disconnect (true);
 			return;
 		}
 	}
@@ -914,9 +914,9 @@ void CL_Frame (int msec)
 	static int	packetDelta = 0;
 	static int	refreshDelta = 0;
 	static int	miscDelta = 1000;
-	qBool		packetFrame = qTrue;
-	qBool		refreshFrame = qTrue;
-	qBool		miscFrame = qTrue;
+	qBool		packetFrame = true;
+	qBool		refreshFrame = true;
+	qBool		miscFrame = true;
 
 	// Internal counters
 	packetDelta += msec;
@@ -943,24 +943,24 @@ void CL_Frame (int msec)
 	if (!cl_timedemo->intVal) {
 		// Packet transmission rate is too high
 		if (packetDelta < 1000.0f/cl_maxfps->floatVal)
-			packetFrame = qFalse;
+			packetFrame = false;
 		// This happens when your video framerate plumits to near-below net 'framerate'
 		else if (cls.netFrameTime == cls.refreshFrameTime)
-			packetFrame = qFalse;
+			packetFrame = false;
 
 		// Video framerate is too high
 		if (refreshDelta < 1000.0f/r_maxfps->floatVal)
-			refreshFrame = qFalse;
+			refreshFrame = false;
 	
 		// Don't need to do this stuff much (10FPS)
 		if (miscDelta < 1000/10)
-			miscFrame = qFalse;
+			miscFrame = false;
 	}
 
 	// Don't flood packets out while connecting (10FPS)
 	if (Com_ClientState () == CA_CONNECTED) {
 		if (packetDelta < 1000/10)
-			packetFrame = qFalse;
+			packetFrame = false;
 
 #ifdef CL_HTTPDL
 		CL_HTTPDL_RunDownloads ();
@@ -973,10 +973,10 @@ void CL_Frame (int msec)
 	// Send commands to the server
 	if (cls.forcePacket || com_userInfoModified) {
 		if (Com_ClientState () < CA_CONNECTED)
-			com_userInfoModified = qFalse;
+			com_userInfoModified = false;
 		else
-			packetFrame = qTrue;
-		cls.forcePacket = qFalse;
+			packetFrame = true;
+		cls.forcePacket = false;
 	}
 
 	if (packetFrame) {
@@ -1078,7 +1078,7 @@ static void CL_Connect_f (void)
 	
 	if (Com_ServerState()) {
 		// If running a local server, kill it and reissue
-		SV_ServerShutdown ("Server quit\n", qFalse, qFalse);
+		SV_ServerShutdown ("Server quit\n", false, false);
 	}
 	server = Cmd_Argv (1);
 
@@ -1094,7 +1094,7 @@ static void CL_Connect_f (void)
 		adr.port = BigShort (PORT_SERVER);
 
 	// Disconnect if connected
-	CL_Disconnect (qFalse);
+	CL_Disconnect (false);
 
 	// Reset the protocol attempt if we're connecting to a different server
 	if (!NET_CompareAdr (adr, cls.netChan.remoteAddress)) {
@@ -1177,7 +1177,7 @@ static void CL_ForwardToServer_f (void)
 	if (Cmd_Argc () > 1) {
 		MSG_WriteByte (&cls.netChan.message, CLC_STRINGCMD);
 		MSG_WriteStringCat (&cls.netChan.message, Cmd_Args ());
-		cls.forcePacket = qTrue;
+		cls.forcePacket = true;
 	}
 }
 
@@ -1191,11 +1191,11 @@ static void CL_Pause_f (void)
 {
 	// Never pause in multiplayer
 	if (Cvar_GetFloatValue ("maxclients") > 1 || !Com_ServerState ()) {
-		Cvar_SetValue ("paused", 0, qFalse);
+		Cvar_SetValue ("paused", 0, false);
 		return;
 	}
 
-	Cvar_SetValue ("paused", !cl_paused->intVal, qFalse);
+	Cvar_SetValue ("paused", !cl_paused->intVal, false);
 }
 
 
@@ -1268,7 +1268,7 @@ static void CL_Precache_f (void)
 	if (Cmd_Argc () < 2) {
 		uint32	mapCheckSum;	// For detecting cheater maps
 
-		CM_LoadMap (cl.configStrings[CS_MODELS+1], qTrue, &mapCheckSum);
+		CM_LoadMap (cl.configStrings[CS_MODELS+1], true, &mapCheckSum);
 		CL_CGModule_LoadMap ();
 		return;
 	}
@@ -1285,8 +1285,8 @@ CL_Quit_f
 */
 static void CL_Quit_f (void)
 {
-	CL_Disconnect (qFalse);
-	Com_Quit (qFalse);
+	CL_Disconnect (false);
+	Com_Quit (false);
 }
 
 
@@ -1379,7 +1379,7 @@ void CL_Reconnect_f (void)
 		Com_Printf (0, "reconnecting (soft)...\n");
 		MSG_WriteChar (&cls.netChan.message, CLC_STRINGCMD);
 		MSG_WriteString (&cls.netChan.message, "new");
-		cls.forcePacket = qTrue;
+		cls.forcePacket = true;
 		return;
 	}
 
@@ -1387,7 +1387,7 @@ void CL_Reconnect_f (void)
 		if (Com_ClientState () >= CA_CONNECTED) {
 			Com_Printf (0, "Disconnecting...\n");
 			Q_strncpyz (cls.serverName, cls.serverNameLast, sizeof (cls.serverName));
-			CL_Disconnect (qFalse);
+			CL_Disconnect (false);
 			cls.connectTime = cls.realTime - (NET_RETRYDELAY*0.5f);
 		}
 		else {
@@ -1758,7 +1758,7 @@ void CL_ClientInit (void)
 
 	CL_SetState (CA_DISCONNECTED);
 	cls.realTime = Sys_Milliseconds ();
-	cls.disableScreen = qTrue;
+	cls.disableScreen = true;
 
 	// Initialize subsystems
 	CDAudio_Init ();
@@ -1778,7 +1778,7 @@ void CL_ClientInit (void)
 	Mem_TouchGlobal ();
 
 	// Ready!
-	cls.disableScreen = qFalse;
+	cls.disableScreen = false;
 }
 
 
@@ -1792,13 +1792,13 @@ to run quit through here before the final handoff to the sys code.
 */
 void CL_ClientShutdown (qBool error)
 {
-	static qBool isDown = qFalse;
+	static qBool isDown = false;
 	if (isDown)
 		return;
-	isDown = qTrue;
+	isDown = true;
 
 #ifdef CL_HTTPDL
-	CL_HTTPDL_Cleanup (qTrue);
+	CL_HTTPDL_Cleanup (true);
 #endif
 
 	if (!error)

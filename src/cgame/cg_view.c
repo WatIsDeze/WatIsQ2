@@ -87,9 +87,9 @@ static void V_CalcVrect (void)
 
 	// Bound viewsize
 	if (viewsize->intVal < 40)
-		cgi.Cvar_SetValue ("viewsize", 40, qTrue);
+		cgi.Cvar_SetValue ("viewsize", 40, true);
 	if (viewsize->intVal > 100)
-		cgi.Cvar_SetValue ("viewsize", 100, qTrue);
+		cgi.Cvar_SetValue ("viewsize", 100, true);
 
 	size = viewsize->intVal;
 
@@ -114,7 +114,7 @@ V_SizeUp_f
 */
 static void V_SizeUp_f (void)
 {
-	cgi.Cvar_SetValue ("viewsize", viewsize->intVal + 10.0f, qTrue);
+	cgi.Cvar_SetValue ("viewsize", viewsize->intVal + 10.0f, true);
 }
 
 
@@ -125,7 +125,7 @@ V_SizeDown_f
 */
 static void V_SizeDown_f (void)
 {
-	cgi.Cvar_SetValue ("viewsize", viewsize->intVal - 10.0f, qTrue);
+	cgi.Cvar_SetValue ("viewsize", viewsize->intVal - 10.0f, true);
 }
 
 /*
@@ -291,7 +291,7 @@ static void ClipCam (vec3_t start, vec3_t end, vec3_t newPos)
 	Vec3Set (mins, -5, -5, -5);
 	Vec3Set (maxs, 5, 5, 5);
 
-	CG_PMTrace (&tr, start, mins, maxs, end, qTrue);
+	CG_PMTrace (&tr, start, mins, maxs, end, true);
 
 	newPos[0] = tr.endPos[0];
 	newPos[1] = tr.endPos[1];
@@ -305,18 +305,18 @@ static void V_CalcThirdPersonView (void)
 
 	// Set the camera angle
 	if (cg_thirdPersonAngle->modified) {
-		cg_thirdPersonAngle->modified = qFalse;
+		cg_thirdPersonAngle->modified = false;
 
 		if (cg_thirdPersonAngle->floatVal < 0.0f)
-			cgi.Cvar_SetValue ("cg_thirdPersonAngle", 0.0f, qTrue);
+			cgi.Cvar_SetValue ("cg_thirdPersonAngle", 0.0f, true);
 	}
 
 	// Set the camera distance
 	if (cg_thirdPersonDist->modified) {
-		cg_thirdPersonDist->modified = qFalse;
+		cg_thirdPersonDist->modified = false;
 
 		if (cg_thirdPersonDist->floatVal < 1.0f)
-			cgi.Cvar_SetValue ("cg_thirdPersonDist", 1.0f, qTrue);
+			cgi.Cvar_SetValue ("cg_thirdPersonDist", 1.0f, true);
 	}
 
 	// Trig stuff
@@ -474,7 +474,7 @@ V_RenderView
 void V_RenderView (int realTime, float netFrameTime, float refreshFrameTime, float stereoSeparation, qBool refreshPrepped)
 {
 	// Check cvar sanity
-	CG_UpdateCvars (qFalse);
+	CG_UpdateCvars (false);
 
 	// Calculate screen dimensions and clear the background
 	V_CalcVrect ();
@@ -503,14 +503,14 @@ void V_RenderView (int realTime, float netFrameTime, float refreshFrameTime, flo
 		case CA_DISCONNECTED:
 			if (cgi.Key_GetDest () == KD_GAME)
 				CG_DrawConnectScreen ();
-			UI_Refresh (qTrue);
+			UI_Refresh (true);
 			break;
 
 		case CA_CONNECTING:
 		case CA_CONNECTED:
 		case CA_ACTIVE:
 			CG_DrawConnectScreen ();
-			UI_Refresh (qFalse);
+			UI_Refresh (false);
 			break;
 		}
 
@@ -529,7 +529,7 @@ void V_RenderView (int realTime, float netFrameTime, float refreshFrameTime, flo
 	// An invalid frame will just use the exact previous refdef
 	// We can't use the old frame if the video mode has changed, though
 	if (cg.frame.valid && (cg.forceRefDef || !cgi.Cvar_GetIntegerValue ("paused"))) {
-		cg.forceRefDef = qFalse;
+		cg.forceRefDef = false;
 
 		cgi.R_ClearScene ();
 
@@ -578,7 +578,7 @@ void V_RenderView (int realTime, float netFrameTime, float refreshFrameTime, flo
 		if (cg.oldAreaBits)
 			cg.refDef.rdFlags |= RDF_OLDAREABITS;
 		else
-			cg.oldAreaBits = qTrue;
+			cg.oldAreaBits = true;
 	}
 
 	// Render the frame

@@ -2520,7 +2520,7 @@ static void APIENTRY dbgArrayElement (GLint i) {
 }
 static void APIENTRY dbgBegin (GLenum mode) {
 	dllBegin (mode);
-	glBegan = qTrue;
+	glBegan = true;
 }
 static void APIENTRY dbgBindTexture (GLenum target, GLuint texture) {
 	dllBindTexture (target, texture);
@@ -2800,7 +2800,7 @@ static void APIENTRY dbgEnableClientState (GLenum array) {
 }
 static void APIENTRY dbgEnd (void) {
 	dllEnd ();
-	glBegan = qFalse;
+	glBegan = false;
 }
 static void APIENTRY dbgEndList (void) {
 	dllEndList ();
@@ -4335,7 +4335,7 @@ qBool QGL_Init (const char *dllName)
 			Com_Printf (PRNT_ERROR, " failed\n");
 			MessageBox (NULL, buf, "EGL Fatal Error", MB_OK|MB_ICONWARNING);
 
-			return qFalse;
+			return false;
 		}
 	}
 #elif defined __unix__
@@ -4355,7 +4355,7 @@ qBool QGL_Init (const char *dllName)
 		Com_Printf (0, "QGL_Init: LoadLibrary ( \"%s\" )", fn);
 		if ((glState.OpenGLLib = dlopen (fn, RTLD_LAZY)) == 0 ) {
 			Com_Printf (0, "%s\n", dlerror());
-			return qFalse;
+			return false;
 		}
 	}
 #endif
@@ -4771,7 +4771,7 @@ qBool QGL_Init (const char *dllName)
 
 	qglActiveStencilFaceEXT			= NULL;
 
-	return qTrue;
+	return true;
 }
 
 

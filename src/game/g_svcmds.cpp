@@ -91,7 +91,7 @@ static qBool StringToFilter (char *s, ipfilter_t *f)
 		if (*s < '0' || *s > '9')
 		{
 			gi.cprintf(NULL, PRINT_HIGH, "Bad filter address: %s\n", s);
-			return qFalse;
+			return false;
 		}
 		
 		j = 0;
@@ -112,7 +112,7 @@ static qBool StringToFilter (char *s, ipfilter_t *f)
 	f->mask = *(unsigned *)m;
 	f->compare = *(unsigned *)b;
 	
-	return qTrue;
+	return true;
 }
 
 

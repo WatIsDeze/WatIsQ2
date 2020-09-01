@@ -560,8 +560,8 @@ static void CL_ParseFrame (int extraBits)
 	// If the frame is delta compressed from data that we no longer have available, we must
 	// suck up the rest of the frame, but not use it, then ask for a non-compressed message
 	if (cl.frame.deltaFrame <= 0) {
-		cl.frame.valid = qTrue;		// uncompressed frame
-		cls.demoWaiting = qFalse;	// we can start recording now
+		cl.frame.valid = true;		// uncompressed frame
+		cls.demoWaiting = false;	// we can start recording now
 		oldFrame = NULL;
 	}
 	else {
@@ -579,7 +579,7 @@ static void CL_ParseFrame (int extraBits)
 			Com_DevPrintf (PRNT_WARNING, "Delta parseEntities too old.\n");
 		}
 		else
-			cl.frame.valid = qTrue;	// Valid delta parse
+			cl.frame.valid = true;	// Valid delta parse
 	}
 
 	// Read areaBits
@@ -611,7 +611,7 @@ static void CL_ParseFrame (int extraBits)
 
 		// Start
 		MSG_Init (&fakeMsg, fakeFrame, sizeof (fakeFrame));
-		fakeMsg.allowOverflow = qTrue;
+		fakeMsg.allowOverflow = true;
 
 		// SVC_FRAME header
 		MSG_WriteByte (&fakeMsg, SVC_FRAME);
@@ -643,7 +643,7 @@ static void CL_ParseFrame (int extraBits)
 		// Getting a valid frame message ends the connection process
 		if (Com_ClientState () != CA_ACTIVE)
 			CL_SetState (CA_ACTIVE);
-		cls.soundPrepped = qTrue;	// can start mixing ambient sounds
+		cls.soundPrepped = true;	// can start mixing ambient sounds
 	}
 }
 
@@ -690,7 +690,7 @@ static qBool CL_ParseServerData (void)
 
 	// Set gamedir
 	if ((*str && (!fs_game->string || !*fs_game->string || strcmp (fs_game->string, str))) || (!*str && (fs_game->string || *fs_game->string)))
-		Cvar_Set ("game", str, qFalse);
+		Cvar_Set ("game", str, false);
 
 	// Parse player entity number
 	cl.playerNum = MSG_ReadShort (&cls.netMessage);
@@ -726,14 +726,14 @@ static qBool CL_ParseServerData (void)
 			cl.strafeHack = MSG_ReadByte (&cls.netMessage);
 		}
 		else
-			cl.strafeHack = qFalse;
+			cl.strafeHack = false;
 
 		cls.protocolMinorVersion = newVersion;
 	}
 	else {
 		cl.enhancedServer = 0;
 		cls.protocolMinorVersion = 0;
-		cl.strafeHack = qFalse;
+		cl.strafeHack = false;
 	}
 
 	Com_DevPrintf (0, "Serverdata: protocol=%d(%d), serverCount=%d, attractLoop=%d, playerNum=%d, game=%s, map=%s, enhanced=%d\n",
@@ -751,10 +751,10 @@ static qBool CL_ParseServerData (void)
 		Com_Printf (0, "%c%s\n", 2, str);
 
 		// Need to prep refresh at next oportunity
-		cls.refreshPrepped = qFalse;
+		cls.refreshPrepped = false;
 	}
 
-	return qTrue;
+	return true;
 }
 
 
@@ -798,7 +798,7 @@ static void CL_ParseConfigString (void)
 	// We do need to know some of these here...
 	switch (num) {
 	case CS_CDTRACK:
-		CDAudio_Play (atoi (cl.configStrings[CS_CDTRACK]), qTrue);
+		CDAudio_Play (atoi (cl.configStrings[CS_CDTRACK]), true);
 		break;
 
 	case CS_MAXCLIENTS:
@@ -989,7 +989,7 @@ void CL_ParseServerMessage (void)
 
 		case SVC_DISCONNECT:
 			cls.connectCount = 0;
-			CL_WriteDemoMessageChunk (cls.netMessage.data + oldReadCount, cls.netMessage.readCount - oldReadCount, qFalse);
+			CL_WriteDemoMessageChunk (cls.netMessage.data + oldReadCount, cls.netMessage.readCount - oldReadCount, false);
 			Com_Error (ERR_DISCONNECT, "Server disconnected\n");
 			break;
 
@@ -1007,13 +1007,13 @@ void CL_ParseServerMessage (void)
 
 		case SVC_SOUND:
 			CL_ParseStartSoundPacket ();
-			CL_WriteDemoMessageChunk (cls.netMessage.data + oldReadCount, cls.netMessage.readCount - oldReadCount, qFalse);
+			CL_WriteDemoMessageChunk (cls.netMessage.data + oldReadCount, cls.netMessage.readCount - oldReadCount, false);
 			break;
 
 		case SVC_PRINT:
 			i = MSG_ReadByte (&cls.netMessage);
 			s = MSG_ReadString (&cls.netMessage);
-			CL_WriteDemoMessageChunk (cls.netMessage.data + oldReadCount, cls.netMessage.readCount - oldReadCount, qFalse);
+			CL_WriteDemoMessageChunk (cls.netMessage.data + oldReadCount, cls.netMessage.readCount - oldReadCount, false);
 
 			if (cl_timestamp->intVal) {
 				ctime = time (NULL);
@@ -1074,21 +1074,21 @@ void CL_ParseServerMessage (void)
 				CL_CGModule_EndServerMessage ();
 				return;
 			}
-			CL_WriteDemoMessageChunk (cls.netMessage.data + oldReadCount, cls.netMessage.readCount - oldReadCount, qFalse);
+			CL_WriteDemoMessageChunk (cls.netMessage.data + oldReadCount, cls.netMessage.readCount - oldReadCount, false);
 			break;
 
 		case SVC_CONFIGSTRING:
 			CL_ParseConfigString ();
-			CL_WriteDemoMessageChunk (cls.netMessage.data + oldReadCount, cls.netMessage.readCount - oldReadCount, qFalse);
+			CL_WriteDemoMessageChunk (cls.netMessage.data + oldReadCount, cls.netMessage.readCount - oldReadCount, false);
 			break;
 
 		case SVC_SPAWNBASELINE:
 			CL_ParseBaseline ();
-			CL_WriteDemoMessageChunk (cls.netMessage.data + oldReadCount, cls.netMessage.readCount - oldReadCount, qFalse);
+			CL_WriteDemoMessageChunk (cls.netMessage.data + oldReadCount, cls.netMessage.readCount - oldReadCount, false);
 			break;
 
 		case SVC_DOWNLOAD:
-			CL_ParseDownload (qFalse);
+			CL_ParseDownload (false);
 			break;
 
 		case SVC_PLAYERINFO:
@@ -1107,11 +1107,11 @@ void CL_ParseServerMessage (void)
 			break;
 
 		case SVC_ZDOWNLOAD:
-			CL_ParseDownload (qTrue);
+			CL_ParseDownload (true);
 			break;
 
 		default:
-			CL_WriteDemoMessageChunk (cls.netMessage.data + oldReadCount, cls.netMessage.readCount - oldReadCount, qFalse);
+			CL_WriteDemoMessageChunk (cls.netMessage.data + oldReadCount, cls.netMessage.readCount - oldReadCount, false);
 			if (CL_CGModule_ParseServerMessage (cmd))
 				break;
 
@@ -1130,7 +1130,7 @@ void CL_ParseServerMessage (void)
 	}
 
 	// Flush this frame
-	CL_WriteDemoMessageChunk (NULL, 0, qTrue);
+	CL_WriteDemoMessageChunk (NULL, 0, true);
 
 	// Let CGame know
 	CL_CGModule_EndServerMessage ();

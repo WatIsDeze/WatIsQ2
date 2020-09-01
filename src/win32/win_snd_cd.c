@@ -85,7 +85,7 @@ static int CDAudio_GetAudioDiskInfo (void)
 	DWORD				dwReturn;
 	MCI_STATUS_PARMS	mciStatusParms;
 
-	cd_isValid = qFalse;
+	cd_isValid = false;
 
 	mciStatusParms.dwItem = MCI_STATUS_READY;
 	dwReturn = mciSendCommand (wDeviceID, MCI_STATUS, MCI_STATUS_ITEM | MCI_WAIT, (DWORD) (LPVOID) &mciStatusParms);
@@ -111,7 +111,7 @@ static int CDAudio_GetAudioDiskInfo (void)
 		return -1;
 	}
 
-	cd_isValid = qTrue;
+	cd_isValid = true;
 	cd_maxTracks = mciStatusParms.dwReturn;
 
 	return 0;
@@ -139,7 +139,7 @@ void CDAudio_Pause (void)
 		Com_DevPrintf (PRNT_WARNING, "MCI_PAUSE failed (%i)", dwReturn);
 
 	cd_wasPlaying = cd_isPlaying;
-	cd_isPlaying = qFalse;
+	cd_isPlaying = false;
 }
 
 
@@ -209,7 +209,7 @@ void CDAudio_Play2 (int track, qBool looping)
 
 	cd_playLooping = looping;
 	cd_playTrack = track;
-	cd_isPlaying = qTrue;
+	cd_isPlaying = true;
 
 	if (cd_nocd->intVal)
 		CDAudio_Pause ();
@@ -245,8 +245,8 @@ void CDAudio_Stop (void)
 	if (dwReturn)
 		Com_DevPrintf (PRNT_WARNING, "MCI_STOP failed (%i)", dwReturn);
 
-	cd_wasPlaying = qFalse;
-	cd_isPlaying = qFalse;
+	cd_wasPlaying = false;
+	cd_isPlaying = false;
 }
 
 
@@ -272,7 +272,7 @@ void CDAudio_Resume (void)
 		return;
 	}
 
-	cd_isPlaying = qTrue;
+	cd_isPlaying = true;
 }
 
 
@@ -293,19 +293,19 @@ static void CD_f (void)
 	command = Cmd_Argv (1);
 
 	if (!Q_stricmp (command, "on")) {
-		cd_enabled = qTrue;
+		cd_enabled = true;
 		return;
 	}
 
 	if (!Q_stricmp (command, "off")) {
 		if (cd_isPlaying)
 			CDAudio_Stop ();
-		cd_enabled = qFalse;
+		cd_enabled = false;
 		return;
 	}
 
 	if (!Q_stricmp (command, "reset")) {
-		cd_enabled = qTrue;
+		cd_enabled = true;
 		if (cd_isPlaying)
 			CDAudio_Stop ();
 
@@ -345,12 +345,12 @@ static void CD_f (void)
 	}
 
 	if (!Q_stricmp (command, "play")) {
-		CDAudio_Play (atoi(Cmd_Argv (2)), qFalse);
+		CDAudio_Play (atoi(Cmd_Argv (2)), false);
 		return;
 	}
 
 	if (!Q_stricmp (command, "loop")) {
-		CDAudio_Play (atoi(Cmd_Argv (2)), qTrue);
+		CDAudio_Play (atoi(Cmd_Argv (2)), true);
 		return;
 	}
 
@@ -373,7 +373,7 @@ static void CD_f (void)
 		if (cd_isPlaying)
 			CDAudio_Stop ();
 		CDAudio_Eject();
-		cd_isValid = qFalse;
+		cd_isValid = false;
 		return;
 	}
 
@@ -401,13 +401,13 @@ LRESULT CALLBACK CDAudio_MessageHandler (HWND hWnd, UINT uMsg, WPARAM wParam, LP
 	switch (wParam) {
 	case MCI_NOTIFY_SUCCESSFUL:
 		if (cd_isPlaying) {
-			cd_isPlaying = qFalse;
+			cd_isPlaying = false;
 			if (cd_playLooping) {
 				// if the track has played the given number of times, go to the ambient track
 				if (++cd_LoopCounter >= cd_loopcount->intVal)
-					CDAudio_Play2 (cd_looptrack->intVal, qTrue);
+					CDAudio_Play2 (cd_looptrack->intVal, true);
 				else
-					CDAudio_Play2 (cd_playTrack, qTrue);
+					CDAudio_Play2 (cd_playTrack, true);
 			}
 		}
 		break;
@@ -419,7 +419,7 @@ LRESULT CALLBACK CDAudio_MessageHandler (HWND hWnd, UINT uMsg, WPARAM wParam, LP
 	case MCI_NOTIFY_FAILURE:
 		Com_DevPrintf (PRNT_WARNING, "MCI_NOTIFY_FAILURE\n");
 		CDAudio_Stop ();
-		cd_isValid = qFalse;
+		cd_isValid = false;
 		break;
 
 	default:
@@ -441,10 +441,10 @@ void CDAudio_Update (void)
 	if (cd_nocd->intVal != !cd_enabled) {
 		if (cd_nocd->intVal) {
 			CDAudio_Stop ();
-			cd_enabled = qFalse;
+			cd_enabled = false;
 		}
 		else {
-			cd_enabled = qTrue;
+			cd_enabled = true;
 			CDAudio_Resume ();
 		}
 	}
@@ -485,13 +485,13 @@ qBool CDAudio_Init (void)
 	cd_looptrack	= Cvar_Register ("cd_looptrack",	"11",	0);
 
 	if (cd_nocd->intVal)
-		return qFalse;
+		return false;
 
 	mciOpenParms.lpstrDeviceType = "cdaudio";
 	dwReturn = mciSendCommand (0, MCI_OPEN, MCI_OPEN_TYPE | MCI_OPEN_SHAREABLE, (DWORD) (LPVOID) &mciOpenParms);
 	if (dwReturn) {
 		Com_Printf (PRNT_WARNING, "CDAudio_Init: MCI_OPEN failed (%i)\n", dwReturn);
-		return qFalse;
+		return false;
 	}
 	wDeviceID = mciOpenParms.wDeviceID;
 
@@ -501,25 +501,25 @@ qBool CDAudio_Init (void)
 	if (dwReturn) {
 		Com_Printf (PRNT_WARNING, "MCI_SET_TIME_FORMAT failed (%i)\n", dwReturn);
 		mciSendCommand (wDeviceID, MCI_CLOSE, 0, (DWORD)NULL);
-		return qFalse;
+		return false;
 	}
 
 	for (n=0 ; n<100; n++)
 		cd_trackRemap[n] = n;
-	cd_initialized = qTrue;
-	cd_enabled = qTrue;
+	cd_initialized = true;
+	cd_enabled = true;
 
 	if (CDAudio_GetAudioDiskInfo ()) {
 		Com_Printf (0, "CDAudio_Init: No CD in player.\n");
-		cd_isValid = qFalse;
-		cd_enabled = qFalse;
+		cd_isValid = false;
+		cd_enabled = false;
 	}
 
 	Com_Printf (0, "CD Audio Initialized\n");
 
 	cmd_cd	= Cmd_AddCommand ("cd",	CD_f,		"Has the CD player perform a specified task");
 
-	return qTrue;
+	return true;
 }
 
 

@@ -107,51 +107,51 @@ static m_screenMenu_t	m_screenMenu;
 
 static void ConsoleClockFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("con_clock", m_screenMenu.con_clock_toggle.curValue, qFalse);
+	cgi.Cvar_SetValue ("con_clock", m_screenMenu.con_clock_toggle.curValue, false);
 }
 
 static void ConsoleNotFadeFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("con_notifyfade", m_screenMenu.con_notfade_toggle.curValue, qFalse);
+	cgi.Cvar_SetValue ("con_notifyfade", m_screenMenu.con_notfade_toggle.curValue, false);
 }
 
 static void ConsoleNotLargeFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("con_notifylarge", m_screenMenu.con_notlarge_toggle.curValue, qFalse);
+	cgi.Cvar_SetValue ("con_notifylarge", m_screenMenu.con_notlarge_toggle.curValue, false);
 }
 
 static void ConsoleTimeStampFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("cl_timestamp", m_screenMenu.con_timestamp_list.curValue, qFalse);
+	cgi.Cvar_SetValue ("cl_timestamp", m_screenMenu.con_timestamp_list.curValue, false);
 }
 
 static void ConsoleNotLinesFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("con_notifylines", m_screenMenu.con_notlines_slider.curValue, qFalse);
+	cgi.Cvar_SetValue ("con_notifylines", m_screenMenu.con_notlines_slider.curValue, false);
 	m_screenMenu.con_notlines_amount.generic.name = cgi.Cvar_GetStringValue ("con_notifylines");
 }
 
 static void ConsoleAlphaFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("con_alpha", m_screenMenu.con_alpha_slider.curValue * 0.1, qFalse);
+	cgi.Cvar_SetValue ("con_alpha", m_screenMenu.con_alpha_slider.curValue * 0.1, false);
 	m_screenMenu.con_alpha_amount.generic.name = cgi.Cvar_GetStringValue ("con_alpha");
 }
 
 static void ConsoleDropFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("con_drop", m_screenMenu.con_drop_slider.curValue * 0.1, qFalse);
+	cgi.Cvar_SetValue ("con_drop", m_screenMenu.con_drop_slider.curValue * 0.1, false);
 	m_screenMenu.con_drop_amount.generic.name = cgi.Cvar_GetStringValue ("con_drop");
 }
 
 static void ConsoleScrollFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("con_scroll", m_screenMenu.con_scroll_slider.curValue, qFalse);
+	cgi.Cvar_SetValue ("con_scroll", m_screenMenu.con_scroll_slider.curValue, false);
 	m_screenMenu.con_scroll_amount.generic.name = cgi.Cvar_GetStringValue ("con_scroll");
 }
 
 static void ConsoleFontScaleFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("r_fontScale", m_screenMenu.con_fontscale_slider.curValue * 0.25, qFalse);
+	cgi.Cvar_SetValue ("r_fontScale", m_screenMenu.con_fontscale_slider.curValue * 0.25, false);
 	m_screenMenu.con_fontscale_amount.generic.name = cgi.Cvar_GetStringValue ("r_fontScale");
 }
 
@@ -162,42 +162,42 @@ static void ConsoleFontScaleFunc (void *unused)
 static void CrosshairFunc (void *unused)
 {
 	if (m_screenMenu.ch_number_list.curValue < (int) m_screenMenu.numCrosshairs)
-		cgi.Cvar_SetValue ("crosshair", m_screenMenu.crosshairs[m_screenMenu.ch_number_list.curValue].number, qFalse);
+		cgi.Cvar_SetValue ("crosshair", m_screenMenu.crosshairs[m_screenMenu.ch_number_list.curValue].number, false);
 }
 
 static void CrosshairAlphaFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("ch_alpha", m_screenMenu.ch_alpha_slider.curValue * 0.1, qFalse);
+	cgi.Cvar_SetValue ("ch_alpha", m_screenMenu.ch_alpha_slider.curValue * 0.1, false);
 	m_screenMenu.ch_alpha_amount.generic.name = cgi.Cvar_GetStringValue ("ch_alpha");
 }
 
 static void CrosshairPulseFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("ch_pulse", m_screenMenu.ch_pulse_slider.curValue * 0.1, qFalse);
+	cgi.Cvar_SetValue ("ch_pulse", m_screenMenu.ch_pulse_slider.curValue * 0.1, false);
 	m_screenMenu.ch_pulse_amount.generic.name = cgi.Cvar_GetStringValue ("ch_pulse");
 }
 
 static void CrosshairScaleFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("ch_scale", m_screenMenu.ch_scale_slider.curValue * 0.1, qFalse);
+	cgi.Cvar_SetValue ("ch_scale", m_screenMenu.ch_scale_slider.curValue * 0.1, false);
 	m_screenMenu.ch_scale_amount.generic.name = cgi.Cvar_GetStringValue ("ch_scale");
 }
 
 static void CrosshairRedFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("ch_red", m_screenMenu.ch_red_slider.curValue * 0.1, qFalse);
+	cgi.Cvar_SetValue ("ch_red", m_screenMenu.ch_red_slider.curValue * 0.1, false);
 	m_screenMenu.ch_red_amount.generic.name = cgi.Cvar_GetStringValue ("ch_red");
 }
 
 static void CrosshairGreenFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("ch_green", m_screenMenu.ch_green_slider.curValue * 0.1, qFalse);
+	cgi.Cvar_SetValue ("ch_green", m_screenMenu.ch_green_slider.curValue * 0.1, false);
 	m_screenMenu.ch_green_amount.generic.name = cgi.Cvar_GetStringValue ("ch_green");
 }
 
 static void CrosshairBlueFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("ch_blue", m_screenMenu.ch_blue_slider.curValue * 0.1, qFalse);
+	cgi.Cvar_SetValue ("ch_blue", m_screenMenu.ch_blue_slider.curValue * 0.1, false);
 	m_screenMenu.ch_blue_amount.generic.name = cgi.Cvar_GetStringValue ("ch_blue");
 }
 
@@ -215,16 +215,16 @@ static void ScreenMenu_SetValues (void)
 	// console
 	//
 
-	cgi.Cvar_SetValue ("con_clock",					clamp (cgi.Cvar_GetIntegerValue ("con_clock"), 0, 1), qFalse);
+	cgi.Cvar_SetValue ("con_clock",					clamp (cgi.Cvar_GetIntegerValue ("con_clock"), 0, 1), false);
 	m_screenMenu.con_clock_toggle.curValue			= cgi.Cvar_GetIntegerValue ("con_clock");
 
-	cgi.Cvar_SetValue ("con_notifyfade",			clamp (cgi.Cvar_GetIntegerValue ("con_notifyfade"), 0, 1), qFalse);
+	cgi.Cvar_SetValue ("con_notifyfade",			clamp (cgi.Cvar_GetIntegerValue ("con_notifyfade"), 0, 1), false);
 	m_screenMenu.con_notfade_toggle.curValue		= cgi.Cvar_GetIntegerValue ("con_notifyfade");
 
-	cgi.Cvar_SetValue ("con_notifylarge",			clamp (cgi.Cvar_GetIntegerValue ("con_notifylarge"), 0, 1), qFalse);
+	cgi.Cvar_SetValue ("con_notifylarge",			clamp (cgi.Cvar_GetIntegerValue ("con_notifylarge"), 0, 1), false);
 	m_screenMenu.con_notlarge_toggle.curValue		= cgi.Cvar_GetIntegerValue ("con_notifylarge");
 
-	cgi.Cvar_SetValue ("cl_timestamp",				clamp (cgi.Cvar_GetIntegerValue ("cl_timestamp"), 0, 2), qFalse);
+	cgi.Cvar_SetValue ("cl_timestamp",				clamp (cgi.Cvar_GetIntegerValue ("cl_timestamp"), 0, 2), false);
 	m_screenMenu.con_timestamp_list.curValue		= cgi.Cvar_GetIntegerValue ("cl_timestamp");
 
 	m_screenMenu.con_notlines_slider.curValue		= cgi.Cvar_GetFloatValue ("con_notifylines");
@@ -251,9 +251,9 @@ static void ScreenMenu_SetValues (void)
 	}
 	m_screenMenu.ch_number_list.curValue = (int) ((i == m_screenMenu.numCrosshairs) ? 0 : i);
 	if (m_screenMenu.numCrosshairs)
-		cgi.Cvar_SetValue ("crosshair", m_screenMenu.crosshairs[m_screenMenu.ch_number_list.curValue].number, qTrue);
+		cgi.Cvar_SetValue ("crosshair", m_screenMenu.crosshairs[m_screenMenu.ch_number_list.curValue].number, true);
 	else
-		cgi.Cvar_SetValue ("crosshair", 0, qTrue);
+		cgi.Cvar_SetValue ("crosshair", 0, true);
 
 	m_screenMenu.ch_alpha_slider.curValue		= cgi.Cvar_GetFloatValue ("ch_alpha") * 10;
 	m_screenMenu.ch_alpha_amount.generic.name	= cgi.Cvar_GetStringValue ("ch_alpha");
@@ -346,11 +346,11 @@ static void ScreenMenu_Init (void)
 	size_t	i, j;
 
 	// get crosshair list
-	numCrosshairs = cgi.FS_FindFiles ("pics", "pics/ch*.*", NULL, crosshairList, MAX_CROSSHAIRS, qFalse, qFalse);
+	numCrosshairs = cgi.FS_FindFiles ("pics", "pics/ch*.*", NULL, crosshairList, MAX_CROSSHAIRS, false, false);
 	if (!numCrosshairs)
-		m_screenMenu.crosshairsFound = qFalse;
+		m_screenMenu.crosshairsFound = false;
 	else
-		m_screenMenu.crosshairsFound = qTrue;
+		m_screenMenu.crosshairsFound = true;
 	m_screenMenu.numCrosshairs = 0;
 
 	if (m_screenMenu.crosshairsFound) {
@@ -394,7 +394,7 @@ static void ScreenMenu_Init (void)
 		}
 
 		if (!m_screenMenu.numCrosshairs)
-			m_screenMenu.crosshairsFound = qFalse;
+			m_screenMenu.crosshairsFound = false;
 	}
 
 	CG_FS_FreeFileList (crosshairList, numCrosshairs);
@@ -617,7 +617,7 @@ static void ScreenMenu_Init (void)
 
 	UI_AddItem (&m_screenMenu.frameWork,		&m_screenMenu.back_action);
 
-	UI_FinishFramework (&m_screenMenu.frameWork, qTrue);
+	UI_FinishFramework (&m_screenMenu.frameWork, true);
 }
 
 

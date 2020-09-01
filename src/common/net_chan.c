@@ -181,7 +181,7 @@ void Netchan_Setup (netSrc_t sock, netChan_t *chan, netAdr_t *adr, int protocol,
 	chan->lastReceived = Sys_Milliseconds ();
 	chan->incomingSequence = 0;
 	chan->outgoingSequence = 1;
-	chan->message.allowOverflow = qTrue;
+	chan->message.allowOverflow = true;
 
 	Com_DevPrintf (0, "Netchan_Setup: sock=%d, protocol=%d, qport=%d, msgLen=%u\n", sock, protocol, qPort, msgLen);
 }
@@ -197,13 +197,13 @@ static inline qBool Netchan_NeedReliable (netChan_t *chan)
 	// If the remote side dropped the last reliable message, resend it
 	if (chan->incomingAcknowledged > chan->lastReliableSequence
 	&& chan->incomingReliableAcknowledged != chan->reliableSequence)
-		return qTrue;
+		return true;
 
 	// If the reliable transmit buffer is empty, copy the current message out
 	if (!chan->reliableLength && chan->message.curSize)
-		return qTrue;
+		return true;
 
-	return qFalse;
+	return false;
 }
 
 
@@ -226,7 +226,7 @@ int Netchan_Transmit (netChan_t *chan, size_t length, byte *data)
 
 	// Check for message overflow
 	if (chan->message.overFlowed || chan->message.curSize >= MAX_CL_MSGLEN) {
-		chan->fatalError = qTrue;
+		chan->fatalError = true;
 		Com_Printf (PRNT_WARNING, "%s: Outgoing message overflow\n", NET_AdrToString (&chan->remoteAddress));
 		return -2;
 	}
@@ -330,7 +330,7 @@ qBool Netchan_Process (netChan_t *chan, netMsg_t *msg)
 
 	reliableMessage = sequence >> 31;
 	reliableAck = sequenceAck >> 31;
-	chan->gotReliable = reliableMessage ? qTrue : qFalse;
+	chan->gotReliable = reliableMessage ? true : false;
 
 	sequence &= ~(1<<31);
 	sequenceAck &= ~(1<<31);
@@ -358,7 +358,7 @@ qBool Netchan_Process (netChan_t *chan, netMsg_t *msg)
 				NET_AdrToString (&chan->remoteAddress),
 				sequence,
 				chan->incomingSequence);
-		return qFalse;
+		return false;
 	}
 
 	// Dropped packets don't keep the message from being used
@@ -386,5 +386,5 @@ qBool Netchan_Process (netChan_t *chan, netMsg_t *msg)
 	// The message can now be read from the current message pointer
 	chan->lastReceived = Sys_Milliseconds ();
 
-	return qTrue;
+	return true;
 }

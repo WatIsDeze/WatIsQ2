@@ -233,7 +233,7 @@ static void CL_PrintToConsole (console_t *console, comPrint_t flags, const char 
 
 		if (console->carriageReturn) {
 			console->currentLine = max (1, console->currentLine - 1);
-			console->carriageReturn = qFalse;
+			console->carriageReturn = false;
 		}
 
 		if (!console->xOffset) {
@@ -265,7 +265,7 @@ static void CL_PrintToConsole (console_t *console, comPrint_t flags, const char 
 			console->lastColor = -1;
 			console->lastStyle = -1;
 			console->xOffset = 0;
-			console->carriageReturn = qTrue;
+			console->carriageReturn = true;
 			break;
 
 		default:
@@ -499,7 +499,7 @@ static void CL_MessageMode_f (void)
 	if (Com_ClientState () != CA_ACTIVE)
 		return;
 
-	key_chatTeam = qFalse;
+	key_chatTeam = false;
 	Key_SetDest (KD_MESSAGE);
 }
 
@@ -514,7 +514,7 @@ static void CL_MessageMode2_f (void)
 	if (Com_ClientState () != CA_ACTIVE)
 		return;
 
-	key_chatTeam = qTrue;
+	key_chatTeam = true;
 	Key_SetDest (KD_MESSAGE);
 }
 
@@ -560,8 +560,8 @@ void CL_ConsoleInit (void)
 	// Done
 	CL_ConsoleCheckResize ();
 
-	cl_console.initialized = qTrue;
-	cl_chatConsole.initialized = qTrue;
+	cl_console.initialized = true;
+	cl_chatConsole.initialized = true;
 }
 
 /*

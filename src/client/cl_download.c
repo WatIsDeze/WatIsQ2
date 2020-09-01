@@ -64,7 +64,7 @@ static void CL_DownloadFileName (char *dest, int destLen, char *fileName)
 ===============
 CL_CheckOrDownloadFile
 
-Returns qTrue if the file exists, otherwise it attempts to start a download from the server.
+Returns true if the file exists, otherwise it attempts to start a download from the server.
 ===============
 */
 qBool CL_CheckOrDownloadFile (char *fileName)
@@ -76,36 +76,36 @@ qBool CL_CheckOrDownloadFile (char *fileName)
 #if 0 // FIXME: looks like iD used this on some of it's models! (see boss2.bsp)
 	if (strstr (fileName, "..")) {
 		Com_Printf (PRNT_WARNING, "Refusing to check a path with '..' (%s)\n", fileName);
-		return qTrue;
+		return true;
 	}
 #endif
 	if (strchr (fileName, ' ')) {
 		Com_Printf (PRNT_WARNING, "Refusing to check a path containing spaces (%s)\n", fileName);
-		return qTrue;
+		return true;
 	}
 	if (strchr (fileName, ':')) {
 		Com_Printf (PRNT_WARNING, "Refusing to check a path containing a colon (%s)\n", fileName);
-		return qTrue;
+		return true;
 	}
 	if (fileName[0] == '/') {
 		Com_Printf (PRNT_WARNING, "Refusing to check a path starting with '/' (%s)\n", fileName);
-		return qTrue;
+		return true;
 	}
 
 	// No need to redownload a file that already exists
 	if (FS_FileExists (fileName) != -1)
-		return qTrue;
+		return true;
 
 #ifdef CL_HTTPDL
 	// Check with the download server
 	if (CL_HTTPDL_QueueDownload (fileName))
-		return qTrue;
+		return true;
 #endif
 
 	// Don't attempt to download another file with UDP
 	if (cls.download.file) {
 		Com_Printf (PRNT_WARNING, "Refusing to download while a file is already downloading (%s)\n", fileName);
-		return qTrue;
+		return true;
 	}
 
 	// Copy a normalized version of the filename
@@ -114,11 +114,11 @@ qBool CL_CheckOrDownloadFile (char *fileName)
 	// Verify the final path is legal
 	if (cls.download.name[0] == '/') {
 		Com_Printf (PRNT_WARNING, "Refusing to download a path starting with '/' (%s)\n", cls.download.name);
-		return qTrue;
+		return true;
 	}
 	if (cls.download.name[strlen(cls.download.name)-1] == '/') {
 		Com_Printf (PRNT_WARNING, "Refusing to download a path ending with '/' (%s)\n", cls.download.name);
-		return qTrue;
+		return true;
 	}
 
 	// Download to a temp filename and rename when done (so if it's interrupted a runt wont be left)
@@ -156,8 +156,8 @@ qBool CL_CheckOrDownloadFile (char *fileName)
 			MSG_WriteString (&cls.netChan.message, Q_VarArgs ("download \"%s\"", cls.download.name));
 	}
 
-	cls.forcePacket = qTrue;
-	return qFalse;
+	cls.forcePacket = true;
+	return false;
 }
 
 
@@ -240,7 +240,7 @@ void CL_ParseDownload (qBool compressed)
 
 		MSG_WriteByte (&cls.netChan.message, CLC_STRINGCMD);
 		MSG_WriteStringCat (&cls.netChan.message, "nextdl");
-		cls.forcePacket = qTrue;
+		cls.forcePacket = true;
 	}
 	else {
 		char	oldName[MAX_OSPATH];
@@ -535,7 +535,7 @@ void CL_RequestNextDownload (void)
 	if (cl_downloadCheck == ENV_CNT) {
 		cl_downloadCheck++;
 
-		CM_LoadMap (cl.configStrings[CS_MODELS+1], qTrue, &mapCheckSum);
+		CM_LoadMap (cl.configStrings[CS_MODELS+1], true, &mapCheckSum);
 		if (mapCheckSum != (uint32) atoi(cl.configStrings[CS_MAPCHECKSUM])) {
 			Com_Error (ERR_DROP, "Local map version differs from server: %i != '%s'", mapCheckSum, cl.configStrings[CS_MAPCHECKSUM]);
 			return;
@@ -591,7 +591,7 @@ void CL_RequestNextDownload (void)
 
 	MSG_WriteByte (&cls.netChan.message, CLC_STRINGCMD);
 	MSG_WriteString (&cls.netChan.message, Q_VarArgs ("begin %i\n", cl_downloadSpawnCount));
-	cls.forcePacket = qTrue;
+	cls.forcePacket = true;
 }
 
 /*
@@ -641,7 +641,7 @@ CL_HTTPDL_QueueDownload
 */
 qBool CL_HTTPDL_QueueDownload (char *file)
 {
-	return qFalse;
+	return false;
 }
 
 
@@ -652,7 +652,7 @@ CL_HTTPDL_PendingDownloads
 */
 qBool CL_HTTPDL_PendingDownloads (void)
 {
-	return qFalse;
+	return false;
 }
 
 

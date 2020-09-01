@@ -111,7 +111,7 @@ static LRESULT WINAPI ConWndProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 			PostQuitMessage (0);
 		}
 		else {
-			Sys_ShowConsole (0, qFalse);
+			Sys_ShowConsole (0, false);
 		}
 #endif
 		return 0;

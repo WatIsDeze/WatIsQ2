@@ -399,8 +399,8 @@ void mutant_jump (edict_t *self)
 qBool mutant_check_melee (edict_t *self)
 {
 	if (range (self, self->enemy) == RANGE_MELEE)
-		return qTrue;
-	return qFalse;
+		return true;
+	return false;
 }
 
 qBool mutant_check_jump (edict_t *self)
@@ -409,10 +409,10 @@ qBool mutant_check_jump (edict_t *self)
 	float	distance;
 
 	if (self->absMin[2] > (self->enemy->absMin[2] + 0.75 * self->enemy->size[2]))
-		return qFalse;
+		return false;
 
 	if (self->absMax[2] < (self->enemy->absMin[2] + 0.25 * self->enemy->size[2]))
-		return qFalse;
+		return false;
 
 	v[0] = self->s.origin[0] - self->enemy->s.origin[0];
 	v[1] = self->s.origin[1] - self->enemy->s.origin[1];
@@ -420,35 +420,35 @@ qBool mutant_check_jump (edict_t *self)
 	distance = Vec3Length(v);
 
 	if (distance < 100)
-		return qFalse;
+		return false;
 	if (distance > 100)
 	{
 		if (random() < 0.9)
-			return qFalse;
+			return false;
 	}
 
-	return qTrue;
+	return true;
 }
 
 qBool mutant_checkattack (edict_t *self)
 {
 	if (!self->enemy || self->enemy->health <= 0)
-		return qFalse;
+		return false;
 
 	if (mutant_check_melee(self))
 	{
 		self->monsterinfo.attack_state = AS_MELEE;
-		return qTrue;
+		return true;
 	}
 
 	if (mutant_check_jump(self))
 	{
 		self->monsterinfo.attack_state = AS_MISSILE;
 		// FIXME play a jump sound here
-		return qTrue;
+		return true;
 	}
 
-	return qFalse;
+	return false;
 }
 
 

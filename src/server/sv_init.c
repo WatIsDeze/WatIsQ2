@@ -125,9 +125,9 @@ static void SV_SpawnServer (char *server, char *spawnPoint, ssState_t serverStat
 	int		i;
 	uint32	checkSum;
 
-	Cvar_SetValue ("paused", 0, qFalse);
+	Cvar_SetValue ("paused", 0, false);
 	if (devMap)
-		Cvar_SetValue ("cheats", 1, qTrue);
+		Cvar_SetValue ("cheats", 1, true);
 
 	Cvar_FixCheatVars ();
 
@@ -176,10 +176,10 @@ static void SV_SpawnServer (char *server, char *spawnPoint, ssState_t serverStat
 
 	if (serverState == SS_GAME) {
 		Q_snprintfz (sv.configStrings[CS_MODELS+1], sizeof (sv.configStrings[CS_MODELS+1]), "maps/%s.bsp", server);
-		sv.models[1] = CM_LoadMap (sv.configStrings[CS_MODELS+1], qFalse, &checkSum);
+		sv.models[1] = CM_LoadMap (sv.configStrings[CS_MODELS+1], false, &checkSum);
 	}
 	else {
-		sv.models[1] = CM_LoadMap ("", qFalse, &checkSum);	// no real map
+		sv.models[1] = CM_LoadMap ("", false, &checkSum);	// no real map
 	}
 	Q_snprintfz (sv.configStrings[CS_MAPCHECKSUM], sizeof (sv.configStrings[CS_MAPCHECKSUM]), "%i", checkSum);
 
@@ -213,7 +213,7 @@ static void SV_SpawnServer (char *server, char *spawnPoint, ssState_t serverStat
 	SV_CheckForSavegame ();
 
 	// Set serverinfo variable
-	Cvar_Set ("mapname", sv.name, qTrue);
+	Cvar_Set ("mapname", sv.name, true);
 
 	// Update dedicated window title
 	SV_UpdateTitle ();
@@ -236,13 +236,13 @@ void SV_GameInit (void)
 
 	if (svs.initialized) {
 		// Cause any connected clients to reconnect
-		SV_ServerShutdown ("Server restarted\n", qTrue, qFalse);
+		SV_ServerShutdown ("Server restarted\n", true, false);
 	}
 	else {
 #ifndef DEDICATED_ONLY
 		// Make sure the client is down
 		if (!dedicated->intVal) {
-			CL_Disconnect (qFalse);
+			CL_Disconnect (false);
 			SCR_BeginLoadingPlaque ();
 		}
 #endif
@@ -251,11 +251,11 @@ void SV_GameInit (void)
 		Cvar_GetLatchedVars (CVAR_LATCH_SERVER);
 	}
 
-	svs.initialized = qTrue;
+	svs.initialized = true;
 
 	if (Cvar_GetFloatValue ("coop") && Cvar_GetFloatValue ("deathmatch")) {
 		Com_Printf (0, "Deathmatch and Coop both set, disabling Coop\n");
-		Cvar_SetValue ("coop", 0, qTrue);
+		Cvar_SetValue ("coop", 0, true);
 	}
 
 	/*
@@ -266,7 +266,7 @@ void SV_GameInit (void)
 	if (dedicated->intVal) {
 #endif
 		if (!Cvar_GetFloatValue ("coop"))
-			Cvar_SetValue ("deathmatch", 1, qTrue);
+			Cvar_SetValue ("deathmatch", 1, true);
 #ifndef DEDICATED_ONLY
 	}
 #endif
@@ -274,17 +274,17 @@ void SV_GameInit (void)
 	// Init clients
 	if (Cvar_GetFloatValue ("deathmatch")) {
 		if (maxclients->intVal <= 1)
-			Cvar_SetValue ("maxclients", 8, qTrue);
+			Cvar_SetValue ("maxclients", 8, true);
 		else if (maxclients->intVal > MAX_CS_CLIENTS)
-			Cvar_SetValue ("maxclients", MAX_CS_CLIENTS, qTrue);
+			Cvar_SetValue ("maxclients", MAX_CS_CLIENTS, true);
 	}
 	else if (Cvar_GetFloatValue ("coop")) {
 		if (maxclients->intVal <= 1 || maxclients->intVal > 4)
-			Cvar_SetValue ("maxclients", 4, qTrue);
+			Cvar_SetValue ("maxclients", 4, true);
 	}
 	else {
 		// Non-deathmatch, non-coop is one player
-		Cvar_SetValue ("maxclients", 1, qTrue);
+		Cvar_SetValue ("maxclients", 1, true);
 	}
 
 	svs.spawnCount = rand ();
@@ -296,7 +296,7 @@ void SV_GameInit (void)
 	if (maxclients->intVal > 1)
 		NET_Config (NET_SERVER);
 	else
-		Cvar_SetValue ("cheats", 1, qTrue);
+		Cvar_SetValue ("cheats", 1, true);
 
 	// Heartbeats will always be sent to the id master
 	svs.lastHeartBeat = -9999999;		// send immediately
@@ -348,14 +348,14 @@ void SV_LoadMap (qBool attractLoop, char *levelString, qBool loadGame, qBool dev
 	ch = strchr (level, '+');
 	if (ch) {
 		*ch = '\0';
-		Cvar_Set ("nextserver", Q_VarArgs ("gamemap \"%s\"", ch+1), qFalse);
+		Cvar_Set ("nextserver", Q_VarArgs ("gamemap \"%s\"", ch+1), false);
 	}
 	else
-		Cvar_Set ("nextserver", "", qFalse);
+		Cvar_Set ("nextserver", "", false);
 
 	// ZOID special hack for end game screen in coop mode
 	if (Cvar_GetFloatValue ("coop") && !Q_stricmp (level, "victory.pcx"))
-		Cvar_Set ("nextserver", "gamemap \"*base1\"", qFalse);
+		Cvar_Set ("nextserver", "gamemap \"*base1\"", false);
 
 	// If there is a $, use the remainder as a spawnPoint
 	ch = strchr (level, '$');
@@ -382,7 +382,7 @@ void SV_LoadMap (qBool attractLoop, char *levelString, qBool loadGame, qBool dev
 		SV_SpawnServer (level, spawnPoint, SS_CINEMATIC, attractLoop, loadGame, devMap);
 	}
 	else if (len > 4 && !strcmp (level+len-4, ".dm2")) {
-		sv.attractLoop = attractLoop = qTrue;
+		sv.attractLoop = attractLoop = true;
 
 		SV_BroadcastCommand ("changing\n");
 		SV_SendClientMessages ();

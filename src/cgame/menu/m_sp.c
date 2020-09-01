@@ -56,10 +56,10 @@ static void StartGame (void)
 	// Disable updates and start the cinematic going
 	cgi.CL_ResetServerCount ();
 	M_ForceMenuOff ();
-	cgi.Cvar_SetValue ("deathmatch", 0, qFalse);
-	cgi.Cvar_SetValue ("coop", 0, qFalse);
+	cgi.Cvar_SetValue ("deathmatch", 0, false);
+	cgi.Cvar_SetValue ("coop", 0, false);
 
-	cgi.Cvar_SetValue ("gamerules", 0, qFalse);
+	cgi.Cvar_SetValue ("gamerules", 0, false);
 
 	cgi.Cbuf_AddText ("killserver ; wait ; newgame\n");
 	cgi.Key_SetDest (KD_GAME);
@@ -67,25 +67,25 @@ static void StartGame (void)
 
 static void EasyGameFunc (void *unused)
 {
-	cgi.Cvar_Set ("skill", "0", qTrue);
+	cgi.Cvar_Set ("skill", "0", true);
 	StartGame ();
 }
 
 static void MediumGameFunc (void *unused)
 {
-	cgi.Cvar_Set ("skill", "1", qTrue);
+	cgi.Cvar_Set ("skill", "1", true);
 	StartGame ();
 }
 
 static void HardGameFunc (void *unused)
 {
-	cgi.Cvar_Set ("skill", "2", qTrue);
+	cgi.Cvar_Set ("skill", "2", true);
 	StartGame ();
 }
 
 static void HardPlusGameFunc (void *unused)
 {
-	cgi.Cvar_Set ("skill", "3", qTrue);
+	cgi.Cvar_Set ("skill", "3", true);
 	StartGame ();
 }
 
@@ -173,7 +173,7 @@ static void GameMenu_Init (void)
 
 	UI_AddItem (&m_gameMenu.frameWork,		&m_gameMenu.back_action);
 
-	UI_FinishFramework (&m_gameMenu.frameWork, qTrue);
+	UI_FinishFramework (&m_gameMenu.frameWork, true);
 }
 
 

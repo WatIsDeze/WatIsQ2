@@ -114,7 +114,7 @@ void GUI_NamedGUIEvent (gui_t *gui, char *name)
 	int		i;
 
 	// Queue any matching events
-	GUI_QueueWindowNamedEvent (gui, name, qFalse);
+	GUI_QueueWindowNamedEvent (gui, name, false);
 
 	// Recurse down the children
 	for (i=0, child=gui->childList ; i<gui->numChildren ; child++, i++)
@@ -151,7 +151,7 @@ static void GUI_SetAction (gui_t *gui, eva_set_t *setAction)
 		switch (setAction->destRegister) {
 		case FR_VISIBLE:
 			if (FRVALUE (setAction->destWindowPtr, setAction->destRegister) != setAction->srcStorage[0]) {
-				gui->shared->cursor.mouseMoved = qTrue;
+				gui->shared->cursor.mouseMoved = true;
 				queueWindow = setAction->destWindowPtr;
 				if (FRVALUE (setAction->destWindowPtr, setAction->destRegister))
 					queueEvent = WEV_INIT;
@@ -212,7 +212,7 @@ static void GUI_RunEvent (gui_t *gui, event_t *event)
 	for (i=0, action=event->actionList ; i<event->numActions ; action++, i++) {
 		switch (action->type) {
 		case EVA_CLOSE:
-			gui->shared->queueClose = qTrue;
+			gui->shared->queueClose = true;
 			break;
 
 		case EVA_COMMAND:
@@ -228,7 +228,7 @@ static void GUI_RunEvent (gui_t *gui, event_t *event)
 			break;
 
 		case EVA_NAMED_EVENT:
-			GUI_QueueWindowNamedEvent (action->named->destWindowPtr, action->named->eventName, qTrue);
+			GUI_QueueWindowNamedEvent (action->named->destWindowPtr, action->named->eventName, true);
 			break;
 
 		case EVA_RESET_TIME:
@@ -267,9 +267,9 @@ static void GUI_CheckDefDefault (gui_t *gui, evType_t type)
 	case WEV_ACTION:
 		if (gui->d.checkDef->liveUpdate) {
 			if (!Q_stricmp (gui->d.checkDef->cvar->string, gui->d.checkDef->values[0]))
-				Cvar_VariableSet (gui->d.checkDef->cvar, gui->d.checkDef->values[1], qFalse);
+				Cvar_VariableSet (gui->d.checkDef->cvar, gui->d.checkDef->values[1], false);
 			else
-				Cvar_VariableSet (gui->d.checkDef->cvar, gui->d.checkDef->values[0], qFalse);
+				Cvar_VariableSet (gui->d.checkDef->cvar, gui->d.checkDef->values[0], false);
 		}
 		else {
 			assert (0);
@@ -386,13 +386,13 @@ void GUI_QueueTrigger (gui_t *gui, evType_t type)
 	case WEV_INIT:
 		if (gui->inited)
 			return;
-		gui->inited = qTrue;
+		gui->inited = true;
 		break;
 
 	case WEV_SHUTDOWN:
 		if (!gui->inited)
 			return;
-		gui->inited = qFalse;
+		gui->inited = false;
 
 		GUI_QueueTrigger (gui, WEV_MOUSE_EXIT);
 		for (i=0, child=gui->childList ; i<gui->numChildren ; child++, i++)
@@ -402,15 +402,15 @@ void GUI_QueueTrigger (gui_t *gui, evType_t type)
 	case WEV_MOUSE_ENTER:
 		if (gui->mouseEntered && !gui->mouseExited)
 			return;
-		gui->mouseEntered = qTrue;
-		gui->mouseExited = qFalse;
+		gui->mouseEntered = true;
+		gui->mouseExited = false;
 		break;
 
 	case WEV_MOUSE_EXIT:
 		if (!gui->mouseEntered && gui->mouseExited)
 			return;
-		gui->mouseEntered = qFalse;
-		gui->mouseExited = qTrue;
+		gui->mouseEntered = false;
+		gui->mouseExited = true;
 		break;
 
 	case WEV_NAMED:
@@ -460,7 +460,7 @@ void GUI_QueueTrigger (gui_t *gui, evType_t type)
 		gui->queueList[gui->numQueued++] = event;
 
 	// Update
-	gui->shared->cursor.mouseMoved = qTrue;
+	gui->shared->cursor.mouseMoved = true;
 
 	// Post-process sub-triggers
 	switch (type) {

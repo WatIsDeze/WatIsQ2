@@ -281,7 +281,7 @@ void CG_AddDecals (void)
 		// Think func
 		flags = d->flags;
 		if (d->think && d->thinkNext) {
-			d->thinkNext = qFalse;
+			d->thinkNext = false;
 			d->think (d, color, &type, &flags);
 		}
 

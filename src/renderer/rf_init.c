@@ -259,8 +259,8 @@ static void R_GfxInfo_f (void)
 
 	Com_Printf (0, "----------------------------------------\n");
 
-	GL_TextureMode (qTrue, qTrue);
-	GL_TextureBits (qTrue, qTrue);
+	GL_TextureMode (true, true);
+	GL_TextureBits (true, true);
 
 	Com_Printf (0, "----------------------------------------\n");
 
@@ -335,7 +335,7 @@ static qBool ExtensionFound (const byte *extensionList, const char *extension)
 	// Extension names should not have spaces
 	where = (byte *) strchr (extension, ' ');
 	if (where || *extension == '\0')
-		return qFalse;
+		return false;
 
 	start = extensionList;
 	for ( ; ; ) {
@@ -345,12 +345,12 @@ static qBool ExtensionFound (const byte *extensionList, const char *extension)
 		terminator = where + strlen (extension);
 		if (where == start || (*(where - 1) == ' ')) {
 			if (*terminator == ' ' || *terminator == '\0') {
-				return qTrue;
+				return true;
 			}
 		}
 		start = terminator;
 	}
-	return qFalse;
+	return false;
 }
 
 
@@ -390,11 +390,11 @@ static vidMode_t r_vidModes[] = {
 qBool R_GetInfoForMode (int mode, int *width, int *height)
 {
 	if (mode < 0 || mode >= NUM_VIDMODES)
-		return qFalse;
+		return false;
 
 	*width  = r_vidModes[mode].width;
 	*height = r_vidModes[mode].height;
-	return qTrue;
+	return true;
 }
 
 
@@ -412,65 +412,65 @@ static qBool R_SetMode (void)
 	Com_Printf (0, "Setting video mode\n");
 
 	// Find the mode info
-	fullScreen = vid_fullscreen->intVal ? qTrue : qFalse;
+	fullScreen = vid_fullscreen->intVal ? true : false;
 	if (vid_width->intVal > 0 && vid_height->intVal > 0) {
 		width = vid_width->intVal;
 		height = vid_height->intVal;
 	}
 	else if (!R_GetInfoForMode (gl_mode->intVal, &width, &height)) {
 		Com_Printf (PRNT_ERROR, "...bad mode '%i', forcing safe mode\n", gl_mode->intVal);
-		Cvar_VariableSetValue (gl_mode, (float)SAFE_MODE, qTrue);
+		Cvar_VariableSetValue (gl_mode, (float)SAFE_MODE, true);
 		if (!R_GetInfoForMode (SAFE_MODE, &width, &height))
-			return qFalse;	// This should *never* happen if SAFE_MODE is a sane value
+			return false;	// This should *never* happen if SAFE_MODE is a sane value
 	}
 
 	// Attempt the desired mode
 	if (GLimp_AttemptMode (fullScreen, width, height)) {
-		Cvar_VariableSetValue (vid_fullscreen, (float)ri.config.vidFullScreen, qTrue);
-		return qTrue;
+		Cvar_VariableSetValue (vid_fullscreen, (float)ri.config.vidFullScreen, true);
+		return true;
 	}
 
 	// Bad mode, fall out of fullscreen if it was attempted
 	if (fullScreen) {
 		Com_Printf (PRNT_ERROR, "...failed to set fullscreen, attempting windowed\n");
 
-		if (GLimp_AttemptMode (qFalse, width, height)) {
-			Cvar_VariableSetValue (vid_fullscreen, (float)ri.config.vidFullScreen, qTrue);
-			return qTrue;
+		if (GLimp_AttemptMode (false, width, height)) {
+			Cvar_VariableSetValue (vid_fullscreen, (float)ri.config.vidFullScreen, true);
+			return true;
 		}
 	}
 
 	// Don't attempt the last valid safe mode if the user is already using it
 	if (ri.lastValidMode != -1 && ri.lastValidMode != gl_mode->intVal) {
 		Com_Printf (PRNT_ERROR, "...failed to set mode, attempted the last valid mode\n");
-		Cvar_VariableSetValue (gl_mode, (float)ri.lastValidMode, qTrue);
+		Cvar_VariableSetValue (gl_mode, (float)ri.lastValidMode, true);
 
-		if (GLimp_AttemptMode (qFalse, width, height)) {
-			Cvar_VariableSetValue (vid_fullscreen, (float)ri.config.vidFullScreen, qTrue);
-			return qTrue;
+		if (GLimp_AttemptMode (false, width, height)) {
+			Cvar_VariableSetValue (vid_fullscreen, (float)ri.config.vidFullScreen, true);
+			return true;
 		}
 	}
 
 	// Don't attempt safe mode if the user is already using it
 	if (gl_mode->intVal == SAFE_MODE) {
 		Com_Printf (PRNT_ERROR, "...already using the safe mode, exiting\n");
-		return qFalse;
+		return false;
 	}
 
 	// Bad mode period, fall back to safe mode
 	Com_Printf (PRNT_ERROR, "...failed to set mode, attempting safe mode '%d'\n", SAFE_MODE);
-	Cvar_VariableSetValue (gl_mode, (float)SAFE_MODE, qTrue);
+	Cvar_VariableSetValue (gl_mode, (float)SAFE_MODE, true);
 
 	// Try setting it back to something safe
 	R_GetInfoForMode (gl_mode->intVal, &width, &height);
 	if (GLimp_AttemptMode (fullScreen, width, height)) {
-		Cvar_VariableSetValue (vid_fullscreen, (float)ri.config.vidFullScreen, qTrue);
-		return qTrue;
+		Cvar_VariableSetValue (vid_fullscreen, (float)ri.config.vidFullScreen, true);
+		return true;
 	}
 
 	Com_Printf (PRNT_ERROR, "...could not revert to safe mode\n");
 	
-	return qFalse;
+	return false;
 }
 
 
@@ -501,7 +501,7 @@ static void GL_InitExtensions (void)
 			}
 			else {
 				Com_Printf (0, "...enabling GL_ARB_multitexture\n");
-				ri.config.extArbMultitexture = qTrue;
+				ri.config.extArbMultitexture = true;
 			}
 		}
 		else
@@ -520,7 +520,7 @@ static void GL_InitExtensions (void)
 				}
 				else {
 					Com_Printf (0, "...enabling GL_SGIS_multitexture\n");
-					ri.config.extSGISMultiTexture = qTrue;
+					ri.config.extSGISMultiTexture = true;
 				}
 			}
 			else
@@ -547,8 +547,8 @@ static void GL_InitExtensions (void)
 			qglActiveTextureARB				= NULL;
 			qglClientActiveTextureARB		= NULL;
 			qglSelectTextureSGIS			= NULL;
-			ri.config.extArbMultitexture	= qFalse;
-			ri.config.extSGISMultiTexture	= qFalse;
+			ri.config.extArbMultitexture	= false;
+			ri.config.extSGISMultiTexture	= false;
 		}
 		else {
 			if (ri.config.extSGISMultiTexture && ri.config.maxTexUnits > 2) {
@@ -580,12 +580,12 @@ static void GL_InitExtensions (void)
 			case 1:
 				if (!ExtensionFound (ri.extensionString, "GL_ARB_texture_compression")) {
 					Com_Printf (0, "...GL_ARB_texture_compression not found\n");
-					Cvar_VariableSetValue (r_ext_textureCompression, 2, qTrue);
+					Cvar_VariableSetValue (r_ext_textureCompression, 2, true);
 					break;
 				}
 
 				Com_Printf (0, "...enabling GL_ARB_texture_compression\n");
-				ri.config.extTexCompression = qTrue;
+				ri.config.extTexCompression = true;
 
 				ri.rgbFormatCompressed = GL_COMPRESSED_RGB_ARB;
 				ri.rgbaFormatCompressed = GL_COMPRESSED_RGBA_ARB;
@@ -597,12 +597,12 @@ static void GL_InitExtensions (void)
 			case 4:
 				if (!ExtensionFound (ri.extensionString, "GL_EXT_texture_compression_s3tc")) {
 					Com_Printf (0, "...GL_EXT_texture_compression_s3tc not found\n");
-					Cvar_VariableSetValue (r_ext_textureCompression, 5, qTrue);
+					Cvar_VariableSetValue (r_ext_textureCompression, 5, true);
 					break;
 				}
 
 				Com_Printf (0, "...enabling GL_EXT_texture_compression_s3tc\n");
-				ri.config.extTexCompression = qTrue;
+				ri.config.extTexCompression = true;
 
 				ri.rgbFormatCompressed = GL_COMPRESSED_RGB_S3TC_DXT1_EXT;
 				ri.greyFormatCompressed = GL_LUMINANCE4; // Not supported, just use 4bit per sample luminance
@@ -627,12 +627,12 @@ static void GL_InitExtensions (void)
 			case 5:
 				if (!ExtensionFound (ri.extensionString, "GL_S3_s3tc")) {
 					Com_Printf (0, "...GL_S3_s3tc not found\n");
-					Cvar_VariableSetValue (r_ext_textureCompression, 0, qTrue);
+					Cvar_VariableSetValue (r_ext_textureCompression, 0, true);
 					break;
 				}
 
 				Com_Printf (0, "...enabling GL_S3_s3tc\n");
-				ri.config.extTexCompression = qTrue;
+				ri.config.extTexCompression = true;
 
 				ri.rgbFormatCompressed = GL_RGB_S3TC;
 				ri.rgbaFormatCompressed = GL_RGBA_S3TC;
@@ -640,7 +640,7 @@ static void GL_InitExtensions (void)
 				break;
 
 			default:
-				Cvar_VariableSetValue (r_ext_textureCompression, 0, qTrue);
+				Cvar_VariableSetValue (r_ext_textureCompression, 0, true);
 				break;
 			}
 
@@ -666,11 +666,11 @@ static void GL_InitExtensions (void)
 				ri.config.maxCMTexSize = 0;
 			}
 			else {
-				Q_NearestPow (&ri.config.maxCMTexSize, qTrue);
+				Q_NearestPow (&ri.config.maxCMTexSize, true);
 
 				Com_Printf (0, "...enabling GL_ARB_texture_cube_map\n");
 				Com_Printf (0, "...* Max cubemap texture size: %i\n", ri.config.maxCMTexSize);
-				ri.config.extTexCubeMap = qTrue;
+				ri.config.extTexCubeMap = true;
 			}
 		}
 		else
@@ -686,7 +686,7 @@ static void GL_InitExtensions (void)
 		if (ExtensionFound (ri.extensionString, "GL_ARB_texture_env_add")) {
 			if (ri.config.extSGISMultiTexture || ri.config.extArbMultitexture) {
 				Com_Printf (0, "...enabling GL_ARB_texture_env_add\n");
-				ri.config.extTexEnvAdd = qTrue;
+				ri.config.extTexEnvAdd = true;
 			}
 			else
 				Com_Printf (0, "...ignoring GL_ARB_texture_env_add (no multitexture)\n");
@@ -706,7 +706,7 @@ static void GL_InitExtensions (void)
 			ExtensionFound (ri.extensionString, "GL_EXT_texture_env_combine")) {
 			if (ri.config.extSGISMultiTexture || ri.config.extArbMultitexture) {
 				Com_Printf (0, "...enabling GL_ARB/EXT_texture_env_combine\n");
-				ri.config.extTexEnvCombine = qTrue;
+				ri.config.extTexEnvCombine = true;
 			}
 			else
 				Com_Printf (0, "...ignoring GL_ARB/EXT_texture_env_combine (no multitexture)\n");
@@ -724,7 +724,7 @@ static void GL_InitExtensions (void)
 		if (ExtensionFound (ri.extensionString, "NV_texture_env_combine4")) {
 			if (ri.config.extTexEnvCombine) {
 				Com_Printf (0, "...enabling GL_NV_texture_env_combine4\n");
-				ri.config.extNVTexEnvCombine4 = qTrue;
+				ri.config.extNVTexEnvCombine4 = true;
 			}
 			else
 				Com_Printf (0, "...ignoring GL_NV_texture_env_combine4 (no combine)\n");
@@ -742,7 +742,7 @@ static void GL_InitExtensions (void)
 		if (ExtensionFound (ri.extensionString, "GL_ARB_texture_env_dot3")) {
 			if (ri.config.extTexEnvCombine) {
 				Com_Printf (0, "...enabling GL_ARB_texture_env_dot3\n");
-				ri.config.extTexEnvDot3 = qTrue;
+				ri.config.extTexEnvDot3 = true;
 			}
 			else
 				Com_Printf (0, "...ignoring GL_ARB_texture_env_dot3 (no combine)\n");
@@ -788,7 +788,7 @@ static void GL_InitExtensions (void)
 			}
 			else {
 				Com_Printf (0, "...enabling GL_ARB_vertex_program\n");
-				ri.config.extVertexProgram = qTrue;
+				ri.config.extVertexProgram = true;
 			}
 		}
 		else
@@ -831,7 +831,7 @@ static void GL_InitExtensions (void)
 				Com_Printf (0, "...enabling GL_ARB_fragment_program\n");
 				Com_Printf (0, "...* Max texture coordinates: %i\n", ri.config.maxTexCoords);
 				Com_Printf (0, "...* Max texture image units: %i\n", ri.config.maxTexImageUnits);
-				ri.config.extFragmentProgram = qTrue;
+				ri.config.extFragmentProgram = true;
 			}
 		}
 		else
@@ -867,7 +867,7 @@ static void GL_InitExtensions (void)
 			}
 			else {
 				Com_Printf (0, "...enabling GL_ARB_vertex_buffer_object\n");
-				ri.config.extVertexBufferObject = qTrue;
+				ri.config.extVertexBufferObject = true;
 			}
 		}
 		else
@@ -882,7 +882,7 @@ static void GL_InitExtensions (void)
 	if (r_ext_BGRA->intVal) {
 		if (ExtensionFound (ri.extensionString, "GL_EXT_bgra")) {
 			Com_Printf (0, "...enabling GL_EXT_bgra\n");
-			ri.config.extBGRA = qTrue;
+			ri.config.extBGRA = true;
 		}
 		else
 			Com_Printf (0, "...GL_EXT_bgra not found\n");
@@ -914,7 +914,7 @@ static void GL_InitExtensions (void)
 				}
 				else {
 					Com_Printf (0, "...enabling GL_EXT/SGI_compiled_vertex_array\n");
-					ri.config.extCompiledVertArray = qTrue;
+					ri.config.extCompiledVertArray = true;
 				}
 			}
 		}
@@ -949,7 +949,7 @@ static void GL_InitExtensions (void)
 				Com_Printf (0, "...enabling GL_EXT_draw_range_elements\n");
 				Com_Printf (0, "...* Max element vertices: %i\n", ri.config.maxElementVerts);
 				Com_Printf (0, "...* Max element indices: %i\n", ri.config.maxElementIndices);
-				ri.config.extDrawRangeElements = qTrue;
+				ri.config.extDrawRangeElements = true;
 			}
 		}
 		else
@@ -974,7 +974,7 @@ static void GL_InitExtensions (void)
 			}
 			else {
 				Com_Printf (0, "...enabling GL_EXT_texture3D\n");
-				ri.config.extTex3D = qTrue;
+				ri.config.extTex3D = true;
 			}
 		}
 		else
@@ -989,7 +989,7 @@ static void GL_InitExtensions (void)
 	if (r_ext_textureEdgeClamp->intVal) {
 		if (ExtensionFound (ri.extensionString, "GL_EXT_texture_edge_clamp")) {
 			Com_Printf (0, "...enabling GL_EXT_texture_edge_clamp\n");
-			ri.config.extTexEdgeClamp = qTrue;
+			ri.config.extTexEdgeClamp = true;
 		}
 		else
 			Com_Printf (0, "...GL_EXT_texture_edge_clamp not found\n");
@@ -1010,7 +1010,7 @@ static void GL_InitExtensions (void)
 			else {
 				Com_Printf (0, "...enabling GL_EXT_texture_filter_anisotropic\n");
 				Com_Printf (0, "...* Max texture anisotropy: %i\n", ri.config.maxAniso);
-				ri.config.extTexFilterAniso = qTrue;
+				ri.config.extTexFilterAniso = true;
 			}
 		}
 		else
@@ -1040,7 +1040,7 @@ static void GL_InitExtensions (void)
 				}
 				else {
 					Com_Printf (0, "...enabling GL_SGIS_generate_mipmap\n");
-					ri.config.extSGISGenMipmap = qTrue;
+					ri.config.extSGISGenMipmap = true;
 				}
 			}
 		}
@@ -1063,7 +1063,7 @@ static void GL_InitExtensions (void)
 			}
 			else {
 				Com_Printf (0, "...enabling GL_EXT_stencil_two_side\n");
-				ri.config.extStencilTwoSide = qTrue;
+				ri.config.extStencilTwoSide = true;
 			}
 		}
 		else
@@ -1078,7 +1078,7 @@ static void GL_InitExtensions (void)
 	if (r_ext_stencilWrap->intVal) {
 		if (ExtensionFound (ri.extensionString, "GL_EXT_stencil_wrap")) {
 			Com_Printf (0, "...enabling GL_EXT_stencil_wrap\n");
-			ri.config.extStencilWrap = qTrue;
+			ri.config.extStencilWrap = true;
 		}
 		else
 			Com_Printf (0, "...GL_EXT_stencil_wrap not found\n");
@@ -1115,7 +1115,7 @@ static void GL_InitExtensions (void)
 				}
 				else {
 					Com_Printf (0, "...enabling WGL_EXT_swap_control\n");
-					ri.config.extWinSwapInterval = qTrue;
+					ri.config.extWinSwapInterval = true;
 				}
 			}
 		}
@@ -1253,12 +1253,12 @@ static void R_Register (void)
 	gl_texturemode		= Cvar_Register ("gl_texturemode",		"GL_LINEAR_MIPMAP_NEAREST",	CVAR_ARCHIVE);
 
 	// Force these to update next endframe
-	r_swapInterval->modified = qTrue;
-	gl_drawbuffer->modified = qTrue;
-	gl_texturemode->modified = qTrue;
-	r_ext_maxAnisotropy->modified = qTrue;
-	r_defaultFont->modified = qTrue;
-	vid_gamma->modified = qTrue;
+	r_swapInterval->modified = true;
+	gl_drawbuffer->modified = true;
+	gl_texturemode->modified = true;
+	r_ext_maxAnisotropy->modified = true;
+	r_defaultFont->modified = true;
+	vid_gamma->modified = true;
 
 	// Add the various commands
 	cmd_gfxInfo			= Cmd_AddCommand ("gfxinfo",		R_GfxInfo_f,			"Prints out renderer information");
@@ -1289,27 +1289,27 @@ rInit_t R_Init (void)
 	R_Register ();
 
 	// Set extension/max defaults
-	ri.config.extArbMultitexture = qFalse;
-	ri.config.extBGRA = qFalse;
-	ri.config.extCompiledVertArray = qFalse;
-	ri.config.extDrawRangeElements = qFalse;
-	ri.config.extFragmentProgram = qFalse;
-	ri.config.extSGISGenMipmap = qFalse;
-	ri.config.extSGISMultiTexture = qFalse;
-	ri.config.extStencilTwoSide = qFalse;
-	ri.config.extStencilWrap = qFalse;
-	ri.config.extTex3D = qFalse;
-	ri.config.extTexCompression = qFalse;
-	ri.config.extTexCubeMap = qFalse;
-	ri.config.extTexEdgeClamp = qFalse;
-	ri.config.extTexEnvAdd = qFalse;
-	ri.config.extTexEnvCombine = qFalse;
-	ri.config.extNVTexEnvCombine4 = qFalse;
-	ri.config.extTexEnvDot3 = qFalse;
-	ri.config.extTexFilterAniso = qFalse;
-	ri.config.extVertexBufferObject = qFalse;
-	ri.config.extVertexProgram = qFalse;
-	ri.config.extWinSwapInterval = qFalse;
+	ri.config.extArbMultitexture = false;
+	ri.config.extBGRA = false;
+	ri.config.extCompiledVertArray = false;
+	ri.config.extDrawRangeElements = false;
+	ri.config.extFragmentProgram = false;
+	ri.config.extSGISGenMipmap = false;
+	ri.config.extSGISMultiTexture = false;
+	ri.config.extStencilTwoSide = false;
+	ri.config.extStencilWrap = false;
+	ri.config.extTex3D = false;
+	ri.config.extTexCompression = false;
+	ri.config.extTexCubeMap = false;
+	ri.config.extTexEdgeClamp = false;
+	ri.config.extTexEnvAdd = false;
+	ri.config.extTexEnvCombine = false;
+	ri.config.extNVTexEnvCombine4 = false;
+	ri.config.extTexEnvDot3 = false;
+	ri.config.extTexFilterAniso = false;
+	ri.config.extVertexBufferObject = false;
+	ri.config.extVertexProgram = false;
+	ri.config.extWinSwapInterval = false;
 
 	ri.config.max3DTexSize = 0;
 	ri.config.maxAniso = 0;
@@ -1323,7 +1323,7 @@ rInit_t R_Init (void)
 
 	// Reset static refresh info
 	ri.lastValidMode = -1;
-	ri.useStencil = qFalse;
+	ri.useStencil = false;
 	ri.cColorBits = 0;
 	ri.cAlphaBits = 0;
 	ri.cDepthBits = 0;
@@ -1413,7 +1413,7 @@ rInit_t R_Init (void)
 			ri.renderClass = REND_CLASS_MCD;
 
 			// MCD has buffering issues
-			Cvar_VariableSetValue (gl_finish, 1, qTrue);
+			Cvar_VariableSetValue (gl_finish, 1, true);
 		}
 		else
 			ri.renderClass = REND_CLASS_DEFAULT;
@@ -1423,7 +1423,7 @@ rInit_t R_Init (void)
 	Com_Printf (0, "Renderer Class: %s\n", R_RendererClass ());
 
 #ifdef GL_FORCEFINISH
-	Cvar_VariableSetValue (gl_finish, 1, qTrue);
+	Cvar_VariableSetValue (gl_finish, 1, true);
 #endif
 
 	// Check stencil buffer availability and usability
@@ -1433,7 +1433,7 @@ rInit_t R_Init (void)
 			Com_Printf (0, "ignored\n");
 		else {
 			Com_Printf (0, "available\n");
-			ri.useStencil = qTrue;
+			ri.useStencil = true;
 		}
 	}
 	else {
@@ -1456,13 +1456,13 @@ rInit_t R_Init (void)
 	// Retreive generic information
 	if (gl_maxTexSize->intVal >= 256) {
 		ri.config.maxTexSize = gl_maxTexSize->intVal;
-		Q_NearestPow (&ri.config.maxTexSize, qTrue);
+		Q_NearestPow (&ri.config.maxTexSize, true);
 
 		Com_Printf (0, "Using forced maximum texture size of: %ix%i\n", ri.config.maxTexSize, ri.config.maxTexSize);
 	}
 	else {
 		qglGetIntegerv (GL_MAX_TEXTURE_SIZE, &ri.config.maxTexSize);
-		Q_NearestPow (&ri.config.maxTexSize, qTrue);
+		Q_NearestPow (&ri.config.maxTexSize, true);
 		if (ri.config.maxTexSize < 256) {
 			Com_Printf (0, "Maximum texture size forced up to 256x256 from %i\n", ri.config.maxTexSize);
 			ri.config.maxTexSize = 256;

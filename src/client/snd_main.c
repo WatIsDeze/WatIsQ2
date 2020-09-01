@@ -23,7 +23,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 #include "snd_local.h"
 
-qBool					snd_isActive = qTrue;
+qBool					snd_isActive = true;
 qBool					snd_isInitialized;
 qBool					snd_isDMA;
 qBool					snd_isAL;
@@ -455,7 +455,7 @@ For queueing a sound restart
 */
 static void Snd_Restart_f (void)
 {
-	snd_queueRestart = qTrue;
+	snd_queueRestart = true;
 }
 
 
@@ -721,7 +721,7 @@ sfx_t *Snd_RegisterSound (char *name)
 	if (!snd_isInitialized)
 		return NULL;
 
-	sfx = Snd_FindName (name, qTrue);
+	sfx = Snd_FindName (name, true);
 	Snd_LoadSound (sfx);
 
 	return sfx;
@@ -763,7 +763,7 @@ static struct sfx_s *Snd_RegisterSexedSound (char *base, int entNum)
 
 	// See if we already know of the model specific sound
 	Q_snprintfz (sexedFilename, sizeof (sexedFilename), "#players/%s/%s", model, base+1);
-	sfx = Snd_FindName (sexedFilename, qFalse);
+	sfx = Snd_FindName (sexedFilename, false);
 
 	if (!sfx) {
 		// No, so see if it exists
@@ -852,7 +852,7 @@ Forces a sound restart now
 void Snd_CheckChanges (void)
 {
 	if (snd_queueRestart) {
-		snd_queueRestart = qFalse;
+		snd_queueRestart = false;
 		Snd_Restart ();
 	}
 }
@@ -876,10 +876,10 @@ void Snd_Init (void)
 
 	Cvar_GetLatchedVars (CVAR_LATCH_AUDIO);
 
-	snd_isInitialized = qFalse;
-	snd_isDMA = qFalse;
-	snd_isAL = qFalse;
-	snd_queueRestart = qFalse;
+	snd_isInitialized = false;
+	snd_isDMA = false;
+	snd_isAL = false;
+	snd_queueRestart = false;
 	snd_registrationFrame = 1;
 
 	s_initSound			= Cvar_Register ("s_initSound",			"1",			CVAR_ARCHIVE|CVAR_LATCH_AUDIO);
@@ -919,7 +919,7 @@ void Snd_Init (void)
 	// First try to initialize OpenAL.
 	initTime = Sys_UMilliseconds ();
 	if (ALSnd_Init ()) {
-		snd_isAL = qTrue;
+		snd_isAL = true;
 	} else {
 		Com_Printf (PRNT_ERROR, "Snd_Init: Failed to initialize OpenAL!\n");
 	}
@@ -928,10 +928,10 @@ void Snd_Init (void)
 	if (!snd_isAL) {
 		if (!DMASnd_Init())
 			return;
-		snd_isDMA = qTrue;
+		snd_isDMA = true;
 	}
 
-	snd_isInitialized = qTrue;
+	snd_isInitialized = true;
 
 	Snd_StopAllSounds ();
 
@@ -962,7 +962,7 @@ void Snd_Shutdown (void)
 
 	if (!snd_isInitialized)
 		return;
-	snd_isInitialized = qFalse;
+	snd_isInitialized = false;
 
 	Com_Printf (0, "\n------------ Sound Shutdown ------------\n");
 
@@ -977,11 +977,11 @@ void Snd_Shutdown (void)
 	// Shutdown the subsystem
 	if (snd_isDMA) {
 		DMASnd_Shutdown ();
-		snd_isDMA = qFalse;
+		snd_isDMA = false;
 	}
 	else if (snd_isAL) {
 		ALSnd_Shutdown ();
-		snd_isAL = qFalse;
+		snd_isAL = false;
 	}
 
 	Com_Printf (0, "----------------------------------------\n");

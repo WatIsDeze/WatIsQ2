@@ -318,7 +318,7 @@ static fileHandle_t FS_GetFreeHandle (fsHandleIndex_t **handle)
 		if (hIndex->inUse)
 			continue;
 
-		hIndex->inUse = qTrue;
+		hIndex->inUse = true;
 		*handle = hIndex;
 		return i+1;
 	}
@@ -421,7 +421,7 @@ size_t FS_Read (void *buffer, size_t len, fileHandle_t fileNum)
 	remaining = len;
 	buf = (byte *)buffer;
 
-	tried = qFalse;
+	tried = false;
 	if (handle->regFile) {
 		// File
 		while (remaining) {
@@ -430,7 +430,7 @@ size_t FS_Read (void *buffer, size_t len, fileHandle_t fileNum)
 			case 0:
 				// We might have been trying to read from a CD
 				if (!tried) {
-					tried = qTrue;
+					tried = true;
 #ifndef DEDICATED_ONLY
 					if (!dedicated->intVal)
 						CDAudio_Stop ();
@@ -459,7 +459,7 @@ size_t FS_Read (void *buffer, size_t len, fileHandle_t fileNum)
 			case 0:
 				// We might have been trying to read from a CD
 				if (!tried) {
-					tried = qTrue;
+					tried = true;
 #ifndef DEDICATED_ONLY
 					if (!dedicated->intVal)
 						CDAudio_Stop ();
@@ -704,7 +704,7 @@ Used for streaming data out of either a pak file or
 a seperate file.
 ===========
 */
-qBool	fs_fileFromPak = qFalse;
+qBool	fs_fileFromPak = false;
 static int FS_OpenFileRead (fsHandleIndex_t *handle)
 {
 	fsPath_t		*searchPath;
@@ -714,7 +714,7 @@ static int FS_OpenFileRead (fsHandleIndex_t *handle)
 	fsLink_t		*link;
 	uint32			hashValue;
 
-	fs_fileFromPak = qFalse;
+	fs_fileFromPak = false;
 	// Check for links first
 	for (link=fs_fileLinks ; link ; link=link->next) {
 		if (!strncmp (handle->name, link->from, link->fromLength)) {
@@ -749,7 +749,7 @@ static int FS_OpenFileRead (fsHandleIndex_t *handle)
 					continue;
 
 				// Found it!
-				fs_fileFromPak = qTrue;
+				fs_fileFromPak = true;
 
 				if (package->pak) {
 					if (fs_developer->intVal)
@@ -820,10 +820,10 @@ int FS_OpenFile (char *fileName, fileHandle_t *fileNum, fsOpenMode_t openMode)
 	// Open under the desired mode
 	switch (openMode) {
 	case FS_MODE_APPEND_BINARY:
-		fileSize = FS_OpenFileAppend (handle, qTrue);
+		fileSize = FS_OpenFileAppend (handle, true);
 		break;
 	case FS_MODE_APPEND_TEXT:
-		fileSize = FS_OpenFileAppend (handle, qFalse);
+		fileSize = FS_OpenFileAppend (handle, false);
 		break;
 
 	case FS_MODE_READ_BINARY:
@@ -831,10 +831,10 @@ int FS_OpenFile (char *fileName, fileHandle_t *fileNum, fsOpenMode_t openMode)
 		break;
 
 	case FS_MODE_WRITE_BINARY:
-		fileSize = FS_OpenFileWrite (handle, qTrue);
+		fileSize = FS_OpenFileWrite (handle, true);
 		break;
 	case FS_MODE_WRITE_TEXT:
-		fileSize = FS_OpenFileWrite (handle, qFalse);
+		fileSize = FS_OpenFileWrite (handle, false);
 		break;
 
 	default:
@@ -877,7 +877,7 @@ void FS_CloseFile (fileHandle_t fileNum)
 		assert (0);
 
 	// Clear handle
-	handle->inUse = qFalse;
+	handle->inUse = false;
 	handle->name[0] = '\0';
 	handle->pkzFile = NULL;
 	handle->regFile = NULL;
@@ -1175,7 +1175,7 @@ static void FS_AddGameDirectory (char *dir, char *gamePath)
 	// Add any pak files in the format pak0.pak pak1.pak, ...
 	for (i=0 ; i<10 ; i++) {
 		Q_snprintfz (searchName, sizeof (searchName), "%s/pak%i.pak", dir, i);
-		pak = FS_LoadPAK (searchName, qFalse);
+		pak = FS_LoadPAK (searchName, false);
 		if (!pak)
 			continue;
 		search = Mem_PoolAlloc (sizeof (fsPath_t), com_fileSysPool, 0);
@@ -1186,7 +1186,7 @@ static void FS_AddGameDirectory (char *dir, char *gamePath)
 
 	// Add the rest of the *.pak files
 	if (!fs_defaultPaks->intVal) {
-		numPacks = Sys_FindFiles (dir, "*/*.pak", packFiles, FS_MAX_PAKS, 0, qFalse, qTrue, qFalse);
+		numPacks = Sys_FindFiles (dir, "*/*.pak", packFiles, FS_MAX_PAKS, 0, false, true, false);
 
 		for (i=0 ; i<numPacks ; i++) {
 			if (strstr (packFiles[i], "/pak0.pak") || strstr (packFiles[i], "/pak1.pak")
@@ -1196,7 +1196,7 @@ static void FS_AddGameDirectory (char *dir, char *gamePath)
 			|| strstr (packFiles[i], "/pak8.pak") || strstr (packFiles[i], "/pak9.pak"))
 				continue; // FIXME :|
 
-			pak = FS_LoadPAK (packFiles[i], qTrue);
+			pak = FS_LoadPAK (packFiles[i], true);
 			if (!pak)
 				continue;
 			search = Mem_PoolAlloc (sizeof (fsPath_t), com_fileSysPool, 0);
@@ -1211,10 +1211,10 @@ static void FS_AddGameDirectory (char *dir, char *gamePath)
 	}
 
 	// Load *.pkz files
-	numPacks = Sys_FindFiles (dir, "*/*.pkz", packFiles, FS_MAX_PAKS, 0, qFalse, qTrue, qFalse);
+	numPacks = Sys_FindFiles (dir, "*/*.pkz", packFiles, FS_MAX_PAKS, 0, false, true, false);
 
 	for (i=0 ; i<numPacks ; i++) {
-		pkz = FS_LoadPKZ (packFiles[i], qTrue);
+		pkz = FS_LoadPKZ (packFiles[i], true);
 		if (!pkz)
 			continue;
 		search = Mem_PoolAlloc (sizeof (fsPath_t), com_fileSysPool, 0);
@@ -1228,10 +1228,10 @@ static void FS_AddGameDirectory (char *dir, char *gamePath)
 	FS_FreeFileList (packFiles, numPacks);
 
 	// Load *.pk3 files
-	numPacks = Sys_FindFiles (dir, "*/*.pk3", packFiles, FS_MAX_PAKS, 0, qFalse, qTrue, qFalse);
+	numPacks = Sys_FindFiles (dir, "*/*.pk3", packFiles, FS_MAX_PAKS, 0, false, true, false);
 
 	for (i=0 ; i<numPacks ; i++) {
-		pkz = FS_LoadPKZ (packFiles[i], qTrue);
+		pkz = FS_LoadPKZ (packFiles[i], true);
 		if (!pkz)
 			continue;
 		search = Mem_PoolAlloc (sizeof (fsPath_t), com_fileSysPool, 0);
@@ -1317,11 +1317,11 @@ void FS_SetGamedir (char *dir, qBool firstTime)
 	Q_snprintfz (fs_gameDir, sizeof (fs_gameDir), "%s/%s", fs_basedir->string, dir);
 
 	if (!strcmp (dir, BASE_MODDIRNAME) || *dir == 0) {
-		Cvar_VariableSet (fs_gamedircvar, "", qTrue);
-		Cvar_VariableSet (fs_game, "", qTrue);
+		Cvar_VariableSet (fs_gamedircvar, "", true);
+		Cvar_VariableSet (fs_game, "", true);
 	}
 	else {
-		Cvar_VariableSet (fs_gamedircvar, dir, qTrue);
+		Cvar_VariableSet (fs_gamedircvar, dir, true);
 		if (fs_cddir->string[0])
 			FS_AddGameDirectory (Q_VarArgs ("%s/%s", fs_cddir->string, dir), dir);
 
@@ -1479,10 +1479,10 @@ size_t FS_FindFiles (char *path, char *filter, char *extension, char **fileList,
 
 			if (extension) {
 				Q_snprintfz (ext, sizeof (ext), "*.%s", extension);
-				dirCount = Sys_FindFiles (dir, ext, dirFiles, FS_MAX_FINDFILES, 0, recurse, qTrue, qFalse);
+				dirCount = Sys_FindFiles (dir, ext, dirFiles, FS_MAX_FINDFILES, 0, recurse, true, false);
 			}
 			else {
-				dirCount = Sys_FindFiles (dir, "*", dirFiles, FS_MAX_FINDFILES, 0, recurse, qTrue, qTrue);
+				dirCount = Sys_FindFiles (dir, "*", dirFiles, FS_MAX_FINDFILES, 0, recurse, true, true);
 			}
 
 			for (i=0 ; i<dirCount ; i++) {
@@ -1718,7 +1718,7 @@ void FS_Init (void)
 
 	// Load the game directory
 	if (fs_game->string[0]) {
-		FS_SetGamedir (fs_game->string, qTrue);
+		FS_SetGamedir (fs_game->string, true);
 	}
 	else {
 		// Store a copy of the search paths inverted for FS_FindFiles

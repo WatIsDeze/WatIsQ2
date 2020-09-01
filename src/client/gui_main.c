@@ -52,7 +52,7 @@ void GUI_ResetGUIState (gui_t *gui)
 	switch (gui->type) {
 	case WTP_GUI:
 		memcpy (&gui->shared->cursor.d, &gui->shared->cursor.s, sizeof (guiCursorData_t));
-		gui->shared->queueClose = qFalse;
+		gui->shared->queueClose = false;
 		break;
 
 	case WTP_GENERIC:
@@ -74,9 +74,9 @@ void GUI_ResetGUIState (gui_t *gui)
 		GUI_QueueTrigger (gui, WEV_INIT);
 	}
 	else {
-		gui->inited = qFalse;
-		gui->mouseEntered = qFalse;
-		gui->mouseExited = qTrue;
+		gui->inited = false;
+		gui->mouseEntered = false;
+		gui->mouseExited = true;
 	}
 	gui->time = 0;
 
@@ -154,12 +154,12 @@ void GUI_CloseGUI (gui_t *gui)
 	GUI_ResetGUIState (gui);
 
 	// Remove it from the list
-	found = qFalse;
+	found = false;
 	for (i=0 ; i<cl_guiState.numLayers ; i++) {
 		if (found)
 			cl_guiState.openLayers[i-1] = cl_guiState.openLayers[i];
 		else if (gui == cl_guiState.openLayers[i])
-			found = qTrue;
+			found = true;
 	}
 
 	// Check if it's open

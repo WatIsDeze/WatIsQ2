@@ -85,7 +85,7 @@ static void UI_FindMouseItem (uiFrameWork_t *fw)
 
 		if (fw->cursor == i)
 			break;
-		uiState.newCursorItem = qTrue;
+		uiState.newCursorItem = true;
 		fw->cursor = i;
 		break;
 	}
@@ -105,7 +105,7 @@ void UI_UpdateMousePos (void)
 	if (!uiState.activeUI || !uiState.activeUI->numItems || uiState.cursorLock)
 		return;
 
-	uiState.newCursorItem = qFalse;
+	uiState.newCursorItem = false;
 	UI_FindMouseItem (uiState.activeUI);
 }
 
@@ -315,7 +315,7 @@ UI_CursorInit
 */
 void UI_CursorInit (void)
 {
-	uiState.cursorOverItem = qFalse;
+	uiState.cursorOverItem = false;
 
 	// Cursor position
 	ui_cursorX	= cgi.Cvar_Register ("ui_cursorX",	"-1",	CVAR_READONLY);
@@ -339,6 +339,6 @@ UI_CursorShutdown
 void UI_CursorShutdown (void)
 {
 	// Store the cursor position
-	cgi.Cvar_VariableSetValue (ui_cursorX, uiState.cursorX, qTrue);
-	cgi.Cvar_VariableSetValue (ui_cursorY, uiState.cursorY, qTrue);
+	cgi.Cvar_VariableSetValue (ui_cursorX, uiState.cursorX, true);
+	cgi.Cvar_VariableSetValue (ui_cursorY, uiState.cursorY, true);
 }

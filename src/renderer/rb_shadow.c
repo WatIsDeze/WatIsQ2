@@ -142,7 +142,7 @@ static void RB_MakeTriangleShadowFlagsFromScratch (vec3_t lightDist, float light
 		// of the triangle along the same normal (the triangle is planar,
 		// I.E. flat, so all points give the same answer)
 		f = (lightDist[0] - v0[0]) * temp[0] + (lightDist[1] - v0[1]) * temp[1] + (lightDist[2] - v0[2]) * temp[2];
-		rb_triFacingLight[j] = (f > 0) ? qTrue : qFalse;
+		rb_triFacingLight[j] = (f > 0) ? true : false;
 	}
 }
 
@@ -168,10 +168,10 @@ static void RB_MakeTriangleShadowFlags (vec3_t lightDist, float lightRadius)
 		// I.E. flat, so all points give the same answer)
 		f = (lightDist[0] - v0[0]) * trnormal[0] + (lightDist[1] - v0[1]) * trnormal[1] + (lightDist[2] - v0[2]) * trnormal[2];
 		if (f > 0) {
-			rb_triFacingLight[j] = qTrue;
+			rb_triFacingLight[j] = true;
 		}
 		else {
-			rb_triFacingLight[j] = qFalse;
+			rb_triFacingLight[j] = false;
 		}
 	}
 }

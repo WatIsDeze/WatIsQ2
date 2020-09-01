@@ -111,80 +111,80 @@ static m_effectsMenu_t	m_effectsMenu;
 
 static void GoreTypeFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("cg_particleGore", m_effectsMenu.part_gore_list.curValue, qFalse);
+	cgi.Cvar_SetValue ("cg_particleGore", m_effectsMenu.part_gore_list.curValue, false);
 }
 
 static void SmokeLingerFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("cg_particleSmokeLinger", m_effectsMenu.part_smokelinger_slider.curValue, qFalse);
+	cgi.Cvar_SetValue ("cg_particleSmokeLinger", m_effectsMenu.part_smokelinger_slider.curValue, false);
 	m_effectsMenu.part_smokelinger_amount.generic.name = cgi.Cvar_GetStringValue ("cg_particleSmokeLinger");
 }
 
 static void RailTrailFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("cg_railSpiral", m_effectsMenu.part_railtrail_list.curValue, qFalse);
+	cgi.Cvar_SetValue ("cg_railSpiral", m_effectsMenu.part_railtrail_list.curValue, false);
 }
 
 static void RailRedColorFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("cg_railCoreRed", m_effectsMenu.part_railred_slider.curValue * 0.1, qFalse);
+	cgi.Cvar_SetValue ("cg_railCoreRed", m_effectsMenu.part_railred_slider.curValue * 0.1, false);
 	m_effectsMenu.part_railred_amount.generic.name = cgi.Cvar_GetStringValue ("cg_railCoreRed");
 }
 
 static void RailGreenColorFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("cg_railCoreGreen", m_effectsMenu.part_railgreen_slider.curValue * 0.1, qFalse);
+	cgi.Cvar_SetValue ("cg_railCoreGreen", m_effectsMenu.part_railgreen_slider.curValue * 0.1, false);
 	m_effectsMenu.part_railgreen_amount.generic.name = cgi.Cvar_GetStringValue ("cg_railCoreGreen");
 }
 
 static void RailBlueColorFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("cg_railCoreBlue", m_effectsMenu.part_railblue_slider.curValue * 0.1, qFalse);
+	cgi.Cvar_SetValue ("cg_railCoreBlue", m_effectsMenu.part_railblue_slider.curValue * 0.1, false);
 	m_effectsMenu.part_railblue_amount.generic.name = cgi.Cvar_GetStringValue ("cg_railCoreBlue");
 }
 
 static void SpiralRedColorFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("cg_railSpiralRed", m_effectsMenu.part_spiralred_slider.curValue * 0.1, qFalse);
+	cgi.Cvar_SetValue ("cg_railSpiralRed", m_effectsMenu.part_spiralred_slider.curValue * 0.1, false);
 	m_effectsMenu.part_spiralred_amount.generic.name = cgi.Cvar_GetStringValue ("cg_railSpiralRed");
 }
 
 static void SpiralGreenColorFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("cg_railSpiralGreen", m_effectsMenu.part_spiralgreen_slider.curValue * 0.1, qFalse);
+	cgi.Cvar_SetValue ("cg_railSpiralGreen", m_effectsMenu.part_spiralgreen_slider.curValue * 0.1, false);
 	m_effectsMenu.part_spiralgreen_amount.generic.name = cgi.Cvar_GetStringValue ("cg_railSpiralGreen");
 }
 
 static void SpiralBlueColorFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("cg_railSpiralBlue", m_effectsMenu.part_spiralblue_slider.curValue * 0.1, qFalse);
+	cgi.Cvar_SetValue ("cg_railSpiralBlue", m_effectsMenu.part_spiralblue_slider.curValue * 0.1, false);
 	m_effectsMenu.part_spiralblue_amount.generic.name = cgi.Cvar_GetStringValue ("cg_railSpiralBlue");
 }
 
 static void PartCullFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("cg_particleCulling", m_effectsMenu.part_cull_toggle.curValue, qFalse);
+	cgi.Cvar_SetValue ("cg_particleCulling", m_effectsMenu.part_cull_toggle.curValue, false);
 }
 
 static void PartShadeFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("cg_particleShading", m_effectsMenu.part_shade_toggle.curValue, qFalse);
+	cgi.Cvar_SetValue ("cg_particleShading", m_effectsMenu.part_shade_toggle.curValue, false);
 }
 
 static void ExploRattleFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("cl_explorattle", m_effectsMenu.explorattle_toggle.curValue, qFalse);
+	cgi.Cvar_SetValue ("cl_explorattle", m_effectsMenu.explorattle_toggle.curValue, false);
 }
 
 static void ExploRattleScaleFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("cl_explorattle_scale", m_effectsMenu.explorattle_scale_slider.curValue * 0.1, qFalse);
+	cgi.Cvar_SetValue ("cl_explorattle_scale", m_effectsMenu.explorattle_scale_slider.curValue * 0.1, false);
 	m_effectsMenu.explorattle_scale_amount.generic.name = cgi.Cvar_GetStringValue ("cl_explorattle_scale");
 }
 
 static void MapEffectsToggleFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("cg_mapeffects", m_effectsMenu.mapeffects_toggle.curValue, qFalse);
+	cgi.Cvar_SetValue ("cg_mapeffects", m_effectsMenu.mapeffects_toggle.curValue, false);
 }
 
 //
@@ -193,28 +193,28 @@ static void MapEffectsToggleFunc (void *unused)
 
 static void DecalToggleFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("cg_decals", m_effectsMenu.dec_toggle.curValue, qFalse);
+	cgi.Cvar_SetValue ("cg_decals", m_effectsMenu.dec_toggle.curValue, false);
 }
 
 static void DecalLODFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("cg_decalLOD", m_effectsMenu.dec_lod_toggle.curValue, qFalse);
+	cgi.Cvar_SetValue ("cg_decalLOD", m_effectsMenu.dec_lod_toggle.curValue, false);
 }
 
 static void DecalLifeFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("cg_decalLife", m_effectsMenu.dec_life_slider.curValue * 100, qFalse);
+	cgi.Cvar_SetValue ("cg_decalLife", m_effectsMenu.dec_life_slider.curValue * 100, false);
 	m_effectsMenu.dec_life_amount.generic.name = cgi.Cvar_GetStringValue ("cg_decalLife");
 }
 static void DecalBurnLifeFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("cg_decalBurnLife", m_effectsMenu.dec_burnlife_slider.curValue * 10, qFalse);
+	cgi.Cvar_SetValue ("cg_decalBurnLife", m_effectsMenu.dec_burnlife_slider.curValue * 10, false);
 	m_effectsMenu.dec_burnlife_amount.generic.name = cgi.Cvar_GetStringValue ("cg_decalBurnLife");
 }
 
 static void DecalMaxFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("cg_decalMax", m_effectsMenu.dec_max_slider.curValue * 1000, qFalse);
+	cgi.Cvar_SetValue ("cg_decalMax", m_effectsMenu.dec_max_slider.curValue * 1000, false);
 	m_effectsMenu.dec_max_amount.generic.name = cgi.Cvar_GetStringValue ("cg_decalMax");
 }
 
@@ -224,11 +224,11 @@ static void DecalMaxFunc (void *unused)
 
 static void CausticsFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("r_caustics", m_effectsMenu.material_caustics_toggle.curValue, qFalse);
+	cgi.Cvar_SetValue ("r_caustics", m_effectsMenu.material_caustics_toggle.curValue, false);
 }
 static void MaterialDetailFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("r_detailTextures", m_effectsMenu.material_detail_toggle.curValue, qFalse);
+	cgi.Cvar_SetValue ("r_detailTextures", m_effectsMenu.material_detail_toggle.curValue, false);
 }
 
 /*
@@ -242,13 +242,13 @@ static void EffectsMenu_SetValues (void)
 	// particles
 	//
 
-	cgi.Cvar_SetValue ("cg_particleGore",	clamp (cgi.Cvar_GetIntegerValue ("cg_particleGore"), 0, 10), qFalse);
+	cgi.Cvar_SetValue ("cg_particleGore",	clamp (cgi.Cvar_GetIntegerValue ("cg_particleGore"), 0, 10), false);
 	m_effectsMenu.part_gore_list.curValue	= cgi.Cvar_GetIntegerValue ("cg_particleGore");
 
 	m_effectsMenu.part_smokelinger_slider.curValue	= cgi.Cvar_GetFloatValue ("cg_particleSmokeLinger");
 	m_effectsMenu.part_smokelinger_amount.generic.name	= cgi.Cvar_GetStringValue ("cg_particleSmokeLinger");
 
-	cgi.Cvar_SetValue ("cg_railSpiral",				clamp (cgi.Cvar_GetIntegerValue ("cg_railSpiral"), 0, 1), qFalse);
+	cgi.Cvar_SetValue ("cg_railSpiral",				clamp (cgi.Cvar_GetIntegerValue ("cg_railSpiral"), 0, 1), false);
 	m_effectsMenu.part_railtrail_list.curValue		= cgi.Cvar_GetIntegerValue ("cg_railSpiral");
 
 	m_effectsMenu.part_railred_slider.curValue			= cgi.Cvar_GetFloatValue ("cg_railCoreRed") * 10;
@@ -265,18 +265,18 @@ static void EffectsMenu_SetValues (void)
 	m_effectsMenu.part_spiralblue_slider.curValue		= cgi.Cvar_GetFloatValue ("cg_railSpiralBlue") * 10;
 	m_effectsMenu.part_spiralblue_amount.generic.name	= cgi.Cvar_GetStringValue ("cg_railSpiralBlue");
 
-	cgi.Cvar_SetValue ("cg_particleCulling",	clamp (cgi.Cvar_GetIntegerValue ("cg_particleCulling"), 0, 1), qFalse);
+	cgi.Cvar_SetValue ("cg_particleCulling",	clamp (cgi.Cvar_GetIntegerValue ("cg_particleCulling"), 0, 1), false);
 	m_effectsMenu.part_cull_toggle.curValue		= cgi.Cvar_GetIntegerValue ("cg_particleCulling");
 
-	cgi.Cvar_SetValue ("cg_particleShading",	clamp (cgi.Cvar_GetIntegerValue ("cg_particleShading"), 0, 1), qFalse);
+	cgi.Cvar_SetValue ("cg_particleShading",	clamp (cgi.Cvar_GetIntegerValue ("cg_particleShading"), 0, 1), false);
 	m_effectsMenu.part_shade_toggle.curValue	= cgi.Cvar_GetIntegerValue ("cg_particleShading");
 
-	cgi.Cvar_SetValue ("cl_explorattle",				clamp (cgi.Cvar_GetIntegerValue ("cl_explorattle"), 0, 1), qFalse);
+	cgi.Cvar_SetValue ("cl_explorattle",				clamp (cgi.Cvar_GetIntegerValue ("cl_explorattle"), 0, 1), false);
 	m_effectsMenu.explorattle_toggle.curValue			= cgi.Cvar_GetIntegerValue ("cl_explorattle");
 	m_effectsMenu.explorattle_scale_slider.curValue		= cgi.Cvar_GetIntegerValue ("cl_explorattle_scale") * 10;
 	m_effectsMenu.explorattle_scale_amount.generic.name	= cgi.Cvar_GetStringValue ("cl_explorattle_scale");
 
-	cgi.Cvar_SetValue ("cg_mapeffects",			clamp (cgi.Cvar_GetIntegerValue ("cg_mapeffects"), 0, 1), qFalse);
+	cgi.Cvar_SetValue ("cg_mapeffects",			clamp (cgi.Cvar_GetIntegerValue ("cg_mapeffects"), 0, 1), false);
 	m_effectsMenu.mapeffects_toggle.curValue	= cgi.Cvar_GetIntegerValue ("cg_mapeffects");
 	
 
@@ -284,10 +284,10 @@ static void EffectsMenu_SetValues (void)
 	// decals
 	//
 
-	cgi.Cvar_SetValue ("cg_decalLOD",		clamp (cgi.Cvar_GetIntegerValue ("cg_decalLOD"), 0, 1), qFalse);
+	cgi.Cvar_SetValue ("cg_decalLOD",		clamp (cgi.Cvar_GetIntegerValue ("cg_decalLOD"), 0, 1), false);
 	m_effectsMenu.dec_lod_toggle.curValue	= cgi.Cvar_GetIntegerValue ("cg_decalLOD");
 
-	cgi.Cvar_SetValue ("cg_decals",			clamp (cgi.Cvar_GetIntegerValue ("cg_decals"), 0, 1), qFalse);
+	cgi.Cvar_SetValue ("cg_decals",			clamp (cgi.Cvar_GetIntegerValue ("cg_decals"), 0, 1), false);
 	m_effectsMenu.dec_toggle.curValue		= cgi.Cvar_GetIntegerValue ("cg_decals");
 
 	m_effectsMenu.dec_life_slider.curValue		= cgi.Cvar_GetFloatValue ("cg_decalLife") * 0.01;
@@ -303,10 +303,10 @@ static void EffectsMenu_SetValues (void)
 	// materials
 	//
 
-	cgi.Cvar_SetValue ("r_caustics",				clamp (cgi.Cvar_GetIntegerValue ("r_caustics"), 0, 1), qFalse);
+	cgi.Cvar_SetValue ("r_caustics",				clamp (cgi.Cvar_GetIntegerValue ("r_caustics"), 0, 1), false);
 	m_effectsMenu.material_caustics_toggle.curValue	= cgi.Cvar_GetIntegerValue ("r_caustics");
 
-	cgi.Cvar_SetValue ("r_detailTextures",			clamp (cgi.Cvar_GetIntegerValue ("r_detailTextures"), 0, 1), qFalse);
+	cgi.Cvar_SetValue ("r_detailTextures",			clamp (cgi.Cvar_GetIntegerValue ("r_detailTextures"), 0, 1), false);
 	m_effectsMenu.material_detail_toggle.curValue	= cgi.Cvar_GetIntegerValue ("r_detailTextures");
 }
 
@@ -620,7 +620,7 @@ static void EffectsMenu_Init (void)
 
 	UI_AddItem (&m_effectsMenu.frameWork,		&m_effectsMenu.back_action);
 
-	UI_FinishFramework (&m_effectsMenu.frameWork, qTrue);
+	UI_FinishFramework (&m_effectsMenu.frameWork, true);
 }
 
 

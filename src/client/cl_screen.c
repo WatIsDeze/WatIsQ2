@@ -40,8 +40,8 @@ SCR_BeginLoadingPlaque
 void SCR_BeginLoadingPlaque (void)
 {
 	// Stop audio
-	cls.soundPrepped = qFalse;
-	cls.refreshPrepped = qFalse;
+	cls.soundPrepped = false;
+	cls.refreshPrepped = false;
 	Snd_StopAllSounds ();
 	CDAudio_Stop ();
 
@@ -96,7 +96,7 @@ void SCR_UpdateScreen (void)
 		numFrames = 2;
 
 		// Range check cl_camera_separation so we don't inadvertently fry someone's brain
-		Cvar_VariableSetValue (cl_stereo_separation, clamp (cl_stereo_separation->floatVal, 0.0, 1.0), qTrue);
+		Cvar_VariableSetValue (cl_stereo_separation, clamp (cl_stereo_separation->floatVal, 0.0, 1.0), true);
 
 		separation[0] = -cl_stereo_separation->floatVal * 0.5f;
 		separation[1] = cl_stereo_separation->floatVal * 0.5f;

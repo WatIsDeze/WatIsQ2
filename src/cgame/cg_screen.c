@@ -687,5 +687,5 @@ void SCR_Draw (void)
 	CG_DrawDebugGraph ();
 
 	// Render the menu
-	UI_Refresh (qFalse);
+	UI_Refresh (false);
 }

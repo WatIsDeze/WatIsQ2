@@ -261,7 +261,7 @@ CG_CrosshairMaterialInit
 */
 void CG_CrosshairMaterialInit (void)
 {
-	crosshair->modified = qFalse;
+	crosshair->modified = false;
 	if (crosshair->intVal) {
 		crosshair->intVal = (crosshair->intVal < 0) ? 0 : crosshair->intVal;
 
@@ -975,9 +975,9 @@ void CG_MapInit (void)
 	CG_LoadingString (0);
 	CG_LoadingFilename (0);
 
-	cg.frame.valid = qFalse;	// Probably out of date
+	cg.frame.valid = false;	// Probably out of date
 
-	cgMedia.initialized = qTrue;
+	cgMedia.initialized = true;
 }
 
 
@@ -991,5 +991,5 @@ void CG_ShutdownMap (void)
 	if (!cgMedia.initialized)
 		return;
 
-	cgMedia.initialized = qFalse;
+	cgMedia.initialized = false;
 }

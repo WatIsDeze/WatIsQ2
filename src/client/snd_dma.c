@@ -64,7 +64,7 @@ static void DMASnd_ScaleTableInit (void)
 	int		i, j;
 	int		scale;
 
-	s_volume->modified = qFalse;
+	s_volume->modified = false;
 	for (i=0 ; i<32 ; i++) {
 		scale = i * 8 * 256 * s_volume->floatVal;
 		for (j=0 ; j<256 ; j++) {
@@ -555,7 +555,7 @@ static void DMASnd_AddLoopSounds (void)
 
 		ch->leftVol = leftTotal;
 		ch->rightVol = rightTotal;
-		ch->autoSound = qTrue;	// Remove next frame
+		ch->autoSound = true;	// Remove next frame
 		ch->sfx = sfx;
 		ch->position = snd_dmaPaintedTime % sc->length;
 		ch->endTime = snd_dmaPaintedTime + sc->length - ch->position;
@@ -946,14 +946,14 @@ DMASnd_Init
 qBool DMASnd_Init (void)
 {
 	if (!SndImp_Init ())
-		return qFalse;
+		return false;
 
 	DMASnd_ScaleTableInit ();
 
 	snd_dmaSoundTime = 0;
 	snd_dmaPaintedTime = 0;
 
-	return qTrue;
+	return true;
 }
 
 

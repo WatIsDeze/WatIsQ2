@@ -114,7 +114,7 @@ guiVar_t *GUIVar_Register (char *name, guiVarType_t type)
 	var = &gui_varList[gui_numVars++];
 	var->name = GUI_StrDup (fixedName, GUITAG_VARS);
 	var->type = type;
-	var->modified = qTrue;
+	var->modified = true;
 	return var;
 }
 
@@ -137,21 +137,21 @@ qBool GUIVar_GetFloatValue (guiVar_t *var, float *dest)
 	if (!var) {
 		assert (0);
 		Com_Printf (PRNT_ERROR, "GUIVar_GetFloatValue: NULL var!\n");
-		return qFalse;
+		return false;
 	}
 	if (!dest) {
 		assert (0);
 		Com_Printf (PRNT_ERROR, "GUIVar_GetFloatValue: NULL dest!\n");
-		return qFalse;
+		return false;
 	}
 	if (var->type != GVT_FLOAT) {
 		Com_Printf (PRNT_ERROR, "GUIVar_GetFloatValue: variable '%s' is not type float!\n", var->name);
-		return qFalse;
+		return false;
 	}
 
 	// Get the value
 	*dest = var->floatVal;
-	return qTrue;
+	return true;
 }
 
 
@@ -166,21 +166,21 @@ qBool GUIVar_GetStrValue (guiVar_t *var, char *dest, size_t size)
 	if (!var) {
 		assert (0);
 		Com_Printf (PRNT_ERROR, "GUIVar_GetStrValue: NULL var!\n");
-		return qFalse;
+		return false;
 	}
 	if (!dest) {
 		assert (0);
 		Com_Printf (PRNT_ERROR, "GUIVar_GetStrValue: NULL target!\n");
-		return qFalse;
+		return false;
 	}
 	if (!size) {
 		assert (0);
 		Com_Printf (PRNT_ERROR, "GUIVar_GetStrValue: invalid size!\n");
-		return qFalse;
+		return false;
 	}
 	if (var->type != GVT_STR && var->type != GVT_STR_PTR) {
 		Com_Printf (PRNT_ERROR, "GUIVar_GetStrValue: variable '%s' is not type string!\n", var->name);
-		return qFalse;
+		return false;
 	}
 
 	// Get the value
@@ -193,7 +193,7 @@ qBool GUIVar_GetStrValue (guiVar_t *var, char *dest, size_t size)
 
 		Q_strncpyz (dest, var->strVal, size);
 	}
-	return qTrue;
+	return true;
 }
 
 
@@ -208,16 +208,16 @@ qBool GUIVar_GetVecValue (guiVar_t *var, vec4_t dest)
 	if (!var) {
 		assert (0);
 		Com_Printf (PRNT_ERROR, "GUIVar_GetVecValue: NULL var!\n");
-		return qFalse;
+		return false;
 	}
 	if (!dest) {
 		assert (0);
 		Com_Printf (PRNT_ERROR, "GUIVar_GetVecValue: NULL target!\n");
-		return qFalse;
+		return false;
 	}
 	if (var->type != GVT_VEC) {
 		Com_Printf (PRNT_ERROR, "GUIVar_GetVecValue: variable '%s' is not type vec!\n", var->name);
-		return qFalse;
+		return false;
 	}
 
 	// Get the value
@@ -225,7 +225,7 @@ qBool GUIVar_GetVecValue (guiVar_t *var, vec4_t dest)
 	dest[1] = var->vecVal[1];
 	dest[2] = var->vecVal[2];
 	dest[3] = var->vecVal[3];
-	return qTrue;
+	return true;
 }
 
 /*
@@ -256,7 +256,7 @@ void GUIVar_SetFloatValue (guiVar_t *var, float value)
 
 	// Set the value
 	var->floatVal = value;
-	var->modified = qTrue;
+	var->modified = true;
 }
 
 
@@ -291,7 +291,7 @@ void GUIVar_SetStrValue (guiVar_t *var, char *value)
 			GUI_MemFree (var->strVal);
 		var->strVal = GUI_StrDup (value, GUITAG_VARS);
 	}
-	var->modified = qTrue;
+	var->modified = true;
 }
 
 
@@ -315,7 +315,7 @@ void GUIVar_SetVecValue (guiVar_t *var, vec4_t value)
 
 	// Set the value
 	Vec4Copy (value, var->vecVal);
-	var->modified = qTrue;
+	var->modified = true;
 }
 
 /*

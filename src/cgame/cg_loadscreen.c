@@ -53,7 +53,7 @@ static void CG_PrepLoadScreen (void)
 		Com_FileBase (cg.configStrings[CS_MODELS+1], buffer);
 		cgMedia.loadMapShot = cgi.R_RegisterPic (Q_VarArgs ("maps/%s.tga", buffer));
 
-		cgMedia.loadScreenPrepped = qTrue;
+		cgMedia.loadScreenPrepped = true;
 	}
 	else {
 		cgMedia.loadMapShot = NULL;

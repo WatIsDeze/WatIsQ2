@@ -128,7 +128,7 @@ void UI_PushInterface (uiFrameWork_t *frameWork, void (*drawFunc) (void), struct
 	uiState.closeFunc = closeFunc;
 	uiState.keyFunc = keyFunc;
 
-	uiState.cursorLock = qFalse;
+	uiState.cursorLock = false;
 	uiState.cursorItem = NULL;
 	uiState.mouseItem = NULL;
 	uiState.selectedItem = NULL;
@@ -162,7 +162,7 @@ void UI_PopInterface (void)
 	// Call close function
 	if (uiState.activeUI && uiState.closeFunc) {
 		outSound = uiState.closeFunc ();
-		uiState.activeUI->initialized = qFalse;
+		uiState.activeUI->initialized = false;
 		uiState.activeUI->numItems = 0;
 	}
 	else
@@ -209,7 +209,7 @@ void UI_ForceAllOff (void)
 	// Call all close functions
 	if (uiState.activeUI && uiState.closeFunc) {
 		uiState.closeFunc ();
-		uiState.activeUI->initialized = qFalse;
+		uiState.activeUI->initialized = false;
 		uiState.activeUI->numItems = 0;
 	}
 	for (i=ui_layerDepth-1 ; i>=0 ; i--) {
@@ -219,7 +219,7 @@ void UI_ForceAllOff (void)
 			continue;
 
 		ui_layers[i].closeFunc ();
-		ui_layers[i].frameWork->initialized = qFalse;
+		ui_layers[i].frameWork->initialized = false;
 		ui_layers[i].frameWork->numItems = 0;
 	}
 	ui_layerDepth = 0;
@@ -252,8 +252,8 @@ Clears out items and prepares a framework for adding items
 */
 void UI_StartFramework (uiFrameWork_t *fw, int flags)
 {
-	fw->locked = qFalse;
-	fw->initialized = qFalse;
+	fw->locked = false;
+	fw->initialized = false;
 	fw->flags = flags;
 
 	// No items yet
@@ -277,7 +277,7 @@ void UI_FinishFramework (uiFrameWork_t *fw, qBool lock)
 		Com_Error (ERR_FATAL, "UI_FinishFramework: Framework has no items");
 
 	fw->locked = lock;
-	fw->initialized = qTrue;
+	fw->initialized = true;
 
 	// Do anything item-specific work now
 	for (i=0 ; i<fw->numItems ; i++) {

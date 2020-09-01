@@ -83,7 +83,7 @@ parse_t *PS_StartSession (char *dataPtr, uint32 properties)
 
 	ps->dataPtr = dataPtr;
 	ps->dataPtrLast = dataPtr;
-	ps->inUse = qTrue;
+	ps->inUse = true;
 
 	ps->numErrors = 0;
 	ps->numWarnings = 0;
@@ -109,7 +109,7 @@ void PS_EndSession (parse_t *ps)
 
 	ps->dataPtr = NULL;
 	ps->dataPtrLast = NULL;
-	ps->inUse = qFalse;
+	ps->inUse = false;
 
 	ps->numErrors = 0;
 	ps->numWarnings = 0;
@@ -227,7 +227,7 @@ static void PS_PrintWarning (parse_t *ps, char *fmt, ...)
 PS_ParseToken
 
 Sets data to NULL when a '\0' is hit, or when a broken comment is detected.
-Returns qTrue only when a comment block was handled.
+Returns true only when a comment block was handled.
 ============
 */
 static qBool PS_SkipComments (parse_t *ps, char **data, uint32 flags)
@@ -236,7 +236,7 @@ static qBool PS_SkipComments (parse_t *ps, char **data, uint32 flags)
 
 	// See if any comment types are allowed
 	if (!(ps->properties & PSP_COMMENT_MASK))
-		return qFalse;
+		return false;
 
 	p = *data;
 
@@ -247,7 +247,7 @@ static qBool PS_SkipComments (parse_t *ps, char **data, uint32 flags)
 			while (*p != '\n') {
 				if (*p == '\0') {
 					*data = NULL;
-					return qTrue;
+					return true;
 				}
 
 				p++;
@@ -255,7 +255,7 @@ static qBool PS_SkipComments (parse_t *ps, char **data, uint32 flags)
 			}
 
 			*data = p;
-			return qTrue;
+			return true;
 		}
 		break;
 
@@ -265,7 +265,7 @@ static qBool PS_SkipComments (parse_t *ps, char **data, uint32 flags)
 			p += 2;
 			PS_PrintError (ps, "PARSE ERROR: end-comment '*/' with no opening\n");
 			*data = NULL;
-			return qTrue;
+			return true;
 		}
 		break;
 
@@ -275,7 +275,7 @@ static qBool PS_SkipComments (parse_t *ps, char **data, uint32 flags)
 			while (*p != '\n') {
 				if (*p == '\0') {
 					*data = NULL;
-					return qTrue;
+					return true;
 				}
 
 				p++;
@@ -283,7 +283,7 @@ static qBool PS_SkipComments (parse_t *ps, char **data, uint32 flags)
 			}
 
 			*data = p;
-			return qTrue;
+			return true;
 		}
 
 		// Skip "/* comments */"
@@ -310,19 +310,19 @@ static qBool PS_SkipComments (parse_t *ps, char **data, uint32 flags)
 				p += 2;
 				ps->currentCol += 2;
 				*data = p;
-				return qTrue;
+				return true;
 			}
 
 			// Didn't find final "*/" (hit EOF)
 			PS_PrintError (ps, "PARSE ERROR: unclosed comment and hit EOF\n");
 			*data = NULL;
-			return qTrue;
+			return true;
 		}
 		break;
 	}
 
 	// No comment block handled
-	return qFalse;
+	return false;
 }
 
 
@@ -339,7 +339,7 @@ static qBool PS_ConvertEscape (parse_t *ps, uint32 flags)
 	// If it's blank then why even try?
 	len = strlen (ps->currentToken);
 	if (!len)
-		return qTrue;
+		return true;
 
 	// Convert escape characters
 	source = &ps->currentToken[0];
@@ -371,7 +371,7 @@ static qBool PS_ConvertEscape (parse_t *ps, uint32 flags)
 
 	// Copy scratch back to the current token
 	Q_strncpyz (ps->currentToken, ps_scratchToken, sizeof (ps->currentToken));
-	return qTrue;
+	return true;
 }
 
 
@@ -392,13 +392,13 @@ qBool PS_ParseToken (parse_t *ps, uint32 flags, char **target)
 	char	*data;
 
 	if (!ps)
-		return qFalse;
+		return false;
 
 	// Check if the incoming data offset is valid (see if we hit EOF last the last run)
 	data = ps->dataPtr;
 	if (!data) {
 		PS_PrintError (ps, "PARSE ERROR: called PS_ParseToken and already hit EOF\n");
-		return qFalse;
+		return false;
 	}
 	ps->dataPtrLast = ps->dataPtr;
 
@@ -412,16 +412,16 @@ qBool PS_ParseToken (parse_t *ps, uint32 flags, char **target)
 			switch (c) {
 			case '\0':
 				ps->dataPtr = NULL;
-				return qFalse;
+				return false;
 
 			case '\n':
 				if (!(flags & PSF_ALLOW_NEWLINES)) {
 					ps->dataPtr = data;
 					if (!ps->currentToken[0])
-						return qFalse;
+						return false;
 
 					*target = ps->currentToken;
-					return qTrue;
+					return true;
 				}
 
 				ps->currentCol = 0;
@@ -440,7 +440,7 @@ qBool PS_ParseToken (parse_t *ps, uint32 flags, char **target)
 		if (PS_SkipComments (ps, &data, flags)) {
 			if (!data) {
 				ps->dataPtr = NULL;
-				return qFalse;
+				return false;
 			}
 		}
 		else {
@@ -462,7 +462,7 @@ qBool PS_ParseToken (parse_t *ps, uint32 flags, char **target)
 				ps->currentCol++;
 				ps->dataPtr = data;
 				PS_PrintError (ps, "PARSE ERROR: hit EOF while inside quotation\n");
-				return qFalse;
+				return false;
 
 			case '\"':
 				ps->currentCol++;
@@ -471,27 +471,27 @@ qBool PS_ParseToken (parse_t *ps, uint32 flags, char **target)
 
 				// Empty token
 				if (!ps->currentToken[0])
-					return qFalse;
+					return false;
 
 				// Lower-case if desired
 				if (flags & PSF_TO_LOWER)
 					Q_strlwr (ps->currentToken);
 				if (flags & PSF_CONVERT_NEWLINE) {
 					if (!PS_ConvertEscape (ps, flags))
-						return qFalse;
+						return false;
 				}
 
 				*target = ps->currentToken;
-				return qTrue;
+				return true;
 
 			case '\n':
 				if (!(flags & PSF_ALLOW_NEWLINES)) {
 					ps->dataPtr = data;
 					if (!ps->currentToken[0])
-						return qFalse;
+						return false;
 
 					*target = ps->currentToken;
-					return qTrue;
+					return true;
 				}
 
 				ps->currentCol = 0;
@@ -526,7 +526,7 @@ qBool PS_ParseToken (parse_t *ps, uint32 flags, char **target)
 			if (c == '*' && data[1] == '/' && ps->properties & PSP_COMMENT_BLOCK) {
 				ps->dataPtr = data;
 				PS_PrintError (ps, "PARSE ERROR: end-comment '*/' with no opening\n");
-				return qFalse;
+				return false;
 			}
 		}
 
@@ -542,7 +542,7 @@ qBool PS_ParseToken (parse_t *ps, uint32 flags, char **target)
 	if (len >= MAX_PS_TOKCHARS-1) {
 		PS_PrintError (ps, "PARSE ERROR: token too long!\n");
 		ps->dataPtr = data;
-		return qFalse;
+		return false;
 	}
 
 	// Done
@@ -551,17 +551,17 @@ qBool PS_ParseToken (parse_t *ps, uint32 flags, char **target)
 
 	// Empty token
 	if (!ps->currentToken[0])
-		return qFalse;
+		return false;
 
 	// Lower-case if desired
 	if (flags & PSF_TO_LOWER)
 		Q_strlwr (ps->currentToken);
 	if (flags & PSF_CONVERT_NEWLINE) {
 		if (!PS_ConvertEscape (ps, flags))
-			return qFalse;
+			return false;
 	}
 	*target = ps->currentToken;
-	return qTrue;
+	return true;
 }
 
 
@@ -642,14 +642,14 @@ static qBool PS_VerifyCharVec (char *token, char *target)
 		break;
 	}
 	if (i != len)
-		return qFalse;
+		return false;
 
 	temp = atoi (token);
 	if (temp < -128 || temp > 127)
-		return qFalse;
+		return false;
 
 	*target = temp;
-	return qTrue;
+	return true;
 }
 
 
@@ -661,15 +661,15 @@ PS_VerifyBooleanVec
 static qBool PS_VerifyBooleanVec (char *token, qBool *target)
 {
 	if (!strcmp (token, "1") || !strcmp (token, "true")) {
-		*target = qTrue;
-		return qTrue;
+		*target = true;
+		return true;
 	}
 	if (!strcmp (token, "0") || !strcmp (token, "false")) {
-		*target = qFalse;
-		return qTrue;
+		*target = false;
+		return true;
 	}
 
-	return qFalse;
+	return false;
 }
 
 
@@ -692,14 +692,14 @@ static qBool PS_VerifyByteVec (char *token, byte *target)
 		break;
 	}
 	if (i != len)
-		return qFalse;
+		return false;
 
 	temp = atoi (token);
 	if (temp < 0 || temp > 255)
-		return qFalse;
+		return false;
 
 	*target = temp;
-	return qTrue;
+	return true;
 }
 
 
@@ -713,7 +713,7 @@ static qBool PS_VerifyDoubleVec (char *token, double *target)
 	size_t	len, i;
 	qBool	dot;
 
-	dot = qFalse;
+	dot = false;
 	len = strlen (token);
 	for (i=0 ; i<len ; i++) {
 		if (token[i] >= '0' || token[i] <= '9')
@@ -721,16 +721,16 @@ static qBool PS_VerifyDoubleVec (char *token, double *target)
 		if (token[i] == '-' && i == 0)
 			continue;
 		if (token[i] == '.' && !dot) {
-			dot = qTrue;
+			dot = true;
 			continue;
 		}
 		break;
 	}
 	if (i != len)
-		return qFalse;
+		return false;
 
 	*target = atof (token);
-	return qTrue;
+	return true;
 }
 
 
@@ -744,13 +744,13 @@ static qBool PS_VerifyFloatVec (char *token, float *target)
 	size_t	len, i;
 	qBool	dot;
 
-	dot = qFalse;
+	dot = false;
 	len = strlen (token);
 	for (i=0 ; i<len ; i++) {
 		if (token[i] >= '0' || token[i] <= '9')
 			continue;
 		if (token[i] == '.' && !dot) {
-			dot = qTrue;
+			dot = true;
 			continue;
 		}
 		if (i == 0) {
@@ -762,10 +762,10 @@ static qBool PS_VerifyFloatVec (char *token, float *target)
 		break;
 	}
 	if (i != len)
-		return qFalse;
+		return false;
 
 	*target = (float)atof (token);
-	return qTrue;
+	return true;
 }
 
 
@@ -787,10 +787,10 @@ static qBool PS_VerifyIntegerVec (char *token, int *target)
 		break;
 	}
 	if (i != len)
-		return qFalse;
+		return false;
 
 	*target = atoi (token);
-	return qTrue;
+	return true;
 }
 
 
@@ -810,10 +810,10 @@ static qBool PS_VerifyUIntegerVec (char *token, uint32 *target)
 		break;
 	}
 	if (i != len)
-		return qFalse;
+		return false;
 
 	*target = atoi (token);
-	return qTrue;
+	return true;
 }
 
 
@@ -841,7 +841,7 @@ static qBool PS_ParseDataVector (char *token, uint32 dataType, void *target)
 		return PS_VerifyUIntegerVec (token, (uint32 *)target);
 	}
 
-	return qFalse;
+	return false;
 }
 
 
@@ -858,7 +858,7 @@ qBool PS_ParseDataType (parse_t *ps, uint32 flags, uint32 dataType, void *target
 
 	// Parse the next token
 	if (!PS_ParseToken (ps, flags, &token))
-		return qFalse;
+		return false;
 
 	// Individual tokens
 	// FIXME: support commas and () [] {} brackets
@@ -868,7 +868,7 @@ qBool PS_ParseDataType (parse_t *ps, uint32 flags, uint32 dataType, void *target
 				// Parse the next token
 				if (!PS_ParseToken (ps, flags, &token)) {
 					PS_PrintError (ps, "PARSE ERROR: vector missing parameters!\n");
-					return qFalse;
+					return false;
 				}
 
 				// Storage position
@@ -886,11 +886,11 @@ qBool PS_ParseDataType (parse_t *ps, uint32 flags, uint32 dataType, void *target
 			// Check the data type
 			if (!PS_ParseDataVector (token, dataType, target)) {
 				PS_PrintError (ps, "PARSE ERROR: does not evaluate to desired data type!\n");
-				return qFalse;
+				return false;
 			}
 		}
 
-		return qTrue;
+		return true;
 	}
 
 	// Single token with all vectors
@@ -925,13 +925,13 @@ qBool PS_ParseDataType (parse_t *ps, uint32 flags, uint32 dataType, void *target
 		// Too few vecs
 		if (!ps_scratchToken[0]) {
 			PS_PrintError (ps, "PARSE ERROR: missing vector parameters!\n");
-			return qFalse;
+			return false;
 		}
 
 		// Check the data type and set the target
 		if (!PS_ParseDataVector (ps_scratchToken, dataType, target)) {
 			PS_PrintError (ps, "PARSE ERROR: '%s' does not evaluate to desired data type %s!\n", ps_scratchToken, ps_dataTypeStr[dataType]);
-			return qFalse;
+			return false;
 		}
 
 		// Next storage position
@@ -953,9 +953,9 @@ qBool PS_ParseDataType (parse_t *ps, uint32 flags, uint32 dataType, void *target
 			break;
 		if (c > ' ') {
 			PS_PrintError (ps, "PARSE ERROR: too many vector parameters!\n");
-			return qFalse;
+			return false;
 		}
 	}
 
-	return qTrue;
+	return true;
 }

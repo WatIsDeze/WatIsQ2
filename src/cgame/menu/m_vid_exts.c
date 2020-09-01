@@ -78,16 +78,16 @@ GLExtsMenu_ApplyValues
 */
 static void GLExtsMenu_ApplyValues (void *unused)
 {
-	cgi.Cvar_SetValue ("r_allowExtensions",					m_extensionsMenu.extensions_toggle.curValue, qTrue);
+	cgi.Cvar_SetValue ("r_allowExtensions",					m_extensionsMenu.extensions_toggle.curValue, true);
 
-	cgi.Cvar_SetValue ("r_ext_multitexture",				m_extensionsMenu.multitexture_toggle.curValue, qTrue);
-	cgi.Cvar_SetValue ("r_ext_textureEnvCombine",			m_extensionsMenu.mtexcombine_toggle.curValue, qTrue);
-	cgi.Cvar_SetValue ("r_ext_textureCubeMap",				m_extensionsMenu.cubemap_toggle.curValue, qTrue);
-	cgi.Cvar_SetValue ("r_ext_textureEdgeClamp",			m_extensionsMenu.edgeclamp_toggle.curValue, qTrue);
-	cgi.Cvar_SetValue ("r_ext_generateMipmap",				m_extensionsMenu.genmipmap_toggle.curValue, qTrue);
-	cgi.Cvar_SetValue ("r_ext_textureCompression",			m_extensionsMenu.texcompress_toggle.curValue, qTrue);
-	cgi.Cvar_SetValue ("r_ext_textureFilterAnisotropic",	m_extensionsMenu.aniso_toggle.curValue, qTrue);
-	cgi.Cvar_SetValue ("r_ext_maxAnisotropy",				m_extensionsMenu.anisoamount_slider.curValue, qTrue);
+	cgi.Cvar_SetValue ("r_ext_multitexture",				m_extensionsMenu.multitexture_toggle.curValue, true);
+	cgi.Cvar_SetValue ("r_ext_textureEnvCombine",			m_extensionsMenu.mtexcombine_toggle.curValue, true);
+	cgi.Cvar_SetValue ("r_ext_textureCubeMap",				m_extensionsMenu.cubemap_toggle.curValue, true);
+	cgi.Cvar_SetValue ("r_ext_textureEdgeClamp",			m_extensionsMenu.edgeclamp_toggle.curValue, true);
+	cgi.Cvar_SetValue ("r_ext_generateMipmap",				m_extensionsMenu.genmipmap_toggle.curValue, true);
+	cgi.Cvar_SetValue ("r_ext_textureCompression",			m_extensionsMenu.texcompress_toggle.curValue, true);
+	cgi.Cvar_SetValue ("r_ext_textureFilterAnisotropic",	m_extensionsMenu.aniso_toggle.curValue, true);
+	cgi.Cvar_SetValue ("r_ext_maxAnisotropy",				m_extensionsMenu.anisoamount_slider.curValue, true);
 
 	cgi.Cbuf_AddText ("vid_restart\n");
 }
@@ -100,31 +100,31 @@ GLExtsMenu_SetValues
 */
 static void GLExtsMenu_SetValues (void)
 {
-	cgi.Cvar_SetValue ("r_allowExtensions",					clamp (cgi.Cvar_GetIntegerValue ("r_allowExtensions"), 0, 1), qTrue);
+	cgi.Cvar_SetValue ("r_allowExtensions",					clamp (cgi.Cvar_GetIntegerValue ("r_allowExtensions"), 0, 1), true);
 	m_extensionsMenu.extensions_toggle.curValue				= cgi.Cvar_GetIntegerValue ("r_allowExtensions");
 
-	cgi.Cvar_SetValue ("r_ext_multitexture",				clamp (cgi.Cvar_GetIntegerValue ("r_ext_multitexture"), 0, 1), qTrue);
+	cgi.Cvar_SetValue ("r_ext_multitexture",				clamp (cgi.Cvar_GetIntegerValue ("r_ext_multitexture"), 0, 1), true);
 	m_extensionsMenu.multitexture_toggle.curValue			= cgi.Cvar_GetIntegerValue ("r_ext_multitexture");
 
-	cgi.Cvar_SetValue ("r_ext_textureEnvCombine",			clamp (cgi.Cvar_GetIntegerValue ("r_ext_textureEnvCombine"), 0, 1), qTrue);
+	cgi.Cvar_SetValue ("r_ext_textureEnvCombine",			clamp (cgi.Cvar_GetIntegerValue ("r_ext_textureEnvCombine"), 0, 1), true);
 	m_extensionsMenu.mtexcombine_toggle.curValue			= cgi.Cvar_GetIntegerValue ("r_ext_textureEnvCombine");
 
-	cgi.Cvar_SetValue ("r_ext_textureCubeMap",				clamp (cgi.Cvar_GetIntegerValue ("r_ext_textureCubeMap"), 0, 1), qTrue);
+	cgi.Cvar_SetValue ("r_ext_textureCubeMap",				clamp (cgi.Cvar_GetIntegerValue ("r_ext_textureCubeMap"), 0, 1), true);
 	m_extensionsMenu.cubemap_toggle.curValue				= cgi.Cvar_GetIntegerValue ("r_ext_textureCubeMap");
 
-	cgi.Cvar_SetValue ("r_ext_textureEdgeClamp",			clamp (cgi.Cvar_GetIntegerValue ("r_ext_textureEdgeClamp"), 0, 1), qTrue);
+	cgi.Cvar_SetValue ("r_ext_textureEdgeClamp",			clamp (cgi.Cvar_GetIntegerValue ("r_ext_textureEdgeClamp"), 0, 1), true);
 	m_extensionsMenu.edgeclamp_toggle.curValue				= cgi.Cvar_GetIntegerValue ("r_ext_textureEdgeClamp");
 
-	cgi.Cvar_SetValue ("r_ext_generateMipmap",				clamp (cgi.Cvar_GetIntegerValue ("r_ext_generateMipmap"), 0, 1), qTrue);
+	cgi.Cvar_SetValue ("r_ext_generateMipmap",				clamp (cgi.Cvar_GetIntegerValue ("r_ext_generateMipmap"), 0, 1), true);
 	m_extensionsMenu.genmipmap_toggle.curValue				= cgi.Cvar_GetIntegerValue ("r_ext_generateMipmap");
 
-	cgi.Cvar_SetValue ("r_ext_textureCompression",			clamp (cgi.Cvar_GetIntegerValue ("r_ext_textureCompression"), 0, 5), qTrue);
+	cgi.Cvar_SetValue ("r_ext_textureCompression",			clamp (cgi.Cvar_GetIntegerValue ("r_ext_textureCompression"), 0, 5), true);
 	m_extensionsMenu.texcompress_toggle.curValue			= cgi.Cvar_GetIntegerValue ("r_ext_textureCompression");
 
-	cgi.Cvar_SetValue ("r_ext_textureFilterAnisotropic",	clamp (cgi.Cvar_GetIntegerValue ("r_ext_textureFilterAnisotropic"), 0, 1), qTrue);
+	cgi.Cvar_SetValue ("r_ext_textureFilterAnisotropic",	clamp (cgi.Cvar_GetIntegerValue ("r_ext_textureFilterAnisotropic"), 0, 1), true);
 	m_extensionsMenu.aniso_toggle.curValue					= cgi.Cvar_GetIntegerValue ("r_ext_textureFilterAnisotropic");
 
-	cgi.Cvar_SetValue ("r_ext_maxAnisotropy",				clamp (cgi.Cvar_GetIntegerValue ("r_ext_maxAnisotropy"), 0, 16), qTrue);
+	cgi.Cvar_SetValue ("r_ext_maxAnisotropy",				clamp (cgi.Cvar_GetIntegerValue ("r_ext_maxAnisotropy"), 0, 16), true);
 	m_extensionsMenu.anisoamount_slider.curValue			= cgi.Cvar_GetIntegerValue ("r_ext_maxAnisotropy");
 }
 
@@ -256,7 +256,7 @@ static void GLExtsMenu_Init (void)
 	UI_AddItem (&m_extensionsMenu.frameWork,			&m_extensionsMenu.reset_action);
 	UI_AddItem (&m_extensionsMenu.frameWork,			&m_extensionsMenu.cancel_action);
 
-	UI_FinishFramework (&m_extensionsMenu.frameWork, qTrue);
+	UI_FinishFramework (&m_extensionsMenu.frameWork, true);
 }
 
 

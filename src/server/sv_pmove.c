@@ -682,7 +682,7 @@ static void SV_PM_CheckSpecialMovement (void) {
 	if (pm->state.pmTime)
 		return;
 
-	pml.ladder = qFalse;
+	pml.ladder = false;
 
 	// check for ladder
 	flatforward[0] = pml.forward[0];
@@ -693,7 +693,7 @@ static void SV_PM_CheckSpecialMovement (void) {
 	Vec3MA (pml.origin, 1, flatforward, spot);
 	trace = pm->trace (pml.origin, pm->mins, pm->maxs, spot);
 	if ((trace.fraction < 1) && (trace.contents & CONTENTS_LADDER))
-		pml.ladder = qTrue;
+		pml.ladder = true;
 
 	// check for water jump
 	if (pm->waterLevel != 2)
@@ -891,7 +891,7 @@ static qBool SV_PM_GoodPosition (void)
 	vec3_t	origin, end;
 
 	if (pm->state.pmType == PMT_SPECTATOR)
-		return qTrue;
+		return true;
 
 	origin[0] = end[0] = pm->state.origin[0]*(1.0f/8.0f);
 	origin[1] = end[1] = pm->state.origin[1]*(1.0f/8.0f);
@@ -1062,7 +1062,7 @@ void SV_Pmove (pMoveNew_t *pMove, float airAcceleration) {
 	SV_PM_ClampAngles ();
 
 	if (pm->state.pmType == PMT_SPECTATOR) {
-		SV_PM_FlyMove (qFalse);
+		SV_PM_FlyMove (false);
 		SV_PM_SnapPosition ();
 		return;
 	}

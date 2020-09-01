@@ -24,7 +24,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <SDL/SDL.h>
 #include "snd_local.h"
 
-static qBool s_inited = qFalse;
+static qBool s_inited = false;
 
 cVar_t	*s_bits;
 cVar_t	*s_speed;
@@ -56,7 +56,7 @@ qBool SndImp_Init (void)
 	SDL_AudioSpec desired, obtained;
 	
 	if(s_inited)
-		return qTrue;
+		return true;
 
 	if (!s_bits) {
 		s_bits = Cvar_Register("sndbits", "16", CVAR_ARCHIVE);
@@ -68,12 +68,12 @@ qBool SndImp_Init (void)
 	if (!SDL_WasInit(SDL_INIT_EVERYTHING)) {
 		if (SDL_Init(SDL_INIT_AUDIO) < 0) {
 			Com_Printf(PRNT_ERROR, "Couldn't init SDL audio: %s\n", SDL_GetError ());
-			return qFalse;
+			return false;
 		}
 	} else if (!SDL_WasInit(SDL_INIT_AUDIO)) {
 		if (SDL_InitSubSystem(SDL_INIT_AUDIO) < 0) {
 			Com_Printf(PRNT_ERROR, "Couldn't init SDL audio: %s\n", SDL_GetError ());
-			return qFalse;
+			return false;
 		}
 	}
 	
@@ -118,7 +118,7 @@ qBool SndImp_Init (void)
 			SDL_Quit();
 		else
 			SDL_QuitSubSystem(SDL_INIT_AUDIO);
-		return qFalse;
+		return false;
 	}
 
 	/* Fill the audio DMA information block */
@@ -135,8 +135,8 @@ qBool SndImp_Init (void)
 
     Com_Printf(PRNT_ERROR, "SDL audio initialized.\n");
 
-	s_inited = qTrue;
-	return qTrue;
+	s_inited = true;
+	return true;
 }
 
 
@@ -152,7 +152,7 @@ void SndImp_Shutdown (void)
 
 	SDL_PauseAudio(1);
 	SDL_CloseAudio ();
-	s_inited = qFalse;
+	s_inited = false;
 
 	if (SDL_WasInit(SDL_INIT_EVERYTHING) == SDL_INIT_AUDIO)
 		SDL_Quit();

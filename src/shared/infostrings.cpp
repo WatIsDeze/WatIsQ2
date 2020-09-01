@@ -186,11 +186,11 @@ can mess up the server's parsing
 qBool Info_Validate (char *s)
 {
 	if (strstr (s, "\""))
-		return qFalse;
+		return false;
 	if (strstr (s, ";"))
-		return qFalse;
+		return false;
 
-	return qTrue;
+	return true;
 }
 
 

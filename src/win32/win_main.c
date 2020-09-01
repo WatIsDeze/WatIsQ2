@@ -63,7 +63,7 @@ void Sys_Init (void)
 	if (!IsWindowsVersionOrGreater(4, 0, 0))
 		Sys_Error ("EGL requires windows version 4 or greater");
 
-	sys_winInfo.isWin32 = qFalse;
+	sys_winInfo.isWin32 = false;
 }
 
 
@@ -105,11 +105,11 @@ void Sys_Error (char *error, ...)
 
 	Sys_SetConsoleTitle ("EGL ERROR!");
 	Sys_SetErrorText (text);
-	Sys_ShowConsole (1, qTrue);
+	Sys_ShowConsole (1, true);
 
 #ifndef DEDICATED_ONLY
 	if (!dedicated->intVal)
-		CL_ClientShutdown (qTrue);
+		CL_ClientShutdown (true);
 #endif
 	Com_Shutdown ();
 
@@ -118,7 +118,7 @@ void Sys_Error (char *error, ...)
 	// Wait for the user to quit
 	for ( ; ; ) {
 		if (!GetMessage (&msg, NULL, 0, 0))
-			Com_Quit (qTrue);
+			Com_Quit (true);
 
 		TranslateMessage (&msg);
       	DispatchMessage (&msg);
@@ -150,7 +150,7 @@ Sys_ScanForCD
 char *Sys_ScanForCD (void)
 {
 	static char	cddir[MAX_OSPATH];
-	static qBool	done = qFalse;
+	static qBool	done = false;
 	char			drive[4];
 	FILE			*f;
 	char			test[MAX_QPATH];
@@ -166,7 +166,7 @@ char *Sys_ScanForCD (void)
 	drive[2] = '\\';
 	drive[3] = 0;
 
-	done = qTrue;
+	done = true;
 
 	// Scan the drives
 	for (drive[0]='c' ; drive[0]<='z' ; drive[0]++) {
@@ -196,12 +196,12 @@ Sys_Milliseconds
 int Sys_Milliseconds (void)
 {
 	static int		base;
-	static qBool	initialized = qFalse;
+	static qBool	initialized = false;
 
 	if (!initialized) {
 		// Let base retain 16 bits of effectively random data
 		base = timeGetTime() & 0xffff0000;
-		initialized = qTrue;
+		initialized = true;
 	}
 
 	return timeGetTime () - base;
@@ -216,12 +216,12 @@ Sys_UMilliseconds
 uint32 Sys_UMilliseconds (void)
 {
 	static uint32	base;
-	static qBool	initialized = qFalse;
+	static qBool	initialized = false;
 
 	if (!initialized) {
 		// Let base retain 16 bits of effectively random data
 		base = timeGetTime() & 0xffff0000;
-		initialized = qTrue;
+		initialized = true;
 	}
 
 	return timeGetTime () - base;
@@ -270,7 +270,7 @@ void Sys_SendKeyEvents (void)
 	// Dispatch window messages
 	while (PeekMessage (&msg, NULL, 0, 0, PM_NOREMOVE)) {
 		if (!GetMessage (&msg, NULL, 0, 0))
-			Com_Quit (qTrue);
+			Com_Quit (true);
 
 		sys_winInfo.msgTime = msg.time;
 		TranslateMessage (&msg);
@@ -323,44 +323,44 @@ static qBool Sys_CompareFileAttributes (int found, uint32 mustHave, uint32 cantH
 	// read only
 	if (found & _A_RDONLY) {
 		if (cantHave & SFF_RDONLY)
-			return qFalse;
+			return false;
 	}
 	else if (mustHave & SFF_RDONLY)
-		return qFalse;
+		return false;
 
 	// hidden
 	if (found & _A_HIDDEN) {
 		if (cantHave & SFF_HIDDEN)
-			return qFalse;
+			return false;
 	}
 	else if (mustHave & SFF_HIDDEN)
-		return qFalse;
+		return false;
 
 	// system
 	if (found & _A_SYSTEM) {
 		if (cantHave & SFF_SYSTEM)
-			return qFalse;
+			return false;
 	}
 	else if (mustHave & SFF_SYSTEM)
-		return qFalse;
+		return false;
 
 	// subdir
 	if (found & _A_SUBDIR) {
 		if (cantHave & SFF_SUBDIR)
-			return qFalse;
+			return false;
 	}
 	else if (mustHave & SFF_SUBDIR)
-		return qFalse;
+		return false;
 
 	// arch
 	if (found & _A_ARCH) {
 		if (cantHave & SFF_ARCH)
-			return qFalse;
+			return false;
 	}
 	else if (mustHave & SFF_ARCH)
-		return qFalse;
+		return false;
 
-	return qTrue;
+	return true;
 }
 
 /*
@@ -708,7 +708,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 #ifndef DEDICATED_ONLY
 	// Show the console
 	if (!dedicated->intVal)
-		Sys_ShowConsole (0, qFalse);
+		Sys_ShowConsole (0, false);
 #endif
 
 	// Pump message loop

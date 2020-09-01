@@ -21,7 +21,7 @@
 // 	gi.WriteByte(1); // Menu ID.
 // 	gi.WriteByte(0); // Message ID.
 // 	gi.WriteByte(0); // Option list ID.
-// 	gi.unicast(self->activator, qTrue);
+// 	gi.unicast(self->activator, true);
 // }
 
 // // Function menu entity spawn.

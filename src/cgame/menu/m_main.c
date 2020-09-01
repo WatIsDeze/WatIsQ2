@@ -154,7 +154,7 @@ static void MainMenu_Init (void)
 	UI_AddItem (&m_mainMenu.frameWork,		&m_mainMenu.plaque_pic);
 	UI_AddItem (&m_mainMenu.frameWork,		&m_mainMenu.idlogo_pic);
 
-	UI_FinishFramework (&m_mainMenu.frameWork, qTrue);
+	UI_FinishFramework (&m_mainMenu.frameWork, true);
 }
 
 

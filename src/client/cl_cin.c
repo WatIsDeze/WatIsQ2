@@ -306,7 +306,7 @@ static qBool CIN_LoadPCX (char *name, byte **pic, byte **palette, int *width, in
 	// Load the file
 	fileLen = FS_LoadFile (name, (void **)&raw, NULL);
 	if (!raw || fileLen <= 0)
-		return qFalse;
+		return false;
 
 	// Parse the PCX file
 	pcx = (pcxHeader_t *)raw;
@@ -325,17 +325,17 @@ static qBool CIN_LoadPCX (char *name, byte **pic, byte **palette, int *width, in
 	// Sanity checks
 	if (pcx->manufacturer != 0x0a || pcx->version != 5 || pcx->encoding != 1) {
 		Com_DevPrintf (PRNT_WARNING, "CIN_LoadPCX: %s: Invalid PCX header\n", name);
-		return qFalse;
+		return false;
 	}
 
 	if (pcx->bitsPerPixel != 8 || pcx->colorPlanes != 1) {
 		Com_DevPrintf (PRNT_WARNING, "CIN_LoadPCX: %s: Only 8-bit PCX images are supported\n", name);
-		return qFalse;
+		return false;
 	}
 
 	if (pcx->xMax >= 640 || pcx->xMax <= 0 || pcx->yMax >= 480 || pcx->yMax <= 0) {
 		Com_DevPrintf (PRNT_WARNING, "CIN_LoadPCX: %s: Bad PCX file dimensions: %i x %i\n", name, pcx->xMax, pcx->yMax);
-		return qFalse;
+		return false;
 	}
 
 	// FIXME: Some images with weird dimensions will crash if I don't do this...
@@ -383,14 +383,14 @@ static qBool CIN_LoadPCX (char *name, byte **pic, byte **palette, int *width, in
 			*palette = NULL;
 		}
 
-		return qFalse;
+		return false;
 	}
 
 	if (!pic)
 		Mem_Free (out);
 	FS_FreeFile (pcx);
 
-	return qTrue;
+	return true;
 }
 
 /*
@@ -426,7 +426,7 @@ static int CIN_SmallestHuffNode (int numNodes)
 	if (bestNode == -1)
 		return -1;
 
-	cl.cin.hUsed[bestNode] = qTrue;
+	cl.cin.hUsed[bestNode] = true;
 	return bestNode;
 }
 
@@ -794,7 +794,7 @@ void CIN_PlayCinematic (char *name)
 	// Setup the streaming channel
 	cl.cin.sndBuffer = Mem_PoolAlloc (MAX_CIN_SNDBUFF, cl_cinSysPool, 0);
 	cl.cin.sndRawChannel = Snd_RawStart ();
-	cl.cin.sndAL = (cl.cin.sndRawChannel) ? qTrue : qFalse;
+	cl.cin.sndAL = (cl.cin.sndRawChannel) ? true : false;
 	cl.cin.vidBuffer = Mem_PoolAlloc (256*256*sizeof(uint32), cl_cinSysPool, 0);
 
 	// Setup the huff table
@@ -804,10 +804,10 @@ void CIN_PlayCinematic (char *name)
 	if (!cl.cin.sndAL) {
 		old_khz = Cvar_GetIntegerValue ("s_khz");
 		if (old_khz != cl.cin.sndRate/1000) {
-			cl.cin.sndRestart = qTrue;
-			Cvar_VariableSetValue (s_khz, cl.cin.sndRate/1000, qTrue);
+			cl.cin.sndRestart = true;
+			Cvar_VariableSetValue (s_khz, cl.cin.sndRate/1000, true);
 			Cbuf_AddText ("snd_restart\n");
-			Cvar_VariableSetValue (s_khz, old_khz, qTrue);
+			Cvar_VariableSetValue (s_khz, old_khz, true);
 		}
 	}
 

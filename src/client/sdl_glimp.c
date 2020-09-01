@@ -99,7 +99,7 @@ cause the entire video mode and refresh DLL to be reset on the next frame.
 */
 void VID_Restart_f (void)
 {
-	vid_queueRestart = qTrue;
+	vid_queueRestart = true;
 }
 
 
@@ -145,14 +145,14 @@ void VID_CheckChanges (refConfig_t *outConfig)
 		CL_MediaShutdown ();
 
 		// Refresh has changed
-		vid_queueRestart = qFalse;
-		cls.refreshPrepped = qFalse;
-		cls.disableScreen = qTrue;
+		vid_queueRestart = false;
+		cls.refreshPrepped = false;
+		cls.disableScreen = true;
 
 		// Kill if already active
 		if (vid_isActive) {
-			R_Shutdown (qFalse);
-			vid_isActive = qFalse;
+			R_Shutdown (false);
+			vid_isActive = false;
 		}
 
 		// Initialize renderer
@@ -160,8 +160,8 @@ void VID_CheckChanges (refConfig_t *outConfig)
 
 		// Refresh init failed!
 		if (errNum != R_INIT_SUCCESS) {
-			R_Shutdown (qTrue);
-			vid_isActive = qFalse;
+			R_Shutdown (true);
+			vid_isActive = false;
 
 			switch (errNum) {
 			case R_INIT_QGL_FAIL:
@@ -183,7 +183,7 @@ void VID_CheckChanges (refConfig_t *outConfig)
 		Snd_Init ();
 		CL_MediaInit ();
 
-		cls.disableScreen = qFalse;
+		cls.disableScreen = false;
 
 		CL_ConsoleClose ();
 
@@ -197,7 +197,7 @@ void VID_CheckChanges (refConfig_t *outConfig)
 			CL_CGModule_MainMenu ();
 		}
 
-		vid_isActive = qTrue;
+		vid_isActive = true;
 	}
 }
 
@@ -218,9 +218,9 @@ void VID_Init (refConfig_t *outConfig)
 	//Cmd_AddCommand ("listremaps", ListRemaps_f, "Lists what keys are remapped to AUX* bindings");
 
 	// Start the graphics mode and load refresh DLL
-	vid_isActive = qFalse;
-	vid_fullscreen->modified = qTrue;
-	vid_queueRestart = qTrue;
+	vid_isActive = false;
+	vid_fullscreen->modified = true;
+	vid_queueRestart = true;
 
 	VID_CheckChanges (outConfig);
 }
@@ -234,8 +234,8 @@ VID_Shutdown
 void VID_Shutdown (void)
 {
 	if(vid_isActive) {
-		R_Shutdown (qTrue);
-		vid_isActive = qFalse;
+		R_Shutdown (true);
+		vid_isActive = false;
 	}
 
 	//Cmd_RemoveCommand ("vid_restart", NULL);
@@ -268,7 +268,7 @@ GLimp_Init
 */
 qBool GLimp_Init (void)
 {
-	GLimp_Shutdown (qFalse);
+	GLimp_Shutdown (false);
 
 	return GLSDL_Init();
 }
@@ -278,7 +278,7 @@ qBool GLimp_Init (void)
 =================
 GLimp_AttemptMode
 
-Returns qTrue when the a mode change was successful
+Returns true when the a mode change was successful
 =================
 */
 qBool GLimp_AttemptMode (qBool fullScreen, int width, int height)
@@ -294,20 +294,20 @@ qBool GLimp_AttemptMode (qBool fullScreen, int width, int height)
 	
 	// Attempt fullscreen if desired
 	if (fullScreen) {
-		if (GLSDL_CreateWindow(width, height, qTrue))
-			return qTrue;
+		if (GLSDL_CreateWindow(width, height, true))
+			return true;
 
 		Com_Printf (PRNT_ERROR, "...fullscreen mode failed\n");
-		return qFalse;
+		return false;
 	}
 
 	// Otherwise, attempt windowed mode
 	Com_Printf (0, "...attempting windowed mode\n");
-	if (GLSDL_CreateWindow (width, height, qFalse))
-		return qTrue;
+	if (GLSDL_CreateWindow (width, height, false))
+		return true;
 
 	Com_Printf (PRNT_ERROR, "...windowed mode failed\n");
-	return qFalse;
+	return false;
 }
 
 
@@ -320,7 +320,7 @@ GLimp_GetGammaRamp
 qBool GLimp_GetGammaRamp (uint16 *ramp)
 {
 	//return SCR_GetGammaRamp (ramp);
-	qFalse;
+	false;
 }
 
 

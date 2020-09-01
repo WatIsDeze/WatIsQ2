@@ -37,9 +37,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 // SDL related.
 SDL_Surface *sdlwnd;			// SDL Window surface.
-qBool isWindowGrabbed = qFalse;	// Is the window grabbed, or not?
-qBool mouseActive = qFalse;		// Is the mouse active?
-qBool mouseAvailable = qTrue;	// Mouse available?
+qBool isWindowGrabbed = false;	// Is the window grabbed, or not?
+qBool mouseActive = false;		// Is the mouse active?
+qBool mouseAvailable = true;	// Mouse available?
 
 // Console variables that we need to access from this module
 cVar_t		*vid_xpos;			// X coordinate of window position
@@ -83,12 +83,12 @@ qBool GLSDL_Init() {
 	if (SDL_WasInit(SDL_INIT_AUDIO|SDL_INIT_CDROM|SDL_INIT_VIDEO) == 0) {
 		if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 			Sys_Error("SDL Init failed: %s\n", SDL_GetError());
-			return qFalse;
+			return false;
 		}
 	} else if (SDL_WasInit(SDL_INIT_VIDEO) == 0) {
 		if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0) {
 			Sys_Error("SDL Init failed: %s\n", SDL_GetError());
-			return qFalse;
+			return false;
 		}
 	}
 
@@ -100,14 +100,14 @@ qBool GLSDL_Init() {
 
 		isfullscreen = (sdlwnd->flags & SDL_FULLSCREEN) ? 1 : 0;
 		if (vid_fullscreen->intVal == isfullscreen)
-			return qTrue;
+			return true;
 	}
 
     // Clear the window in case it exists.
     if (sdlwnd)
         SDL_FreeSurface(sdlwnd);
 
-    return qTrue;
+    return true;
 }
 
 qBool GLSDL_CreateWindow(int width, int height, qBool fullscreen) {
@@ -143,7 +143,7 @@ qBool GLSDL_CreateWindow(int width, int height, qBool fullscreen) {
 	//SetSDLIcon(); /* currently uses q2icon.xbm data */
 	if ((sdlwnd = SDL_SetVideoMode(ri.config.vidWidth, ri.config.vidHeight, 32, windowFlags)) == NULL) {
 		Sys_Error("(SDLGL) SDL SetVideoMode failed: %s\n", SDL_GetError());
-		return qFalse;
+		return false;
 	}
 
 	ri.config.vidWidth = sdlwnd->w;
@@ -156,7 +156,7 @@ qBool GLSDL_CreateWindow(int width, int height, qBool fullscreen) {
 
 	SDL_ShowCursor(0);
 
-    return qTrue;
+    return true;
 }
 
 void GLSDL_Shutdown() {
@@ -190,10 +190,10 @@ void IN_MouseEvent (void)
 	for (i=0 ; i<5 ; i++)
 	{
 		if ( (mouseButtonState & (1<<i)) && !(mouseOldButtonState & (1<<i)) )
-			Key_Event (K_MOUSE1 + i, qTrue, Sys_Milliseconds());
+			Key_Event (K_MOUSE1 + i, true, Sys_Milliseconds());
 
 		if ( !(mouseButtonState & (1<<i)) && (mouseOldButtonState & (1<<i)) )
-				Key_Event (K_MOUSE1 + i, qFalse, Sys_Milliseconds());
+				Key_Event (K_MOUSE1 + i, false, Sys_Milliseconds());
 	}
 
 	mouseOldButtonState = mouseButtonState;
@@ -205,7 +205,7 @@ static void IN_DeactivateMouse( void )
 		return;
 
 	if (mouseActive) {
-		mouseActive = qFalse;
+		mouseActive = false;
 	}
 }
 static void IN_ActivateMouse( void )
@@ -217,7 +217,7 @@ static void IN_ActivateMouse( void )
 		mouseDeltaX = mouseDeltaY = 0; // don't spazz
 		_windowed_mouse = NULL;
 		old_windowed_mouse = 0;
-		mouseActive = qTrue;
+		mouseActive = true;
 	}
 
 }
@@ -349,26 +349,26 @@ void SDLGL_HandleEvents(void)
 			case SDL_ACTIVEEVENT: {
 				if ( event.active.state & SDL_APPACTIVE ) {
 					if ( event.active.gain ) {
-						IN_Activate(qTrue);
+						IN_Activate(true);
 					} else {
-						IN_Activate(qFalse);
+						IN_Activate(false);
 					}
 				}
 			}
 			case SDL_MOUSEBUTTONDOWN:
 				if (event.button.button == 4) {
 					keyq[keyq_head].key = K_MWHEELUP;
-					keyq[keyq_head].down = qTrue;
+					keyq[keyq_head].down = true;
 					keyq_head = (keyq_head + 1) & 63;
 					keyq[keyq_head].key = K_MWHEELUP;
-					keyq[keyq_head].down = qFalse;
+					keyq[keyq_head].down = false;
 					keyq_head = (keyq_head + 1) & 63;
 				} else if (event.button.button == 5) {
 					keyq[keyq_head].key = K_MWHEELDOWN;
-					keyq[keyq_head].down = qTrue;
+					keyq[keyq_head].down = true;
 					keyq_head = (keyq_head + 1) & 63;
 					keyq[keyq_head].key = K_MWHEELDOWN;
-					keyq[keyq_head].down = qFalse;
+					keyq[keyq_head].down = false;
 					keyq_head = (keyq_head + 1) & 63;
 				}
 				break;
@@ -386,13 +386,13 @@ void SDLGL_HandleEvents(void)
 					SDL_WM_ToggleFullScreen(sdlwnd);
 
 					if (sdlwnd->flags & SDL_FULLSCREEN) {
-						Cvar_SetValue( "vid_fullscreen", 1, qFalse );
+						Cvar_SetValue( "vid_fullscreen", 1, false );
 					} else {
-						Cvar_SetValue( "vid_fullscreen", 0, qFalse );
+						Cvar_SetValue( "vid_fullscreen", 0, false );
 					}
 
 					_fullscreen = Cvar_Exists( "vid_fullscreen" );
-					_fullscreen->modified = qFalse;	// we just changed it with SDL.
+					_fullscreen->modified = false;	// we just changed it with SDL.
 
 					break; /* ignore this key */
 				}
@@ -404,7 +404,7 @@ void SDLGL_HandleEvents(void)
 					SDL_WM_GrabInput((gm == SDL_GRAB_ON) ? SDL_GRAB_OFF : SDL_GRAB_ON);
 					gm = SDL_WM_GrabInput(SDL_GRAB_QUERY);
 					*/
-					Cvar_SetValue( "_windowed_mouse", (gm != SDL_GRAB_ON) ? /*1*/ 0 : /*0*/ 1, qFalse );
+					Cvar_SetValue( "_windowed_mouse", (gm != SDL_GRAB_ON) ? /*1*/ 0 : /*0*/ 1, false );
 					SDL_WM_GrabInput(gm != SDL_GRAB_ON ? SDL_GRAB_ON : SDL_GRAB_OFF);
 					break; /* ignore this key */
 				}
@@ -414,7 +414,7 @@ void SDLGL_HandleEvents(void)
 				int key = XLateKey(event.key.keysym.sym);
 				if (key) {
 					keyq[keyq_head].key = key;
-					keyq[keyq_head].down = qTrue;
+					keyq[keyq_head].down = true;
 					keyq_head = (keyq_head + 1) & 63;
 				}
 				break;
@@ -425,7 +425,7 @@ void SDLGL_HandleEvents(void)
 					key = XLateKey(event.key.keysym.sym);
 					if (key) {
 						keyq[keyq_head].key = key;
-						keyq[keyq_head].down = qFalse;
+						keyq[keyq_head].down = false;
 						keyq_head = (keyq_head + 1) & 63;
 					}
 				}
@@ -461,10 +461,10 @@ void SDLGL_HandleEvents(void)
 
         if (!_windowed_mouse->intVal) {
             /* ungrab the pointer */
-			isWindowGrabbed = qFalse;
+			isWindowGrabbed = false;
             SDL_WM_GrabInput(SDL_GRAB_OFF);
         } else {
-			isWindowGrabbed = qTrue;
+			isWindowGrabbed = true;
             /* grab the pointer */
             SDL_WM_GrabInput(SDL_GRAB_ON);
         }
@@ -581,10 +581,10 @@ void IN_Frame (void)
 	} else {
 		// Ungrab the mouse from window in case we are in the console or in a menu.
 		if (Key_GetDest() == KD_CONSOLE) {// || Key_GetDest() == KD_MENU) {
-			isWindowGrabbed = qFalse;	
+			isWindowGrabbed = false;	
 			SDL_WM_GrabInput(SDL_GRAB_OFF);
 		} else {
-			isWindowGrabbed = qTrue;
+			isWindowGrabbed = true;
 			SDL_WM_GrabInput(SDL_GRAB_ON);
 		}
 	}

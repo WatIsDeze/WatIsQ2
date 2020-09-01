@@ -174,7 +174,7 @@ void SV_Multicast (vec3_t origin, multiCast_t to)
 	qBool		reliable;
 	int			area1, area2;
 
-	reliable = qFalse;
+	reliable = false;
 
 	if ((to != MULTICAST_ALL_R) && (to != MULTICAST_ALL)) {
 		leafNum = CM_PointLeafnum (origin);
@@ -192,14 +192,14 @@ void SV_Multicast (vec3_t origin, multiCast_t to)
 	
 	switch (to) {
 	case MULTICAST_ALL_R:
-		reliable = qTrue;	// Intentional fallthrough
+		reliable = true;	// Intentional fallthrough
 	case MULTICAST_ALL:
 		leafNum = 0;
 		mask = NULL;
 		break;
 
 	case MULTICAST_PHS_R:
-		reliable = qTrue;	// Intentional fallthrough
+		reliable = true;	// Intentional fallthrough
 	case MULTICAST_PHS:
 		leafNum = CM_PointLeafnum (origin);
 		cluster = CM_LeafCluster (leafNum);
@@ -207,7 +207,7 @@ void SV_Multicast (vec3_t origin, multiCast_t to)
 		break;
 
 	case MULTICAST_PVS_R:
-		reliable = qTrue;	// Intentional fallthrough
+		reliable = true;	// Intentional fallthrough
 	case MULTICAST_PVS:
 		leafNum = CM_PointLeafnum (origin);
 		cluster = CM_LeafCluster (leafNum);
@@ -305,11 +305,11 @@ void SV_StartSound (vec3_t origin, edict_t *entity, int channel, int soundIndex,
 	// No PHS flag
 	if (channel & 8 || attenuation == ATTN_NONE) {
 		// If the sound doesn't attenuate, send it to everyone (global radio chatter, voiceovers, etc)
-		usePHS = qFalse;
+		usePHS = false;
 		channel &= 7;
 	}
 	else
-		usePHS = qTrue;
+		usePHS = true;
 
 	sendChan = (ent<<3) | (channel&7);
 
@@ -408,7 +408,7 @@ void SV_StartSound (vec3_t origin, edict_t *entity, int channel, int soundIndex,
 		if (flags & SND_ENT)			MSG_WriteShort (&sv.multiCast, sendChan);
 		if (flags & SND_POS)			MSG_WritePos (&sv.multiCast, origin);
 
-		SV_Unicast (client->edict, (channel & CHAN_RELIABLE)?qTrue:qFalse);
+		SV_Unicast (client->edict, (channel & CHAN_RELIABLE)?true:false);
 	}
 }
 
@@ -433,7 +433,7 @@ qBool SV_SendClientDatagram (svClient_t *client)
 	SV_BuildClientFrame (client);
 
 	MSG_Init (&msg, msgBuf, sizeof (msgBuf));
-	msg.allowOverflow = qTrue;
+	msg.allowOverflow = true;
 
 	// Send over all the relevant entityStateOld_t and the playerState_t
 	SV_WriteFrameToClient (client, &msg);
@@ -461,7 +461,7 @@ qBool SV_SendClientDatagram (svClient_t *client)
 	// Record the size for rate estimation
 	client->messageSize[sv.frameNum % RATE_MESSAGES] = msg.curSize;
 
-	return qTrue;
+	return true;
 }
 
 
@@ -485,7 +485,7 @@ static void SV_DemoCompleted (void)
 =======================
 SV_RateDrop
 
-Returns qTrue if the client is over its current
+Returns true if the client is over its current
 bandwidth estimation and should not be sent another packet
 =======================
 */
@@ -496,7 +496,7 @@ qBool SV_RateDrop (svClient_t *c)
 
 	// never drop over the loopback
 	if (c->netChan.remoteAddress.naType == NA_LOOPBACK)
-		return qFalse;
+		return false;
 
 	total=0;
 	for (i=0 ; i<RATE_MESSAGES ; i++)
@@ -505,10 +505,10 @@ qBool SV_RateDrop (svClient_t *c)
 	if (total > c->rate) {
 		c->surpressCount++;
 		c->messageSize[sv.frameNum % RATE_MESSAGES] = 0;
-		return qTrue;
+		return true;
 	}
 
-	return qFalse;
+	return false;
 }
 
 

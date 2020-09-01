@@ -59,47 +59,47 @@ static m_gloomOptionsMenu_t	m_gloomOptionsMenu;
 
 static void GlmAdvGasFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("glm_advgas", m_gloomOptionsMenu.advgas_toggle.curValue, qFalse);
+	cgi.Cvar_SetValue ("glm_advgas", m_gloomOptionsMenu.advgas_toggle.curValue, false);
 }
 
 static void GlmAdvStingerFireFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("glm_advstingfire", m_gloomOptionsMenu.advstingfire_toggle.curValue, qFalse);
+	cgi.Cvar_SetValue ("glm_advstingfire", m_gloomOptionsMenu.advstingfire_toggle.curValue, false);
 }
 
 static void GlmBlueStingerFireFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("glm_bluestingfire", m_gloomOptionsMenu.bluestingfire_toggle.curValue, qFalse);
+	cgi.Cvar_SetValue ("glm_bluestingfire", m_gloomOptionsMenu.bluestingfire_toggle.curValue, false);
 }
 
 static void GlmBlobTypeFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("glm_blobtype", m_gloomOptionsMenu.blobtype_list.curValue, qFalse);
+	cgi.Cvar_SetValue ("glm_blobtype", m_gloomOptionsMenu.blobtype_list.curValue, false);
 }
 
 static void GlmFlashPredFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("glm_flashpred", m_gloomOptionsMenu.flashpred_toggle.curValue, qFalse);
+	cgi.Cvar_SetValue ("glm_flashpred", m_gloomOptionsMenu.flashpred_toggle.curValue, false);
 }
 
 static void GlmFlWhiteFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("glm_flwhite", m_gloomOptionsMenu.flashwhite_toggle.curValue, qFalse);
+	cgi.Cvar_SetValue ("glm_flwhite", m_gloomOptionsMenu.flashwhite_toggle.curValue, false);
 }
 
 static void GlmForceCacheFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("glm_forcecache", m_gloomOptionsMenu.forcecache_toggle.curValue, qFalse);
+	cgi.Cvar_SetValue ("glm_forcecache", m_gloomOptionsMenu.forcecache_toggle.curValue, false);
 }
 
 static void GlmJumpPredFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("glm_jumppred", m_gloomOptionsMenu.jumppred_toggle.curValue, qFalse);
+	cgi.Cvar_SetValue ("glm_jumppred", m_gloomOptionsMenu.jumppred_toggle.curValue, false);
 }
 
 static void GlmClassDispFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("glm_showclass", m_gloomOptionsMenu.classdisplay_toggle.curValue, qFalse);
+	cgi.Cvar_SetValue ("glm_showclass", m_gloomOptionsMenu.classdisplay_toggle.curValue, false);
 }
 
 
@@ -110,31 +110,31 @@ GloomMenu_SetValues
 */
 static void GloomMenu_SetValues (void)
 {
-	cgi.Cvar_SetValue ("glm_advgas",		clamp (cgi.Cvar_GetIntegerValue ("glm_advgas"), 0, 1), qFalse);
+	cgi.Cvar_SetValue ("glm_advgas",		clamp (cgi.Cvar_GetIntegerValue ("glm_advgas"), 0, 1), false);
 	m_gloomOptionsMenu.advgas_toggle.curValue	= cgi.Cvar_GetIntegerValue ("glm_advgas");
 
-	cgi.Cvar_SetValue ("glm_advstingfire",		clamp (cgi.Cvar_GetIntegerValue ("glm_advstingfire"), 0, 1), qFalse);
+	cgi.Cvar_SetValue ("glm_advstingfire",		clamp (cgi.Cvar_GetIntegerValue ("glm_advstingfire"), 0, 1), false);
 	m_gloomOptionsMenu.advstingfire_toggle.curValue	= cgi.Cvar_GetIntegerValue ("glm_advstingfire");
 
-	cgi.Cvar_SetValue ("glm_bluestingfire",		clamp (cgi.Cvar_GetIntegerValue ("glm_bluestingfire"), 0, 1), qFalse);
+	cgi.Cvar_SetValue ("glm_bluestingfire",		clamp (cgi.Cvar_GetIntegerValue ("glm_bluestingfire"), 0, 1), false);
 	m_gloomOptionsMenu.bluestingfire_toggle.curValue	= cgi.Cvar_GetIntegerValue ("glm_bluestingfire");
 
-	cgi.Cvar_SetValue ("glm_blobtype",			clamp (cgi.Cvar_GetIntegerValue ("glm_blobtype"), 0, 1), qFalse);
+	cgi.Cvar_SetValue ("glm_blobtype",			clamp (cgi.Cvar_GetIntegerValue ("glm_blobtype"), 0, 1), false);
 	m_gloomOptionsMenu.blobtype_list.curValue		= cgi.Cvar_GetIntegerValue ("glm_blobtype");
 
-	cgi.Cvar_SetValue ("glm_flashpred",			clamp (cgi.Cvar_GetIntegerValue ("glm_flashpred"), 0, 1), qFalse);
+	cgi.Cvar_SetValue ("glm_flashpred",			clamp (cgi.Cvar_GetIntegerValue ("glm_flashpred"), 0, 1), false);
 	m_gloomOptionsMenu.flashpred_toggle.curValue	= cgi.Cvar_GetIntegerValue ("glm_flashpred");
 
-	cgi.Cvar_SetValue ("glm_flwhite",			clamp (cgi.Cvar_GetIntegerValue ("glm_flwhite"), 0, 1), qFalse);
+	cgi.Cvar_SetValue ("glm_flwhite",			clamp (cgi.Cvar_GetIntegerValue ("glm_flwhite"), 0, 1), false);
 	m_gloomOptionsMenu.flashwhite_toggle.curValue	= cgi.Cvar_GetIntegerValue ("glm_flwhite");
 
-	cgi.Cvar_SetValue ("glm_forcecache",		clamp (cgi.Cvar_GetIntegerValue ("glm_forcecache"), 0, 1), qFalse);
+	cgi.Cvar_SetValue ("glm_forcecache",		clamp (cgi.Cvar_GetIntegerValue ("glm_forcecache"), 0, 1), false);
 	m_gloomOptionsMenu.forcecache_toggle.curValue	= cgi.Cvar_GetIntegerValue ("glm_forcecache");
 
-	cgi.Cvar_SetValue ("glm_jumppred",			clamp (cgi.Cvar_GetIntegerValue ("glm_jumppred"), 0, 1), qFalse);
+	cgi.Cvar_SetValue ("glm_jumppred",			clamp (cgi.Cvar_GetIntegerValue ("glm_jumppred"), 0, 1), false);
 	m_gloomOptionsMenu.jumppred_toggle.curValue		= cgi.Cvar_GetIntegerValue ("glm_jumppred");
 
-	cgi.Cvar_SetValue ("glm_showclass",			clamp (cgi.Cvar_GetIntegerValue ("glm_showclass"), 0, 1), qFalse);
+	cgi.Cvar_SetValue ("glm_showclass",			clamp (cgi.Cvar_GetIntegerValue ("glm_showclass"), 0, 1), false);
 	m_gloomOptionsMenu.classdisplay_toggle.curValue	= cgi.Cvar_GetIntegerValue ("glm_showclass");
 }
 
@@ -262,7 +262,7 @@ static void GloomMenu_Init (void)
 
 	UI_AddItem (&m_gloomOptionsMenu.frameWork,		&m_gloomOptionsMenu.back_action);
 
-	UI_FinishFramework (&m_gloomOptionsMenu.frameWork, qTrue);
+	UI_FinishFramework (&m_gloomOptionsMenu.frameWork, true);
 }
 
 

@@ -59,55 +59,55 @@ static m_inputMenu_t	m_inputMenu;
 
 static void AlwaysRunFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("cl_run", m_inputMenu.always_run_toggle.curValue, qFalse);
+	cgi.Cvar_SetValue ("cl_run", m_inputMenu.always_run_toggle.curValue, false);
 }
 
 static void JoystickFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("in_joystick", m_inputMenu.joystick_toggle.curValue, qFalse);
+	cgi.Cvar_SetValue ("in_joystick", m_inputMenu.joystick_toggle.curValue, false);
 }
 
 static void UISensFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("ui_sensitivity", m_inputMenu.ui_sensitivity_slider.curValue / 2.0F, qFalse);
+	cgi.Cvar_SetValue ("ui_sensitivity", m_inputMenu.ui_sensitivity_slider.curValue / 2.0F, false);
 	m_inputMenu.ui_sensitivity_amount.generic.name = cgi.Cvar_GetStringValue ("ui_sensitivity");
 }
 
 static void SensitivityFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("sensitivity", m_inputMenu.sensitivity_slider.curValue / 2.0F, qFalse);
+	cgi.Cvar_SetValue ("sensitivity", m_inputMenu.sensitivity_slider.curValue / 2.0F, false);
 	m_inputMenu.sensitivity_amount.generic.name = cgi.Cvar_GetStringValue ("sensitivity");
 }
 
 static void MouseAccelFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("m_accel", m_inputMenu.maccel_list.curValue, qFalse);
+	cgi.Cvar_SetValue ("m_accel", m_inputMenu.maccel_list.curValue, false);
 }
 
 static void InvertMouseFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("m_pitch", (cgi.Cvar_GetFloatValue ("m_pitch")) * -1, qFalse);
+	cgi.Cvar_SetValue ("m_pitch", (cgi.Cvar_GetFloatValue ("m_pitch")) * -1, false);
 	m_inputMenu.invert_mouse_toggle.curValue		= (!!(cgi.Cvar_GetFloatValue ("m_pitch") < 0));
 }
 
 static void AutoSensFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("autosensitivity", m_inputMenu.autosensitivity_toggle.curValue, qFalse);
+	cgi.Cvar_SetValue ("autosensitivity", m_inputMenu.autosensitivity_toggle.curValue, false);
 }
 
 static void LookspringFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("lookspring", m_inputMenu.lookspring_toggle.curValue, qFalse);
+	cgi.Cvar_SetValue ("lookspring", m_inputMenu.lookspring_toggle.curValue, false);
 }
 
 static void LookstrafeFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("lookstrafe", m_inputMenu.lookstrafe_toggle.curValue, qFalse);
+	cgi.Cvar_SetValue ("lookstrafe", m_inputMenu.lookstrafe_toggle.curValue, false);
 }
 
 static void FreeLookFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("freelook", m_inputMenu.freelook_toggle.curValue, qFalse);
+	cgi.Cvar_SetValue ("freelook", m_inputMenu.freelook_toggle.curValue, false);
 }
 
 
@@ -118,10 +118,10 @@ InputMenu_SetValues
 */
 static void InputMenu_SetValues (void)
 {
-	cgi.Cvar_SetValue ("cl_run",				clamp (cgi.Cvar_GetIntegerValue ("cl_run"), 0, 1), qFalse);
+	cgi.Cvar_SetValue ("cl_run",				clamp (cgi.Cvar_GetIntegerValue ("cl_run"), 0, 1), false);
 	m_inputMenu.always_run_toggle.curValue		= cgi.Cvar_GetIntegerValue ("cl_run");
 
-	cgi.Cvar_SetValue ("in_joystick",			clamp (cgi.Cvar_GetIntegerValue ("in_joystick"), 0, 1), qFalse);
+	cgi.Cvar_SetValue ("in_joystick",			clamp (cgi.Cvar_GetIntegerValue ("in_joystick"), 0, 1), false);
 	m_inputMenu.joystick_toggle.curValue		= cgi.Cvar_GetIntegerValue ("in_joystick");
 
 	m_inputMenu.ui_sensitivity_slider.curValue		= (cgi.Cvar_GetFloatValue ("ui_sensitivity")) * 2;
@@ -129,21 +129,21 @@ static void InputMenu_SetValues (void)
 	m_inputMenu.sensitivity_slider.curValue		= (cgi.Cvar_GetFloatValue ("sensitivity")) * 2;
 	m_inputMenu.sensitivity_amount.generic.name	= cgi.Cvar_GetStringValue ("sensitivity");
 
-	cgi.Cvar_SetValue ("m_accel",					clamp (cgi.Cvar_GetIntegerValue ("m_accel"), 0, 2), qFalse);
+	cgi.Cvar_SetValue ("m_accel",					clamp (cgi.Cvar_GetIntegerValue ("m_accel"), 0, 2), false);
 	m_inputMenu.maccel_list.curValue				= cgi.Cvar_GetIntegerValue ("m_accel");
 
 	m_inputMenu.invert_mouse_toggle.curValue		= (!!(cgi.Cvar_GetFloatValue ("m_pitch") < 0));
 
-	cgi.Cvar_SetValue ("autosensitivity",			clamp (cgi.Cvar_GetIntegerValue ("autosensitivity"), 0, 1), qFalse);
+	cgi.Cvar_SetValue ("autosensitivity",			clamp (cgi.Cvar_GetIntegerValue ("autosensitivity"), 0, 1), false);
 	m_inputMenu.autosensitivity_toggle.curValue	= cgi.Cvar_GetIntegerValue ("autosensitivity");
 
-	cgi.Cvar_SetValue ("lookspring",			clamp (cgi.Cvar_GetIntegerValue ("lookspring"), 0, 1), qFalse);
+	cgi.Cvar_SetValue ("lookspring",			clamp (cgi.Cvar_GetIntegerValue ("lookspring"), 0, 1), false);
 	m_inputMenu.lookspring_toggle.curValue		= cgi.Cvar_GetIntegerValue ("lookspring");
 
-	cgi.Cvar_SetValue ("lookstrafe",			clamp (cgi.Cvar_GetIntegerValue ("lookstrafe"), 0, 1), qFalse);
+	cgi.Cvar_SetValue ("lookstrafe",			clamp (cgi.Cvar_GetIntegerValue ("lookstrafe"), 0, 1), false);
 	m_inputMenu.lookstrafe_toggle.curValue		= cgi.Cvar_GetIntegerValue ("lookstrafe");
 
-	cgi.Cvar_SetValue ("freelook",				clamp (cgi.Cvar_GetIntegerValue ("freelook"), 0, 1), qFalse);
+	cgi.Cvar_SetValue ("freelook",				clamp (cgi.Cvar_GetIntegerValue ("freelook"), 0, 1), false);
 	m_inputMenu.freelook_toggle.curValue		= cgi.Cvar_GetIntegerValue ("freelook");
 }
 
@@ -279,7 +279,7 @@ static void InputMenu_Init (void)
 
 	UI_AddItem (&m_inputMenu.frameWork,		&m_inputMenu.back_action);
 
-	UI_FinishFramework (&m_inputMenu.frameWork, qTrue);
+	UI_FinishFramework (&m_inputMenu.frameWork, true);
 }
 
 

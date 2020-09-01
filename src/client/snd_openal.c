@@ -168,7 +168,7 @@ static LPALCCAPTURESAMPLES		qalcCaptureSamples;
 ===========
 ALSnd_CheckForError
 
-Return qTrue if there was an error.
+Return true if there was an error.
 ===========
 */
 static inline const char *GetALErrorString (ALenum error)
@@ -195,10 +195,10 @@ qBool ALSnd_CheckForError (char *where)
 			Com_Printf (0, " %s\n", where);
 		else
 			Com_Printf (0, "\n");
-		return qFalse;
+		return false;
 	}
 
-	return qTrue;
+	return true;
 }
 
 
@@ -518,8 +518,8 @@ static void ALSnd_IssuePlaysounds (void)
 			Com_Printf (0, "Issue %i\n", ps->beginTime);
 
 		// Spatialize
-		ch->alLooping = qFalse;
-		ch->alRawStream = qFalse;
+		ch->alLooping = false;
+		ch->alRawStream = false;
 		ch->alVolume = ps->volume * (1.0f/255.0f);
 		ch->entNum = ps->entNum;
 		ch->entChannel = ps->entChannel;
@@ -565,8 +565,8 @@ channel_t *ALSnd_RawStart (void)
 
 	// Fill source values
 	ch->psType = PSND_LOCAL;
-	ch->alLooping = qFalse;
-	ch->alRawStream = qTrue;
+	ch->alLooping = false;
+	ch->alRawStream = true;
 	ch->alVolume = 1;
 	ch->sfx = NULL;
 
@@ -623,8 +623,8 @@ void ALSnd_RawStop (channel_t *rawChannel)
 		return;
 
 	qalSourceStop (rawChannel->alSourceNum);
-	rawChannel->alRawPlaying = qFalse;
-	rawChannel->alRawStream = qFalse;
+	rawChannel->alRawPlaying = false;
+	rawChannel->alRawStream = false;
 }
 
 
@@ -675,7 +675,7 @@ static void ALSnd_RawUpdate (channel_t *rawChannel)
 	if (state == AL_STOPPED) {
 		if (processed) {
 			qalSourcePlay (rawChannel->alSourceNum);
-			rawChannel->alRawPlaying = qTrue;
+			rawChannel->alRawPlaying = true;
 		}
 		else if (!rawChannel->alRawPlaying)
 			ALSnd_RawStop (rawChannel);
@@ -745,10 +745,10 @@ static void ALSnd_AddLoopSounds (void)
 		if (!ch)
 			return;
 
-		ch->alLooping = qTrue;
+		ch->alLooping = true;
 		ch->alLoopEntNum = ent->number;
 		ch->alLoopFrame = snd_audioAL.frameCount;
-		ch->alRawStream = qFalse;
+		ch->alRawStream = false;
 		ch->alVolume = 1;
 		ch->psType = PSND_ENTITY;
 
@@ -815,11 +815,11 @@ void ALSnd_Update (refDef_t *rd)
 
 	// Update doppler
 	if (al_dopplerFactor->modified) {
-		al_dopplerFactor->modified = qFalse;
+		al_dopplerFactor->modified = false;
 		qalDopplerFactor (al_dopplerFactor->floatVal);
 	}
 	if (al_dopplerVelocity->modified) {
-		al_dopplerVelocity->modified = qFalse;
+		al_dopplerVelocity->modified = false;
 		qalDopplerVelocity (al_dopplerVelocity->floatVal);
 	}
 
@@ -911,7 +911,7 @@ qBool ALSnd_Init (void)
 	Com_Printf (0, "...LoadLibrary (\"%s\")\n", libName);
 	if (!(snd_alLibrary = AL_LOADLIB (libName))) {
 		Com_Printf (PRNT_ERROR, "failed!\n");
-		return qFalse;
+		return false;
 	}
 
 	// Create the QAL bindings
@@ -1029,7 +1029,7 @@ qBool ALSnd_Init (void)
 	Com_Printf (0, "...opening device\n");
 	if (!al_hDevice) {
 		Com_Printf (PRNT_ERROR, "failed!\n");
-		return qFalse;
+		return false;
 	}
 
 	// Create the context and make it current
@@ -1038,14 +1038,14 @@ qBool ALSnd_Init (void)
 	if (!al_hALC) {
 		Com_Printf (PRNT_ERROR, "failed!\n");
 		ALSnd_Shutdown ();
-		return qFalse;
+		return false;
 	}
 
 	Com_Printf (0, "...making current\n");
 	if (!qalcMakeContextCurrent (al_hALC)) {
 		Com_Printf (PRNT_ERROR, "failed!\n");
 		ALSnd_Shutdown ();
-		return qFalse;
+		return false;
 	}
 
 	// Generate sources
@@ -1060,7 +1060,7 @@ qBool ALSnd_Init (void)
 	if (!snd_audioAL.numChannels) {
 		Com_Printf (PRNT_ERROR, "failed!\n");
 		ALSnd_Shutdown ();
-		return qFalse;
+		return false;
 	}
 	Com_Printf (0, "...generated %i sources\n", snd_audioAL.numChannels);
 
@@ -1069,8 +1069,8 @@ qBool ALSnd_Init (void)
 	qalDopplerFactor (al_dopplerFactor->floatVal);
 	qalDopplerVelocity (al_dopplerVelocity->floatVal);
 
-	al_dopplerFactor->modified = qFalse;
-	al_dopplerVelocity->modified = qFalse;
+	al_dopplerFactor->modified = false;
+	al_dopplerVelocity->modified = false;
 
 	// Query some info
 	snd_audioAL.extensionString = qalGetString (AL_EXTENSIONS);
@@ -1085,7 +1085,7 @@ qBool ALSnd_Init (void)
 	Com_Printf (0, "AL_VERSION: %s\n", snd_audioAL.versionString);
 	Com_Printf (0, "AL_EXTENSIONS: %s\n", snd_audioAL.extensionString);
 	Com_Printf (0, "ALC_DEVICE_SPECIFIER: %s\n", snd_audioAL.deviceName);
-	return qTrue;
+	return true;
 }
 
 

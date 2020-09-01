@@ -217,7 +217,7 @@ static void R_UpdateCvars (void)
 {
 	// Draw buffer stuff
 	if (gl_drawbuffer->modified) {
-		gl_drawbuffer->modified = qFalse;
+		gl_drawbuffer->modified = false;
 		if (!ri.cameraSeparation || !ri.config.stereoEnabled) {
 			if (!Q_stricmp (gl_drawbuffer->string, "GL_FRONT"))
 				qglDrawBuffer (GL_FRONT);
@@ -228,7 +228,7 @@ static void R_UpdateCvars (void)
 
 	// Texturemode stuff
 	if (gl_texturemode->modified)
-		GL_TextureMode (qFalse, qFalse);
+		GL_TextureMode (false, false);
 
 	// Update anisotropy
 	if (r_ext_maxAnisotropy->modified)
@@ -238,9 +238,9 @@ static void R_UpdateCvars (void)
 	if (r_defaultFont->modified)
 		R_CheckFont ();
 	if (r_fontScale->modified) {
-		r_fontScale->modified = qFalse;
+		r_fontScale->modified = false;
 		if (r_fontScale->floatVal <= 0)
-			Cvar_VariableSetValue (r_fontScale, 1, qTrue);
+			Cvar_VariableSetValue (r_fontScale, 1, true);
 	}
 
 	// Gamma ramp
@@ -249,21 +249,21 @@ static void R_UpdateCvars (void)
 
 	// Clamp zFar
 	if (r_zFarAbs->modified) {
-		r_zFarAbs->modified = qFalse;
+		r_zFarAbs->modified = false;
 		if (r_zFarAbs->intVal < 0)
-			Cvar_VariableSetValue (r_zFarAbs, 0, qTrue);
+			Cvar_VariableSetValue (r_zFarAbs, 0, true);
 	}
 	if (r_zFarMin->modified) {
-		r_zFarMin->modified = qFalse;
+		r_zFarMin->modified = false;
 		if (r_zFarMin->intVal <= 0)
-			Cvar_VariableSetValue (r_zFarMin, 1, qTrue);
+			Cvar_VariableSetValue (r_zFarMin, 1, true);
 	}
 
 	// Clamp zNear
 	if (r_zNear->modified) {
-		r_zNear->modified = qFalse;
+		r_zNear->modified = false;
 		if (r_zNear->floatVal < 0.1f)
-			Cvar_VariableSetValue (r_zNear, 4, qTrue);
+			Cvar_VariableSetValue (r_zNear, 4, true);
 	}
 }
 
@@ -290,7 +290,7 @@ void R_RenderToList (refDef_t *rd, meshList_t *list)
 		r_currentList->numMeshes[i] = 0;
 	for (i=0 ; i<MAX_ADDITIVE_KEYS ; i++)
 		r_currentList->numAdditiveMeshes[i] = 0;
-	r_currentList->skyDrawn = qFalse;
+	r_currentList->skyDrawn = false;
 
 	RB_SetupGL3D ();
 	R_SetupFrustum ();
@@ -301,7 +301,7 @@ void R_RenderToList (refDef_t *rd, meshList_t *list)
 	R_AddPolysToList ();
 	R_AddEntitiesToList ();
 	R_SortMeshList ();
-	R_DrawMeshList (qFalse);
+	R_DrawMeshList (false);
 	R_DrawMeshOutlines ();
 	RB_DrawNullModelList ();
 	RB_DrawDLights ();
@@ -328,8 +328,8 @@ void R_RenderScene (refDef_t *rd)
 		Com_Error (ERR_DROP, "R_RenderScene: NULL worldmodel");
 
 	ri.scn.zFar = 0;
-	ri.scn.mirrorView = qFalse;
-	ri.scn.portalView = qFalse;
+	ri.scn.mirrorView = false;
+	ri.scn.portalView = false;
 
 	if (gl_finish->intVal)
 		qglFinish ();
@@ -356,14 +356,14 @@ void R_BeginFrame (float cameraSeparation)
 
 	// Frame logging
 	if (gl_log->modified) {
-		gl_log->modified = qFalse;
+		gl_log->modified = false;
 		QGL_ToggleLogging ();
 	}
 	QGL_LogBeginFrame ();
 
 	// Debugging
 	if (qgl_debug->modified) {
-		qgl_debug->modified = qFalse;
+		qgl_debug->modified = false;
 		QGL_ToggleDebug ();
 	}
 
@@ -741,7 +741,7 @@ void R_BeginRegistration (void)
 	ri.reg.matsTouched = 0;
 
 	// Begin sub-system registration
-	ri.reg.inSequence = qTrue;
+	ri.reg.inSequence = true;
 	ri.reg.registerFrame++;
 
 	R_BeginImageRegistration ();
@@ -762,7 +762,7 @@ void R_EndRegistration (void)
 	R_EndMaterialRegistration ();	// Register first so programs and images are touched
 	R_EndImageRegistration ();
 
-	ri.reg.inSequence = qFalse;
+	ri.reg.inSequence = false;
 
 	// Print registration info
 	Com_Printf (PRNT_CONSOLE, "Registration sequence completed...\n");

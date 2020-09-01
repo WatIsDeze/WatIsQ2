@@ -49,7 +49,7 @@ static void AddressBook_SaveChanges (void)
 	int		i;
 
 	for (i=0 ; i<MAX_ADDRBOOK_SAVES ; i++)
-		cgi.Cvar_Set (Q_VarArgs ("adr%d", i), m_addressBookMenu.fields[i].buffer, qFalse);
+		cgi.Cvar_Set (Q_VarArgs ("adr%d", i), m_addressBookMenu.fields[i].buffer, false);
 }
 
 
@@ -93,7 +93,7 @@ static void AddrBookMenu_Init (void)
 
 	UI_AddItem (&m_addressBookMenu.frameWork,			&m_addressBookMenu.back_action);
 
-	UI_FinishFramework (&m_addressBookMenu.frameWork, qTrue);
+	UI_FinishFramework (&m_addressBookMenu.frameWork, true);
 }
 
 

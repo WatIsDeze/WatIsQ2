@@ -32,7 +32,7 @@ Load the skin, icon, and model for a client
 */
 void CG_ParseClientinfo (int player)
 {
-	cg.gloomCheckClass = (cg.playerNum == player) ? qTrue : qFalse;
+	cg.gloomCheckClass = (cg.playerNum == player) ? true : false;
 
 	CG_LoadClientinfo (&cg.clientInfo[player], cg.configStrings[player+CS_PLAYERSKINS]);
 }
@@ -103,7 +103,7 @@ void CG_ParseConfigString (int num, char *str)
 ==============================================================
 */
 
-static qBool	in_parseSequence = qFalse;
+static qBool	in_parseSequence = false;
 
 /*
 ==============
@@ -114,7 +114,7 @@ Called by the client BEFORE all server messages have been parsed
 */
 void CG_StartServerMessage (void)
 {
-	in_parseSequence = qTrue;
+	in_parseSequence = true;
 }
 
 
@@ -127,7 +127,7 @@ Called by the client AFTER all server messages have been parsed
 */
 void CG_EndServerMessage (int realTime)
 {
-	in_parseSequence = qFalse;
+	in_parseSequence = false;
 
 	cg.realTime = realTime;
 
@@ -141,7 +141,7 @@ void CG_EndServerMessage (int realTime)
 CG_ParseServerMessage
 
 Parses command operations known to the game dll
-Returns qTrue if the message was parsed
+Returns true if the message was parsed
 ==============
 */
 qBool CG_ParseServerMessage (int command)
@@ -149,29 +149,29 @@ qBool CG_ParseServerMessage (int command)
 	switch (command) {
 	case SVC_CENTERPRINT:
 		SCR_ParseCenterPrint ();
-		return qTrue;
+		return true;
 
 	case SVC_INVENTORY:
 		Inv_ParseInventory ();
-		return qTrue;
+		return true;
 
 	case SVC_LAYOUT:
 		HUD_CopyLayout ();
-		return qTrue;
+		return true;
 
 	case SVC_MUZZLEFLASH:
 		CG_ParseMuzzleFlash ();
-		return qTrue;
+		return true;
 
 	case SVC_MUZZLEFLASH2:
 		CG_ParseMuzzleFlash2 ();
-		return qTrue;
+		return true;
 
 	case SVC_TEMP_ENTITY:
 		CG_ParseTempEnt ();
-		return qTrue;
+		return true;
 
 	default:
-		return qFalse;
+		return false;
 	}
 }

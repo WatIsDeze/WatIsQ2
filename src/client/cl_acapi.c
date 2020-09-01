@@ -68,30 +68,30 @@ CL_ACAPI_Init
 */
 qBool CL_ACAPI_Init (void)
 {
-	qBool				updated = qFalse;
+	qBool				updated = false;
 	static FNINIT		init;
 
 	// Already loaded, just re-initialize
 	if (acex) {
 		acex = (acExport_t *)init ();
-		return (acex) ? qTrue : qFalse;
+		return (acex) ? true : false;
 	}
 
 reInit:
 	cl_acLibrary = AC_LOADLIB ("anticheat");
 	if (!cl_acLibrary)
-		return qFalse;
+		return false;
 
 	init = (FNINIT)AC_GPA ("Initialize");
 	acex = (acExport_t *)init ();
 	if (!updated && !acex) {
-		updated = qTrue;
+		updated = true;
 		AC_FREELIB (cl_acLibrary);
 		cl_acLibrary = NULL;
 		goto reInit;
 	}
 
-	return (acex) ? qTrue : qFalse;
+	return (acex) ? true : false;
 }
 
 #endif // CL_ANTICHEAT

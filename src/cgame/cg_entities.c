@@ -26,7 +26,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 cgEntity_t		cg_entityList[MAX_CS_EDICTS];
 entityState_t	cg_parseEntities[MAX_PARSE_ENTITIES];
 
-static qBool	cg_inFrameSequence = qFalse;
+static qBool	cg_inFrameSequence = false;
 
 /*
 ==========================================================================
@@ -51,7 +51,7 @@ void CG_BeginFrameSequence (frame_t frame)
 	cg.oldFrame = cg.frame;
 	cg.frame = frame;
 
-	cg_inFrameSequence = qTrue;
+	cg_inFrameSequence = true;
 }
 
 
@@ -235,7 +235,7 @@ static void CG_FootStep (entityState_t *ent)
 	struct sfx_s	*sound;
 
 	Vec3Set (end, ent->origin[0], ent->origin[1], ent->origin[2]-64);
-	CG_PMTrace (&tr, ent->origin, NULL, NULL, end, qFalse);
+	CG_PMTrace (&tr, ent->origin, NULL, NULL, end, false);
 
 	if (!tr.surface || !tr.surface->name || !tr.surface->name[0]) {
 		sound = cgMedia.sfx.steps.standard[rand () & 3];
@@ -337,7 +337,7 @@ void CG_EndFrameSequence (int numEntities)
 		return;
 	}
 
-	cg_inFrameSequence = qFalse;
+	cg_inFrameSequence = false;
 
 	// Clamp time
 	cg.netTime = clamp (cg.netTime, cg.frame.serverTime - 100, cg.frame.serverTime);
@@ -354,9 +354,9 @@ void CG_EndFrameSequence (int numEntities)
 
 	// Check if areaBits changed
 	if (memcmp(cg.oldFrame.areaBits, cg.frame.areaBits, sizeof(cg.frame.areaBits)) == 0)
-		cg.oldAreaBits = qTrue;
+		cg.oldAreaBits = true;
 	else
-		cg.oldAreaBits = qFalse;
+		cg.oldAreaBits = false;
 
 	// Build a list of collision solids
 	CG_BuildSolidList ();
@@ -441,7 +441,7 @@ void CG_AddPacketEntities (void)
 
 	memset (&ent, 0, sizeof (ent));
 
-	cg.thirdPerson = qFalse;
+	cg.thirdPerson = false;
 	for (pNum=0 ; pNum<cg.frame.numEntities ; pNum++) {
 		state = &cg_parseEntities[(cg.frame.parseEntities+pNum)&(MAX_PARSEENTITIES_MASK)];
 		cent = &cg_entityList[state->number];
@@ -449,8 +449,8 @@ void CG_AddPacketEntities (void)
 		effects = state->effects;
 		ent.flags = state->renderFx;
 
-		isSelf = isPred = qFalse;
-		isDrawn = qTrue;
+		isSelf = isPred = false;
+		isDrawn = true;
 
 		// Set frame
 		if (effects & EF_ANIM01)
@@ -499,7 +499,7 @@ void CG_AddPacketEntities (void)
 
 		// Is it me?
 		if (state->number == cg.playerNum+1) {
-			isSelf = qTrue;
+			isSelf = true;
 
 			if (cl_predict->intVal
 			&& !(cg.frame.playerState.pMove.pmFlags & PMF_NO_PREDICTION)
@@ -515,7 +515,7 @@ void CG_AddPacketEntities (void)
 					ent.origin[2] -= cg.predicted.step * (150 - delta) / 150;
 
 				Vec3Copy (ent.origin, ent.oldOrigin);
-				isPred = qTrue;
+				isPred = true;
 			}
 		}
 
@@ -559,7 +559,7 @@ void CG_AddPacketEntities (void)
 				ent.frame + ((ent.frame * 0.1f) * (rand () & 1)),
 				ent.frame + ((ent.frame * 0.1f) * (rand () & 1)),
 				PT_BEAM,						0,
-				0,								qFalse,
+				0,								false,
 				PART_STYLE_BEAM,
 				0);
 
@@ -615,7 +615,7 @@ void CG_AddPacketEntities (void)
 					}
 					else if (glm_advstingfire->intVal) {
 						// Stinger fire
-						CG_GloomStingerFire (cent->lerpOrigin, ent.origin, 25 + (frand () * 15), qTrue);
+						CG_GloomStingerFire (cent->lerpOrigin, ent.origin, 25 + (frand () * 15), true);
 					}
 
 					// Skip the original lighting/trail effects
@@ -636,7 +636,7 @@ void CG_AddPacketEntities (void)
 				// Blob model
 				else if (!Q_stricmp ((char *)ent.model, "models/objects/tlaser/tris.md2")) {
 					CG_GloomBlobTip (cent->lerpOrigin, ent.origin);
-					isDrawn = qFalse;
+					isDrawn = false;
 				}
 
 				// ST/Stinger gas
@@ -664,19 +664,19 @@ void CG_AddPacketEntities (void)
 				// Ugly phalanx tip
 				if (!Q_stricmp ((char *)ent.model, "sprites/s_photon.sp2")) {
 					CG_PhalanxTip (cent->lerpOrigin, ent.origin);
-					isDrawn = qFalse;
+					isDrawn = false;
 				}
 			}
 
 			// Ugly model-based blaster tip
 			if (!Q_stricmp ((char *)ent.model, "models/objects/laser/tris.md2")) {
 				CG_BlasterTip (cent->lerpOrigin, ent.origin);
-				isDrawn = qFalse;
+				isDrawn = false;
 			}
 
 			// Don't draw the BFG sprite
 			if (effects & EF_BFG && Q_WildcardMatch ("sprites/s_bfg*.sp2", (char *)ent.model, 1))
-				isDrawn = qFalse;
+				isDrawn = false;
 		}
 
 		// Generically translucent
@@ -789,7 +789,7 @@ void CG_AddPacketEntities (void)
 				cg.thirdPerson = (state->modelIndex != 0 && cg.frame.playerState.pMove.pmType != PMT_SPECTATOR);
 			}
 			else {
-				cg.thirdPerson = qFalse;
+				cg.thirdPerson = false;
 			}
 
 			if (cg.thirdPerson && cg.cameraTrans > 0) {
@@ -985,7 +985,7 @@ void CG_AddPacketEntities (void)
 							case GLM_STINGER:
 							case GLM_GUARDIAN:
 							case GLM_STALKER:
-								flPred = qFalse;
+								flPred = false;
 								break;
 
 							case GLM_ENGINEER:
@@ -996,7 +996,7 @@ void CG_AddPacketEntities (void)
 							case GLM_COMMANDO:
 							case GLM_EXTERM:
 							case GLM_MECH:
-								flPred = qTrue;
+								flPred = true;
 								break;
 						}
 						if (glm_flashpred->intVal && flPred && flPredLastTime != cg.realTime) {
@@ -1132,10 +1132,10 @@ void CG_AddPacketEntities (void)
 		}
 done:
 		if (cent->muzzleOn) {
-			cent->muzzleOn = qFalse;
+			cent->muzzleOn = false;
 			cent->muzzType = -1;
-			cent->muzzSilenced = qFalse;
-			cent->muzzVWeap = qFalse;
+			cent->muzzSilenced = false;
+			cent->muzzVWeap = false;
 		}
 		Vec3Copy (ent.origin, cent->lerpOrigin);
 	}

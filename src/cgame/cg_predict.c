@@ -144,13 +144,13 @@ static void CG_ClipMoveToEntities (vec3_t start, vec3_t mins, vec3_t maxs, vec3_
 			trace.ent = (struct edict_s *)ent;
 			if (out->startSolid) {
 				*out = trace;
-				out->startSolid = qTrue;
+				out->startSolid = true;
 			}
 			else
 				*out = trace;
 		}
 		else if (trace.startSolid)
-			out->startSolid = qTrue;
+			out->startSolid = true;
 	}
 }
 

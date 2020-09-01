@@ -160,7 +160,7 @@ static void DMFlagCallback (void *self)
 	}
 
 setvalue:
-	cgi.Cvar_SetValue ("dmflags", flags, qFalse);
+	cgi.Cvar_SetValue ("dmflags", flags, false);
 
 	Q_snprintfz (mDMFlagsStatusbar, sizeof (mDMFlagsStatusbar), "dmflags = %d", flags);
 }
@@ -372,7 +372,7 @@ static void DMFlagsMenu_Init (void)
 	DMFlagCallback (0);
 
 	m_dMFlagsMenu.frameWork.statusBar = mDMFlagsStatusbar;
-	UI_FinishFramework (&m_dMFlagsMenu.frameWork, qTrue);
+	UI_FinishFramework (&m_dMFlagsMenu.frameWork, true);
 }
 
 

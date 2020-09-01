@@ -89,10 +89,10 @@ qBool Matrix4_Compare (mat4x4_t a, mat4x4_t b)
 
 	for (i=0 ; i<16 ; i++) {
 		if (a[i] != b[i])
-			return qFalse;
+			return false;
 	}
 
-	return qTrue;
+	return true;
 }
 
 

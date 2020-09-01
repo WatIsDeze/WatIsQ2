@@ -73,7 +73,7 @@ void CG_GloomBlobTip (vec3_t start, vec3_t end)
 			0.9f,								-15,
 			3.5f + (frand () * 4),				3.5f + (frand () * 2.5f),
 			PT_FLAREGLOW,						PF_SCALED|PF_ALPHACOLOR,
-			0,									qFalse,
+			0,									false,
 			PART_STYLE_QUAD,
 			0);
 	}
@@ -102,7 +102,7 @@ void CG_GloomDroneEffect (vec3_t org, vec3_t dir)
 			1.0f,								1.0f,
 			12 + crand () - (4.5f * i),
 			DT_DRONE_SPIT_GLOW,					DF_ALPHACOLOR,
-			0,									qFalse,
+			0,									false,
 			0,									frand () * 360);
 	}
 
@@ -127,7 +127,7 @@ void CG_GloomDroneEffect (vec3_t org, vec3_t dir)
 			1.0f,								-1.0f / (0.5f + (frand () * 0.3f)),
 			7 + crand (),						3 + crand (),
 			PT_FLAREGLOW,						PF_SCALED|PF_GRAVITY|PF_ALPHACOLOR|PF_NOCLOSECULL,
-			pBounceThink,						qTrue,
+			pBounceThink,						true,
 			PART_STYLE_QUAD,
 			0);
 	}
@@ -166,7 +166,7 @@ void CG_GloomEmberTrail (vec3_t start, vec3_t end)
 			1.0f,								-3.5f + (crand () * 0.1f),
 			10 + (crand () * 5),				70 + (crand () * 10),
 			PT_EXPLO1 + (rand () % 6),			PF_ALPHACOLOR,
-			0,									qFalse,
+			0,									false,
 			PART_STYLE_QUAD,
 			crand () * 12);
 
@@ -230,7 +230,7 @@ void CG_GloomFlareTrail (vec3_t start, vec3_t end)
 				0.3f + (frand () * 0.1f),		-1.0f / (1.5f + (cg.smokeLingerScale * 5.0f) + (crand () * 0.2f)),
 				10 + (crand () * 5),			30 + (crand () * 5),
 				pRandSmoke (),					PF_SHADE,
-				pSmokeThink,					qTrue,
+				pSmokeThink,					true,
 				PART_STYLE_QUAD,
 				frand () * 360);
 		}
@@ -265,7 +265,7 @@ void CG_GloomGasEffect (vec3_t origin)
 		0.35f,							-1.0f / (5.1f + (frand () * 0.2f)),
 		30 + (frand () * 10),			300 + (crand () * 50),
 		pRandSmoke (),					PF_SHADE,
-		pSmokeThink,					qTrue,
+		pSmokeThink,					true,
 		PART_STYLE_QUAD,
 		frand () * 360);
 }
@@ -293,7 +293,7 @@ void CG_GloomRepairEffect (vec3_t org, vec3_t dir, int count)
 			1.0f,								0,
 			3 + (frand () * 0.5f),
 			DT_ENGYREPAIR_GLOWMARK,				DF_USE_BURNLIFE|DF_ALPHACOLOR,
-			0,									qFalse,
+			0,									false,
 			0,									frand () * 360);
 	}
 
@@ -307,7 +307,7 @@ void CG_GloomRepairEffect (vec3_t org, vec3_t dir, int count)
 		0.9f + (crand () * 0.1f),			0.8f,
 		2 + (frand () * 0.5f),
 		DT_ENGYREPAIR_BURNMARK,				DF_ALPHACOLOR,
-		0,									qFalse,
+		0,									false,
 		0,									frand () * 360);
 
 	// Dots
@@ -324,7 +324,7 @@ void CG_GloomRepairEffect (vec3_t org, vec3_t dir, int count)
 			1.0f,								-1.0f / (0.5f + (frand () * 0.3f)),
 			6 + (frand () * -5.75f),			0.5f + (crand () * 0.45f),
 			PT_ENGYREPAIR_DOT,					PF_SCALED|PF_GRAVITY|PF_ALPHACOLOR|PF_NOCLOSECULL,
-			pBounceThink,						qTrue,
+			pBounceThink,						true,
 			PART_STYLE_QUAD,
 			0);
 	}
@@ -340,11 +340,11 @@ void CG_GloomStingerFire (vec3_t start, vec3_t end, float size, qBool light)
 {
 	vec3_t	move, vec;
 	float	len, dec, waterScale;
-	qBool	inWater = qFalse;
+	qBool	inWater = false;
 	int		tipimage, trailimage;
 
 	if (cgi.CM_PointContents (start, 0) & MASK_WATER)
-		inWater = qTrue;
+		inWater = true;
 
 	Vec3Copy (start, move);
 	Vec3Subtract (end, start, vec);
@@ -383,7 +383,7 @@ void CG_GloomStingerFire (vec3_t start, vec3_t end, float size, qBool light)
 			0.6f + (crand () * 0.1f),				-0.3f / (0.05f + (frand () * 0.1f)),
 			size + (crand () * 2),					(size * 0.25f) + (crand () * 3),
 			tipimage,								PF_SCALED|PF_ALPHACOLOR,
-			pFireThink,								qTrue,
+			pFireThink,								true,
 			PART_STYLE_QUAD,
 			frand () * 360);
 	}
@@ -399,7 +399,7 @@ void CG_GloomStingerFire (vec3_t start, vec3_t end, float size, qBool light)
 			0.6f + (crand () * 0.1f),				-0.3f / (0.05f + (frand () * 0.1f)),
 			(size * 0.6f) + (crand () * 2),			(size * 1.2f) + (crand () * 2),
 			tipimage,								PF_SCALED|PF_ALPHACOLOR,
-			pFireThink,								qTrue,
+			pFireThink,								true,
 			PART_STYLE_QUAD,
 			frand () * 360);
 	}
@@ -418,7 +418,7 @@ void CG_GloomStingerFire (vec3_t start, vec3_t end, float size, qBool light)
 			0.6f + (frand () * 0.2f),				-0.25f / (0.05f + (frand () * 0.1f)),
 			(size * 0.8f) + (crand () * 2),			2 + crand (),
 			trailimage,								PF_SCALED|PF_ALPHACOLOR,
-			pFireThink,								qTrue,
+			pFireThink,								true,
 			PART_STYLE_QUAD,
 			frand () * 360);
 	}

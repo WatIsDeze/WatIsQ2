@@ -91,7 +91,7 @@ static void SaveGameMenu_Init (void)
 
 	UI_AddItem (&m_saveGameMenu.frameWork,	&m_saveGameMenu.back_action);
 
-	UI_FinishFramework (&m_saveGameMenu.frameWork, qTrue);
+	UI_FinishFramework (&m_saveGameMenu.frameWork, true);
 }
 
 

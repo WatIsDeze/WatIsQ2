@@ -168,7 +168,7 @@ void GL_TextureMode (qBool verbose, qBool verboseOnly)
 	if (i == NUM_GL_MODES) {
 		// Not found
 		Com_Printf (PRNT_WARNING, "bad filter name -- falling back to GL_LINEAR_MIPMAP_NEAREST\n");
-		Cvar_VariableSet (gl_texturemode, "GL_LINEAR_MIPMAP_NEAREST", qTrue);
+		Cvar_VariableSet (gl_texturemode, "GL_LINEAR_MIPMAP_NEAREST", true);
 		
 		ri.texMinFilter = GL_LINEAR_MIPMAP_NEAREST;
 		ri.texMagFilter = GL_LINEAR;
@@ -179,7 +179,7 @@ void GL_TextureMode (qBool verbose, qBool verboseOnly)
 		ri.texMagFilter = modes[i].maximize;
 	}
 
-	gl_texturemode->modified = qFalse;
+	gl_texturemode->modified = false;
 	if (verbose) {
 		Com_Printf (0, "Texture mode: %s\n", modes[i].name);
 		if (verboseOnly)
@@ -211,7 +211,7 @@ void GL_ResetAnisotropy (void)
 	image_t	*image;
 	int		set;
 
-	r_ext_maxAnisotropy->modified = qFalse;
+	r_ext_maxAnisotropy->modified = false;
 	if (!ri.config.extTexFilterAniso)
 		return;
 
@@ -376,7 +376,7 @@ static void R_WriteJPG (FILE *f, byte *buffer, int width, int height, int qualit
 
 	jpeg_set_defaults (&cinfo);
 	jpeg_set_quality (&cinfo, quality, TRUE);
-	jpeg_start_compress (&cinfo, qTrue);	// start compression
+	jpeg_start_compress (&cinfo, true);	// start compression
 	jpeg_write_marker (&cinfo, JPEG_COM, (byte *) "WatIsQ2 v" WATISQ2_VERSTR, (uint32) strlen ("WatIsQ2 v" WATISQ2_VERSTR));
 
 	// Feed scanline data
@@ -751,10 +751,10 @@ static void R_LoadTGA (char *name, byte **pic, int *width, int *height, int *sam
 	if (tga.idLength != 0)
 		buf_p += tga.idLength;
 
-	compressed = qFalse;
+	compressed = false;
 	switch (tga.imageType) {
 	case 9:
-		compressed = qTrue;
+		compressed = true;
 	case 1:
 		// Uncompressed colormapped image
 		if (tga.pixelSize != 8) {
@@ -800,7 +800,7 @@ static void R_LoadTGA (char *name, byte **pic, int *width, int *height, int *sam
 		break;
 
 	case 10:
-		compressed = qTrue;
+		compressed = true;
 	case 2:
 		// Uncompressed or RLE compressed RGB
 		if (tga.pixelSize != 32 && tga.pixelSize != 24) {
@@ -811,7 +811,7 @@ static void R_LoadTGA (char *name, byte **pic, int *width, int *height, int *sam
 		break;
 
 	case 11:
-		compressed = qTrue;
+		compressed = true;
 	case 3:
 		// Uncompressed greyscale
 		if (tga.pixelSize != 8) {
@@ -1197,11 +1197,11 @@ static void R_ResampleImage (uint32 *in, int inWidth, int inHeight, uint32 *out,
 
 	if (ri.reg.inSequence && outWidth*outHeight < MAX_IMAGE_SCRATCHSIZE*MAX_IMAGE_SCRATCHSIZE) {
 		resampleBuffer = r_imageResampleScratch;
-		noFree = qTrue;
+		noFree = true;
 	}
 	else {
 		resampleBuffer = Mem_PoolAlloc (outWidth * outHeight * sizeof (uint32), ri.imageSysPool, r_imageAllocTag);
-		noFree = qFalse;
+		noFree = false;
 	}
 
 	p1 = resampleBuffer;
@@ -1279,7 +1279,7 @@ static void R_UploadCMImage (char *name, byte **data, int width, int height, tex
 	}
 
 	// Mipmap
-	mipMap = (flags & IF_NOMIPMAP_MASK) ? qFalse : qTrue;
+	mipMap = (flags & IF_NOMIPMAP_MASK) ? false : true;
 
 	// Let people sample down the world textures for speed
 	if (mipMap && !(flags & IF_NOPICMIP)) {
@@ -1347,11 +1347,11 @@ static void R_UploadCMImage (char *name, byte **data, int width, int height, tex
 	// Allocate a buffer
 	if (ri.reg.inSequence && scaledWidth*scaledHeight < MAX_IMAGE_SCRATCHSIZE*MAX_IMAGE_SCRATCHSIZE) {
 		scaledData = r_imageScaleScratch;
-		noFree = qTrue;
+		noFree = true;
 	}
 	else {
 		scaledData = Mem_PoolAlloc (scaledWidth * scaledHeight * 4, ri.imageSysPool, r_imageAllocTag);
-		noFree = qFalse;
+		noFree = false;
 	}
 
 	// Upload
@@ -1441,7 +1441,7 @@ static void R_Upload2DImage (char *name, byte *data, int width, int height, texF
 	}
 
 	// Mipmap
-	mipMap = (flags & IF_NOMIPMAP_MASK) ? qFalse : qTrue;
+	mipMap = (flags & IF_NOMIPMAP_MASK) ? false : true;
 
 	// Let people sample down the world textures for speed
 	if (mipMap && !(flags & IF_NOPICMIP)) {
@@ -1518,11 +1518,11 @@ static void R_Upload2DImage (char *name, byte *data, int width, int height, texF
 	// Allocate a buffer
 	if (ri.reg.inSequence && scaledWidth*scaledHeight < MAX_IMAGE_SCRATCHSIZE*MAX_IMAGE_SCRATCHSIZE) {
 		scaledData = r_imageScaleScratch;
-		noFree = qTrue;
+		noFree = true;
 	}
 	else {
 		scaledData = Mem_PoolAlloc (scaledWidth * scaledHeight * 4, ri.imageSysPool, r_imageAllocTag);
-		noFree = qFalse;
+		noFree = false;
 	}
 
 	// Resample
@@ -1607,7 +1607,7 @@ static void R_Upload3DImage (char *name, byte **data, int width, int height, int
 	for (scaledDepth=1 ; scaledDepth<depth ; scaledDepth<<=1) ;
 
 	// Mipmap
-	mipMap = (flags & IF_NOMIPMAP_MASK) ? qFalse : qTrue;
+	mipMap = (flags & IF_NOMIPMAP_MASK) ? false : true;
 
 	// Mipmapping not supported
 	if (mipMap && !ri.config.extSGISGenMipmap)
@@ -1810,11 +1810,11 @@ static void R_PalToRGBA (char *name, byte *data, int width, int height, texFlags
 	s = width * height;
 	if (ri.reg.inSequence && s < MAX_IMAGE_SCRATCHSIZE*MAX_IMAGE_SCRATCHSIZE) {
 		trans = (uint32 *)r_palScratch;
-		noFree = qTrue;
+		noFree = true;
 	}
 	else {
 		trans = Mem_PoolAlloc (s * 4, ri.imageSysPool, r_imageAllocTag);
-		noFree = qFalse;
+		noFree = false;
 	}
 
 	// Map the palette to standard RGB
@@ -2113,7 +2113,7 @@ static inline image_t *R_RegisterCubeMap (char *name, texFlags_t flags)
 
 	// Load the cubemap
 	if (i == 6)
-		image = R_LoadImage (loadName, bareName, pic, width, height, 1, flags, samples, qFalse, qFalse);
+		image = R_LoadImage (loadName, bareName, pic, width, height, 1, flags, samples, false, false);
 
 	// Finish
 	for (i=0 ; i<6 ; i++) {
@@ -2194,7 +2194,7 @@ image_t	*R_RegisterImage (char *name, texFlags_t flags)
 					loadName[len-3] = 'w'; loadName[len-2] = 'a'; loadName[len-1] = 'l';
 					R_LoadWal (loadName, &pic, &width, &height);
 					if (pic) {
-						image = R_LoadImage (loadName, bareName, &pic, width, height, 1, flags, samples, qTrue, qFalse);
+						image = R_LoadImage (loadName, bareName, &pic, width, height, 1, flags, samples, true, false);
 						return image;
 					}
 					return NULL;
@@ -2204,7 +2204,7 @@ image_t	*R_RegisterImage (char *name, texFlags_t flags)
 				loadName[len-3] = 'p'; loadName[len-2] = 'c'; loadName[len-1] = 'x';
 				R_LoadPCX (loadName, &pic, NULL, &width, &height);
 				if (pic) {
-					image = R_LoadImage (loadName, bareName, &pic, width, height, 1, flags, samples, qTrue, qTrue);
+					image = R_LoadImage (loadName, bareName, &pic, width, height, 1, flags, samples, true, true);
 					return image;
 				}
 				return NULL;
@@ -2213,7 +2213,7 @@ image_t	*R_RegisterImage (char *name, texFlags_t flags)
 	}
 
 	// Found it, upload it
-	image = R_LoadImage (loadName, bareName, &pic, width, height, 1, flags, samples, qFalse, qFalse);
+	image = R_LoadImage (loadName, bareName, &pic, width, height, 1, flags, samples, false, false);
 
 	// Finish
 	if (pic)
@@ -2330,43 +2330,43 @@ qBool R_UpdateTexture (char *name, byte *data, int width, int height)
 	image = R_FindImage (bareName, 0);
 	if (!image) {
 		Com_DevPrintf (PRNT_WARNING, "R_UpdateTexture: %s: could not find!\n", name);
-		return qFalse;
+		return false;
 	}
 
 	// Can't be compressed
 	if (!(image->flags & IF_NOCOMPRESS)) {
 		Com_DevPrintf (PRNT_WARNING, "R_UpdateTexture: %s: can not update potentially compressed images!\n", name);
-		return qFalse;
+		return false;
 	}
 
 	// Can't be picmipped
 	if (!(image->flags & IF_NOPICMIP)) {
 		Com_DevPrintf (PRNT_WARNING, "R_UpdateTexture: %s: can not update potentionally picmipped images!\n", name);
-		return qFalse;
+		return false;
 	}
 
 	// Can't be mipmapped
 	if (!(image->flags & IF_NOMIPMAP_MASK)) {
 		Com_DevPrintf (PRNT_WARNING, "R_UpdateTexture: %s: can not update mipmapped images!\n", name);
-		return qFalse;
+		return false;
 	}
 
 	// Must be 2D
 	if (image->target != GL_TEXTURE_2D) {
 		Com_DevPrintf (PRNT_WARNING, "R_UpdateTexture: %s: must be a 2D image!\n", name);
-		return qFalse;
+		return false;
 	}
 
 	// Check the size
 	if (width > ri.config.maxTexSize || height > ri.config.maxTexSize) {
 		Com_DevPrintf (PRNT_WARNING, "R_UpdateTexture: %s: size exceeds card maximum!\n", name);
-		return qFalse;
+		return false;
 	}
 
 	// Update
 	RB_BindTexture (image);
 	qglTexSubImage2D (GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
-	return qTrue;
+	return true;
 }
 
 
@@ -2663,7 +2663,7 @@ void R_UpdateGammaRamp (void)
 	int		i;
 	byte	gam;
 
-	vid_gamma->modified = qFalse;
+	vid_gamma->modified = false;
 	if (!ri.config.hwGammaInUse)
 		return;
 
@@ -2839,8 +2839,8 @@ void R_ImageInit (void)
 	r_numImages = 0;
 
 	// Set the initial state
-	GL_TextureMode (qTrue, qFalse);
-	GL_TextureBits (qTrue, qFalse);
+	GL_TextureMode (true, false);
+	GL_TextureBits (true, false);
 
 	// Get the palette
 	Com_Printf (0, "Loading pallete table\n");
@@ -2867,7 +2867,7 @@ void R_ImageInit (void)
 	// Set up the gamma and intensity ramps
 	Com_Printf (0, "Creating software gamma and intensity ramps\n");
 	if (intensity->floatVal < 1)
-		Cvar_VariableSetValue (intensity, 1, qTrue);
+		Cvar_VariableSetValue (intensity, 1, true);
 	ri.inverseIntensity = 1.0f / intensity->floatVal;
 
 	// Hack! because voodoo's are nasty bright
@@ -2906,11 +2906,11 @@ void R_ImageInit (void)
 	ri.rampDownloaded = GLimp_GetGammaRamp (ri.originalRamp);
 	if (ri.rampDownloaded) {
 		Com_Printf (0, "...GLimp_GetGammaRamp succeeded\n");
-		ri.config.hwGammaAvail = qTrue;
+		ri.config.hwGammaAvail = true;
 	}
 	else {
 		Com_Printf (PRNT_ERROR, "...GLimp_GetGammaRamp failed!\n");
-		ri.config.hwGammaAvail = qFalse;
+		ri.config.hwGammaAvail = false;
 	}
 
 	// Use hardware gamma?

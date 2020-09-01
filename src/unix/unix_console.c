@@ -26,7 +26,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #include <unistd.h>
 #include <fcntl.h>
 
-qBool	stdin_active = qTrue;
+qBool	stdin_active = true;
 
 static cVar_t *con_convertcolors = NULL;
 static char    ttyc;
@@ -90,7 +90,7 @@ char *Sys_ConsoleInput (void)
 
     if (len < 1) {
       if (len == 0) // eof
-        stdin_active = qFalse;
+        stdin_active = false;
       len = 0;
       return NULL;
     }
@@ -124,7 +124,7 @@ Sys_ConsoleOutput
 */
 void Sys_ConsoleOutput (const char *string)
 {
-  static qBool colorleft = qFalse;
+  static qBool colorleft = false;
   qBool        convert = con_convertcolors && (con_convertcolors->intVal == 1 && ttyc || con_convertcolors->intVal > 1);
   char buf[65];
   char c = 0;
@@ -152,23 +152,23 @@ void Sys_ConsoleOutput (const char *string)
         else
         if (e == '6') e = '5';
         buf[c-2] = e;
-        colorleft = qTrue;
+        colorleft = true;
       } else
       if (e == '8') {
         buf[c-5] = '0';
         buf[c-2] = '7';
-        colorleft = qTrue;
+        colorleft = true;
       } else
       if (e == 'r' || e == 'R') {
         buf[c-5] = '0';
         c -= 3;
         buf[c++] = 'm';
-        colorleft = qFalse;
+        colorleft = false;
      } else
        c -= 7; /* ignore all other */
     } else {
       if (*string == 10 && colorleft) {
-        colorleft = qFalse;
+        colorleft = false;
         if (c > 60) {
           buf[c] = 0;
           c = 0;

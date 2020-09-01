@@ -52,7 +52,7 @@ static void SV_SetMaster_f (void)
 #endif
 
 	// Make sure the server is listed public
-	Cvar_Set ("public", "1", qFalse);
+	Cvar_Set ("public", "1", false);
 
 	for (i=1 ; i<MAX_MASTERS ; i++)
 		memset (&sv_masterAddresses[i], 0, sizeof (sv_masterAddresses[i]));
@@ -96,7 +96,7 @@ static qBool SV_SetPlayer (void)
 	char		*s;
 
 	if (Cmd_Argc () < 2)
-		return qFalse;
+		return false;
 
 	s = Cmd_Argv (1);
 
@@ -105,16 +105,16 @@ static qBool SV_SetPlayer (void)
 		idnum = atoi (Cmd_Argv (1));
 		if (idnum < 0 || idnum >= maxclients->intVal) {
 			Com_Printf (PRNT_WARNING, "Bad client slot: %i\n", idnum);
-			return qFalse;
+			return false;
 		}
 
 		sv_currentClient = &svs.clients[idnum];
 		sv_currentEdict = sv_currentClient->edict;
 		if (!sv_currentClient->state) {
 			Com_Printf (0, "Client %i is not active\n", idnum);
-			return qFalse;
+			return false;
 		}
-		return qTrue;
+		return true;
 	}
 
 	// Check for a name match
@@ -125,12 +125,12 @@ static qBool SV_SetPlayer (void)
 		if (!Q_stricmp (cl->name, s)) {
 			sv_currentClient = cl;
 			sv_currentEdict = sv_currentClient->edict;
-			return qTrue;
+			return true;
 		}
 	}
 
 	Com_Printf (PRNT_WARNING, "Userid %s is not on the server\n", s);
-	return qFalse;
+	return false;
 }
 
 /*
@@ -391,7 +391,7 @@ static void SV_ReadServerFile (void)
 
 		FS_Read (string, sizeof (string), fileNum);
 		Com_DevPrintf (0, "Set %s = %s\n", name, string);
-		Cvar_Set (name, string, qTrue);
+		Cvar_Set (name, string, true);
 	}
 
 	FS_CloseFile (fileNum);
@@ -445,11 +445,11 @@ static void SV_DemoMap_f (void)
 		}
 
 		map = Com_SkipPath (expanded);
-		SV_LoadMap (qTrue, map, qFalse, qFalse);
+		SV_LoadMap (true, map, false, false);
 		return;
 	}
 
-	SV_LoadMap (qTrue, map, qFalse, qFalse);
+	SV_LoadMap (true, map, false, false);
 }
 
 
@@ -522,7 +522,7 @@ static void SV_GameMap_f (void)
 			savedInuse = Mem_PoolAlloc (maxclients->intVal * sizeof (qBool), sv_genericPool, 0);
 			for (i=0, cl=svs.clients ; i<maxclients->intVal ; i++, cl++) {
 				savedInuse[i] = cl->edict->inUse;
-				cl->edict->inUse = qFalse;
+				cl->edict->inUse = false;
 			}
 
 			SV_WriteLevelFile ();
@@ -535,7 +535,7 @@ static void SV_GameMap_f (void)
 	}
 
 	// Start up the next map
-	SV_LoadMap (qFalse, map, qFalse, !Q_stricmp (Cmd_Argv (0), "devmap"));
+	SV_LoadMap (false, map, false, !Q_stricmp (Cmd_Argv (0), "devmap"));
 
 	// Archive server state
 	Q_strncpyz (svs.mapCmd, Cmd_Argv (1), sizeof (svs.mapCmd));
@@ -543,7 +543,7 @@ static void SV_GameMap_f (void)
 #ifndef DEDICATED_ONLY
 	// Copy off the level to the autosave slot
 	if (!dedicated->intVal) {
-		SV_WriteServerFile (qTrue);
+		SV_WriteServerFile (true);
 		SV_CopySaveGame ("current", "save0");
 	}
 #endif
@@ -635,7 +635,7 @@ static void SV_Loadgame_f (void)
 
 	// Go to the map
 	SV_SetState (SS_DEAD);	// Don't save current level when changing
-	SV_LoadMap (qFalse, svs.mapCmd, qTrue, qFalse);
+	SV_LoadMap (false, svs.mapCmd, true, false);
 }
 
 
@@ -686,7 +686,7 @@ static void SV_Savegame_f (void)
 	SV_WriteLevelFile ();
 
 	// Save server state
-	SV_WriteServerFile (qFalse);
+	SV_WriteServerFile (false);
 
 	// Copy it off
 	SV_CopySaveGame ("current", dir);
@@ -999,9 +999,9 @@ static void SV_KillServer_f (void)
 		return;
 
 	if (Cmd_Argc () == 1)
-		SV_ServerShutdown ("Server was killed.\n", qFalse, qFalse);
+		SV_ServerShutdown ("Server was killed.\n", false, false);
 	else
-		SV_ServerShutdown ("Server is restarting...\n", qTrue, qFalse);
+		SV_ServerShutdown ("Server is restarting...\n", true, false);
 
 	NET_Config (NET_NONE);	// Close network sockets
 }

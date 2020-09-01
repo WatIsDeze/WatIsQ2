@@ -47,8 +47,8 @@ void CL_CGModule_LoadMap (void)
 	if (!cge)
 		Com_Error (ERR_FATAL, "CL_CGModule_LoadMap: CGame not initialized!");
 
-	cls.mapLoading = qTrue;
-	cls.mapLoaded = qFalse;
+	cls.mapLoading = true;
+	cls.mapLoaded = false;
 
 	initTime = Sys_UMilliseconds ();
 
@@ -73,7 +73,7 @@ void CL_CGModule_LoadMap (void)
 	R_MediaInit ();
 
 	// Start the cd track
-	CDAudio_Play (atoi (cl.configStrings[CS_CDTRACK]), qTrue);
+	CDAudio_Play (atoi (cl.configStrings[CS_CDTRACK]), true);
 
 	// The subsystems can now free unneeded stuff
 	GUI_EndRegistration ();
@@ -90,9 +90,9 @@ void CL_CGModule_LoadMap (void)
 	Sys_SendKeyEvents ();
 
 	// All done!
-	cls.refreshPrepped = qTrue;
-	cls.mapLoading = qFalse;
-	cls.mapLoaded = qTrue;
+	cls.refreshPrepped = true;
+	cls.mapLoading = false;
+	cls.mapLoaded = true;
 	Com_Printf (0, "Map loaded in: %ums\n", Sys_UMilliseconds()-initTime);
 }
 
@@ -214,7 +214,7 @@ qBool CL_CGModule_ParseServerMessage (int command)
 	if (cge)
 		return cge->ParseServerMessage (command);
 
-	return qFalse;
+	return false;
 }
 
 
@@ -239,10 +239,10 @@ qBool CL_CGModule_Pmove (pMoveNew_t *pMove, float airAcceleration)
 {
 	if (cge) {
 		cge->Pmove (pMove, airAcceleration);
-		return qTrue;
+		return true;
 	}
 
-	return qFalse;
+	return false;
 }
 
 
@@ -339,7 +339,7 @@ qBool CL_CGModule_ParseServerInfo (char *adr, char *info)
 {
 	if (cge)
 		return cge->ParseServerInfo (adr, info);
-	return qFalse;
+	return false;
 }
 
 
@@ -352,7 +352,7 @@ qBool CL_CGModule_ParseServerStatus (char *adr, char *info)
 {
 	if (cge)
 		return cge->ParseServerStatus (adr, info);
-	return qFalse;
+	return false;
 }
 
 
@@ -382,7 +382,7 @@ CGI_Cmd_AddCommand
 */
 static void *CGI_Cmd_AddCommand (char *name, void (*function) (void), const char *description)
 {
-	return _Cmd_AddCommand (qTrue, name, function, description);
+	return _Cmd_AddCommand (true, name, function, description);
 }
 
 
@@ -836,7 +836,7 @@ void CL_CGameAPI_Shutdown (void)
 
 	CGI_Com_DevPrintf (0, "UnloadLibrary()\n");
 	Sys_UnloadLibrary (LIB_CGAME);
-	cls.mapLoaded = qFalse;
+	cls.mapLoaded = false;
 	cge = NULL;
 
 	// Notify of memory leaks

@@ -291,7 +291,7 @@ static inline void R_BatchMeshBuffer (meshBuffer_t *mb, meshBuffer_t *nextMB, qB
 	if (mb->mat->flags & MAT_SKY) {
 		if (!r_currentList->skyDrawn) {
 			R_DrawSky (mb);
-			r_currentList->skyDrawn = qTrue;
+			r_currentList->skyDrawn = true;
 		}
 		return;
 	}
@@ -518,8 +518,8 @@ void R_DrawMeshList (qBool triangleOutlines)
 			continue;
 		mb = r_currentList->meshBuffer[j];
 		for (i=0 ; i<r_currentList->numMeshes[j]-1 ; i++, mb++)
-			R_BatchMeshBuffer (mb, mb+1, qFalse, triangleOutlines);
-		R_BatchMeshBuffer (mb, NULL, qFalse, triangleOutlines);
+			R_BatchMeshBuffer (mb, mb+1, false, triangleOutlines);
+		R_BatchMeshBuffer (mb, NULL, false, triangleOutlines);
 	}
 
 	// Draw additive meshes
@@ -538,14 +538,14 @@ void R_DrawMeshList (qBool triangleOutlines)
 		// Render meshes
 		mb = r_currentList->meshBufferAdditive[j];
 		for (i=0 ; i<r_currentList->numAdditiveMeshes[j]-1 ; i++, mb++)
-			R_BatchMeshBuffer (mb, mb+1, qFalse, triangleOutlines);
-		R_BatchMeshBuffer (mb, NULL, qFalse, triangleOutlines);
+			R_BatchMeshBuffer (mb, mb+1, false, triangleOutlines);
+		R_BatchMeshBuffer (mb, NULL, false, triangleOutlines);
 	}
 
 	// Draw mesh shadows
 	if (gl_shadows->intVal) {
 #ifdef SHADOW_VOLUMES
-		RB_SetShadowState (qTrue);
+		RB_SetShadowState (true);
 #endif
 
 		// Draw the meshes
@@ -554,8 +554,8 @@ void R_DrawMeshList (qBool triangleOutlines)
 				continue;
 			mb = r_currentList->meshBuffer[j];
 			for (i=0 ; i<r_currentList->numMeshes[j]-1 ; i++, mb++)
-				R_BatchMeshBuffer (mb, mb+1, qTrue, triangleOutlines);
-			R_BatchMeshBuffer (mb, NULL, qTrue, triangleOutlines);
+				R_BatchMeshBuffer (mb, mb+1, true, triangleOutlines);
+			R_BatchMeshBuffer (mb, NULL, true, triangleOutlines);
 		}
 
 		for (j=0 ; j<MAX_ADDITIVE_KEYS ; j++) {
@@ -563,19 +563,19 @@ void R_DrawMeshList (qBool triangleOutlines)
 				continue;
 			mb = r_currentList->meshBufferAdditive[j];
 			for (i=0 ; i<r_currentList->numAdditiveMeshes[j]-1 ; i++, mb++)
-				R_BatchMeshBuffer (mb, mb+1, qTrue, triangleOutlines);
-			R_BatchMeshBuffer (mb, NULL, qTrue, triangleOutlines);
+				R_BatchMeshBuffer (mb, mb+1, true, triangleOutlines);
+			R_BatchMeshBuffer (mb, NULL, true, triangleOutlines);
 		}
 
 		if (r_currentList->numPostProcessMeshes) {
 			mb = r_currentList->meshBufferPostProcess;
 			for (i=0 ; i<r_currentList->numPostProcessMeshes-1 ; i++, mb++)
-				R_BatchMeshBuffer (mb, mb+1, qTrue, triangleOutlines);
-			R_BatchMeshBuffer (mb, NULL, qTrue, triangleOutlines);
+				R_BatchMeshBuffer (mb, mb+1, true, triangleOutlines);
+			R_BatchMeshBuffer (mb, NULL, true, triangleOutlines);
 		}
 
 #ifdef SHADOW_VOLUMES
-		RB_SetShadowState (qFalse);
+		RB_SetShadowState (false);
 #endif
 	}
 
@@ -583,8 +583,8 @@ void R_DrawMeshList (qBool triangleOutlines)
 	if (r_currentList->numPostProcessMeshes) {
 		mb = r_currentList->meshBufferPostProcess;
 		for (i=0 ; i<r_currentList->numPostProcessMeshes-1 ; i++, mb++)
-			R_BatchMeshBuffer (mb, mb+1, qFalse, triangleOutlines);
-		R_BatchMeshBuffer (mb, NULL, qFalse, triangleOutlines);
+			R_BatchMeshBuffer (mb, mb+1, false, triangleOutlines);
+		R_BatchMeshBuffer (mb, NULL, false, triangleOutlines);
 	}
 
 	// Clear state
@@ -606,6 +606,6 @@ void R_DrawMeshOutlines (void)
 		return;
 
 	RB_BeginTriangleOutlines ();
-	R_DrawMeshList (qTrue);
+	R_DrawMeshList (true);
 	RB_EndTriangleOutlines ();
 }

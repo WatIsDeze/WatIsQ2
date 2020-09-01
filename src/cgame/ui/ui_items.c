@@ -103,13 +103,13 @@ void UI_RemoveItem (uiFrameWork_t *fw, void *item)
 		Com_Error (ERR_FATAL, "UI_RemoveItem: Attempted to remove item when framework is locked");
 
 	// Pull the list backwards starting at the item
-	found = qFalse;
+	found = false;
 	for (i=0 ; i<fw->numItems ; i++) {
 		if (found) {
 			fw->items[i-1] = fw->items[i];
 		}
 		else if (fw->items[i] == item)
-			found = qTrue;
+			found = true;
 	}
 
 	// Remove the last entry, since it's now a duplicate
@@ -232,17 +232,17 @@ static void SpinControl_DoSlide (uiList_t *s, int dir)
 qBool UI_SlideItem (uiCommon_t *item, int dir)
 {
 	if (!item || item->flags & UIF_NOSELECT)
-		return qFalse;
+		return false;
 
 	switch (item->type) {
 	case UITYPE_SLIDER:
 		Slider_DoSlide ((uiSlider_t *) item, dir);
-		return qTrue;
+		return true;
 
 	case UITYPE_SPINCONTROL:
 		SpinControl_DoSlide ((uiList_t *) item, dir);
-		return qTrue;
+		return true;
 	}
 
-	return qFalse;
+	return false;
 }

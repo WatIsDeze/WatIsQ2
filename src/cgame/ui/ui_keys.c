@@ -23,7 +23,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 #include "ui_local.h"
 
-static qBool	ui_lastClick = qFalse;
+static qBool	ui_lastClick = false;
 static int		ui_lastClickTime = 0;
 
 /*
@@ -72,7 +72,7 @@ UI_FieldKeyFunc
 static qBool UI_FieldKeyFunc (uiField_t *f, keyNum_t keyNum)
 {
 	if (keyNum > 127)
-		return qFalse;
+		return false;
 
 	switch (keyNum) {
 	case K_KP_SLASH:		keyNum = '/';	break;
@@ -109,7 +109,7 @@ static qBool UI_FieldKeyFunc (uiField_t *f, keyNum_t keyNum)
 
 			CG_MemFree (cbd);
 		}
-		return qTrue;
+		return true;
 	}
 
 	switch (keyNum) {
@@ -134,11 +134,11 @@ static qBool UI_FieldKeyFunc (uiField_t *f, keyNum_t keyNum)
 	case K_ENTER:
 	case K_ESCAPE:
 	case K_TAB:
-		return qFalse;
+		return false;
 
 	default:
 		if (f->generic.flags & UIF_NUMBERSONLY && !isdigit (keyNum))
-			return qFalse;
+			return false;
 
 		if (f->cursor < f->length) {
 			f->buffer[f->cursor++] = keyNum;
@@ -149,7 +149,7 @@ static qBool UI_FieldKeyFunc (uiField_t *f, keyNum_t keyNum)
 		}
 	}
 
-	return qTrue;
+	return true;
 }
 
 
@@ -224,11 +224,11 @@ struct sfx_s *UI_DefaultKeyFunc (uiFrameWork_t *fw, keyNum_t keyNum)
 		if (item->flags & UIF_DBLCLICK) {
 			if (ui_lastClick && ui_lastClickTime + 850 > cg.realTime) {
 				ui_lastClickTime = cg.realTime;
-				ui_lastClick = qFalse;
+				ui_lastClick = false;
 			}
 			else {
 				if (!ui_lastClick)
-					ui_lastClick = qTrue;
+					ui_lastClick = true;
 
 				ui_lastClickTime = cg.realTime;
 				return uiMedia.sounds.menuMove;
@@ -258,11 +258,11 @@ struct sfx_s *UI_DefaultKeyFunc (uiFrameWork_t *fw, keyNum_t keyNum)
 		if (item->flags & UIF_DBLCLICK) {
 			if (ui_lastClick && ui_lastClickTime + 850 > cg.realTime) {
 				ui_lastClickTime = cg.realTime;
-				ui_lastClick = qFalse;
+				ui_lastClick = false;
 			}
 			else {
 				if (!ui_lastClick)
-					ui_lastClick = qTrue;
+					ui_lastClick = true;
 
 				ui_lastClickTime = cg.realTime;
 				return uiMedia.sounds.menuMove;

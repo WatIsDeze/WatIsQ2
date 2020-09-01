@@ -94,7 +94,7 @@ static void menu_id_1_action(void *self) {
 }
 
 void menu_id_1_init() {
-	menu_init = qTrue;
+	menu_init = true;
 
 	// Init menu...
 	UI_StartFramework(&m_menu_id_1.frameWork, FWF_CENTERHEIGHT);
@@ -131,7 +131,7 @@ void menu_id_1_init() {
 		UI_AddItem(&m_menu_id_1.frameWork, &m_menu_id_1.option_actions[i]);
 	}
 
-	UI_FinishFramework(&m_menu_id_1.frameWork, qTrue);
+	UI_FinishFramework(&m_menu_id_1.frameWork, true);
 }
 
 static void menu_id_1_draw(void) {
@@ -171,7 +171,7 @@ static struct sfx_s *menu_id_1_close(void)
 // Activate this menu.
 void menu_id_1_activate(char menu_id, char message_id, char optionlist_id) {
 	// This is temp...
-	if (menu_init == qFalse) {
+	if (menu_init == false) {
 		menu_id_1_init();
 	}
 

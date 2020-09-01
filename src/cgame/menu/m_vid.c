@@ -95,7 +95,7 @@ static void VideoMenu_Init (void)
 
 	UI_AddItem (&m_videoMenu.frameWork,		&m_videoMenu.back_action);
 
-	UI_FinishFramework (&m_videoMenu.frameWork, qTrue);
+	UI_FinishFramework (&m_videoMenu.frameWork, true);
 }
 
 

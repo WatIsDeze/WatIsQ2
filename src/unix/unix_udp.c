@@ -175,7 +175,7 @@ qBool	NET_StringToSockaddr (char *s, struct sockaddr *sadr)
 		*(int *)&((struct sockaddr_in *)sadr)->sin_addr = *(int *)h->h_addr_list[0];
 	}
 	
-	return qTrue;
+	return true;
 }
 
 /*
@@ -199,15 +199,15 @@ qBool	NET_StringToAdr (char *s, netAdr_t *a)
 		a->naType = NA_LOOPBACK;
 		a->ip[0] = 127;
 		a->ip[3] = 1;
-		return qTrue;
+		return true;
 	}
 
 	if (!NET_StringToSockaddr (s, (struct sockaddr *)&sadr))
-		return qFalse;
+		return false;
 	
 	NET_SockAdrToNetAdr (&sadr, a);
 
-	return qTrue;
+	return true;
 }
 
 
@@ -235,7 +235,7 @@ qBool	NET_GetLoopPacket (netSrc_t sock, netAdr_t *fromAddr, netMsg_t *message)
 		loop->get = loop->send - MAX_LOOPBACK;
 
 	if (loop->get >= loop->send)
-		return qFalse;
+		return false;
 
 	i = loop->get & (MAX_LOOPBACK-1);
 	loop->get++;
@@ -243,7 +243,7 @@ qBool	NET_GetLoopPacket (netSrc_t sock, netAdr_t *fromAddr, netMsg_t *message)
 	memcpy (message->data, loop->msgs[i].data, loop->msgs[i].datalen);
 	message->curSize = loop->msgs[i].datalen;
 	*fromAddr = net_local_adr;
-	return qTrue;
+	return true;
 
 }
 
@@ -273,11 +273,11 @@ qBool NET_GetPacket (netSrc_t sock, netAdr_t *net_from, netMsg_t *net_message)
 	int		err;
 
 	if (NET_GetLoopPacket (sock, net_from, net_message))
-		return qTrue;
+		return true;
 
 	net_socket = ipSockets[sock];
 	if (!net_socket)
-		return qFalse;
+		return false;
 
 	fromlen = sizeof(from);
 	ret = recvfrom (net_socket, net_message->data, net_message->maxSize, 0, (struct sockaddr *)&from, &fromlen);
@@ -288,7 +288,7 @@ qBool NET_GetPacket (netSrc_t sock, netAdr_t *net_from, netMsg_t *net_message)
 		err = errno;
 
 		if (err == EWOULDBLOCK || err == ECONNREFUSED)
-			return qFalse;
+			return false;
 		Com_Printf (0, "NET_GetPacket: %s from %s\n", NET_ErrorString(),
 					NET_AdrToString(net_from));
 		return 0;
@@ -296,14 +296,14 @@ qBool NET_GetPacket (netSrc_t sock, netAdr_t *net_from, netMsg_t *net_message)
 
 	if (ret == net_message->maxSize) {
 		Com_Printf (0, "Oversize packet from %s\n", NET_AdrToString (net_from));
-		return qFalse;
+		return false;
 	}
 
 	netStats.sizeIn += ret;
 	netStats.packetsIn++;
 
 	net_message->curSize = ret;
-	return qTrue;
+	return true;
 }
 
 //=============================================================================
@@ -395,7 +395,7 @@ netConfig_t NET_Config (netConfig_t openFlags)
 
 		// open sockets
 		netStats.initTime = time (0);
-		netStats.initialized = qTrue;
+		netStats.initialized = true;
 
 		if (openFlags & NET_SERVER) {
 			if (!ipSockets[NS_SERVER]) {
@@ -422,7 +422,7 @@ netConfig_t NET_Config (netConfig_t openFlags)
 					port = Cvar_Register ("clientport", Q_VarArgs ("%i", newport), CVAR_READONLY)->intVal;
 					if (!port) {
 						port = PORT_ANY;
- 						Cvar_Set ("clientport", Q_VarArgs ("%d", newport), qFalse);
+ 						Cvar_Set ("clientport", Q_VarArgs ("%d", newport), false);
 					}
 				}
 
@@ -450,7 +450,7 @@ int NET_Socket (char *net_interface, int port)
 {
 	int newsocket;
 	struct sockaddr_in address;
-	qBool _qTrue = qTrue;
+	qBool _true = true;
 	int	i = 1;
 
 	if ((newsocket = socket (PF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
@@ -460,7 +460,7 @@ int NET_Socket (char *net_interface, int port)
 	}
 
 	// make it non-blocking
-	if (ioctl (newsocket, FIONBIO, &_qTrue) == -1)
+	if (ioctl (newsocket, FIONBIO, &_true) == -1)
 	{
 		Com_Printf (0, "ERROR: UDP_OpenSocket: ioctl FIONBIO:%s\n", NET_ErrorString());
 		return 0;

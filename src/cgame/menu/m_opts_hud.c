@@ -58,39 +58,39 @@ static m_hudMenu_t	m_hudMenu;
 
 static void ShowFPSFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("cl_showfps", m_hudMenu.showfps_toggle.curValue, qFalse);
+	cgi.Cvar_SetValue ("cl_showfps", m_hudMenu.showfps_toggle.curValue, false);
 }
 
 static void ShowPINGFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("cl_showping", m_hudMenu.showping_toggle.curValue, qFalse);
+	cgi.Cvar_SetValue ("cl_showping", m_hudMenu.showping_toggle.curValue, false);
 }
 
 static void ShowTIMEFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("cl_showtime", m_hudMenu.showtime_toggle.curValue, qFalse);
+	cgi.Cvar_SetValue ("cl_showtime", m_hudMenu.showtime_toggle.curValue, false);
 }
 
 static void HudScaleFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("r_hudScale", m_hudMenu.hudscale_slider.curValue * 0.25, qFalse);
+	cgi.Cvar_SetValue ("r_hudScale", m_hudMenu.hudscale_slider.curValue * 0.25, false);
 	m_hudMenu.hudscale_amount.generic.name = cgi.Cvar_GetStringValue ("r_hudScale");
 }
 
 static void HudAlphaFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("scr_hudalpha", m_hudMenu.hudalpha_slider.curValue * 0.1, qFalse);
+	cgi.Cvar_SetValue ("scr_hudalpha", m_hudMenu.hudalpha_slider.curValue * 0.1, false);
 	m_hudMenu.hudalpha_amount.generic.name = cgi.Cvar_GetStringValue ("scr_hudalpha");
 }
 
 static void NetgraphToggleFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("netgraph", m_hudMenu.netgraph_toggle.curValue, qFalse);
+	cgi.Cvar_SetValue ("netgraph", m_hudMenu.netgraph_toggle.curValue, false);
 }
 
 static void NetgraphAlphaFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("scr_graphalpha", m_hudMenu.netgraph_alpha_slider.curValue * 0.1, qFalse);
+	cgi.Cvar_SetValue ("scr_graphalpha", m_hudMenu.netgraph_alpha_slider.curValue * 0.1, false);
 	m_hudMenu.netgraph_alpha_amount.generic.name = cgi.Cvar_GetStringValue ("scr_graphalpha");
 }
 
@@ -102,13 +102,13 @@ HUDMenu_SetValues
 */
 static void HUDMenu_SetValues (void)
 {
-	cgi.Cvar_SetValue ("cl_showfps",			clamp (cgi.Cvar_GetIntegerValue ("cl_showfps"), 0, 1), qFalse);
+	cgi.Cvar_SetValue ("cl_showfps",			clamp (cgi.Cvar_GetIntegerValue ("cl_showfps"), 0, 1), false);
 	m_hudMenu.showfps_toggle.curValue			= cgi.Cvar_GetIntegerValue ("cl_showfps");
 
-	cgi.Cvar_SetValue ("cl_showping",			clamp (cgi.Cvar_GetIntegerValue ("cl_showping"), 0, 1), qFalse);
+	cgi.Cvar_SetValue ("cl_showping",			clamp (cgi.Cvar_GetIntegerValue ("cl_showping"), 0, 1), false);
 	m_hudMenu.showping_toggle.curValue			= cgi.Cvar_GetIntegerValue ("cl_showping");
 
-	cgi.Cvar_SetValue ("cl_showtime",			clamp (cgi.Cvar_GetIntegerValue ("cl_showtime"), 0, 1), qFalse);
+	cgi.Cvar_SetValue ("cl_showtime",			clamp (cgi.Cvar_GetIntegerValue ("cl_showtime"), 0, 1), false);
 	m_hudMenu.showtime_toggle.curValue			= cgi.Cvar_GetIntegerValue ("cl_showtime");
 
 	m_hudMenu.hudscale_slider.curValue			= cgi.Cvar_GetFloatValue ("r_hudScale") * 4;
@@ -117,7 +117,7 @@ static void HUDMenu_SetValues (void)
 	m_hudMenu.hudalpha_slider.curValue			= cgi.Cvar_GetFloatValue ("scr_hudalpha") * 10;
 	m_hudMenu.hudalpha_amount.generic.name		= cgi.Cvar_GetStringValue ("scr_hudalpha");
 
-	cgi.Cvar_SetValue ("netgraph",				clamp (cgi.Cvar_GetIntegerValue ("netgraph"), 0, 1), qFalse);
+	cgi.Cvar_SetValue ("netgraph",				clamp (cgi.Cvar_GetIntegerValue ("netgraph"), 0, 1), false);
 	m_hudMenu.netgraph_toggle.curValue			= cgi.Cvar_GetIntegerValue ("netgraph");
 
 	m_hudMenu.netgraph_alpha_slider.curValue		= cgi.Cvar_GetFloatValue ("scr_graphalpha") * 10;
@@ -226,7 +226,7 @@ static void HUDMenu_Init (void)
 
 	UI_AddItem (&m_hudMenu.frameWork,			&m_hudMenu.back_action);
 
-	UI_FinishFramework (&m_hudMenu.frameWork, qTrue);
+	UI_FinishFramework (&m_hudMenu.frameWork, true);
 }
 
 

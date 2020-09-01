@@ -96,7 +96,7 @@ void pBloodThink (struct cgParticle_s *p, vec3_t org, vec3_t angle, vec4_t color
 	float		alpha, alphaVel;
 
 	isGreen = (p->flags & PF_GREENBLOOD);
-	p->thinkNext = qTrue;
+	p->thinkNext = true;
 
 	// make a decal
 	clipsize = *size * 0.1f;
@@ -107,7 +107,7 @@ void pBloodThink (struct cgParticle_s *p, vec3_t org, vec3_t angle, vec4_t color
 		// Kill if inside a solid
 		if (tr.allSolid || tr.startSolid) {
 			p->color[3] = 0;
-			p->thinkNext = qFalse;
+			p->thinkNext = false;
 		}
 		else if (!(p->flags & PF_NODECAL)) {
 			sizescale = clamp ((p->size < p->sizeVel) ? (p->sizeVel / *size) : (p->size / *size), 0.75f, 1.25f);
@@ -126,7 +126,7 @@ void pBloodThink (struct cgParticle_s *p, vec3_t org, vec3_t angle, vec4_t color
 				(13 + (crand()*4)) * sizescale,
 				isGreen ? dRandGrnBloodMark () : dRandBloodMark (),
 				DF_ALPHACOLOR,
-				0,								qFalse,
+				0,								false,
 				0,								frand () * 360.0f);
 
 			if (!(p->flags & PF_NOSFX) && cg.realTime > sfxDelay) {
@@ -135,7 +135,7 @@ void pBloodThink (struct cgParticle_s *p, vec3_t org, vec3_t angle, vec4_t color
 			}
 
 			p->color[3] = 0;
-			p->thinkNext = qFalse;
+			p->thinkNext = false;
 		}
 	}
 }
@@ -173,7 +173,7 @@ void pBounceThink (struct cgParticle_s *p, vec3_t org, vec3_t angle, vec4_t colo
 	trace_t	tr;
 	vec3_t	velocity;
 
-	p->thinkNext = qTrue;
+	p->thinkNext = true;
 
 	clipsize = *size*0.5f;
 	if (clipsize<0.25) clipsize = 0.25;
@@ -187,7 +187,7 @@ void pBounceThink (struct cgParticle_s *p, vec3_t org, vec3_t angle, vec4_t colo
 			p->flags &= ~PF_GRAVITY;
 		Vec3Clear (p->vel);
 		Vec3Clear (p->accel);
-		p->thinkNext = qFalse;
+		p->thinkNext = false;
 		return;
 	}
 
@@ -212,7 +212,7 @@ void pBounceThink (struct cgParticle_s *p, vec3_t org, vec3_t angle, vec4_t colo
 			if (p->colorVel[3] != PART_INSTANT)
 				p->colorVel[3] *= 0.5;
 
-			p->thinkNext = qFalse;
+			p->thinkNext = false;
 		}
 	}
 
@@ -236,7 +236,7 @@ void pDropletThink (struct cgParticle_s *p, vec3_t org, vec3_t angle, vec4_t col
 	else
 		*orient += cg.realTime*0.02f;
 
-	p->thinkNext = qTrue;
+	p->thinkNext = true;
 }
 
 
@@ -264,7 +264,7 @@ void pExploAnimThink (struct cgParticle_s *p, vec3_t org, vec3_t angle, vec4_t c
 	else
 		p->mat = cgMedia.particleTable[PT_EXPLO7];
 
-	p->thinkNext = qTrue;
+	p->thinkNext = true;
 }
 
 
@@ -280,7 +280,7 @@ void pFastSmokeThink (struct cgParticle_s *p, vec3_t org, vec3_t angle, vec4_t c
 	else
 		*orient += cg.realTime*0.02f;
 
-	p->thinkNext = qTrue;
+	p->thinkNext = true;
 }
 
 
@@ -293,7 +293,7 @@ void pFireThink (struct cgParticle_s *p, vec3_t org, vec3_t angle, vec4_t color,
 {
 	*orient = (frand () * 360) * (color[3] * color[3]);
 
-	p->thinkNext = qTrue;
+	p->thinkNext = true;
 }
 
 
@@ -313,7 +313,7 @@ void pFireTrailThink (struct cgParticle_s *p, vec3_t org, vec3_t angle, vec4_t c
 		length = *orient;
 	Vec3Scale (angle, -length, angle);
 
-	p->thinkNext = qTrue;
+	p->thinkNext = true;
 }
 
 
@@ -373,7 +373,7 @@ void pLight70Think(struct cgParticle_s *p, vec3_t org, vec3_t angle, vec4_t colo
 		p->thinkNext = cg.refreshTime;// + THINK_DELAY_EXPENSIVE;
 	}
 
-	p->thinkNext = qTrue;
+	p->thinkNext = true;
 }
 
 /*
@@ -385,7 +385,7 @@ void pRailSpiralThink (struct cgParticle_s *p, vec3_t org, vec3_t angle, vec4_t 
 {
 	*orient += cg.realTime * 0.075f;
 
-	p->thinkNext = qTrue;
+	p->thinkNext = true;
 }
 
 
@@ -405,7 +405,7 @@ void pRicochetSparkThink (struct cgParticle_s *p, vec3_t org, vec3_t angle, vec4
 		length = *orient;
 	Vec3Scale (angle, -length, angle);
 
-	p->thinkNext = qTrue;
+	p->thinkNext = true;
 }
 
 
@@ -421,7 +421,7 @@ void pSlowFireThink (struct cgParticle_s *p, vec3_t org, vec3_t angle, vec4_t co
 	else
 		*orient += cg.realTime*0.01f;
 
-	p->thinkNext = qTrue;
+	p->thinkNext = true;
 }
 
 
@@ -437,7 +437,7 @@ void pSmokeThink (struct cgParticle_s *p, vec3_t org, vec3_t angle, vec4_t color
 	else
 		*orient += cg.realTime*0.01f;
 
-	p->thinkNext = qTrue;
+	p->thinkNext = true;
 }
 
 
@@ -457,7 +457,7 @@ void pSparkGrowThink (struct cgParticle_s *p, vec3_t org, vec3_t angle, vec4_t c
 		length = *orient;
 	Vec3Scale (angle, -length, angle);
 
-	p->thinkNext = qTrue;
+	p->thinkNext = true;
 }
 
 
@@ -477,5 +477,5 @@ void pSplashThink (struct cgParticle_s *p, vec3_t org, vec3_t angle, vec4_t colo
 		length = *orient;
 	Vec3Scale (angle, -length, angle);
 
-	p->thinkNext = qTrue;
+	p->thinkNext = true;
 }

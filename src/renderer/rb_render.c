@@ -80,7 +80,7 @@ void RB_LockArrays (int numVerts)
 		return;
 
 	qglLockArraysEXT (0, numVerts);
-	rb_arraysLocked = qTrue;
+	rb_arraysLocked = true;
 }
 
 
@@ -95,7 +95,7 @@ void RB_UnlockArrays (void)
 		return;
 
 	qglUnlockArraysEXT ();
-	rb_arraysLocked = qFalse;
+	rb_arraysLocked = false;
 }
 
 
@@ -139,7 +139,7 @@ void RB_ResetPointers (void)
 	rb.numIndexes = 0;
 	rb.numVerts = 0;
 
-	rb_arraysLocked = qFalse;
+	rb_arraysLocked = false;
 	rb_numPasses = 0;
 }
 
@@ -171,9 +171,9 @@ static void RB_SetupColorFog (const matPass_t *pass, int numColors)
 
 	if ((pass->blendSource != GL_SRC_ALPHA && pass->blendDest != GL_SRC_ALPHA)
 	&& (pass->blendSource != GL_ONE_MINUS_SRC_ALPHA && pass->blendDest != GL_ONE_MINUS_SRC_ALPHA))
-		alphaFog = qFalse;
+		alphaFog = false;
 	else
-		alphaFog = qTrue;
+		alphaFog = true;
 
 	fogPlane = rb.curColorFog->visiblePlane;
 	if (!fogPlane) {
@@ -309,7 +309,7 @@ static qBool RB_SetupColorFast (const matPass_t *pass)
 		break;
 
 	default:
-		return qFalse;
+		return false;
 	}
 
 	// Get the alpha
@@ -335,12 +335,12 @@ static qBool RB_SetupColorFast (const matPass_t *pass)
 		break;
 
 	default:
-		return qFalse;
+		return false;
 	}
 
 	qglDisableClientState (GL_COLOR_ARRAY);
 	qglColor4ubv (color);
-	return qTrue;
+	return true;
 }
 
 
@@ -1051,15 +1051,15 @@ static qBool RB_VertexTCBaseMatrix (matPass_t *pass, texUnit_t texUnit, mat4x4_t
 	switch (pass->tcGen) {
 	case TC_GEN_BASE:
 		qglTexCoordPointer (2, GL_FLOAT, 0, rb.inCoords);
-		return qTrue;
+		return true;
 
 	case TC_GEN_LIGHTMAP:
 		qglTexCoordPointer (2, GL_FLOAT, 0, rb.inLMCoords);
-		return qTrue;
+		return true;
 
 	case TC_GEN_ENVIRONMENT:
 		if (rb_glState.in2D)
-			return qTrue;
+			return true;
 
 		matrix[0] = matrix[12] = -0.5f;
 		matrix[5] = matrix[13] = 0.5f;
@@ -1101,7 +1101,7 @@ static qBool RB_VertexTCBaseMatrix (matPass_t *pass, texUnit_t texUnit, mat4x4_t
 		}
 
 		qglTexCoordPointer (2, GL_FLOAT, 0, rb_outCoordArray[texUnit][0]);
-		return qFalse;
+		return false;
 
 	case TC_GEN_VECTOR:
 		{
@@ -1120,7 +1120,7 @@ static qBool RB_VertexTCBaseMatrix (matPass_t *pass, texUnit_t texUnit, mat4x4_t
 			qglTexGeni (GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
 			qglTexGenfv (GL_S, GL_OBJECT_PLANE, genVector[0]);
 			qglTexGenfv (GL_T, GL_OBJECT_PLANE, genVector[1]);
-			return qFalse;
+			return false;
 		}
 
 	case TC_GEN_REFLECTION:
@@ -1129,7 +1129,7 @@ static qBool RB_VertexTCBaseMatrix (matPass_t *pass, texUnit_t texUnit, mat4x4_t
 		qglTexGeni (GL_R, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP_ARB);
 
 		qglNormalPointer (GL_FLOAT, 12, rb.inNormals);
-		return qTrue;
+		return true;
 
 	case TC_GEN_WARP:
 		for (i=0 ; i<rb.numVerts ; i++) {
@@ -1138,10 +1138,10 @@ static qBool RB_VertexTCBaseMatrix (matPass_t *pass, texUnit_t texUnit, mat4x4_t
 		}
 
 		qglTexCoordPointer (2, GL_FLOAT, 0, rb_outCoordArray[texUnit][0]);
-		return qTrue;
+		return true;
 
 	case TC_GEN_DLIGHT:
-		return qTrue;
+		return true;
 
 	case TC_GEN_FOG:
 		{
@@ -1226,13 +1226,13 @@ static qBool RB_VertexTCBaseMatrix (matPass_t *pass, texUnit_t texUnit, mat4x4_t
 			}
 
 			qglTexCoordPointer (2, GL_FLOAT, 0, rb_outCoordArray[texUnit][0]);
-			return qFalse;
+			return false;
 		}
 	}
 
 	// Should never reach here...
 	assert (0);
-	return qTrue;
+	return true;
 }
 static void RB_ModifyTextureCoordsMatrix (matPass_t *pass, texUnit_t texUnit)
 {
@@ -1246,7 +1246,7 @@ static void RB_ModifyTextureCoordsMatrix (matPass_t *pass, texUnit_t texUnit)
 	qglMatrixMode (GL_TEXTURE);
 
 	if (pass->numTCMods) {
-		identityMatrix = qFalse;
+		identityMatrix = false;
 		RB_ApplyTCModsMatrix (pass, result);
 	}
 
@@ -1802,7 +1802,7 @@ static void RB_RenderDLights (void)
 	// Set state
 	pass = rb_accumPasses[0];
 	RB_BindMaterialPass (pass, ri.dLightTexture, 0);
-	RB_SetupPassState (pass, qFalse);
+	RB_SetupPassState (pass, false);
 	RB_TextureEnv (GL_MODULATE);
 
 	// Texture state
@@ -1914,7 +1914,7 @@ static void RB_RenderGeneric (void)
 
 	RB_BindMaterialPass (pass, NULL, 0);
 	RB_SetupColor (pass);
-	RB_SetupPassState (pass, qFalse);
+	RB_SetupPassState (pass, false);
 	if (pass->blendMode == GL_REPLACE)
 		RB_TextureEnv (GL_REPLACE);
 	else
@@ -1938,7 +1938,7 @@ static void RB_RenderCombine (void)
 
 	RB_BindMaterialPass (pass, NULL, 0);
 	RB_SetupColor (pass);
-	RB_SetupPassState (pass, qTrue);
+	RB_SetupPassState (pass, true);
 	RB_TextureEnv (GL_MODULATE);
 
 	for (i=1 ; i<rb_numPasses ; i++) {
@@ -1957,7 +1957,7 @@ static void RB_RenderCombine (void)
 			break;
 
 		case GL_DECAL:
-			// Mimics Alpha-Blending in upper texture stage, but instead of multiplying the alpha-channel, they´re added
+			// Mimics Alpha-Blending in upper texture stage, but instead of multiplying the alpha-channel, theyï¿½re added
 			// this way it can be possible to use GL_DECAL in both texture-units, while still looking good
 			// normal mutlitexturing would multiply the alpha-channel which looks ugly
 			RB_TextureEnv (GL_COMBINE_ARB);
@@ -2122,7 +2122,7 @@ static void RB_RenderMTex (void)
 
 	RB_BindMaterialPass (pass, NULL, 0);
 	RB_SetupColor (pass);
-	RB_SetupPassState (pass, qTrue);
+	RB_SetupPassState (pass, true);
 	RB_TextureEnv (GL_MODULATE);
 
 	for (i=1 ; i<rb_numPasses ; i++) {
@@ -2222,7 +2222,7 @@ static void RB_AccumulatePass (matPass_t *pass)
 	else switch (prevPass->blendMode) {
 	case GL_REPLACE:
 		if (ri.config.extTexEnvCombine)
-			accum = (pass->blendMode == GL_ADD) ? ri.config.extTexEnvAdd : qTrue;
+			accum = (pass->blendMode == GL_ADD) ? ri.config.extTexEnvAdd : true;
 		else
 			accum = (pass->blendMode == GL_ADD) ? ri.config.extTexEnvAdd : (pass->blendMode != GL_DECAL);
 		break;
@@ -2236,7 +2236,7 @@ static void RB_AccumulatePass (matPass_t *pass)
 		break;
 
 	default:
-		accum = qFalse;
+		accum = false;
 		break;
 	}
 
@@ -2442,7 +2442,7 @@ void RB_RenderMeshBuffer (meshBuffer_t *mb, qBool shadowPass)
 		rb.curLMTexNum = ((mBspSurface_t *)mb->mesh)->q2_lmTexNumActive;
 
 		surf = (mBspSurface_t *)mb->mesh;
-		addDlights = qFalse;
+		addDlights = false;
 		break;
 
 	case MBT_Q3BSP:
@@ -2453,15 +2453,15 @@ void RB_RenderMeshBuffer (meshBuffer_t *mb, qBool shadowPass)
 		surf = (mBspSurface_t *)mb->mesh;
 		if (!(rb.curMat->flags & MAT_FLARE) && surf->dLightFrame == ri.frameCount) {
 			rb.curDLightBits = surf->dLightBits;
-			addDlights = qTrue;
+			addDlights = true;
 		}
 		else {
-			addDlights = qFalse;
+			addDlights = false;
 		}
 		break;
 
 	default:
-		addDlights = qFalse;
+		addDlights = false;
 		break;
 	}
 
@@ -2512,7 +2512,7 @@ void RB_RenderMeshBuffer (meshBuffer_t *mb, qBool shadowPass)
 	}
 
 	// Accumulate passes and render
-	debugLightmap = qFalse;
+	debugLightmap = false;
 	for (i=0, pass=mb->mat->passes ; i<mb->mat->numPasses ; pass++, i++) {
 		if (pass->flags & MAT_PASS_LIGHTMAP) {
 			if (rb.curLMTexNum < 0)
@@ -2533,7 +2533,7 @@ void RB_RenderMeshBuffer (meshBuffer_t *mb, qBool shadowPass)
 
 		if (pass->flags & MAT_PASS_LIGHTMAP) {
 			RB_AccumulatePass (&rb_dLightPass);
-			addDlights = qFalse;
+			addDlights = false;
 		}
 	}
 
@@ -2639,7 +2639,7 @@ RB_BeginTriangleOutlines
 */
 void RB_BeginTriangleOutlines (void)
 {
-	rb_triangleOutlines = qTrue;
+	rb_triangleOutlines = true;
 
 	RB_StateForBits (SB1_BLENDSRC_SRC_ALPHA|SB1_BLENDDST_ONE_MINUS_SRC_ALPHA);
 	RB_TextureTarget (0);
@@ -2655,7 +2655,7 @@ RB_EndTriangleOutlines
 */
 void RB_EndTriangleOutlines (void)
 {
-	rb_triangleOutlines = qFalse;
+	rb_triangleOutlines = false;
 
 	RB_StateForBits (SB1_DEPTHMASK_ON|SB1_DEFAULT);
 	RB_TextureTarget (GL_TEXTURE_2D);
@@ -2732,7 +2732,7 @@ void RB_Init (void)
 	double	t;
 
 	// Set defaults
-	rb_triangleOutlines = qFalse;
+	rb_triangleOutlines = false;
 	RB_ResetPointers ();
 
 	qglEnableClientState (GL_VERTEX_ARRAY);
@@ -2760,7 +2760,7 @@ void RB_Init (void)
 	rb_dLightPass.depthFunc = GL_EQUAL;
 	rb_dLightPass.blendSource = GL_DST_COLOR;
 	rb_dLightPass.blendDest = GL_ONE;
-	rb_dLightPass.canAccumulate = qFalse;
+	rb_dLightPass.canAccumulate = false;
 	R_PassStateBits (&rb_dLightPass);
 
 	// Create the fog pass
@@ -2772,7 +2772,7 @@ void RB_Init (void)
 	rb_fogPass.blendDest = GL_ONE_MINUS_SRC_ALPHA;
 	rb_fogPass.rgbGen.type = RGB_GEN_FOG;
 	rb_fogPass.alphaGen.type = ALPHA_GEN_FOG;
-	rb_fogPass.canAccumulate = qFalse;
+	rb_fogPass.canAccumulate = false;
 	R_PassStateBits (&rb_fogPass);
 
 	// Togglable solid lightmap overlay
@@ -2783,7 +2783,7 @@ void RB_Init (void)
 	rb_lightMapPass.blendMode = GL_REPLACE;
 	rb_lightMapPass.rgbGen.type = RGB_GEN_IDENTITY;
 	rb_lightMapPass.alphaGen.type = ALPHA_GEN_IDENTITY;
-	rb_lightMapPass.canAccumulate = qTrue;
+	rb_lightMapPass.canAccumulate = true;
 	R_PassStateBits (&rb_lightMapPass);
 
 	// Find rendering paths
@@ -2793,12 +2793,12 @@ void RB_Init (void)
 	case REND_CLASS_SIS:
 		// These models are known for not supporting texture matrices properly/at all
 		RB_ModifyTextureCoords = RB_ModifyTextureCoordsGeneric;
-		rb_matrixCoords = qFalse;
+		rb_matrixCoords = false;
 		break;
 
 	default:
 		RB_ModifyTextureCoords = RB_ModifyTextureCoordsMatrix;
-		rb_matrixCoords = qTrue;
+		rb_matrixCoords = true;
 		break;
 	}
 }

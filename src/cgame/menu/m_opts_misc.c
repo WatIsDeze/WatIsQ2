@@ -50,20 +50,20 @@ static m_miscMenu_t	m_miscMenu;
 
 static void ShadowFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("gl_shadows", m_miscMenu.shadows_list.curValue, qFalse);
+	cgi.Cvar_SetValue ("gl_shadows", m_miscMenu.shadows_list.curValue, false);
 }
 
 static void ScreenshotFunc (void *unused)
 {
 	if (m_miscMenu.screenshot_list.curValue == 1)
-		cgi.Cvar_Set ("gl_screenshot", "png", qFalse);
+		cgi.Cvar_Set ("gl_screenshot", "png", false);
 	else
-		cgi.Cvar_Set ("gl_screenshot", "tga", qFalse);
+		cgi.Cvar_Set ("gl_screenshot", "tga", false);
 }
 
 static void FlashBlendFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("gl_flashblend", m_miscMenu.flashblend_list.curValue, qFalse);
+	cgi.Cvar_SetValue ("gl_flashblend", m_miscMenu.flashblend_list.curValue, false);
 }
 
 
@@ -74,7 +74,7 @@ MiscMenu_SetValues
 */
 static void MiscMenu_SetValues (void)
 {
-	cgi.Cvar_SetValue ("gl_shadows",			clamp (cgi.Cvar_GetIntegerValue ("gl_shadows"), 0, 2), qFalse);
+	cgi.Cvar_SetValue ("gl_shadows",			clamp (cgi.Cvar_GetIntegerValue ("gl_shadows"), 0, 2), false);
 	m_miscMenu.shadows_list.curValue			= cgi.Cvar_GetIntegerValue ("gl_shadows");
 
 	if (!Q_stricmp (cgi.Cvar_GetStringValue ("gl_screenshot"), "png"))
@@ -82,7 +82,7 @@ static void MiscMenu_SetValues (void)
 	else
 		m_miscMenu.screenshot_list.curValue	= 0;
 
-	cgi.Cvar_SetValue ("gl_flashblend",		clamp (cgi.Cvar_GetIntegerValue ("gl_flashblend"), 0, 1), qFalse);
+	cgi.Cvar_SetValue ("gl_flashblend",		clamp (cgi.Cvar_GetIntegerValue ("gl_flashblend"), 0, 1), false);
 	m_miscMenu.flashblend_list.curValue	= cgi.Cvar_GetIntegerValue ("gl_flashblend");
 }
 
@@ -172,7 +172,7 @@ static void MiscMenu_Init (void)
 
 	UI_AddItem (&m_miscMenu.frameWork,			&m_miscMenu.back_action);
 
-	UI_FinishFramework (&m_miscMenu.frameWork, qTrue);
+	UI_FinishFramework (&m_miscMenu.frameWork, true);
 }
 
 

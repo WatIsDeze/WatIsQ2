@@ -140,7 +140,7 @@ void R_DrawSP2Model (meshBuffer_t *mb)
 		features |= MF_NORMALS;
 
 	RB_PushMesh (&mesh, features);
-	RB_RenderMeshBuffer (mb, qFalse);
+	RB_RenderMeshBuffer (mb, false);
 }
 
 /*

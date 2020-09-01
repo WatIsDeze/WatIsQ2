@@ -61,7 +61,7 @@ void R_SetupFrustum (void)
 =================
 R_CullBox
 
-Returns qTrue if the box is completely outside the frustum
+Returns true if the box is completely outside the frustum
 =================
 */
 qBool R_CullBox (vec3_t mins, vec3_t maxs, int clipFlags)
@@ -70,7 +70,7 @@ qBool R_CullBox (vec3_t mins, vec3_t maxs, int clipFlags)
 	cBspPlane_t	*p;
 
 	if (r_noCull->intVal)
-		return qFalse;
+		return false;
 
 	for (i=0, p=ri.scn.viewFrustum ; i<5 ; p++, i++) {
 		if (!(clipFlags & (1<<i)))
@@ -80,67 +80,67 @@ qBool R_CullBox (vec3_t mins, vec3_t maxs, int clipFlags)
 		case 0:
 			if (p->normal[0]*maxs[0] + p->normal[1]*maxs[1] + p->normal[2]*maxs[2] < p->dist) {
 				ri.pc.cullBounds[CULL_PASS]++;
-				return qTrue;
+				return true;
 			}
 			break;
 
 		case 1:
 			if (p->normal[0]*mins[0] + p->normal[1]*maxs[1] + p->normal[2]*maxs[2] < p->dist) {
 				ri.pc.cullBounds[CULL_PASS]++;
-				return qTrue;
+				return true;
 			}
 			break;
 
 		case 2:
 			if (p->normal[0]*maxs[0] + p->normal[1]*mins[1] + p->normal[2]*maxs[2] < p->dist) {
 				ri.pc.cullBounds[CULL_PASS]++;
-				return qTrue;
+				return true;
 			}
 			break;
 
 		case 3:
 			if (p->normal[0]*mins[0] + p->normal[1]*mins[1] + p->normal[2]*maxs[2] < p->dist) {
 				ri.pc.cullBounds[CULL_PASS]++;
-				return qTrue;
+				return true;
 			}
 			break;
 
 		case 4:
 			if (p->normal[0]*maxs[0] + p->normal[1]*maxs[1] + p->normal[2]*mins[2] < p->dist) {
 				ri.pc.cullBounds[CULL_PASS]++;
-				return qTrue;
+				return true;
 			}
 			break;
 
 		case 5:
 			if (p->normal[0]*mins[0] + p->normal[1]*maxs[1] + p->normal[2]*mins[2] < p->dist) {
 				ri.pc.cullBounds[CULL_PASS]++;
-				return qTrue;
+				return true;
 			}
 			break;
 
 		case 6:
 			if (p->normal[0]*maxs[0] + p->normal[1]*mins[1] + p->normal[2]*mins[2] < p->dist) {
 				ri.pc.cullBounds[CULL_PASS]++;
-				return qTrue;
+				return true;
 			}
 			break;
 
 		case 7:
 			if (p->normal[0]*mins[0] + p->normal[1]*mins[1] + p->normal[2]*mins[2] < p->dist) {
 				ri.pc.cullBounds[CULL_PASS]++;
-				return qTrue;
+				return true;
 			}
 			break;
 
 		default:
 			assert (0);
-			return qFalse;
+			return false;
 		}
 	}
 
 	ri.pc.cullBounds[CULL_FAIL]++;
-	return qFalse;
+	return false;
 }
 
 
@@ -148,7 +148,7 @@ qBool R_CullBox (vec3_t mins, vec3_t maxs, int clipFlags)
 =================
 R_CullSphere
 
-Returns qTrue if the sphere is completely outside the frustum
+Returns true if the sphere is completely outside the frustum
 =================
 */
 qBool R_CullSphere (const vec3_t origin, const float radius, int clipFlags)
@@ -157,7 +157,7 @@ qBool R_CullSphere (const vec3_t origin, const float radius, int clipFlags)
 	cBspPlane_t	*p;
 
 	if (r_noCull->intVal)
-		return qFalse;
+		return false;
 
 	for (i=0, p=ri.scn.viewFrustum ; i<5 ; p++, i++) {
 		if (!(clipFlags & (1<<i)))
@@ -165,19 +165,19 @@ qBool R_CullSphere (const vec3_t origin, const float radius, int clipFlags)
 
 		if (DotProduct(origin, p->normal)-p->dist <= -radius) {
 			ri.pc.cullRadius[CULL_PASS]++;
-			return qTrue;
+			return true;
 		}
 	}
 
 	ri.pc.cullRadius[CULL_FAIL]++;
-	return qFalse;
+	return false;
 }
 
 /*
 =================
 R_PointOccluded
 
-Returns qTrue if the origin is not visible via trace
+Returns true if the origin is not visible via trace
 =================
 */
 qBool R_PointOccluded (const vec3_t origin)
@@ -201,21 +201,21 @@ qBool R_PointOccluded (const vec3_t origin)
 ===============
 R_CullNode
 
-Returns qTrue if this node hasn't been touched this frame
+Returns true if this node hasn't been touched this frame
 ===============
 */
 qBool R_CullNode (mBspNode_t *node)
 {
 	if (r_noCull->intVal)
-		return qFalse;
+		return false;
 
 	if (!node || node->c.visFrame == ri.scn.visFrameCount) {
 		ri.pc.cullVis[CULL_FAIL]++;
-		return qFalse;
+		return false;
 	}
 
 	ri.pc.cullVis[CULL_PASS]++;
-	return qTrue;
+	return true;
 }
 
 
@@ -223,19 +223,19 @@ qBool R_CullNode (mBspNode_t *node)
 ===============
 R_CullSurface
 
-Returns qTrue if this surface hasn't been touched this frame
+Returns true if this surface hasn't been touched this frame
 ===============
 */
 qBool R_CullSurface (mBspSurface_t *surf)
 {
 	if (r_noCull->intVal)
-		return qFalse;
+		return false;
 
 	if (!surf || surf->visFrame == ri.frameCount) {
 		ri.pc.cullSurf[CULL_FAIL]++;
-		return qFalse;
+		return false;
 	}
 
 	ri.pc.cullSurf[CULL_PASS]++;
-	return qTrue;
+	return true;
 }

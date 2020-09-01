@@ -331,12 +331,12 @@ static void CM_Q3BSP_CreateBrush (cbrush_t *brush, vec3_t *verts, cBspSurface_t 
 	// Set plane->type and mark duplicate planes for removal
 	for (i=0 ; i<numPatchPlanes ; i++) {
 		CategorizePlane (&patchplanes[i]);
-		skip[i] = qFalse;
+		skip[i] = false;
 
 		for (j=i+1 ; j<numPatchPlanes ; j++) {
 			if (patchplanes[j].dist == patchplanes[i].dist
 			&& Vec3Compare (patchplanes[j].normal, patchplanes[i].normal)) {
-				skip[i] = qTrue;
+				skip[i] = true;
 				break;
 			}
 		}
@@ -356,7 +356,7 @@ static void CM_Q3BSP_CreateBrush (cbrush_t *brush, vec3_t *verts, cBspSurface_t 
 			if (!k && patchplanes[i].type >= 3)
 				continue;
 
-			skip[i] = qTrue;
+			skip[i] = true;
 
 			if (cm_q3_numPlanes == MAX_Q3BSP_CM_PLANES)
 				Com_Error (ERR_DROP, "CM_Q3BSP_CreateBrush: cm_q3_numPlanes == MAX_Q3BSP_CM_PLANES");

@@ -124,7 +124,7 @@ static void LE_BrassThink (localEnt_t *le)
 
 	// Check if time is up
 	if (cg.realTime >= le->time+(cg_brassTime->floatVal*1000)) {
-		le->remove = qTrue;
+		le->remove = true;
 		return;
 	}
 
@@ -148,9 +148,9 @@ static void LE_BrassThink (localEnt_t *le)
 		le->refEnt.origin[2] = le->org[2] + le->velocity[2] * time - le->pubParms[0] * time2;
 
 		// Check for collision
-		CG_PMTrace (&tr, le->refEnt.oldOrigin, le->mins, le->maxs, le->refEnt.origin, qFalse);
+		CG_PMTrace (&tr, le->refEnt.oldOrigin, le->mins, le->maxs, le->refEnt.origin, false);
 		if (tr.allSolid || tr.startSolid) {
-			le->remove = qTrue;
+			le->remove = true;
 			return;
 		}
 
@@ -301,7 +301,7 @@ qBool CG_SpawnLocalEnt (float org0,						float org1,						float org2,
 	Vec3Set (le->pubParms, parm0, parm1, parm2);
 
 	Vec3Clear (le->privFloatParms);
-	le->privBoolParms[0] = le->privBoolParms[1] = le->privBoolParms[2] = qFalse;
+	le->privBoolParms[0] = le->privBoolParms[1] = le->privBoolParms[2] = false;
 	le->privIntParms[0] = le->privIntParms[1] = le->privIntParms[2] = 0;
 
 	// Set up the refEnt
@@ -323,7 +323,7 @@ qBool CG_SpawnLocalEnt (float org0,						float org1,						float org2,
 
 	le->remove = !(le->refEnt.model);
 
-	return qTrue;
+	return true;
 }
 
 

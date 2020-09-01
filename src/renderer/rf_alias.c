@@ -255,17 +255,17 @@ static qBool R_CullAliasModel (refEntity_t *ent, vec3_t origin, vec3_t mins, vec
 	cBspPlane_t		*p;
 
 	if (ent->flags & RF_WEAPONMODEL)
-		return qFalse;
+		return false;
 	if (ent->flags & RF_VIEWERMODEL)
 		return !(ri.scn.mirrorView || ri.scn.portalView);
 
 	if (r_noCull->intVal)
-		return qFalse;
+		return false;
 
 	// Cull
 	if (r_sphereCull->intVal) {
 		if (R_CullSphere (origin, radius, 31))
-			return qTrue;
+			return true;
 	}
 	else {
 		vec3_t	bbox[8];
@@ -297,24 +297,24 @@ static qBool R_CullAliasModel (refEntity_t *ent, vec3_t origin, vec3_t mins, vec
 
 		if (aggregateMask) {
 			ri.pc.cullBounds[CULL_PASS]++;
-			return qTrue;
+			return true;
 		}
 
 		ri.pc.cullBounds[CULL_FAIL]++;
-		return qFalse;
+		return false;
 	}
 
 	// Mirror/portal culling
 	if (ri.scn.mirrorView || ri.scn.portalView) {
 		if (PlaneDiff (origin, &ri.scn.clipPlane) < -radius) {
 			ri.pc.cullRadius[CULL_PASS]++;
-			return qTrue;
+			return true;
 		}
 
 		ri.pc.cullRadius[CULL_FAIL]++;
 	}
 
-	return qFalse;
+	return false;
 }
 
 
@@ -470,14 +470,14 @@ void R_DrawAliasModel (meshBuffer_t *mb, qBool shadowPass)
 		features |= MF_NOCULL;
 
 	if (shadowPass) {
-		calcNormals = qFalse;
-		calcSTVectors = qFalse;
+		calcNormals = false;
+		calcSTVectors = false;
 		features |= MF_DEFORMVS;
 	}
 	else {
 		if (gl_shownormals->intVal) {
 			features |= MF_NORMALS;
-			calcNormals = qTrue;
+			calcNormals = true;
 		}
 		else {
 			calcNormals = (features & MF_NORMALS);

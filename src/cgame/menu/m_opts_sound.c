@@ -82,25 +82,25 @@ static m_soundMenu_t	m_soundMenu;
 
 static void SoundToggleFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("s_initSound", m_soundMenu.sound_toggle.curValue, qTrue);
+	cgi.Cvar_SetValue ("s_initSound", m_soundMenu.sound_toggle.curValue, true);
 	Sound_RestartBox ();
 }
 
 static void UpdateVolumeFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("s_volume", m_soundMenu.sfxvolume_slider.curValue * 0.05, qFalse);
+	cgi.Cvar_SetValue ("s_volume", m_soundMenu.sfxvolume_slider.curValue * 0.05, false);
 	m_soundMenu.sfxvolume_amount.generic.name = cgi.Cvar_GetStringValue ("s_volume");
 }
 
 static void ALDopFactorFunc (void *unused)
 {
-//	cgi.Cvar_SetValue ("al_dopplerfactor", m_soundMenu.dopplerfactor_slider.curValue * 0.1, qFalse);
+//	cgi.Cvar_SetValue ("al_dopplerfactor", m_soundMenu.dopplerfactor_slider.curValue * 0.1, false);
 //	m_soundMenu.dopplerfactor_amount.generic.name = cgi.Cvar_GetStringValue ("al_dopplerfactor");
 }
 
 static void ALDopVelocityFunc (void *unused)
 {
-//	cgi.Cvar_SetValue ("al_dopplervelocity", m_soundMenu.dopplervelocity_slider.curValue * 100, qFalse);
+//	cgi.Cvar_SetValue ("al_dopplervelocity", m_soundMenu.dopplervelocity_slider.curValue * 100, false);
 //	m_soundMenu.dopplervelocity_amount.generic.name = cgi.Cvar_GetStringValue ("al_dopplervelocity");
 }
 
@@ -118,7 +118,7 @@ static void ALExtEAXFunc (void *unused)
 
 static void UpdateCDToggleFunc (void *unused)
 {
-	cgi.Cvar_SetValue ("cd_nocd", !m_soundMenu.cdtoggle_toggle.curValue, qFalse);
+	cgi.Cvar_SetValue ("cd_nocd", !m_soundMenu.cdtoggle_toggle.curValue, false);
 }
 
 static void UpdateSoundQualityFunc (void *unused)
@@ -134,12 +134,12 @@ static void UpdateSoundQualityFunc (void *unused)
 		0
 	};
 
-	cgi.Cvar_SetValue ("s_khz", quality_ints[m_soundMenu.sw_quality_list.curValue], qTrue);
+	cgi.Cvar_SetValue ("s_khz", quality_ints[m_soundMenu.sw_quality_list.curValue], true);
 
-	if (cgi.Cvar_GetIntegerValue ("s_khz") < 16) { cgi.Cvar_SetValue ("s_loadas8bit", 1, qTrue); }
-	else { cgi.Cvar_SetValue ("s_loadas8bit", 0, qTrue); }
+	if (cgi.Cvar_GetIntegerValue ("s_khz") < 16) { cgi.Cvar_SetValue ("s_loadas8bit", 1, true); }
+	else { cgi.Cvar_SetValue ("s_loadas8bit", 0, true); }
 
-	cgi.Cvar_SetValue ("s_primary", m_soundMenu.sw_combatibility_list.curValue, qTrue);
+	cgi.Cvar_SetValue ("s_primary", m_soundMenu.sw_combatibility_list.curValue, true);
 
 	Sound_RestartBox ();
 }
@@ -152,14 +152,14 @@ Sound_SetValues
 */
 static void SoundMenu_SetValues (void)
 {
-//	cgi.Cvar_SetValue ("s_initSound",	clamp (cgi.Cvar_GetIntegerValue ("s_initSound"), 0, 2), qTrue);
-	cgi.Cvar_SetValue ("s_initSound",	clamp (cgi.Cvar_GetIntegerValue ("s_initSound"), 0, 1), qTrue);
+//	cgi.Cvar_SetValue ("s_initSound",	clamp (cgi.Cvar_GetIntegerValue ("s_initSound"), 0, 2), true);
+	cgi.Cvar_SetValue ("s_initSound",	clamp (cgi.Cvar_GetIntegerValue ("s_initSound"), 0, 1), true);
 	m_soundMenu.sound_toggle.curValue		= cgi.Cvar_GetIntegerValue ("s_initSound");
 
 	m_soundMenu.sfxvolume_slider.curValue		= cgi.Cvar_GetFloatValue ("s_volume") * 20;
 	m_soundMenu.sfxvolume_amount.generic.name	= cgi.Cvar_GetStringValue ("s_volume");
 
-	cgi.Cvar_SetValue ("cd_nocd",			clamp (cgi.Cvar_GetIntegerValue ("cd_nocd"), 0, 1), qFalse);
+	cgi.Cvar_SetValue ("cd_nocd",			clamp (cgi.Cvar_GetIntegerValue ("cd_nocd"), 0, 1), false);
 	m_soundMenu.cdtoggle_toggle.curValue	= !cgi.Cvar_GetIntegerValue ("cd_nocd");
 
 /*	m_soundMenu.dopplerfactor_slider.curValue		= cgi.Cvar_GetFloatValue ("al_dopplerfactor") * 10;
@@ -338,7 +338,7 @@ static void SoundMenu_Init (void)
 
 	UI_AddItem (&m_soundMenu.frameWork,		&m_soundMenu.back_action);
 
-	UI_FinishFramework (&m_soundMenu.frameWork, qTrue);
+	UI_FinishFramework (&m_soundMenu.frameWork, true);
 }
 
 

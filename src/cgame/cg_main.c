@@ -142,7 +142,7 @@ void CG_SetRefConfig (refConfig_t *inConfig)
 	cg.refConfig = *inConfig;
 
 	// Force a cg.hudScale update
-	r_hudScale->modified = qTrue;
+	r_hudScale->modified = true;
 }
 
 
@@ -155,9 +155,9 @@ void CG_UpdateCvars (qBool forceUpdate)
 {
 	// HUD scale
 	if (r_hudScale->modified || forceUpdate) {
-		r_hudScale->modified = qFalse;
+		r_hudScale->modified = false;
 		if (r_hudScale->floatVal <= 0)
-			cgi.Cvar_VariableSetValue (r_hudScale, 1, qTrue);
+			cgi.Cvar_VariableSetValue (r_hudScale, 1, true);
 
 		cg.hudScale[0] = r_hudScale->floatVal;
 		cg.hudScale[1] = r_hudScale->floatVal;
@@ -165,57 +165,57 @@ void CG_UpdateCvars (qBool forceUpdate)
 
 	// cg_brassTime
 	if (cg_brassTime->modified) {
-		cg_brassTime->modified = qFalse;
+		cg_brassTime->modified = false;
 		if (cg_brassTime->floatVal < 0)
-			cgi.Cvar_VariableSetValue (cg_brassTime, 0, qTrue);
+			cgi.Cvar_VariableSetValue (cg_brassTime, 0, true);
 	}
 
 	// cg_decalBurnLife
 	if (cg_decalBurnLife->modified) {
-		cg_decalBurnLife->modified = qFalse;
+		cg_decalBurnLife->modified = false;
 		if (cg_decalBurnLife->floatVal < 0)
-			cgi.Cvar_VariableSetValue (cg_decalBurnLife, 0, qTrue);
+			cgi.Cvar_VariableSetValue (cg_decalBurnLife, 0, true);
 	}
 
 	// cg_decalFadeTime
 	if (cg_decalFadeTime->modified) {
-		cg_decalFadeTime->modified = qFalse;
+		cg_decalFadeTime->modified = false;
 		if (cg_decalFadeTime->floatVal < 0)
-			cgi.Cvar_VariableSetValue (cg_decalFadeTime, 0, qTrue);
+			cgi.Cvar_VariableSetValue (cg_decalFadeTime, 0, true);
 	}
 
 	// cg_decalLife
 	if (cg_decalLife->modified) {
-		cg_decalLife->modified = qFalse;
+		cg_decalLife->modified = false;
 		if (cg_decalLife->floatVal < 0)
-			cgi.Cvar_VariableSetValue (cg_decalLife, 0, qTrue);
+			cgi.Cvar_VariableSetValue (cg_decalLife, 0, true);
 	}
 
 	// cg_decalMax
 	if (cg_decalMax->modified) {
-		cg_decalMax->modified = qFalse;
+		cg_decalMax->modified = false;
 		if (cg_decalMax->intVal > MAX_REF_DECALS)
-			cgi.Cvar_VariableSetValue (cg_decalMax, MAX_REF_DECALS, qTrue);
+			cgi.Cvar_VariableSetValue (cg_decalMax, MAX_REF_DECALS, true);
 		else if (cg_decalMax->intVal < 0)
-			cgi.Cvar_VariableSetValue (cg_decalMax, 0, qTrue);
+			cgi.Cvar_VariableSetValue (cg_decalMax, 0, true);
 	}
 
 	// cg_particleMax
 	if (cg_particleMax->modified) {
-		cg_particleMax->modified = qFalse;
+		cg_particleMax->modified = false;
 		if (cg_particleMax->intVal > MAX_PARTICLES)
-			cgi.Cvar_VariableSetValue (cg_particleMax, MAX_PARTICLES, qTrue);
+			cgi.Cvar_VariableSetValue (cg_particleMax, MAX_PARTICLES, true);
 		else if (cg_particleMax->intVal < 0)
-			cgi.Cvar_VariableSetValue (cg_particleMax, 0, qTrue);
+			cgi.Cvar_VariableSetValue (cg_particleMax, 0, true);
 	}
 
 	// cg_particleGore
 	if (cg_particleGore->modified || forceUpdate) {
-		cg_particleGore->modified = qFalse;
+		cg_particleGore->modified = false;
 		if (cg_particleGore->floatVal < 0.0f)
-			cgi.Cvar_VariableSetValue(cg_particleGore, 0.0f, qTrue);
+			cgi.Cvar_VariableSetValue(cg_particleGore, 0.0f, true);
 		else if (cg_particleGore->floatVal > 10.0f)
-			cgi.Cvar_VariableSetValue(cg_particleGore, 10.0f, qTrue);
+			cgi.Cvar_VariableSetValue(cg_particleGore, 10.0f, true);
 
 		// 0.0-10.0 -> 0.0-1.0
 		cg.goreScale = cg_particleGore->floatVal * 0.1f;
@@ -223,11 +223,11 @@ void CG_UpdateCvars (qBool forceUpdate)
 
 	// cg_particleSmokeLinger
 	if (cg_particleSmokeLinger->modified || forceUpdate) {
-		cg_particleSmokeLinger->modified = qFalse;
+		cg_particleSmokeLinger->modified = false;
 		if (cg_particleSmokeLinger->floatVal < 0.0f)
-			cgi.Cvar_VariableSetValue(cg_particleSmokeLinger, 0.0f, qTrue);
+			cgi.Cvar_VariableSetValue(cg_particleSmokeLinger, 0.0f, true);
 		else if (cg_particleSmokeLinger->floatVal > 10.0f)
-			cgi.Cvar_VariableSetValue(cg_particleSmokeLinger, 10.0f, qTrue);
+			cgi.Cvar_VariableSetValue(cg_particleSmokeLinger, 10.0f, true);
 
 		// 0.0-10.0 -> 0.0-1.0
 		cg.smokeLingerScale = cg_particleGore->floatVal * 0.1f;
@@ -277,7 +277,7 @@ CG_ThirdPerson_f
 */
 static void CG_ThirdPerson_f (void)
 {
-	cgi.Cvar_SetValue ("cg_thirdPerson", !cg_thirdPerson->intVal, qFalse);
+	cgi.Cvar_SetValue ("cg_thirdPerson", !cg_thirdPerson->intVal, false);
 }
 
 /*
@@ -453,7 +453,7 @@ static void CG_RegisterMain (void)
 	else
 		gl_polyblend		= cgi.Cvar_Register ("gl_polyblend",			"1",			0);
 
-	gender->modified = qFalse; // clear this so we know when user sets it manually
+	gender->modified = false; // clear this so we know when user sets it manually
 
 	cmd_glmCache	= cgi.Cmd_AddCommand ("glmcache",		CG_CacheGloomMedia,	"Forces caching of Gloom media right now");
 	cmd_skins		= cgi.Cmd_AddCommand ("skins",			CG_Skins_f,			"Lists skins of players connected");
@@ -541,7 +541,7 @@ void CG_LoadMap (int playerNum, int serverProtocol, int protocolMinorVersion, qB
 {
 	// Default values
 	cg.frameCount = 1;
-	cg.gloomCheckClass = qFalse;
+	cg.gloomCheckClass = false;
 	cg.gloomClassType = GLM_OBSERVER;
 	cg.playerNum = playerNum;
 	cg.serverProtocol = serverProtocol;
@@ -558,13 +558,13 @@ void CG_LoadMap (int playerNum, int serverProtocol, int protocolMinorVersion, qB
 	// Init media
 	CG_InitBaseMedia ();
 
-	cg.mapLoading = qTrue;
-	cg.mapLoaded = qFalse;
+	cg.mapLoading = true;
+	cg.mapLoaded = false;
 
 	CG_MapInit ();
 
-	cg.mapLoading = qFalse;
-	cg.mapLoaded = qTrue;
+	cg.mapLoading = false;
+	cg.mapLoaded = true;
 }
 
 
@@ -617,7 +617,7 @@ void CG_Init (void)
 	CG_RegisterMain ();
 
 	// Check cvar sanity
-	CG_UpdateCvars (qTrue);
+	CG_UpdateCvars (true);
 
 	// Location system init
 	CG_LocationInit ();

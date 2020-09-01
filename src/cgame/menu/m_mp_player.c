@@ -78,13 +78,13 @@ static int rateTable[] = {
 
 static void HandednessCallback (void *unused)
 {
-	cgi.Cvar_SetValue ("hand", m_playerConfigMenu.handednessList.curValue, qFalse);
+	cgi.Cvar_SetValue ("hand", m_playerConfigMenu.handednessList.curValue, false);
 }
 
 static void RateCallback (void *unused)
 {
 	if (m_playerConfigMenu.rateList.curValue != sizeof (rateTable) / sizeof (*rateTable) - 1)
-		cgi.Cvar_SetValue ("rate", rateTable[m_playerConfigMenu.rateList.curValue], qFalse);
+		cgi.Cvar_SetValue ("rate", rateTable[m_playerConfigMenu.rateList.curValue], false);
 }
 
 static void ModelCallback (void *unused)
@@ -119,9 +119,9 @@ static qBool PlayerConfig_ScanDirectories (void)
 	m_playerConfigMenu.numPlayerModels = 0;
 
 	// Model list
-	numModels = cgi.FS_FindFiles ("players", "players/*/tris.md*", "md*", modelList, MAX_PLAYERMODELS, qFalse, qTrue);
+	numModels = cgi.FS_FindFiles ("players", "players/*/tris.md*", "md*", modelList, MAX_PLAYERMODELS, false, true);
 	if (!numModels)
-		return qFalse;
+		return false;
 
 	for (i=0 ; i<numModels ; i++) {
 		// skip duplicates
@@ -142,7 +142,7 @@ static qBool PlayerConfig_ScanDirectories (void)
 			*p = '\0';
 
 		// Get the skins
-		numSkins = cgi.FS_FindFiles (directory, "*.pcx", NULL, skinList, MAX_PLAYERSKINS, qFalse, qFalse);
+		numSkins = cgi.FS_FindFiles (directory, "*.pcx", NULL, skinList, MAX_PLAYERSKINS, false, false);
 		if (!skinList)
 			continue;
 
@@ -288,7 +288,7 @@ static void PlayerConfigMenu_Init (void)
 
 	// clamp "hand"
 	if (cgi.Cvar_GetIntegerValue ("hand") < 0 || cgi.Cvar_GetIntegerValue ("hand") > 2)
-		cgi.Cvar_SetValue ("hand", 0, qFalse);
+		cgi.Cvar_SetValue ("hand", 0, false);
 
 	// find current directory and skin
 	Q_strncpyz (currentDirectory, cgi.Cvar_GetStringValue ("skin"), sizeof (currentDirectory));
@@ -394,7 +394,7 @@ static void PlayerConfigMenu_Init (void)
 
 	UI_AddItem (&m_playerConfigMenu.frameWork,		&m_playerConfigMenu.backAction);
 
-	UI_FinishFramework (&m_playerConfigMenu.frameWork, qTrue);
+	UI_FinishFramework (&m_playerConfigMenu.frameWork, true);
 }
 
 
@@ -408,13 +408,13 @@ struct sfx_s *PlayerConfigMenu_Close (void)
 	size_t	i, j;
 
 	// Set name
-	cgi.Cvar_Set ("name", m_playerConfigMenu.nameField.buffer, qFalse);
+	cgi.Cvar_Set ("name", m_playerConfigMenu.nameField.buffer, false);
 
 	if (m_playerConfigMenu.modelsFound) {
 		// Set skin
 		cgi.Cvar_Set ("skin", Q_VarArgs ("%s/%s", 
 			m_playerConfigMenu.modelInfo[m_playerConfigMenu.modelList.curValue].directory, 
-			m_playerConfigMenu.modelInfo[m_playerConfigMenu.modelList.curValue].skinDisplayNames[m_playerConfigMenu.skinList.curValue]), qFalse);
+			m_playerConfigMenu.modelInfo[m_playerConfigMenu.modelList.curValue].skinDisplayNames[m_playerConfigMenu.skinList.curValue]), false);
 	}
 
 	// Free model lists
@@ -432,7 +432,7 @@ struct sfx_s *PlayerConfigMenu_Close (void)
 		m_playerConfigMenu.modelInfo[i].numSkins = 0;
 	}
 
-	m_playerConfigMenu.modelsFound = qFalse;
+	m_playerConfigMenu.modelsFound = false;
 	memset (&m_playerConfigMenu.modelInfo, 0, sizeof (m_playerConfigMenu.modelInfo));
 	memset (&m_playerConfigMenu.modelNames, 0, sizeof (m_playerConfigMenu.modelNames));
 	m_playerConfigMenu.numPlayerModels = 0;

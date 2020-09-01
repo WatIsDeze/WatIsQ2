@@ -105,20 +105,20 @@ static void StartServerActionFunc (void *self)
 	timelimit	= atoi (m_startServerMenu.timelimit_field.buffer);
 	fraglimit	= atoi (m_startServerMenu.fraglimit_field.buffer);
 
-	cgi.Cvar_SetValue ("maxclients",	clamp (maxclients, 0, maxclients), qFalse);
-	cgi.Cvar_SetValue ("timelimit",		clamp (timelimit, 0, timelimit), qFalse);
-	cgi.Cvar_SetValue ("fraglimit",		clamp (fraglimit, 0, fraglimit), qFalse);
-	cgi.Cvar_Set ("hostname",			m_startServerMenu.hostname_field.buffer, qFalse);
+	cgi.Cvar_SetValue ("maxclients",	clamp (maxclients, 0, maxclients), false);
+	cgi.Cvar_SetValue ("timelimit",		clamp (timelimit, 0, timelimit), false);
+	cgi.Cvar_SetValue ("fraglimit",		clamp (fraglimit, 0, fraglimit), false);
+	cgi.Cvar_Set ("hostname",			m_startServerMenu.hostname_field.buffer, false);
 
 	if (m_startServerMenu.rules_box.curValue < 2 || cg.currGameMod != GAME_MOD_ROGUE) {
-		cgi.Cvar_SetValue ("deathmatch",	!m_startServerMenu.rules_box.curValue, qFalse);
-		cgi.Cvar_SetValue ("coop",			m_startServerMenu.rules_box.curValue, qFalse);
-		cgi.Cvar_SetValue ("gamerules",		0, qFalse);
+		cgi.Cvar_SetValue ("deathmatch",	!m_startServerMenu.rules_box.curValue, false);
+		cgi.Cvar_SetValue ("coop",			m_startServerMenu.rules_box.curValue, false);
+		cgi.Cvar_SetValue ("gamerules",		0, false);
 	}
 	else {
-		cgi.Cvar_SetValue ("deathmatch",	1, qFalse);	// deathmatch is always true for rogue games, right?
-		cgi.Cvar_SetValue ("coop",			0, qFalse);
-		cgi.Cvar_SetValue ("gamerules",		m_startServerMenu.rules_box.curValue, qFalse);
+		cgi.Cvar_SetValue ("deathmatch",	1, false);	// deathmatch is always true for rogue games, right?
+		cgi.Cvar_SetValue ("coop",			0, false);
+		cgi.Cvar_SetValue ("gamerules",		m_startServerMenu.rules_box.curValue, false);
 	}
 
 	spot = NULL;
@@ -342,7 +342,7 @@ static void StartServerMenu_Init (void)
 	// Call this now to set proper inital state
 	RulesChangeFunc (NULL);
 
-	UI_FinishFramework (&m_startServerMenu.frameWork, qTrue);
+	UI_FinishFramework (&m_startServerMenu.frameWork, true);
 }
 
 

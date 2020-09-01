@@ -71,9 +71,9 @@ Cvar_InfoValidate
 static qBool Cvar_InfoValidate (char *s)
 {
 	if (strchr (s, '\\') || strchr (s, '\"') || strchr (s, ';'))
-		return qFalse;
+		return false;
 
-	return qTrue;
+	return true;
 }
 
 
@@ -223,7 +223,7 @@ cVar_t *Cvar_Register (char *varName, char *varValue, int flags)
 	var->intVal = atoi (var->string);
 
 	var->flags = flags;
-	var->modified = qTrue;
+	var->modified = true;
 
 	// Link it into the hash list
 	var->hashNext = com_cvarHashTree[hashValue];
@@ -284,7 +284,7 @@ void Cvar_GetLatchedVars (int flags)
 		var->intVal = atoi (var->string);
 
 		if (var->flags & CVAR_RESET_GAMEDIR)
-			FS_SetGamedir (var->string, qFalse);
+			FS_SetGamedir (var->string, false);
 	}
 }
 
@@ -387,7 +387,7 @@ static cVar_t *Cvar_SetVariableValue (cVar_t *var, char *value, int flags, qBool
 				// Some modifications use this to check a variable value
 				// We still want them to get the info, just don't change the variable
 				if (var->flags & CVAR_USERINFO)
-					com_userInfoModified = qTrue;	// Transmit at next opportunity
+					com_userInfoModified = true;	// Transmit at next opportunity
 
 				if (!strcmp (value, var->string))
 					return var;
@@ -440,13 +440,13 @@ static cVar_t *Cvar_SetVariableValue (cVar_t *var, char *value, int flags, qBool
 	var->intVal = atoi (var->string);
 
 	// It has changed
-	var->modified = qTrue;
+	var->modified = true;
 	if (var->flags & CVAR_USERINFO)
-		com_userInfoModified = qTrue;	// Transmit at next opportunity
+		com_userInfoModified = true;	// Transmit at next opportunity
 
 	// Update the game directory
 	if (var->flags & CVAR_RESET_GAMEDIR)
-		FS_SetGamedir (var->string, qFalse);
+		FS_SetGamedir (var->string, false);
 
 	return var;
 }
@@ -587,7 +587,7 @@ qBool Cvar_Command (void)
 	// Check variables
 	var = Cvar_Exists (Cmd_Argv (0));
 	if (!var)
-		return qFalse;
+		return false;
 
 	// Perform a variable print or set
 	if (Cmd_Argc () == 1) {
@@ -595,11 +595,11 @@ qBool Cvar_Command (void)
 		if (!(var->flags & CVAR_READONLY))
 			Com_Printf (0, " default: \"%s" S_STYLE_RETURN "\"", var->defaultString);
 		Com_Printf (0, "\n");
-		return qTrue;
+		return true;
 	}
 
-	Cvar_SetVariableValue (var, Cmd_Argv (1), 0, qFalse);
-	return qTrue;
+	Cvar_SetVariableValue (var, Cmd_Argv (1), 0, false);
+	return true;
 }
 
 /*
@@ -642,7 +642,7 @@ static void Cvar_Set_f (void)
 		flags = 0;
 	}
 
-	Cvar_FindAndSet (Cmd_Argv (1), Cmd_Argv (2), flags, qFalse);
+	Cvar_FindAndSet (Cmd_Argv (1), Cmd_Argv (2), flags, false);
 }
 
 static void Cvar_SetA_f (void)
@@ -669,7 +669,7 @@ static void Cvar_SetA_f (void)
 	else
 		flags = 0;
 
-	Cvar_FindAndSet (Cmd_Argv (1), Cmd_Argv (2), CVAR_ARCHIVE|flags, qFalse);
+	Cvar_FindAndSet (Cmd_Argv (1), Cmd_Argv (2), CVAR_ARCHIVE|flags, false);
 }
 
 static void Cvar_SetS_f (void)
@@ -679,7 +679,7 @@ static void Cvar_SetS_f (void)
 		return;
 	}
 
-	Cvar_FindAndSet (Cmd_Argv (1), Cmd_Argv (2), CVAR_SERVERINFO, qFalse);
+	Cvar_FindAndSet (Cmd_Argv (1), Cmd_Argv (2), CVAR_SERVERINFO, false);
 }
 
 static void Cvar_SetU_f (void)
@@ -689,7 +689,7 @@ static void Cvar_SetU_f (void)
 		return;
 	}
 
-	Cvar_FindAndSet (Cmd_Argv (1), Cmd_Argv (2), CVAR_USERINFO, qFalse);
+	Cvar_FindAndSet (Cmd_Argv (1), Cmd_Argv (2), CVAR_USERINFO, false);
 }
 
 
@@ -715,7 +715,7 @@ static void Cvar_Reset_f (void)
 		return;
 	}
 
-	Cvar_VariableReset (var, qFalse);
+	Cvar_VariableReset (var, false);
 }
 
 
@@ -749,9 +749,9 @@ static void Cvar_Toggle_f (void)
 	}
 
 	if (Q_stricmp (var->string, opt1))
-		Cvar_VariableSet (var, opt1, qFalse);
+		Cvar_VariableSet (var, opt1, false);
 	else
-		Cvar_VariableSet (var, opt2, qFalse);  
+		Cvar_VariableSet (var, opt2, false);  
 }
 
 
@@ -784,7 +784,7 @@ static void Cvar_IncVar_f (void)
 		return;
 	}
 
-	Cvar_VariableSetValue (var, var->floatVal + inc, qFalse);  
+	Cvar_VariableSetValue (var, var->floatVal + inc, false);  
 }
 
 
@@ -817,7 +817,7 @@ static void Cvar_DecVar_f (void)
 		return;
 	}
 
-	Cvar_VariableSetValue (var, var->floatVal - dec, qFalse);  
+	Cvar_VariableSetValue (var, var->floatVal - dec, false);  
 }
 
 

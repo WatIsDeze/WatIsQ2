@@ -73,7 +73,7 @@ qBool fire_hit (edict_t *self, vec3_t aim, int damage, int kick)
 	Vec3Subtract (self->enemy->s.origin, self->s.origin, dir);
 	range = Vec3Length(dir);
 	if (range > aim[0])
-		return qFalse;
+		return false;
 
 	if (aim[1] > self->mins[0] && aim[1] < self->maxs[0])
 	{
@@ -95,7 +95,7 @@ qBool fire_hit (edict_t *self, vec3_t aim, int damage, int kick)
 	if (tr.fraction < 1)
 	{
 		if (!tr.ent->takedamage)
-			return qFalse;
+			return false;
 		// if it will hit any client/monster then hit the one we wanted to hit
 		if ((tr.ent->svFlags & SVF_MONSTER) || (tr.ent->client))
 			tr.ent = self->enemy;
@@ -111,7 +111,7 @@ qBool fire_hit (edict_t *self, vec3_t aim, int damage, int kick)
 	T_Damage (tr.ent, self, self, dir, point, vec3Origin, damage, kick/2, DAMAGE_NO_KNOCKBACK, MOD_HIT);
 
 	if (!(tr.ent->svFlags & SVF_MONSTER) && (!tr.ent->client))
-		return qFalse;
+		return false;
 
 	// do our special form of knockback here
 	Vec3MA (self->enemy->absMin, 0.5, self->enemy->size, v);
@@ -120,7 +120,7 @@ qBool fire_hit (edict_t *self, vec3_t aim, int damage, int kick)
 	Vec3MA (self->enemy->velocity, kick, v, self->enemy->velocity);
 	if (self->enemy->velocity[2] > 0)
 		self->enemy->groundentity = NULL;
-	return qTrue;
+	return true;
 }
 
 
@@ -140,7 +140,7 @@ static void fire_lead (edict_t *self, vec3_t start, vec3_t aimdir, int damage, i
 	float		r;
 	float		u;
 	vec3_t		water_start;
-	qBool	water = qFalse;
+	qBool	water = false;
 	int			content_mask = MASK_SHOT | MASK_WATER;
 
 	tr = gi.trace (self->s.origin, NULL, NULL, start, self, MASK_SHOT);
@@ -157,7 +157,7 @@ static void fire_lead (edict_t *self, vec3_t start, vec3_t aimdir, int damage, i
 
 		if (gi.pointcontents (start) & MASK_WATER)
 		{
-			water = qTrue;
+			water = true;
 			Vec3Copy (start, water_start);
 			content_mask &= ~MASK_WATER;
 		}
@@ -169,7 +169,7 @@ static void fire_lead (edict_t *self, vec3_t start, vec3_t aimdir, int damage, i
 		{
 			int		color;
 
-			water = qTrue;
+			water = true;
 			Vec3Copy (tr.endPos, water_start);
 
 			if (!Vec3Compare (start, tr.endPos))
@@ -667,7 +667,7 @@ void fire_rail (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int kick
 	Vec3MA (start, 8192, aimdir, end);
 	Vec3Copy (start, from);
 	ignore = self;
-	water = qFalse;
+	water = false;
 	mask = MASK_SHOT|CONTENTS_SLIME|CONTENTS_LAVA;
 	while (ignore)
 	{
@@ -676,7 +676,7 @@ void fire_rail (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int kick
 		if (tr.contents & (CONTENTS_SLIME|CONTENTS_LAVA))
 		{
 			mask &= ~(CONTENTS_SLIME|CONTENTS_LAVA);
-			water = qTrue;
+			water = true;
 		}
 		else
 		{

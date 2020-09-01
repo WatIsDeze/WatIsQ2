@@ -173,13 +173,13 @@ GUI_CvarValidate
 static qBool GUI_CvarValidate (const char *name)
 {
 	if (strchr (name, '\\'))
-		return qFalse;
+		return false;
 	if (strchr (name, '\"'))
-		return qFalse;
+		return false;
 	if (strchr (name, ';'))
-		return qFalse;
+		return false;
 
-	return qTrue;
+	return true;
 }
 
 /*
@@ -330,12 +330,12 @@ static qBool GUI_ParseFloatRegister (char *fileName, gui_t *gui, parse_t *ps, ch
 		if (!requireValue) {
 			floatReg->sourceType = REG_SOURCE_SELF;
 			floatReg->storage = defaultValue;
-			return qTrue;
+			return true;
 		}
 
 		GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 		GUI_PrintError ("ERROR: invalid/missing parameters for '%s'\n", keyName);
-		return qFalse;
+		return false;
 	}
 
 	if (charToken[0] == '$') {
@@ -346,7 +346,7 @@ static qBool GUI_ParseFloatRegister (char *fileName, gui_t *gui, parse_t *ps, ch
 			if (!*(p+2)) {
 				GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 				GUI_PrintError ("ERROR: invalid argument for '%s', contains '::' with no flag name!\n", keyName);
-				return qFalse;
+				return false;
 			}
 
 			// "<window::>var"
@@ -371,12 +371,12 @@ static qBool GUI_ParseFloatRegister (char *fileName, gui_t *gui, parse_t *ps, ch
 			if (!var) {
 				GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 				GUI_PrintError ("ERROR: unable to find guivar '%s'\n", floatName);
-				return qFalse;
+				return false;
 			}
 
 			floatReg->sourceType = REG_SOURCE_GUIVAR;
 			floatReg->guiVar = var;
-			return qTrue;
+			return true;
 		}
 		else {
 			// Find the window
@@ -384,7 +384,7 @@ static qBool GUI_ParseFloatRegister (char *fileName, gui_t *gui, parse_t *ps, ch
 			if (!windowPtr) {
 				GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 				GUI_PrintError ("ERROR: unable to find window '%s'\n", windowName);
-				return qFalse;
+				return false;
 			}
 
 			// Find the defineFloat
@@ -392,7 +392,7 @@ static qBool GUI_ParseFloatRegister (char *fileName, gui_t *gui, parse_t *ps, ch
 			if (floatNum == -1) {
 				GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 				GUI_PrintError ("ERROR: unable to find float '%s'\n", floatName);
-				return qFalse;
+				return false;
 			}
 
 			floatReg->sourceType = REG_SOURCE_DEF;
@@ -400,7 +400,7 @@ static qBool GUI_ParseFloatRegister (char *fileName, gui_t *gui, parse_t *ps, ch
 			floatReg->defFloatWindow = windowPtr;
 		}
 
-		return qTrue;
+		return true;
 	}
 
 	// Not a pointer, use value
@@ -408,12 +408,12 @@ static qBool GUI_ParseFloatRegister (char *fileName, gui_t *gui, parse_t *ps, ch
 	if (!PS_ParseDataType (ps, 0, PSDT_FLOAT, &storage, 1)) {
 		GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 		GUI_PrintError ("ERROR: invalid/missing parameters for '%s'\n", keyName);
-		return qFalse;
+		return false;
 	}
 
 	floatReg->sourceType = REG_SOURCE_SELF;
 	floatReg->storage = storage;
-	return qTrue;
+	return true;
 }
 
 
@@ -437,7 +437,7 @@ static qBool GUI_ParseVectorRegister (char *fileName, gui_t *gui, parse_t *ps, c
 	if (!PS_ParseToken (ps, PSF_TO_LOWER, &charToken)) {
 		GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 		GUI_PrintError ("ERROR: invalid/missing parameters for '%s'\n", keyName);
-		return qFalse;
+		return false;
 	}
 
 	if (charToken[0] == '$') {
@@ -448,7 +448,7 @@ static qBool GUI_ParseVectorRegister (char *fileName, gui_t *gui, parse_t *ps, c
 			if (!*(p+2)) {
 				GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 				GUI_PrintError ("ERROR: invalid argument for '%s', contains '::' with no flag name!\n", keyName);
-				return qFalse;
+				return false;
 			}
 
 			// "<window::>var"
@@ -473,12 +473,12 @@ static qBool GUI_ParseVectorRegister (char *fileName, gui_t *gui, parse_t *ps, c
 			if (!var) {
 				GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 				GUI_PrintError ("ERROR: unable to find guivar '%s'\n", vecName);
-				return qFalse;
+				return false;
 			}
 
 			vecReg->sourceType = REG_SOURCE_GUIVAR;
 			vecReg->guiVar = var;
-			return qTrue;
+			return true;
 		}
 		else {
 			// Find the window
@@ -486,7 +486,7 @@ static qBool GUI_ParseVectorRegister (char *fileName, gui_t *gui, parse_t *ps, c
 			if (!windowPtr) {
 				GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 				GUI_PrintError ("ERROR: unable to find window '%s'\n", windowName);
-				return qFalse;
+				return false;
 			}
 
 			// Find the defineVec
@@ -494,7 +494,7 @@ static qBool GUI_ParseVectorRegister (char *fileName, gui_t *gui, parse_t *ps, c
 			if (vecNum == -1) {
 				GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 				GUI_PrintError ("ERROR: unable to find vec '%s'\n", vecName);
-				return qFalse;
+				return false;
 			}
 
 			vecReg->sourceType = REG_SOURCE_DEF;
@@ -502,7 +502,7 @@ static qBool GUI_ParseVectorRegister (char *fileName, gui_t *gui, parse_t *ps, c
 			vecReg->defVecWindow = windowPtr;
 		}
 
-		return qTrue;
+		return true;
 	}
 
 	// Not a pointer, use value
@@ -510,12 +510,12 @@ static qBool GUI_ParseVectorRegister (char *fileName, gui_t *gui, parse_t *ps, c
 	if (!PS_ParseDataType (ps, 0, PSDT_FLOAT, &storage, 4)) {
 		GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 		GUI_PrintError ("ERROR: invalid/missing parameters for '%s'\n", keyName);
-		return qFalse;
+		return false;
 	}
 
 	vecReg->sourceType = REG_SOURCE_SELF;
 	Vec4Copy (storage, vecReg->storage);
-	return qTrue;
+	return true;
 }
 
 /*
@@ -556,13 +556,13 @@ static qBool GUI_CallKeyFunc (char *fileName, gui_t *gui, parse_t *ps, guiParseK
 			// This is just to ignore any warnings
 			if (!key->func) {
 				PS_SkipLine (ps);
-				return qTrue;
+				return true;
 			}
 
 			// Failed to parse line
 			if (!key->func (fileName, gui, ps, keyName)) {
 				PS_SkipLine (ps);
-				return qFalse;
+				return false;
 			}
 
 			// Report any extra parameters
@@ -570,11 +570,11 @@ static qBool GUI_CallKeyFunc (char *fileName, gui_t *gui, parse_t *ps, guiParseK
 				GUI_PrintPos (PRNT_WARNING, ps, fileName, gui);
 				GUI_PrintWarning ("WARNING: unused trailing parameters after key '%s', \"%s\"\n", keyName, str);
 				PS_SkipLine (ps);
-				return qTrue;
+				return true;
 			}
 
 			// Parsed fine
-			return qTrue;
+			return true;
 		}
 
 		// Next list
@@ -588,7 +588,7 @@ static qBool GUI_CallKeyFunc (char *fileName, gui_t *gui, parse_t *ps, guiParseK
 
 	GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 	GUI_PrintError ("ERROR: unrecognized key: '%s'\n", keyName);
-	return qFalse;
+	return false;
 }
 
 /*
@@ -612,14 +612,14 @@ static qBool itemDef_item (char *fileName, gui_t *gui, parse_t *ps, char *keyNam
 	if (!PS_ParseDataType (ps, 0, PSDT_BOOLEAN, &item, 1)) {
 		GUI_DevPrintPos (PRNT_WARNING, ps, fileName, gui);
 		GUI_DevPrintf (PRNT_WARNING, ps, fileName, gui, "WARNING: missing '%s' paramter(s), using default\n");
-		item = qTrue;
+		item = true;
 	}
 
 	if (item)
 		gui->flags |= WFL_ITEM;
 	else
 		gui->flags &= ~WFL_ITEM;
-	return qTrue;
+	return true;
 }
 
 // ==========================================================================
@@ -630,7 +630,7 @@ static qBool itemDef_rect (char *fileName, gui_t *gui, parse_t *ps, char *keyNam
 }
 static qBool itemDef_rotate (char *fileName, gui_t *gui, parse_t *ps, char *keyName)
 {
-	return GUI_ParseFloatRegister (fileName, gui, ps, keyName, &gui->s.floatRegisters[FR_ROTATION], qTrue, 0);
+	return GUI_ParseFloatRegister (fileName, gui, ps, keyName, &gui->s.floatRegisters[FR_ROTATION], true, 0);
 }
 
 // ==========================================================================
@@ -647,21 +647,21 @@ static qBool itemDef_mat (char *fileName, gui_t *gui, parse_t *ps, char *keyName
 	if (!PS_ParseToken (ps, PSF_TO_LOWER, &str)) {
 		GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 		GUI_PrintError ("ERROR: invalid/missing parameters for '%s'\n", keyName);
-		return qFalse;
+		return false;
 	}
 
 	Q_strncpyz (gui->matName, str, sizeof (gui->matName));
 	gui->flags |= WFL_MATERIAL;
-	return qTrue;
+	return true;
 }
 
 static qBool itemDef_fill (char *fileName, gui_t *gui, parse_t *ps, char *keyName)
 {
 	if (GUI_ParseVectorRegister (fileName, gui, ps, keyName, &gui->s.vecRegisters[VR_FILL_COLOR])) {
 		gui->flags |= WFL_FILL_COLOR;
-		return qTrue;
+		return true;
 	}
-	return qFalse;
+	return false;
 }
 static qBool itemDef_matColor (char *fileName, gui_t *gui, parse_t *ps, char *keyName)
 {
@@ -669,11 +669,11 @@ static qBool itemDef_matColor (char *fileName, gui_t *gui, parse_t *ps, char *ke
 }
 static qBool itemDef_matScaleX (char *fileName, gui_t *gui, parse_t *ps, char *keyName)
 {
-	return GUI_ParseFloatRegister (fileName, gui, ps, keyName, &gui->s.floatRegisters[FR_MAT_SCALE_X], qTrue, 1);
+	return GUI_ParseFloatRegister (fileName, gui, ps, keyName, &gui->s.floatRegisters[FR_MAT_SCALE_X], true, 1);
 }
 static qBool itemDef_matScaleY (char *fileName, gui_t *gui, parse_t *ps, char *keyName)
 {
-	return GUI_ParseFloatRegister (fileName, gui, ps, keyName, &gui->s.floatRegisters[FR_MAT_SCALE_Y], qTrue, 1);
+	return GUI_ParseFloatRegister (fileName, gui, ps, keyName, &gui->s.floatRegisters[FR_MAT_SCALE_Y], true, 1);
 }
 
 // ==========================================================================
@@ -694,7 +694,7 @@ static qBool itemDef_defineFloat (char *fileName, gui_t *gui, parse_t *ps, char 
 	if (!PS_ParseToken (ps, PSF_TO_LOWER, &name)) {
 		GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 		GUI_PrintError ("ERROR: invalid/missing parameters for '%s'\n", keyName);
-		return qFalse;
+		return false;
 	}
 
 	// Check for duplicates
@@ -703,7 +703,7 @@ static qBool itemDef_defineFloat (char *fileName, gui_t *gui, parse_t *ps, char 
 			continue;
 		GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 		GUI_PrintError ("ERROR: %s '%s' name already in use!\n", keyName, name);
-		return qFalse;
+		return false;
 	}
 
 	// Store
@@ -713,13 +713,13 @@ static qBool itemDef_defineFloat (char *fileName, gui_t *gui, parse_t *ps, char 
 	if (!PS_ParseDataType (ps, 0, PSDT_FLOAT, &floatToken, 1)) {
 		GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 		GUI_PrintError ("ERROR: invalid/missing parameters for '%s'\n", keyName);
-		return qFalse;
+		return false;
 	}
 
 	// Store
 	gui->s.defFloatList[gui->s.numDefFloats].value = floatToken;
 	gui->s.numDefFloats++;
-	return qTrue;
+	return true;
 }
 
 
@@ -739,7 +739,7 @@ static qBool itemDef_defineVec (char *fileName, gui_t *gui, parse_t *ps, char *k
 	if (!PS_ParseToken (ps, PSF_TO_LOWER, &name)) {
 		GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 		GUI_PrintError ("ERROR: invalid/missing parameters for '%s'\n", keyName);
-		return qFalse;
+		return false;
 	}
 
 	// Check for duplicates
@@ -748,7 +748,7 @@ static qBool itemDef_defineVec (char *fileName, gui_t *gui, parse_t *ps, char *k
 			continue;
 		GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 		GUI_PrintError ("ERROR: %s '%s' name already in use!\n", keyName, name);
-		return qFalse;
+		return false;
 	}
 
 	// Store
@@ -758,36 +758,36 @@ static qBool itemDef_defineVec (char *fileName, gui_t *gui, parse_t *ps, char *k
 	if (!PS_ParseDataType (ps, 0, PSDT_FLOAT, &vecToken[0], 4)) {
 		GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 		GUI_PrintError ("ERROR: invalid/missing parameters for '%s'\n", keyName);
-		return qFalse;
+		return false;
 	}
 
 	// Store
 	Vec4Copy (vecToken, gui->s.defVecList[gui->s.numDefVecs].value);
 	gui->s.numDefVecs++;
-	return qTrue;
+	return true;
 }
 
 // ==========================================================================
 
 static qBool itemDef_modal (char *fileName, gui_t *gui, parse_t *ps, char *keyName)
 {
-	return GUI_ParseFloatRegister (fileName, gui, ps, keyName, &gui->s.floatRegisters[FR_MODAL], qFalse, 1);
+	return GUI_ParseFloatRegister (fileName, gui, ps, keyName, &gui->s.floatRegisters[FR_MODAL], false, 1);
 }
 static qBool itemDef_noEvents (char *fileName, gui_t *gui, parse_t *ps, char *keyName)
 {
-	return GUI_ParseFloatRegister (fileName, gui, ps, keyName, &gui->s.floatRegisters[FR_NO_EVENTS], qFalse, 1);
+	return GUI_ParseFloatRegister (fileName, gui, ps, keyName, &gui->s.floatRegisters[FR_NO_EVENTS], false, 1);
 }
 static qBool itemDef_noTime (char *fileName, gui_t *gui, parse_t *ps, char *keyName)
 {
-	return GUI_ParseFloatRegister (fileName, gui, ps, keyName, &gui->s.floatRegisters[FR_NO_TIME], qFalse, 1);
+	return GUI_ParseFloatRegister (fileName, gui, ps, keyName, &gui->s.floatRegisters[FR_NO_TIME], false, 1);
 }
 static qBool itemDef_visible (char *fileName, gui_t *gui, parse_t *ps, char *keyName)
 {
-	return GUI_ParseFloatRegister (fileName, gui, ps, keyName, &gui->s.floatRegisters[FR_VISIBLE], qFalse, 1);
+	return GUI_ParseFloatRegister (fileName, gui, ps, keyName, &gui->s.floatRegisters[FR_VISIBLE], false, 1);
 }
 static qBool itemDef_wantEnter (char *fileName, gui_t *gui, parse_t *ps, char *keyName)
 {
-	return GUI_ParseFloatRegister (fileName, gui, ps, keyName, &gui->s.floatRegisters[FR_WANT_ENTER], qFalse, 1);
+	return GUI_ParseFloatRegister (fileName, gui, ps, keyName, &gui->s.floatRegisters[FR_WANT_ENTER], false, 1);
 }
 
 // ==========================================================================
@@ -849,7 +849,7 @@ static qBool event_newAction (evAction_t *newAction, evaType_t type, char *fileN
 		case EVA_TRANSITION:
 			GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 			GUI_PrintError ("ERROR: invalid/missing arguments for '%s'!\n", keyName);
-			return qFalse;
+			return false;
 		}
 	}
 
@@ -862,7 +862,7 @@ static qBool event_newAction (evAction_t *newAction, evaType_t type, char *fileN
 		if (!PS_ParseToken (ps, PSF_ALLOW_NEWLINES|PSF_TO_LOWER, &charToken)) {
 			GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 			GUI_PrintError ("ERROR: invalid/missing arguments for '%s'!\n", keyName);
-			return qFalse;
+			return false;
 		}
 
 		newAction->command = GUI_AllocTag (strlen(charToken)+2, GUITAG_SCRATCH);
@@ -876,7 +876,7 @@ static qBool event_newAction (evAction_t *newAction, evaType_t type, char *fileN
 		if (!PS_ParseToken (ps, PSF_ALLOW_NEWLINES|PSF_TO_LOWER, &charToken)) {
 			GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 			GUI_PrintError ("ERROR: invalid/missing arguments for '%s'!\n", keyName);
-			return qFalse;
+			return false;
 		}
 
 		newAction->localSound = GUI_AllocTag (sizeof (eva_localSound_t), GUITAG_SCRATCH);
@@ -887,7 +887,7 @@ static qBool event_newAction (evAction_t *newAction, evaType_t type, char *fileN
 		if (!PS_ParseDataType (ps, 0, PSDT_FLOAT, &newAction->localSound->volume, 1)) {
 			GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 			GUI_PrintError ("ERROR: invalid/missing arguments for '%s'!\n", keyName);
-			return qFalse;
+			return false;
 		}
 		break;
 
@@ -896,7 +896,7 @@ static qBool event_newAction (evAction_t *newAction, evaType_t type, char *fileN
 		if (!PS_ParseToken (ps, PSF_ALLOW_NEWLINES|PSF_TO_LOWER, &charToken)) {
 			GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 			GUI_PrintError ("ERROR: invalid/missing arguments for '%s'!\n", keyName);
-			return qFalse;
+			return false;
 		}
 
 		newAction->named = GUI_AllocTag (sizeof (eva_named_t), GUITAG_SCRATCH);
@@ -909,7 +909,7 @@ static qBool event_newAction (evAction_t *newAction, evaType_t type, char *fileN
 			if (!*(p+2)) {
 				GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 				GUI_PrintError ("ERROR: invalid argument for '%s', contains '::' with no event name!\n", keyName);
-				return qFalse;
+				return false;
 			}
 
 			// "<window::>event"
@@ -942,7 +942,7 @@ static qBool event_newAction (evAction_t *newAction, evaType_t type, char *fileN
 		if (!PS_ParseToken (ps, PSF_TO_LOWER, &charToken)) {
 			GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 			GUI_PrintError ("ERROR: invalid/missing arguments for '%s'!\n", keyName);
-			return qFalse;
+			return false;
 		}
 
 		newAction->set = GUI_AllocTag (sizeof (eva_set_t), GUITAG_SCRATCH);
@@ -955,7 +955,7 @@ static qBool event_newAction (evAction_t *newAction, evaType_t type, char *fileN
 			if (!*(p+2)) {
 				GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 				GUI_PrintError ("ERROR: invalid argument for '%s', contains '::' with no flag name!\n", keyName);
-				return qFalse;
+				return false;
 			}
 
 			// "<window::>register"
@@ -982,7 +982,7 @@ static qBool event_newAction (evAction_t *newAction, evaType_t type, char *fileN
 		if (!setDest) {
 			GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 			GUI_PrintError ("ERROR: invalid '%s' variable '%s'!\n", keyName, newAction->set->destVarName);
-			return qFalse;
+			return false;
 		}
 
 		// Store destination parms
@@ -997,7 +997,7 @@ static qBool event_newAction (evAction_t *newAction, evaType_t type, char *fileN
 		if (!PS_ParseToken (ps, PSF_TO_LOWER, &charToken)) {
 			GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 			GUI_PrintError ("ERROR: invalid/missing arguments for '%s'!\n", keyName);
-			return qFalse;
+			return false;
 		}
 
 		if (charToken[0] == '$') {
@@ -1008,7 +1008,7 @@ static qBool event_newAction (evAction_t *newAction, evaType_t type, char *fileN
 				if (!*(p+2)) {
 					GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 					GUI_PrintError ("ERROR: invalid argument for '%s', contains '::' with no flag name!\n", keyName);
-					return qFalse;
+					return false;
 				}
 
 				// "<window::>var"
@@ -1048,7 +1048,7 @@ static qBool event_newAction (evAction_t *newAction, evaType_t type, char *fileN
 		if (!PS_ParseDataType (ps, 0, PSDT_FLOAT, &newAction->set->srcStorage[0], setDest->destNumVecs)) {
 			GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 			GUI_PrintError ("ERROR: invalid/missing arguments for '%s'!\n", keyName);
-			return qFalse;
+			return false;
 		}
 
 		// Store source parms
@@ -1066,11 +1066,11 @@ static qBool event_newAction (evAction_t *newAction, evaType_t type, char *fileN
 	if (!gotSemicolon && (!PS_ParseToken (ps, PSF_ALLOW_NEWLINES|PSF_TO_LOWER, &charToken) || strcmp (charToken, ";"))) {
 		GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 		GUI_PrintError ("ERROR: expecting ';' after %s <args>, got '%s'!\n", keyName, charToken);
-		return qFalse;
+		return false;
 	}
 
 	newAction->type = type;
-	return qTrue;
+	return true;
 }
 
 
@@ -1094,7 +1094,7 @@ static qBool itemDef_newEvent (evType_t type, char *fileName, gui_t *gui, parse_
 	if (gui->numEvents+1 >= MAX_GUI_EVENTS) {
 		GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 		GUI_PrintError ("ERROR: too many events!\n");
-		return qFalse;
+		return false;
 	}
 	newEvent = &gui->eventList[gui->numEvents];
 	memset (&gui->eventList[gui->numEvents], 0, sizeof (event_t));
@@ -1106,7 +1106,7 @@ static qBool itemDef_newEvent (evType_t type, char *fileName, gui_t *gui, parse_
 		if (!PS_ParseToken (ps, PSF_ALLOW_NEWLINES|PSF_TO_LOWER, &token) || !strcmp (token, "{")) {
 			GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 			GUI_PrintError ("ERROR: invalid/missing arguments for '%s'!\n", keyName);
-			return qFalse;
+			return false;
 		}
 
 		newEvent->named = GUI_StrDup (token, GUITAG_SCRATCH);
@@ -1116,7 +1116,7 @@ static qBool itemDef_newEvent (evType_t type, char *fileName, gui_t *gui, parse_
 		if (!PS_ParseDataType (ps, PSF_ALLOW_NEWLINES, PSDT_INTEGER, &len, 1)) {
 			GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 			GUI_PrintError ("ERROR: invalid/missing arguments for '%s'!\n", keyName);
-			return qFalse;
+			return false;
 		}
 		newEvent->onTime = len;
 		break;
@@ -1133,7 +1133,7 @@ static qBool itemDef_newEvent (evType_t type, char *fileName, gui_t *gui, parse_
 			if (!strcmp (gui->eventList[i].named, newEvent->named)) {
 				GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 				GUI_PrintError ("ERROR: event '%s' already exists (with the same arguments) for this window!\n", keyName);
-				return qFalse;
+				return false;
 			}
 			break;
 
@@ -1141,14 +1141,14 @@ static qBool itemDef_newEvent (evType_t type, char *fileName, gui_t *gui, parse_
 			if (gui->eventList[i].onTime == newEvent->onTime) {
 				GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 				GUI_PrintError ("ERROR: event '%s' already exists (with the same arguments) for this window!\n", keyName);
-				return qFalse;
+				return false;
 			}
 			break;
 
 		default:
 			GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 			GUI_PrintError ("ERROR: event '%s' already exists for this window!\n", keyName);
-			return qFalse;
+			return false;
 		}
 	}
 
@@ -1156,7 +1156,7 @@ static qBool itemDef_newEvent (evType_t type, char *fileName, gui_t *gui, parse_
 	if (!PS_ParseToken (ps, PSF_ALLOW_NEWLINES|PSF_TO_LOWER, &token) || strcmp (token, "{")) {
 		GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 		GUI_PrintError ("ERROR: expecting '{' after %s <args>, got '%s'!\n", keyName, token);
-		return qFalse;
+		return false;
 	}
 
 	// Storage space for children
@@ -1174,10 +1174,10 @@ static qBool itemDef_newEvent (evType_t type, char *fileName, gui_t *gui, parse_
 		len = strlen (actionName);
 		if (actionName[len-1] == ';') {
 			actionName[len-1] = '\0';
-			gotSemicolon = qTrue;
+			gotSemicolon = true;
 		}
 		else {
-			gotSemicolon = qFalse;
+			gotSemicolon = false;
 		}
 
 		// Find out the type
@@ -1202,12 +1202,12 @@ static qBool itemDef_newEvent (evType_t type, char *fileName, gui_t *gui, parse_
 		else {
 			GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 			GUI_PrintError ("ERROR: unknown action '%s'!\n", actionName);
-			return qFalse;
+			return false;
 		}
 
 		// Parse it
 		if (!event_newAction (&newEvent->actionList[newEvent->numActions], action, fileName, gui, ps, actionName, gotSemicolon))
-			return qFalse;
+			return false;
 
 		// Done
 		newEvent->numActions++;
@@ -1217,7 +1217,7 @@ static qBool itemDef_newEvent (evType_t type, char *fileName, gui_t *gui, parse_
 	if (strcmp (token, "}")) {
 		GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 		GUI_PrintError ("ERROR: expecting '}' after %s <args>, got '%s'!\n", keyName, token);
-		return qFalse;
+		return false;
 	}
 
 	// Store events
@@ -1232,7 +1232,7 @@ static qBool itemDef_newEvent (evType_t type, char *fileName, gui_t *gui, parse_
 
 	// Done
 	gui->numEvents++;
-	return qTrue;
+	return true;
 }
 
 static qBool itemDef_onAction (char *fileName, gui_t *gui, parse_t *ps, char *keyName)
@@ -1334,17 +1334,17 @@ static qBool bindDef_bind (char *fileName, gui_t *gui, parse_t *ps, char *keyNam
 	if (!PS_ParseToken (ps, PSF_TO_LOWER, &str)) {
 		GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 		GUI_PrintError ("ERROR: invalid/missing parameters for '%s'\n", keyName);
-		return qFalse;
+		return false;
 	}
 	
 	keyNum = Key_StringToKeynum (str);
 	if (keyNum == -1) {
 		Com_Printf (0, "\"%s\" isn't a valid key\n", str);
-		return qFalse;
+		return false;
 	}
 
 	gui->s.bindDef->keyNum = keyNum;
-	return qTrue;
+	return true;
 }
 
 // ==========================================================================
@@ -1374,11 +1374,11 @@ static qBool checkDef_liveUpdate (char *fileName, gui_t *gui, parse_t *ps, char 
 	if (!PS_ParseDataType (ps, 0, PSDT_BOOLEAN, &liveUpdate, 1)) {
 		GUI_DevPrintPos (PRNT_WARNING, ps, fileName, gui);
 		GUI_DevPrintf (PRNT_WARNING, ps, fileName, gui, "WARNING: missing '%s' paramter(s), using default\n");
-		liveUpdate = qTrue;
+		liveUpdate = true;
 	}
 
 	gui->s.checkDef->liveUpdate = liveUpdate;
-	return qTrue;
+	return true;
 }
 
 
@@ -1394,11 +1394,11 @@ static qBool checkDef_offMat (char *fileName, gui_t *gui, parse_t *ps, char *key
 	if (!PS_ParseToken (ps, PSF_TO_LOWER, &str)) {
 		GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 		GUI_PrintError ("ERROR: invalid/missing parameters for '%s'\n", keyName);
-		return qFalse;
+		return false;
 	}
 
 	Com_NormalizePath (gui->s.checkDef->offMatName, sizeof(gui->s.checkDef->offMatName), str);
-	return qTrue;
+	return true;
 }
 
 
@@ -1414,11 +1414,11 @@ static qBool checkDef_onMat (char *fileName, gui_t *gui, parse_t *ps, char *keyN
 	if (!PS_ParseToken (ps, PSF_TO_LOWER, &str)) {
 		GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 		GUI_PrintError ("ERROR: invalid/missing parameters for '%s'\n", keyName);
-		return qFalse;
+		return false;
 	}
 
 	Com_NormalizePath (gui->s.checkDef->onMatName, sizeof(gui->s.checkDef->onMatName), str);
-	return qTrue;
+	return true;
 }
 
 
@@ -1435,7 +1435,7 @@ static qBool checkDef_values (char *fileName, gui_t *gui, parse_t *ps, char *key
 	if (!PS_ParseToken (ps, PSF_TO_LOWER, &str)) {
 		GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 		GUI_PrintError ("ERROR: invalid/missing parameters for '%s'\n", keyName);
-		return qFalse;
+		return false;
 	}
 
 	// Only has two values
@@ -1443,7 +1443,7 @@ static qBool checkDef_values (char *fileName, gui_t *gui, parse_t *ps, char *key
 	if (!*p) {
 		GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 		GUI_PrintError ("ERROR: invalid/missing parameters for '%s'\n", keyName);
-		return qFalse;
+		return false;
 	}
 	*p = '\0';
 	gui->s.checkDef->values[0] = GUI_StrDup (str, GUITAG_SCRATCH);
@@ -1453,11 +1453,11 @@ static qBool checkDef_values (char *fileName, gui_t *gui, parse_t *ps, char *key
 	if (!*p) {
 		GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 		GUI_PrintError ("ERROR: invalid/missing parameters for '%s'\n", keyName);
-		return qFalse;
+		return false;
 	}
 	gui->s.checkDef->values[1] = GUI_StrDup (p, GUITAG_SCRATCH);
 
-	return qTrue;
+	return true;
 }
 
 
@@ -1473,13 +1473,13 @@ static qBool checkDef_cvar (char *fileName, gui_t *gui, parse_t *ps, char *keyNa
 	if (!PS_ParseToken (ps, PSF_TO_LOWER, &str)) {
 		GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 		GUI_PrintError ("ERROR: invalid/missing parameters for '%s'\n", keyName);
-		return qFalse;
+		return false;
 	}
 
 	if (!GUI_CvarValidate (str)) {
 		GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 		GUI_PrintError ("ERROR: invalid cvar name for '%s'\n", keyName);
-		return qFalse;
+		return false;
 	}
 
 	gui->s.checkDef->cvar = Cvar_Exists (str);
@@ -1488,7 +1488,7 @@ static qBool checkDef_cvar (char *fileName, gui_t *gui, parse_t *ps, char *keyNa
 		gui->s.checkDef->cvar = Cvar_Register (str, "0", 0);
 	}
 
-	return qTrue;
+	return true;
 }
 
 // ==========================================================================
@@ -1562,10 +1562,10 @@ static qBool listDef_scrollBar (char *fileName, gui_t *gui, parse_t *ps, char *k
 	if (!PS_ParseDataType (ps, 0, PSDT_BOOLEAN, gui->s.listDef->scrollBar, 2)) {
 		GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 		GUI_PrintError ("ERROR: invalid/missing parameters for '%s'\n", keyName);
-		return qFalse;
+		return false;
 	}
 
-	return qTrue;
+	return true;
 }
 
 // ==========================================================================
@@ -1637,11 +1637,11 @@ static qBool textDef_font (char *fileName, gui_t *gui, parse_t *ps, char *keyNam
 	if (!PS_ParseToken (ps, PSF_TO_LOWER, &str)) {
 		GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 		GUI_PrintError ("ERROR: invalid/missing parameters for '%s'\n", keyName);
-		return qFalse;
+		return false;
 	}
 
 	Com_NormalizePath (gui->s.textDef->fontName, sizeof (gui->s.textDef->fontName), str);
-	return qTrue;
+	return true;
 }
 
 
@@ -1658,7 +1658,7 @@ static qBool textDef_text (char *fileName, gui_t *gui, parse_t *ps, char *keyNam
 	if (!PS_ParseToken (ps, PSF_CONVERT_NEWLINE, &token)) {
 		GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 		GUI_PrintError ("ERROR: invalid/missing parameters for '%s'\n", keyName);
-		return qFalse;
+		return false;
 	}
 
 	// Check length
@@ -1666,17 +1666,17 @@ static qBool textDef_text (char *fileName, gui_t *gui, parse_t *ps, char *keyNam
 	if (len >= MAX_TEXTDEF_STRLEN-1) {
 		GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 		GUI_PrintError ("ERROR: parameter too long for '%s'\n", keyName);
-		return qFalse;
+		return false;
 	}
 
 	gui->s.textDef->textString = GUI_StrDup (token, GUITAG_SCRATCH);
 	gui->s.textDef->textStringLen = len;
-	return qTrue;
+	return true;
 }
 
 static qBool textDef_textAlign (char *fileName, gui_t *gui, parse_t *ps, char *keyName)
 {
-	return GUI_ParseFloatRegister (fileName, gui, ps, keyName, &gui->s.floatRegisters[FR_TEXT_ALIGN], qTrue, 1);
+	return GUI_ParseFloatRegister (fileName, gui, ps, keyName, &gui->s.floatRegisters[FR_TEXT_ALIGN], true, 1);
 }
 static qBool textDef_textColor (char *fileName, gui_t *gui, parse_t *ps, char *keyName)
 {
@@ -1688,11 +1688,11 @@ static qBool textDef_textHoverColor (char *fileName, gui_t *gui, parse_t *ps, ch
 }
 static qBool textDef_textScale (char *fileName, gui_t *gui, parse_t *ps, char *keyName)
 {
-	return GUI_ParseFloatRegister (fileName, gui, ps, keyName, &gui->s.floatRegisters[FR_TEXT_SCALE], qTrue, 1);
+	return GUI_ParseFloatRegister (fileName, gui, ps, keyName, &gui->s.floatRegisters[FR_TEXT_SCALE], true, 1);
 }
 static qBool textDef_textShadow (char *fileName, gui_t *gui, parse_t *ps, char *keyName)
 {
-	return GUI_ParseFloatRegister (fileName, gui, ps, keyName, &gui->s.floatRegisters[FR_TEXT_SHADOW], qFalse, 1);
+	return GUI_ParseFloatRegister (fileName, gui, ps, keyName, &gui->s.floatRegisters[FR_TEXT_SHADOW], false, 1);
 }
 
 // ==========================================================================
@@ -1728,13 +1728,13 @@ static qBool guiDef_cursorMat (char *fileName, gui_t *gui, parse_t *ps, char *ke
 	if (!PS_ParseToken (ps, PSF_TO_LOWER, &str)) {
 		GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 		GUI_PrintError ("ERROR: invalid/missing parameters for '%s'\n", keyName);
-		return qFalse;
+		return false;
 	}
 
 	Q_strncpyz (gui->shared->cursor.s.matName, str, sizeof (gui->shared->cursor.s.matName));
-	gui->shared->cursor.s.visible = qTrue;
+	gui->shared->cursor.s.visible = true;
 	gui->flags |= WFL_CURSOR;
-	return qTrue;
+	return true;
 }
 
 
@@ -1750,12 +1750,12 @@ static qBool guiDef_cursorColor (char *fileName, gui_t *gui, parse_t *ps, char *
 	if (!PS_ParseDataType (ps, 0, PSDT_FLOAT, &color[0], 4)) {
 		GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 		GUI_PrintError ("ERROR: invalid/missing parameters for '%s'\n", keyName);
-		return qFalse;
+		return false;
 	}
 
 	ColorNormalizef (color, gui->shared->cursor.s.color);
 	gui->shared->cursor.s.color[3] = color[3];
-	return qTrue;
+	return true;
 }
 
 
@@ -1771,11 +1771,11 @@ static qBool guiDef_cursorHeight (char *fileName, gui_t *gui, parse_t *ps, char 
 	if (!PS_ParseDataType (ps, 0, PSDT_FLOAT, &height, 1)) {
 		GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 		GUI_PrintError ("ERROR: invalid/missing parameters for '%s'\n", keyName);
-		return qFalse;
+		return false;
 	}
 
 	gui->shared->cursor.s.size[1] = height;
-	return qTrue;
+	return true;
 }
 
 
@@ -1791,11 +1791,11 @@ static qBool guiDef_cursorWidth (char *fileName, gui_t *gui, parse_t *ps, char *
 	if (!PS_ParseDataType (ps, 0, PSDT_FLOAT, &width, 1)) {
 		GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 		GUI_PrintError ("ERROR: invalid/missing parameters for '%s'\n", keyName);
-		return qFalse;
+		return false;
 	}
 
 	gui->shared->cursor.s.size[0] = width;
-	return qTrue;
+	return true;
 }
 
 
@@ -1811,11 +1811,11 @@ static qBool guiDef_cursorPos (char *fileName, gui_t *gui, parse_t *ps, char *ke
 	if (!PS_ParseDataType (ps, 0, PSDT_FLOAT, &pos[0], 2)) {
 		GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 		GUI_PrintError ("ERROR: invalid/missing parameters for '%s'\n", keyName);
-		return qFalse;
+		return false;
 	}
 
 	Vec2Copy (pos, gui->shared->cursor.s.pos);
-	return qTrue;
+	return true;
 }
 
 
@@ -1831,11 +1831,11 @@ static qBool guiDef_cursorVisible (char *fileName, gui_t *gui, parse_t *ps, char
 	if (!PS_ParseDataType (ps, 0, PSDT_BOOLEAN, &visible, 1)) {
 		GUI_DevPrintPos (PRNT_WARNING, ps, fileName, gui);
 		GUI_DevPrintf (PRNT_WARNING, ps, fileName, gui, "WARNING: missing '%s' paramter(s), using default\n");
-		visible = qTrue;
+		visible = true;
 	}
 
 	gui->shared->cursor.s.visible = visible;
-	return qTrue;
+	return true;
 }
 
 
@@ -1908,12 +1908,12 @@ qBool GUI_NewWindowDef (char *fileName, gui_t *gui, parse_t *ps, char *keyName)
 	if (!PS_ParseToken (ps, PSF_TO_LOWER, &token)) {
 		GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 		GUI_PrintError ("ERROR: expecting <name> after %s, got '%s'!\n", keyName, token);
-		return qFalse;
+		return false;
 	}
 	if (strlen(token)+1 >= MAX_GUI_NAMELEN) {
 		GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 		GUI_PrintError ("ERROR: %s '%s' name too long!\n", keyName, token);
-		return qFalse;
+		return false;
 	}
 	Q_strncpyz (windowName, token, sizeof (windowName));
 
@@ -1921,26 +1921,26 @@ qBool GUI_NewWindowDef (char *fileName, gui_t *gui, parse_t *ps, char *keyName)
 	if (gui && GUI_FindWindow (gui->owner, windowName)) {
 		GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 		GUI_PrintError ("ERROR: %s '%s' name already in use!\n", keyName, token);
-		return qFalse;
+		return false;
 	}
 
 	// Make sure the name is allowed
 	if (!strcmp (windowName, "guivar")) {
 		GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 		GUI_PrintError ("ERROR: %s '%s' name not allowed!\n", keyName, token);
-		return qFalse;
+		return false;
 	}
 	if (strchr (windowName, '$') || strstr (windowName, "::")) {
 		GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 		GUI_PrintError ("ERROR: %s '%s' name must not contain '$' or '::'!\n", keyName, token);
-		return qFalse;
+		return false;
 	}
 
 	// Next is the opening brace
 	if (!PS_ParseToken (ps, PSF_ALLOW_NEWLINES|PSF_TO_LOWER, &token) || strcmp (token, "{")) {
 		GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 		GUI_PrintError ("ERROR: expecting '{' after %s <name>, got '%s'!\n", keyName, token);
-		return qFalse;
+		return false;
 	}
 
 	// Find out the type
@@ -1956,7 +1956,7 @@ qBool GUI_NewWindowDef (char *fileName, gui_t *gui, parse_t *ps, char *keyName)
 		if (gui->numChildren+1 >= MAX_GUI_CHILDREN) {
 			GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 			GUI_PrintError ("ERROR: too many children!\n");
-			return qFalse;
+			return false;
 		}
 		newGUI = &gui->childList[gui->numChildren];
 		newGUI->parent = gui;
@@ -1975,7 +1975,7 @@ qBool GUI_NewWindowDef (char *fileName, gui_t *gui, parse_t *ps, char *keyName)
 		if (cl_numGUI+1 >= MAX_GUIS) {
 			GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 			GUI_PrintError ("ERROR: too many GUIs!\n");
-			return qFalse;
+			return false;
 		}
 		newGUI = &cl_guiList[cl_numGUI];
 		memset (&cl_guiList[cl_numGUI], 0, sizeof (gui_t));
@@ -1984,7 +1984,7 @@ qBool GUI_NewWindowDef (char *fileName, gui_t *gui, parse_t *ps, char *keyName)
 		newGUI->shared = &cl_guiSharedInfo[cl_numGUI];
 		memset (&cl_guiSharedInfo[cl_numGUI], 0, sizeof (guiShared_t));
 		Vec4Set (newGUI->shared->cursor.s.color, 1, 1, 1, 1);
-		newGUI->shared->cursor.s.visible = qTrue;
+		newGUI->shared->cursor.s.visible = true;
 
 		newGUI->owner = newGUI;
 
@@ -2037,8 +2037,8 @@ qBool GUI_NewWindowDef (char *fileName, gui_t *gui, parse_t *ps, char *keyName)
 		newGUI->s.listDef = GUI_AllocTag (sizeof (listDef_t) * 2, GUITAG_SCRATCH);
 		newGUI->d.listDef = newGUI->s.listDef + 1;
 
-		newGUI->s.listDef->scrollBar[0] = qTrue;
-		newGUI->s.listDef->scrollBar[1] = qTrue;
+		newGUI->s.listDef->scrollBar[0] = true;
+		newGUI->s.listDef->scrollBar[1] = true;
 		break;
 
 	case WTP_RENDER:
@@ -2082,43 +2082,43 @@ qBool GUI_NewWindowDef (char *fileName, gui_t *gui, parse_t *ps, char *keyName)
 		switch (type) {
 		case WTP_GUI:
 			if (!GUI_CallKeyFunc (fileName, newGUI, ps, cl_guiDefKeyList, cl_itemDefKeyList, cl_windowDefKeyList, token))
-				return qFalse;
+				return false;
 			break;
 		case WTP_GENERIC:
 			if (!GUI_CallKeyFunc (fileName, newGUI, ps, cl_itemDefKeyList, cl_windowDefKeyList, NULL, token))
-				return qFalse;
+				return false;
 			break;
 		case WTP_BIND:
 			if (!GUI_CallKeyFunc (fileName, newGUI, ps, cl_itemDefKeyList, cl_bindDefKeyList, NULL, token))
-				return qFalse;
+				return false;
 			break;
 		case WTP_CHECKBOX:
 			if (!GUI_CallKeyFunc (fileName, newGUI, ps, cl_itemDefKeyList, cl_checkDefKeyList, NULL, token))
-				return qFalse;
+				return false;
 			break;
 		case WTP_CHOICE:
 			if (!GUI_CallKeyFunc (fileName, newGUI, ps, cl_itemDefKeyList, cl_choiceDefKeyList, NULL, token))
-				return qFalse;
+				return false;
 			break;
 		case WTP_EDIT:
 			if (!GUI_CallKeyFunc (fileName, newGUI, ps, cl_itemDefKeyList, cl_editDefKeyList, NULL, token))
-				return qFalse;
+				return false;
 			break;
 		case WTP_LIST:
 			if (!GUI_CallKeyFunc (fileName, newGUI, ps, cl_itemDefKeyList, cl_listDefKeyList, NULL, token))
-				return qFalse;
+				return false;
 			break;
 		case WTP_RENDER:
 			if (!GUI_CallKeyFunc (fileName, newGUI, ps, cl_itemDefKeyList, cl_renderDefKeyList, NULL, token))
-				return qFalse;
+				return false;
 			break;
 		case WTP_SLIDER:
 			if (!GUI_CallKeyFunc (fileName, newGUI, ps, cl_itemDefKeyList, cl_sliderDefKeyList, NULL, token))
-				return qFalse;
+				return false;
 			break;
 		case WTP_TEXT:
 			if (!GUI_CallKeyFunc (fileName, newGUI, ps, cl_itemDefKeyList, cl_textDefKeyList, NULL, token))
-				return qFalse;
+				return false;
 			break;
 		}
 	}
@@ -2127,7 +2127,7 @@ qBool GUI_NewWindowDef (char *fileName, gui_t *gui, parse_t *ps, char *keyName)
 	if (strcmp (token, "}")) {
 		GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 		GUI_PrintError ("ERROR: expecting '}' after %s, got '%s'!\n", keyName, token);
-		return qFalse;
+		return false;
 	}
 
 	// Check for required values
@@ -2136,12 +2136,12 @@ qBool GUI_NewWindowDef (char *fileName, gui_t *gui, parse_t *ps, char *keyName)
 		if (!newGUI->s.checkDef->cvar) {
 			GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 			GUI_PrintError ("ERROR: missing required 'cvar' value!\n");
-			return qFalse;
+			return false;
 		}
 		if (!newGUI->s.checkDef->values[0] || !newGUI->s.checkDef->values[1]) {
 			GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);
 			GUI_PrintError ("ERROR: missing required 'values' value!\n");
-			return qFalse;
+			return false;
 		}
 		break;
 	}
@@ -2197,7 +2197,7 @@ qBool GUI_NewWindowDef (char *fileName, gui_t *gui, parse_t *ps, char *keyName)
 	Mem_Free (defVecList);
 
 	// Done
-	return qTrue;
+	return true;
 }
 
 /*
@@ -2711,7 +2711,7 @@ void GUI_Init (void)
 	// Load scripts
 	cl_numGUIErrors = 0;
 	cl_numGUIWarnings = 0;
-	numGUI = FS_FindFiles ("guis", "*guis/*.gui", "gui", guiList, MAX_GUIS, qTrue, qFalse);
+	numGUI = FS_FindFiles ("guis", "*guis/*.gui", "gui", guiList, MAX_GUIS, true, false);
 	for (i=0 ; i<numGUI ; i++) {
 		// Fix the path
 		Com_NormalizePath (fixedName, sizeof (fixedName), guiList[i]);

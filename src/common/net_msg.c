@@ -59,7 +59,7 @@ void MSG_Clear (netMsg_t *dest)
 #endif
 
 	dest->curSize = 0;
-	dest->overFlowed = qFalse;
+	dest->overFlowed = false;
 }
 
 /*
@@ -100,7 +100,7 @@ static void *MSG_GetWriteSpace (netMsg_t *dest, size_t length)
 			Com_Printf (PRNT_WARNING, "MSG_GetWriteSpace: overflowed maxSize\n");
 		}
 
-		dest->overFlowed = qTrue;
+		dest->overFlowed = true;
 	}
 
 	data = dest->data + dest->curSize;

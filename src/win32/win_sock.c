@@ -212,7 +212,7 @@ qBool NET_StringToSockaddr (char *s, struct sockaddr *sadr)
 		*(int *)&((struct sockaddr_in *)sadr)->sin_addr = *(int *)h->h_addr_list[0];
 	}
 
-	return qTrue;
+	return true;
 }
 
 
@@ -238,15 +238,15 @@ qBool NET_StringToAdr (char *s, netAdr_t *a)
 		a->ip[0] = 127;
 		a->ip[3] = 1;
 
-		return qTrue;
+		return true;
 	}
 
 	if (!NET_StringToSockaddr (s, &sadr))
-		return qFalse;
+		return false;
 	
 	NET_SockAdrToNetAdr (&sadr, a);
 
-	return qTrue;
+	return true;
 }
 
 /*
@@ -274,7 +274,7 @@ static qBool NET_GetLoopPacket (netSrc_t sock, netAdr_t *fromAddr, netMsg_t *mes
 		loop->get = loop->send - MAX_LOOPBACK;
 
 	if (loop->get >= loop->send)
-		return qFalse;
+		return false;
 
 	i = loop->get & MAX_LOOPBACKMASK;
 	loop->get++;
@@ -287,7 +287,7 @@ static qBool NET_GetLoopPacket (netSrc_t sock, netAdr_t *fromAddr, netMsg_t *mes
 	fromAddr->ip[0] = 127;
 	fromAddr->ip[3] = 1;
 
-	return qTrue;
+	return true;
 }
 
 
@@ -331,12 +331,12 @@ qBool NET_GetPacket (netSrc_t sock, netAdr_t *fromAddr, netMsg_t *message)
 
 #ifndef DEDICATED_ONLY
 	if (NET_GetLoopPacket (sock, fromAddr, message))
-		return qTrue;
+		return true;
 #endif
 
 	netSocket = net_ipSockets[sock];
 	if (!netSocket)
-		return qFalse;
+		return false;
 
 	fromLen = sizeof (fromSockAddr);
 	ret = recvfrom (netSocket, (char *)message->data, (int) message->maxSize, 0, (struct sockaddr *)&fromSockAddr, &fromLen);
@@ -349,12 +349,12 @@ qBool NET_GetPacket (netSrc_t sock, netAdr_t *fromAddr, netMsg_t *message)
 		switch (error) {
 		// wouldblock is silent
 		case WSAEWOULDBLOCK:
-			return qFalse;
+			return false;
 
 		// large packet
 		case WSAEMSGSIZE:
 			Com_Printf (PRNT_WARNING, "WARNING: NET_GetPacket: Oversize packet from %s\n", NET_AdrToString (fromAddr));
-			return qFalse;
+			return false;
 		}
 
 #ifndef DEDICATED_ONLY
@@ -366,7 +366,7 @@ qBool NET_GetPacket (netSrc_t sock, netAdr_t *fromAddr, netMsg_t *message)
 			Com_Printf (PRNT_ERROR, "NET_GetPacket: %s from %s\n", NET_ErrorString (error), NET_AdrToString (fromAddr));
 #endif
 
-		return qFalse;
+		return false;
 	}
 
 	netStats.sizeIn += ret;
@@ -374,11 +374,11 @@ qBool NET_GetPacket (netSrc_t sock, netAdr_t *fromAddr, netMsg_t *message)
 
 	if ((size_t) ret == message->maxSize) {
 		Com_Printf (PRNT_WARNING, "NET_GetPacket: Oversize packet from %s\n", NET_AdrToString (fromAddr));
-		return qFalse;
+		return false;
 	}
 
 	message->curSize = ret;
-	return qTrue;
+	return true;
 }
 
 
@@ -561,7 +561,7 @@ netConfig_t NET_Config (netConfig_t openFlags)
 
 		// Open sockets
 		netStats.initTime = time (0);
-		netStats.initialized = qTrue;
+		netStats.initialized = true;
 
 		if (openFlags & NET_SERVER) {
 			if (!net_ipSockets[NS_SERVER]) {
@@ -589,7 +589,7 @@ netConfig_t NET_Config (netConfig_t openFlags)
 					port = Cvar_Register ("clientport", Q_VarArgs ("%i", newport), CVAR_READONLY)->intVal;
 					if (!port) {
 						port = PORT_ANY;
- 						Cvar_Set ("clientport", Q_VarArgs ("%d", newport), qFalse);
+ 						Cvar_Set ("clientport", Q_VarArgs ("%d", newport), false);
 					}
 				}
 

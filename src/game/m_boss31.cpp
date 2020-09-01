@@ -618,7 +618,7 @@ qBool Jorg_CheckAttack (edict_t *self)
 
 		// do we have a clear shot?
 		if (tr.ent != self->enemy)
-			return qFalse;
+			return false;
 	}
 	
 	enemy_infront = infront(self, self->enemy);
@@ -636,18 +636,18 @@ qBool Jorg_CheckAttack (edict_t *self)
 			self->monsterinfo.attack_state = AS_MELEE;
 		else
 			self->monsterinfo.attack_state = AS_MISSILE;
-		return qTrue;
+		return true;
 	}
 	
 // missile attack
 	if (!self->monsterinfo.attack)
-		return qFalse;
+		return false;
 		
 	if (level.time < self->monsterinfo.attack_finished)
-		return qFalse;
+		return false;
 		
 	if (enemy_range == RANGE_FAR)
-		return qFalse;
+		return false;
 
 	if (self->monsterinfo.aiflags & AI_STAND_GROUND)
 	{
@@ -667,14 +667,14 @@ qBool Jorg_CheckAttack (edict_t *self)
 	}
 	else
 	{
-		return qFalse;
+		return false;
 	}
 
 	if (random () < chance)
 	{
 		self->monsterinfo.attack_state = AS_MISSILE;
 		self->monsterinfo.attack_finished = level.time + 2*random();
-		return qTrue;
+		return true;
 	}
 
 	if (self->flags & FL_FLY)
@@ -685,7 +685,7 @@ qBool Jorg_CheckAttack (edict_t *self)
 			self->monsterinfo.attack_state = AS_STRAIGHT;
 	}
 
-	return qFalse;
+	return false;
 }
 
 

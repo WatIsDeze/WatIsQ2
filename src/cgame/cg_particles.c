@@ -332,7 +332,7 @@ void CG_AddParticles (void)
 		// Think function
 		orient = p->orient;
 		if (p->thinkNext && p->think) {
-			p->thinkNext = qFalse;
+			p->thinkNext = false;
 			p->think (p, org, p->angle, color, &size, &orient, &time);
 		}
 

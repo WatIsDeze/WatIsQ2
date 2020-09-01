@@ -153,13 +153,13 @@ static qBool R_LoadMD2Model (refModel_t *model)
 	// Load the file
 	fileLen = FS_LoadFile (model->name, (void **)&buffer, NULL);
 	if (!buffer || fileLen <= 0)
-		return qFalse;
+		return false;
 
 	// Check the header
 	if (strncmp ((const char *)buffer, MD2_HEADERSTR, 4)) {
 		FS_FreeFile (buffer);
 		Com_Printf (PRNT_ERROR, "R_LoadMD2Model: '%s' has invalid header", model->name);
-		return qFalse;
+		return false;
 	}
 
 	// Check the version
@@ -168,7 +168,7 @@ static qBool R_LoadMD2Model (refModel_t *model)
 	if (version != MD2_MODEL_VERSION) {
 		FS_FreeFile (buffer);
 		Com_Printf (PRNT_ERROR, "R_LoadMD2Model: '%s' has wrong version number (%i != %i)", model->name, version, MD2_MODEL_VERSION);
-		return qFalse;
+		return false;
 	}
 
 	allocBuffer = R_ModAlloc (model, sizeof (mAliasModel_t) + sizeof (mAliasMesh_t));
@@ -189,14 +189,14 @@ static qBool R_LoadMD2Model (refModel_t *model)
 	if (outMesh->numVerts <= 0 || outMesh->numVerts > MD2_MAX_VERTS) {
 		FS_FreeFile (buffer);
 		Com_Printf (PRNT_ERROR, "R_LoadMD2Model: model '%s' has an invalid amount of vertices '%d'", model->name, outMesh->numVerts);
-		return qFalse;
+		return false;
 	}
 
 	outMesh->numTris = LittleLong (inModel->numTris);
 	if (outMesh->numTris <= 0 || outMesh->numTris > MD2_MAX_TRIANGLES) {
 		FS_FreeFile (buffer);
 		Com_Printf (PRNT_ERROR, "R_LoadMD2Model: model '%s' has an invalid amount of triangles '%d'", model->name, outMesh->numTris);
-		return qFalse;
+		return false;
 	}
 
 	frameSize = LittleLong (inModel->frameSize);
@@ -204,7 +204,7 @@ static qBool R_LoadMD2Model (refModel_t *model)
 	if (outModel->numFrames <= 0 || outModel->numFrames > MD2_MAX_FRAMES) {
 		FS_FreeFile (buffer);
 		Com_Printf (PRNT_ERROR, "R_LoadMD2Model: model '%s' has an invalid amount of frames '%d'", model->name, outModel->numFrames);
-		return qFalse;
+		return false;
 	}
 
 	//
@@ -215,14 +215,14 @@ static qBool R_LoadMD2Model (refModel_t *model)
 	if (skinWidth <= 0 || skinHeight <= 0) {
 		FS_FreeFile (buffer);
 		Com_Printf (PRNT_ERROR, "R_LoadMD2Model: model '%s' has invalid skin dimensions '%d x %d'", model->name, skinWidth, skinHeight);
-		return qFalse;
+		return false;
 	}
 
 	outMesh->numSkins = LittleLong (inModel->numSkins);
 	if (outMesh->numSkins < 0 || outMesh->numSkins > MD2_MAX_SKINS) {
 		FS_FreeFile (buffer);
 		Com_Printf (PRNT_ERROR, "R_LoadMD2Model: model '%s' has an invalid amount of skins '%d'", model->name, outMesh->numSkins);
-		return qFalse;
+		return false;
 	}
 
 	isw = 1.0 / (double)skinWidth;
@@ -287,7 +287,7 @@ static qBool R_LoadMD2Model (refModel_t *model)
 	if (numVerts <= 0 || numVerts >= ALIAS_MAX_VERTS) {
 		FS_FreeFile (buffer);
 		Com_Printf (PRNT_ERROR, "R_LoadMD2Model: model '%s' has an invalid amount of resampled verts for an alias model '%d' >= ALIAS_MAX_VERTS", numVerts, ALIAS_MAX_VERTS);
-		return qFalse;
+		return false;
 	}
 
 	Com_DevPrintf (0, "R_LoadMD2Model: '%s' remapped %i verts to %i (%i tris)\n",
@@ -416,7 +416,7 @@ static qBool R_LoadMD2Model (refModel_t *model)
 
 	// Done
 	FS_FreeFile (buffer);
-	return qTrue;
+	return true;
 }
 
 /*
@@ -482,13 +482,13 @@ static qBool R_LoadMD3Model (refModel_t *model)
 	// Load the file
 	fileLen = FS_LoadFile (model->name, (void **)&buffer, NULL);
 	if (!buffer || fileLen <= 0)
-		return qFalse;
+		return false;
 
 	// Check the header
 	if (strncmp ((const char *)buffer, MD3_HEADERSTR, 4)) {
 		FS_FreeFile (buffer);
 		Com_Printf (PRNT_ERROR, "R_LoadMD3Model: '%s' has invalid header", model->name);
-		return qFalse;
+		return false;
 	}
 
 	// Check the version
@@ -497,7 +497,7 @@ static qBool R_LoadMD3Model (refModel_t *model)
 	if (version != MD3_MODEL_VERSION) {
 		FS_FreeFile (buffer);
 		Com_Printf (PRNT_ERROR, "R_LoadMD3Model: model '%s' has wrong version number (%i != %i)", model->name, version, MD3_MODEL_VERSION);
-		return qFalse;
+		return false;
 	}
 
 	model->aliasModel = outModel = R_ModAlloc (model, sizeof (mAliasModel_t));
@@ -510,27 +510,27 @@ static qBool R_LoadMD3Model (refModel_t *model)
 	if (outModel->numFrames <= 0 || outModel->numFrames > MD3_MAX_FRAMES) {
 		FS_FreeFile (buffer);
 		Com_Printf (PRNT_ERROR, "R_LoadMD3Model: model '%s' has an invalid amount of frames '%d'", model->name, outModel->numFrames);
-		return qFalse;
+		return false;
 	}
 
 	outModel->numTags = LittleLong (inModel->numTags);
 	if (outModel->numTags < 0 || outModel->numTags > MD3_MAX_TAGS) {
 		FS_FreeFile (buffer);
 		Com_Printf (PRNT_ERROR, "R_LoadMD3Model: model '%s' has an invalid amount of tags '%d'", model->name, outModel->numTags);
-		return qFalse;
+		return false;
 	}
 
 	outModel->numMeshes = LittleLong (inModel->numMeshes);
 	if (outModel->numMeshes < 0 || outModel->numMeshes > MD3_MAX_MESHES) {
 		FS_FreeFile (buffer);
 		Com_Printf (PRNT_ERROR, "R_LoadMD3Model: model '%s' has an invalid amount of meshes '%d'", model->name, outModel->numMeshes);
-		return qFalse;
+		return false;
 	}
 
 	if (!outModel->numMeshes && !outModel->numTags) {
 		FS_FreeFile (buffer);
 		Com_Printf (PRNT_ERROR, "R_LoadMD3Model: model '%s' has no meshes and no tags!", model->name);
-		return qFalse;
+		return false;
 	}
 
 	// Allocate as much as possible now
@@ -593,7 +593,7 @@ static qBool R_LoadMD3Model (refModel_t *model)
 		if (strncmp ((const char *)inMesh->ident, MD3_HEADERSTR, 4)) {
 			FS_FreeFile (buffer);
 			Com_Printf (PRNT_ERROR, "R_LoadMD3Model: mesh '%s' in model '%s' has wrong id (%i != %i)", inMesh->meshName, model->name, LittleLong (*(int* )inMesh->ident), MD3_HEADER);
-			return qFalse;
+			return false;
 		}
 
 		R_StripModelLODSuffix (outMesh->name);
@@ -602,27 +602,27 @@ static qBool R_LoadMD3Model (refModel_t *model)
 		if (outMesh->numSkins <= 0 || outMesh->numSkins > MD3_MAX_SHADERS) {
 			FS_FreeFile (buffer);
 			Com_Printf (PRNT_ERROR, "R_LoadMD3Model: mesh '%s' in model '%s' has an invalid amount of skins '%d'", outMesh->name, model->name, outMesh->numSkins);
-			return qFalse;
+			return false;
 		}
 
 		outMesh->numTris = LittleLong (inMesh->numTris);
 		if (outMesh->numTris <= 0 || outMesh->numTris > MD3_MAX_TRIANGLES) {
 			FS_FreeFile (buffer);
 			Com_Printf (PRNT_ERROR, "R_LoadMD3Model: mesh '%s' in model '%s' has an invalid amount of triangles '%d'", outMesh->name, model->name, outMesh->numTris);
-			return qFalse;
+			return false;
 		}
 
 		outMesh->numVerts = LittleLong (inMesh->numVerts);
 		if (outMesh->numVerts <= 0 || outMesh->numVerts > MD3_MAX_VERTS) {
 			FS_FreeFile (buffer);
 			Com_Printf (PRNT_ERROR, "R_LoadMD3Model: mesh '%s' in model '%s' has an invalid amount of vertices '%d'", outMesh->name, model->name, outMesh->numVerts);
-			return qFalse;
+			return false;
 		}
 
 		if (outMesh->numVerts >= ALIAS_MAX_VERTS) {
 			FS_FreeFile (buffer);
 			Com_Printf (PRNT_ERROR, "R_LoadMD3Model: mesh '%s' in model '%s' has an invalid amount verts for an alias model '%d' >= ALIAS_MAX_VERTS", outMesh->name, outMesh->numVerts, ALIAS_MAX_VERTS);
-			return qFalse;
+			return false;
 		}
 
 		// Allocate as much as possible now
@@ -757,7 +757,7 @@ static qBool R_LoadMD3Model (refModel_t *model)
 
 	// Done
 	FS_FreeFile (buffer);
-	return qTrue;
+	return true;
 }
 
 /*
@@ -788,7 +788,7 @@ static qBool R_LoadSP2Model (refModel_t *model)
 	// Load the file
 	fileLen = FS_LoadFile (model->name, (void **)&buffer, NULL);
 	if (!buffer || fileLen <= 0)
-		return qFalse;
+		return false;
 
 	inModel = (dSpriteHeader_t *)buffer;
 
@@ -799,14 +799,14 @@ static qBool R_LoadSP2Model (refModel_t *model)
 	if (version != SP2_VERSION) {
 		FS_FreeFile (buffer);
 		Com_Printf (PRNT_ERROR, "R_LoadSP2Model: '%s' has wrong version number (%i should be %i)", model->name, version, SP2_VERSION);
-		return qFalse;
+		return false;
 	}
 
 	numFrames = LittleLong (inModel->numFrames);
 	if (numFrames > SP2_MAX_FRAMES) {
 		FS_FreeFile (buffer);
 		Com_Printf (PRNT_ERROR, "R_LoadSP2Model: '%s' has too many frames (%i > %i)", model->name, numFrames, SP2_MAX_FRAMES);
-		return qFalse;
+		return false;
 	}
 
 	//
@@ -844,7 +844,7 @@ static qBool R_LoadSP2Model (refModel_t *model)
 	}
 
 	// Done
-	return qTrue;
+	return true;
 }
 
 /*
@@ -940,7 +940,7 @@ static qBool SubdivideQ2Polygon (refModel_t *model, mBspSurface_t *surf, int num
 
 	if (numVerts > 60) {
 		Com_Printf (PRNT_ERROR, "SubdivideQ2Polygon: numVerts = %i", numVerts);
-		return qFalse;
+		return false;
 	}
 
 	BoundQ2BSPPoly (numVerts, verts, mins, maxs);
@@ -1067,7 +1067,7 @@ static qBool SubdivideQ2Polygon (refModel_t *model, mBspSurface_t *surf, int num
 	poly->next = surf->q2_polys;
 	surf->q2_polys = poly;
 
-	return qTrue;
+	return true;
 }
 static qBool R_SubdivideQ2BSPSurface (refModel_t *model, mBspSurface_t *surf, float subdivideSize)
 {
@@ -1120,7 +1120,7 @@ static qBool SubdivideQ2BSPLMSurface_r (refModel_t *model, mBspSurface_t *surf, 
 
 	if (numVerts > 60) {
 		Com_Printf (PRNT_ERROR, "SubdivideQ2BSPLMSurface_r: numVerts = %i", numVerts);
-		return qFalse;
+		return false;
 	}
 
 	BoundQ2BSPPoly (numVerts, verts, mins, maxs);
@@ -1263,7 +1263,7 @@ static qBool SubdivideQ2BSPLMSurface_r (refModel_t *model, mBspSurface_t *surf, 
 	poly->next = surf->q2_polys;
 	surf->q2_polys = poly;
 
-	return qTrue;
+	return true;
 }
 
 static qBool R_SubdivideQ2BSPLMSurface (refModel_t *model, mBspSurface_t *surf, float subdivideSize)
@@ -1313,7 +1313,7 @@ static qBool R_BuildQ2BSPSurface (refModel_t *model, mBspSurface_t *surf)
 	if (surf->q2_numEdges < 3) {
 		assert (0);
 		surf->mesh = NULL;
-		return qTrue;	// FIXME: return qFalse?
+		return true;	// FIXME: return false?
 	}
 
 	ti = surf->q2_texInfo;
@@ -1377,7 +1377,7 @@ static qBool R_BuildQ2BSPSurface (refModel_t *model, mBspSurface_t *surf)
 	// Check mesh validity
 	if (RB_InvalidMesh (outMesh)) {
 		Com_Printf (PRNT_ERROR, "R_BuildQ2BSPSurface: surface mesh is invalid!");
-		return qFalse;
+		return false;
 	}
 
 	// Copy vertex data
@@ -1433,7 +1433,7 @@ static qBool R_BuildQ2BSPSurface (refModel_t *model, mBspSurface_t *surf)
 		outIndexes += 3;
 	}
 
-	return qTrue;
+	return true;
 }
 
 
@@ -1525,7 +1525,7 @@ static qBool R_ConvertQ2BSPSurface (refModel_t *model, mBspSurface_t *surf)
 	// Check mesh validity
 	if (RB_InvalidMesh (outMesh)) {
 		Com_Printf (PRNT_ERROR, "R_ConvertQ2BSPSurface: surface mesh is invalid!");
-		return qFalse;
+		return false;
 	}
 
 	// Store vertex data
@@ -1591,7 +1591,7 @@ static qBool R_ConvertQ2BSPSurface (refModel_t *model, mBspSurface_t *surf)
 		Mem_Free (poly);
 	}
 
-	return qTrue;
+	return true;
 }
 
 // ============================================================================
@@ -1749,7 +1749,7 @@ static qBool R_LoadQ2BSPVertexes (refModel_t *model, byte *byteBase, const dQ2Bs
 	in = (void *)(byteBase + lump->fileOfs);
 	if (lump->fileLen % sizeof (*in)) {
 		Com_Printf (PRNT_ERROR, "R_LoadQ2BSPVertexes: funny lump size in %s", model->name);
-		return qFalse;
+		return false;
 	}
 
 	model->q2BspModel.numVertexes = lump->fileLen / sizeof (*in);
@@ -1764,7 +1764,7 @@ static qBool R_LoadQ2BSPVertexes (refModel_t *model, byte *byteBase, const dQ2Bs
 		out->position[2] = LittleFloat (in->point[2]);
 	}
 
-	return qTrue;
+	return true;
 }
 
 
@@ -1782,7 +1782,7 @@ static qBool R_LoadQ2BSPEdges (refModel_t *model, byte *byteBase, const dQ2BspLu
 	in = (void *)(byteBase + lump->fileOfs);
 	if (lump->fileLen % sizeof (*in)) {
 		Com_Printf (PRNT_ERROR, "R_LoadQ2BSPEdges: funny lump size in %s", model->name);
-		return qFalse;
+		return false;
 	}
 
 	model->q2BspModel.numEdges = lump->fileLen / sizeof (*in);
@@ -1796,7 +1796,7 @@ static qBool R_LoadQ2BSPEdges (refModel_t *model, byte *byteBase, const dQ2BspLu
 		out->v[1] = (uint16) LittleShort (in->v[1]);
 	}
 
-	return qTrue;
+	return true;
 }
 
 
@@ -1814,13 +1814,13 @@ static qBool R_LoadQ2BSPSurfEdges (refModel_t *model, byte *byteBase, const dQ2B
 	in = (void *)(byteBase + lump->fileOfs);
 	if (lump->fileLen % sizeof (*in)) {
 		Com_Printf (PRNT_ERROR, "R_LoadQ2BSPSurfEdges: funny lump size in %s", model->name);
-		return qFalse;
+		return false;
 	}
 
 	model->q2BspModel.numSurfEdges = lump->fileLen / sizeof (*in);
 	if (model->q2BspModel.numSurfEdges < 1 || model->q2BspModel.numSurfEdges >= Q2BSP_MAX_SURFEDGES) {
 		Com_Printf (PRNT_ERROR, "R_LoadQ2BSPSurfEdges: invalid surfEdges count in %s: %i (min: 1; max: %d)", model->name, model->q2BspModel.numSurfEdges, Q2BSP_MAX_SURFEDGES);
-		return qFalse;
+		return false;
 	}
 
 	model->q2BspModel.surfEdges = out = R_ModAlloc (model, sizeof (*out) * model->q2BspModel.numSurfEdges);
@@ -1831,7 +1831,7 @@ static qBool R_LoadQ2BSPSurfEdges (refModel_t *model, byte *byteBase, const dQ2B
 	for (i=0 ; i<model->q2BspModel.numSurfEdges ; i++)
 		out[i] = LittleLong (in[i]);
 
-	return qTrue;
+	return true;
 }
 
 
@@ -1844,13 +1844,13 @@ static qBool R_LoadQ2BSPLighting (refModel_t *model, byte *byteBase, const dQ2Bs
 {
 	if (!lump->fileLen) {
 		model->q2BspModel.lightData = NULL;
-		return qTrue;
+		return true;
 	}
 
 	model->q2BspModel.lightData = R_ModAlloc (model, lump->fileLen);	
 	memcpy (model->q2BspModel.lightData, byteBase + lump->fileOfs, lump->fileLen);
 
-	return qTrue;
+	return true;
 }
 
 
@@ -1869,7 +1869,7 @@ static qBool R_LoadQ2BSPPlanes (refModel_t *model, byte *byteBase, const dQ2BspL
 	in = (void *)(byteBase + lump->fileOfs);
 	if (lump->fileLen % sizeof (*in)) {
 		Com_Printf (PRNT_ERROR, "R_LoadQ2BSPPlanes: funny lump size in %s", model->name);
-		return qFalse;
+		return false;
 	}
 
 	model->bspModel.numPlanes = lump->fileLen / sizeof (*in);
@@ -1891,7 +1891,7 @@ static qBool R_LoadQ2BSPPlanes (refModel_t *model, byte *byteBase, const dQ2BspL
 		out->signBits = bits;
 	}
 
-	return qTrue;
+	return true;
 }
 
 
@@ -1909,7 +1909,7 @@ static qBool R_LoadQ2BSPTexInfo (refModel_t *model, byte *byteBase, const dQ2Bsp
 	in = (void *)(byteBase + lump->fileOfs);
 	if (lump->fileLen % sizeof (*in)) {
 		Com_Printf (PRNT_ERROR, "R_LoadQ2BSPTexInfo: funny lump size in %s", model->name);
-		return qFalse;
+		return false;
 	}
 
 	model->q2BspModel.numTexInfo = lump->fileLen / sizeof (*in);
@@ -1979,7 +1979,7 @@ static qBool R_LoadQ2BSPTexInfo (refModel_t *model, byte *byteBase, const dQ2Bsp
 			out->numFrames++;
 	}
 
-	return qTrue;
+	return true;
 }
 
 
@@ -1998,7 +1998,7 @@ static qBool R_LoadQ2BSPFaces (refModel_t *model, byte *byteBase, const dQ2BspLu
 	in = (void *)(byteBase + lump->fileOfs);
 	if (lump->fileLen % sizeof (*in)) {
 		Com_Printf (PRNT_ERROR, "R_LoadQ2BSPFaces: funny lump size in %s", model->name);
-		return qFalse;
+		return false;
 	}
 
 	model->bspModel.numSurfaces = lump->fileLen / sizeof (*in);
@@ -2022,7 +2022,7 @@ static qBool R_LoadQ2BSPFaces (refModel_t *model, byte *byteBase, const dQ2BspLu
 		i = LittleShort (in->texInfo);
 		if (i < 0 || i >= model->q2BspModel.numTexInfo) {
 			Com_Printf (PRNT_ERROR, "R_LoadQ2BSPFaces: bad texInfo number");
-			return qFalse;
+			return false;
 		}
 		out->q2_texInfo = model->q2BspModel.texInfo + i;
 
@@ -2070,10 +2070,10 @@ static qBool R_LoadQ2BSPFaces (refModel_t *model, byte *byteBase, const dQ2BspLu
 			if (out->q2_texInfo->mat && out->q2_texInfo->mat->flags & MAT_SUBDIVIDE) {
 				if (!R_SubdivideQ2BSPSurface (model, out, out->q2_texInfo->mat->subdivide)
 				|| !R_ConvertQ2BSPSurface (model, out))
-					return qFalse;
+					return false;
 			}
 			else if (!R_BuildQ2BSPSurface (model, out))
-				return qFalse;
+				return false;
 		}
 		else {
 			// The rest do
@@ -2082,16 +2082,16 @@ static qBool R_LoadQ2BSPFaces (refModel_t *model, byte *byteBase, const dQ2BspLu
 			if (out->q2_texInfo->mat && out->q2_texInfo->mat->flags & MAT_SUBDIVIDE) {
 				if (!R_SubdivideQ2BSPLMSurface (model, out, out->q2_texInfo->mat->subdivide)
 				|| !R_ConvertQ2BSPSurface (model, out))
-					return qFalse;
+					return false;
 			}
 			else if (!R_BuildQ2BSPSurface (model, out))
-				return qFalse;
+				return false;
 		}
 	}
 
 	R_Q2BSP_EndBuildingLightmaps ();
 
-	return qTrue;
+	return true;
 }
 
 
@@ -2109,7 +2109,7 @@ static qBool R_LoadQ2BSPMarkSurfaces (refModel_t *model, byte *byteBase, const d
 	in = (void *)(byteBase + lump->fileOfs);
 	if (lump->fileLen % sizeof (*in)) {
 		Com_Printf (PRNT_ERROR, "R_LoadQ2BSPMarkSurfaces: funny lump size in %s", model->name);
-		return qFalse;
+		return false;
 	}
 
 	model->q2BspModel.numMarkSurfaces = lump->fileLen / sizeof (*in);
@@ -2122,12 +2122,12 @@ static qBool R_LoadQ2BSPMarkSurfaces (refModel_t *model, byte *byteBase, const d
 		j = LittleShort (in[i]);
 		if (j < 0 || j >= model->bspModel.numSurfaces) {
 			Com_Printf (PRNT_ERROR, "R_LoadQ2BSPMarkSurfaces: bad surface number");
-			return qFalse;
+			return false;
 		}
 		out[i] = model->bspModel.surfaces + j;
 	}
 
-	return qTrue;
+	return true;
 }
 
 
@@ -2142,7 +2142,7 @@ static qBool R_LoadQ2BSPVisibility (refModel_t *model, byte *byteBase, const dQ2
 
 	if (!lump->fileLen) {
 		model->q2BspModel.vis = NULL;
-		return qTrue;
+		return true;
 	}
 
 	model->q2BspModel.vis = R_ModAlloc (model, lump->fileLen);	
@@ -2158,7 +2158,7 @@ static qBool R_LoadQ2BSPVisibility (refModel_t *model, byte *byteBase, const dQ2
 		model->q2BspModel.vis->bitOfs[i][1] = LittleLong (model->q2BspModel.vis->bitOfs[i][1]);
 	}
 
-	return qTrue;
+	return true;
 }
 
 
@@ -2170,34 +2170,34 @@ R_LoadQ2BSPLeafs
 static qBool R_Q2BSP_SurfPotentiallyVisible (mBspSurface_t *surf)
 {
 	if (!surf->q2_texInfo)
-		return qFalse;
+		return false;
 
 	if (!surf->mesh || RB_InvalidMesh (surf->mesh))
-		return qFalse;
+		return false;
 	if (!surf->q2_texInfo->mat)
-		return qFalse;
+		return false;
 	if (!surf->q2_texInfo->mat->numPasses)
-		return qFalse;
+		return false;
 
-	return qTrue;
+	return true;
 }
 static qBool R_Q2BSP_SurfPotentiallyLit (mBspSurface_t *surf)
 {
 	if (surf->q2_texInfo->flags & (SURF_TEXINFO_SKY|SURF_TEXINFO_WARP)) 
-		return qFalse;
+		return false;
 	if (!surf->q2_lmSamples)
-		return qFalse;
+		return false;
 
-	return qTrue;
+	return true;
 }
 static qBool R_Q2BSP_SurfPotentiallyFragmented (mBspSurface_t *surf)
 {
 	if (surf->q2_texInfo->flags & SURF_TEXINFO_NODRAW)
-		return qFalse;
+		return false;
 	if (surf->q2_texInfo->mat->flags & MAT_NOMARK)
-		return qFalse;
+		return false;
 
-	return qTrue;
+	return true;
 }
 static qBool R_LoadQ2BSPLeafs (refModel_t *model, byte *byteBase, const dQ2BspLump_t *lump)
 {
@@ -2212,7 +2212,7 @@ static qBool R_LoadQ2BSPLeafs (refModel_t *model, byte *byteBase, const dQ2BspLu
 	in = (void *)(byteBase + lump->fileOfs);
 	if (lump->fileLen % sizeof (*in)) {
 		Com_Printf (PRNT_ERROR, "R_LoadQ2BSPLeafs: funny lump size in %s", model->name);
-		return qFalse;
+		return false;
 	}
 
 	model->bspModel.numLeafs = lump->fileLen / sizeof (*in);
@@ -2223,12 +2223,12 @@ static qBool R_LoadQ2BSPLeafs (refModel_t *model, byte *byteBase, const dQ2BspLu
 	//
 	totalFragRemoved = 0;
 	for (i=0 ; i<model->bspModel.numLeafs ; i++, in++, out++) {
-		badBounds = qFalse;
+		badBounds = false;
 		for (j=0 ; j<3 ; j++) {
 			out->c.mins[j] = LittleShort (in->mins[j]);
 			out->c.maxs[j] = LittleShort (in->maxs[j]);
 			if (out->c.mins[j] > out->c.maxs[j])
-				badBounds = qTrue;
+				badBounds = true;
 		}
 
 		if (i && (badBounds || Vec3Compare (out->c.mins, out->c.maxs))) {
@@ -2237,10 +2237,10 @@ static qBool R_LoadQ2BSPLeafs (refModel_t *model, byte *byteBase, const dQ2BspLu
 			Com_DevPrintf (PRNT_WARNING, "maxs: %i %i %i\n", Q_rint (out->c.maxs[0]), Q_rint (out->c.maxs[1]), Q_rint (out->c.maxs[2]));
 			Com_DevPrintf (PRNT_WARNING, "cluster: %i\n", out->cluster);
 			Com_DevPrintf (PRNT_WARNING, "area: %i\n", out->area);
-			out->c.badBounds = qTrue;
+			out->c.badBounds = true;
 		}
 		else {
-			out->c.badBounds = qFalse;
+			out->c.badBounds = false;
 		}
 
 		out->c.q2_contents = LittleLong (in->contents);
@@ -2301,7 +2301,7 @@ static qBool R_LoadQ2BSPLeafs (refModel_t *model, byte *byteBase, const dQ2BspLu
 	}
 
 	Com_DevPrintf (0, "R_LoadQ2BSPLeafs: %i non-fragmentable surfaces skipped.\n", totalFragRemoved);
-	return qTrue;
+	return true;
 }
 
 
@@ -2326,7 +2326,7 @@ static qBool R_LoadQ2BSPNodes (refModel_t *model, byte *byteBase, const dQ2BspLu
 	in = (void *)(byteBase + lump->fileOfs);
 	if (lump->fileLen % sizeof (*in)) {
 		Com_Printf (PRNT_ERROR, "R_LoadQ2BSPNodes: funny lump size in %s", model->name);
-		return qFalse;
+		return false;
 	}
 
 	model->bspModel.numNodes = lump->fileLen / sizeof (*in);
@@ -2338,23 +2338,23 @@ static qBool R_LoadQ2BSPNodes (refModel_t *model, byte *byteBase, const dQ2BspLu
 	totalLitRemoved = 0;
 	totalVisRemoved = 0;
 	for (i=0 ; i<model->bspModel.numNodes ; i++, in++, out++) {
-		badBounds = qFalse;
+		badBounds = false;
 		for (j=0 ; j<3 ; j++) {
 			out->c.mins[j] = LittleShort (in->mins[j]);
 			out->c.maxs[j] = LittleShort (in->maxs[j]);
 
 			if (out->c.mins[j] > out->c.maxs[j])
-				badBounds = qTrue;
+				badBounds = true;
 		}
 
 		if (badBounds || Vec3Compare (out->c.mins, out->c.maxs)) {
 			Com_DevPrintf (PRNT_WARNING, "WARNING: bad node %i bounds:\n", i);
 			Com_DevPrintf (PRNT_WARNING, "mins: %i %i %i\n", Q_rint (out->c.mins[0]), Q_rint (out->c.mins[1]), Q_rint (out->c.mins[2]));
 			Com_DevPrintf (PRNT_WARNING, "maxs: %i %i %i\n", Q_rint (out->c.maxs[0]), Q_rint (out->c.maxs[1]), Q_rint (out->c.maxs[2]));
-			out->c.badBounds = qTrue;
+			out->c.badBounds = true;
 		}
 		else {
-			out->c.badBounds = qFalse;
+			out->c.badBounds = false;
 		}
 
 		out->c.q2_contents = -1;	// Differentiate from leafs
@@ -2431,7 +2431,7 @@ static qBool R_LoadQ2BSPNodes (refModel_t *model, byte *byteBase, const dQ2BspLu
 	//
 	R_SetParentQ2BSPNode (model->bspModel.nodes, NULL);
 
-	return qTrue;
+	return true;
 }
 
 
@@ -2451,13 +2451,13 @@ static qBool R_LoadQ2BSPSubModels (refModel_t *model, byte *byteBase, const dQ2B
 	in = (void *)(byteBase + lump->fileOfs);
 	if (lump->fileLen % sizeof (*in)) {
 		Com_Printf (PRNT_ERROR, "R_LoadQ2BSPSubModels: funny lump size in %s", model->name);
-		return qFalse;
+		return false;
 	}
 
 	model->bspModel.numSubModels = lump->fileLen / sizeof (*in);
 	if (model->bspModel.numSubModels >= MAX_REF_MODELS) {
 		Com_Printf (PRNT_ERROR, "R_LoadQ2BSPSubModels: too many submodels %i >= %i\n", model->bspModel.numSubModels, MAX_REF_MODELS);
-		return qFalse;
+		return false;
 	}
 
 	model->bspModel.subModels = out = R_ModAlloc (model, sizeof (*out) * model->bspModel.numSubModels);
@@ -2468,12 +2468,12 @@ static qBool R_LoadQ2BSPSubModels (refModel_t *model, byte *byteBase, const dQ2B
 	//
 	for (i=0 ; i<model->bspModel.numSubModels ; i++, in++, out++) {
 		// Pad the mins / maxs by a pixel
-		badBounds = qFalse;
+		badBounds = false;
 		for (j=0 ; j<3 ; j++) {
 			out->mins[j] = LittleFloat (in->mins[j]) - 1;
 			out->maxs[j] = LittleFloat (in->maxs[j]) + 1;
 			if (out->mins[j] > out->maxs[j])
-				badBounds = qTrue;
+				badBounds = true;
 		}
 
 		if (badBounds || Vec3Compare (out->mins, out->maxs)) {
@@ -2495,7 +2495,7 @@ static qBool R_LoadQ2BSPSubModels (refModel_t *model, byte *byteBase, const dQ2B
 		out->numFaces	= LittleLong (in->numFaces);
 	}
 
-	return qTrue;
+	return true;
 }
 
 
@@ -2521,7 +2521,7 @@ static qBool R_LoadQ2BSPModel (refModel_t *model, byte *buffer)
 	version = LittleLong (header->version);
 	if (version != Q2BSP_VERSION) {
 		Com_Printf (PRNT_ERROR, "R_LoadQ2BSPModel: %s has wrong version number (%i should be %i)", model->name, version, Q2BSP_VERSION);
-		return qFalse;
+		return false;
 	}
 
 	//
@@ -2546,7 +2546,7 @@ static qBool R_LoadQ2BSPModel (refModel_t *model, byte *buffer)
 	|| !R_LoadQ2BSPLeafs		(model, modBase, &header->lumps[Q2BSP_LUMP_LEAFS])
 	|| !R_LoadQ2BSPNodes		(model, modBase, &header->lumps[Q2BSP_LUMP_NODES])
 	|| !R_LoadQ2BSPSubModels	(model, modBase, &header->lumps[Q2BSP_LUMP_MODELS]))
-		return qFalse;
+		return false;
 
 	//
 	// Set up the submodels
@@ -2565,7 +2565,7 @@ static qBool R_LoadQ2BSPModel (refModel_t *model, byte *buffer)
 
 		if (starmodel->q2BspModel.firstNode >= model->bspModel.numNodes) {
 			Com_Printf (PRNT_ERROR, "R_LoadQ2BSPModel: Inline model number '%i' has a bad firstNode (%d >= %d)", i, starmodel->q2BspModel.firstNode, model->bspModel.numNodes);
-			return qFalse;
+			return false;
 		}
 
 		Vec3Copy (bm->maxs, starmodel->maxs);
@@ -2578,7 +2578,7 @@ static qBool R_LoadQ2BSPModel (refModel_t *model, byte *buffer)
 		starmodel->bspModel.numLeafs = bm->visLeafs;
 	}
 
-	return qTrue;
+	return true;
 }
 
 /*
@@ -2693,19 +2693,19 @@ Only true if R_Q3BSP_SurfPotentiallyVisible is true
 qBool R_Q3BSP_SurfPotentiallyFragmented (mBspSurface_t *surf)
 {
 	if (surf->q3_shaderRef->flags & (SHREF_NOMARKS|SHREF_NOIMPACT))
-		return qFalse;
+		return false;
 
 	switch (surf->q3_faceType) {
 	case FACETYPE_PLANAR:
 		if (surf->q3_shaderRef->contents & CONTENTS_SOLID)
-			return qTrue;
+			return true;
 		break;
 
 	case FACETYPE_PATCH:
-		return qTrue;
+		return true;
 	}
 
-	return qFalse;
+	return false;
 }
 
 
@@ -2719,15 +2719,15 @@ Only true if R_Q3BSP_SurfPotentiallyVisible is true
 qBool R_Q3BSP_SurfPotentiallyLit (mBspSurface_t *surf)
 {
 	if (surf->q3_shaderRef->flags & (SHREF_SKY|SHREF_NODLIGHT))
-		return qFalse;
+		return false;
 
 	if (surf->q3_faceType == FACETYPE_FLARE)
-		return qFalse;
+		return false;
 	if (surf->q3_shaderRef->mat
 	&& surf->q3_shaderRef->mat->flags & (MAT_FLARE|MAT_SKY))
-		return qFalse;
+		return false;
 
-	return qTrue;
+	return true;
 }
 
 
@@ -2739,16 +2739,16 @@ R_Q3BSP_SurfPotentiallyVisible
 qBool R_Q3BSP_SurfPotentiallyVisible (mBspSurface_t *surf)
 {
 	if (surf->q3_shaderRef->flags & SHREF_NODRAW)
-		return qFalse;
+		return false;
 
 	if (!surf->mesh || RB_InvalidMesh (surf->mesh))
-		return qFalse;
+		return false;
 	if (!surf->q3_shaderRef->mat)
-		return qFalse;
+		return false;
 	if (!surf->q3_shaderRef->mat->numPasses)
-		return qFalse;
+		return false;
 
-	return qTrue;
+	return true;
 }
 
 /*
@@ -2772,7 +2772,7 @@ static qBool R_LoadQ3BSPLighting (refModel_t *model, byte *byteBase, const dQ3Bs
 	if (lightLump->fileLen && !r_vertexLighting->intVal) {
 		if (lightLump->fileLen % Q3LIGHTMAP_SIZE) {
 			Com_Printf (PRNT_ERROR, "R_LoadQ3BSPLighting: funny lighting lump size in %s", model->name);
-			return qFalse;
+			return false;
 		}
 
 		model->q3BspModel.numLightmaps = lightLump->fileLen / Q3LIGHTMAP_SIZE;
@@ -2782,7 +2782,7 @@ static qBool R_LoadQ3BSPLighting (refModel_t *model, byte *byteBase, const dQ3Bs
 	// Load the light grid
 	if (gridLump->fileLen % sizeof (*inGrid)) {
 		Com_Printf (PRNT_ERROR, "R_LoadQ3BSPLighting: funny lightgrid lump size in %s", model->name);
-		return qFalse;
+		return false;
 	}
 
 	inGrid = (void *)(byteBase + gridLump->fileOfs);
@@ -2791,7 +2791,7 @@ static qBool R_LoadQ3BSPLighting (refModel_t *model, byte *byteBase, const dQ3Bs
 
 	memcpy (model->q3BspModel.lightGrid, inGrid, model->q3BspModel.numLightGridElems * sizeof (*model->q3BspModel.lightGrid));
 
-	return qTrue;
+	return true;
 }
 
 
@@ -2804,7 +2804,7 @@ static qBool R_LoadQ3BSPVisibility (refModel_t *model, byte *byteBase, const dQ3
 {
 	if (!lump->fileLen) {
 		model->q3BspModel.vis = NULL;
-		return qTrue;
+		return true;
 	}
 
 	model->q3BspModel.vis = R_ModAlloc (model, lump->fileLen);
@@ -2813,7 +2813,7 @@ static qBool R_LoadQ3BSPVisibility (refModel_t *model, byte *byteBase, const dQ3
 	model->q3BspModel.vis->numClusters = LittleLong (model->q3BspModel.vis->numClusters);
 	model->q3BspModel.vis->rowSize = LittleLong (model->q3BspModel.vis->rowSize);
 
-	return qTrue;
+	return true;
 }
 
 
@@ -2834,7 +2834,7 @@ static qBool R_LoadQ3BSPVertexes (refModel_t *model, byte *byteBase, const dQ3Bs
 	in = (void *)(byteBase + lump->fileOfs);
 	if (lump->fileLen % sizeof (*in)) {
 		Com_Printf (PRNT_ERROR, "R_LoadQ3BSPVertexes: funny lump size in %s", model->name);
-		return qFalse;
+		return false;
 	}
 	count = lump->fileLen / sizeof(*in);
 
@@ -2897,7 +2897,7 @@ static qBool R_LoadQ3BSPVertexes (refModel_t *model, byte *byteBase, const dQ3Bs
 		outColors += 4;
 	}
 
-	return qTrue;
+	return true;
 }
 
 
@@ -2915,13 +2915,13 @@ static qBool R_LoadQ3BSPSubmodels (refModel_t *model, byte *byteBase, const dQ3B
 	in = (void *)(byteBase + lump->fileOfs);
 	if (lump->fileLen % sizeof(*in)) {
 		Com_Printf (PRNT_ERROR, "R_LoadQ3BSPSubmodels: funny lump size in %s", model->name);
-		return qFalse;
+		return false;
 	}
 
 	model->bspModel.numSubModels = lump->fileLen / sizeof (*in);
 	if (model->bspModel.numSubModels >= MAX_REF_MODELS) {
 		Com_Printf (PRNT_ERROR, "R_LoadQ3BSPSubmodels: too many submodels %i >= %i\n", model->bspModel.numSubModels, MAX_REF_MODELS);
-		return qFalse;
+		return false;
 	}
 
 	model->bspModel.subModels = out = R_ModAlloc (model, model->bspModel.numSubModels * sizeof (*out));
@@ -2941,7 +2941,7 @@ static qBool R_LoadQ3BSPSubmodels (refModel_t *model, byte *byteBase, const dQ3B
 		out->numFaces = LittleLong (in->numFaces);
 	}
 
-	return qTrue;
+	return true;
 }
 
 
@@ -2959,7 +2959,7 @@ static qBool R_LoadQ3BSPShaderRefs (refModel_t *model, byte *byteBase, const dQ3
 	in = (void *)(byteBase + lump->fileOfs);
 	if (lump->fileLen % sizeof (*in)) {
 		Com_Printf (PRNT_ERROR, "R_LoadQ3BSPShaderRefs: funny lump size in %s", model->name);	
-		return qFalse;
+		return false;
 	}
 
 	model->q3BspModel.numShaderRefs = lump->fileLen / sizeof (*in);
@@ -2972,7 +2972,7 @@ static qBool R_LoadQ3BSPShaderRefs (refModel_t *model, byte *byteBase, const dQ3
 		out->mat = NULL;
 	}
 
-	return qTrue;
+	return true;
 }
 
 
@@ -3190,7 +3190,7 @@ static qBool R_LoadQ3BSPFaces (refModel_t *model, byte *byteBase, const dQ3BspLu
 	in = (void *)(byteBase + lump->fileOfs);
 	if (lump->fileLen % sizeof (*in)) {
 		Com_Printf (PRNT_ERROR, "Mod_LoadFaces: funny lump size in %s", model->name);
-		return qFalse;
+		return false;
 	}
 
 	model->bspModel.numSurfaces = lump->fileLen / sizeof (*in);
@@ -3220,7 +3220,7 @@ static qBool R_LoadQ3BSPFaces (refModel_t *model, byte *byteBase, const dQ3BspLu
 		shaderNum = LittleLong (in->shaderNum);
 		if (shaderNum < 0 || shaderNum >= model->q3BspModel.numShaderRefs) {
 			Com_Printf (PRNT_ERROR, "R_LoadQ3BSPFaces: bad shader number");
-			return qFalse;
+			return false;
 		}
 
 		shaderRef = model->q3BspModel.shaderRefs + shaderNum;
@@ -3283,7 +3283,7 @@ static qBool R_LoadQ3BSPFaces (refModel_t *model, byte *byteBase, const dQ3BspLu
 		R_FixAutosprites (out);
 	}
 
-	return qTrue;
+	return true;
 }
 
 
@@ -3302,7 +3302,7 @@ static qBool R_LoadQ3BSPNodes (refModel_t *model, byte *byteBase, const dQ3BspLu
 	in = (void *)(byteBase + lump->fileOfs);
 	if (lump->fileLen % sizeof (*in)) {
 		Com_Printf (PRNT_ERROR, "R_LoadQ3BSPNodes: funny lump size in %s", model->name);
-		return qFalse;
+		return false;
 	}
 
 	model->bspModel.numNodes = lump->fileLen / sizeof(*in);
@@ -3319,23 +3319,23 @@ static qBool R_LoadQ3BSPNodes (refModel_t *model, byte *byteBase, const dQ3BspLu
 				out->children[j] = (mBspNode_t *)(model->bspModel.leafs + (-1 - p));
 		}
 
-		badBounds = qFalse;
+		badBounds = false;
 		for (j=0 ; j<3 ; j++) {
 			out->c.mins[j] = LittleFloat (in->mins[j]);
 			out->c.maxs[j] = LittleFloat (in->maxs[j]);
 			if (out->c.mins[j] > out->c.maxs[j])
-				badBounds = qTrue;
+				badBounds = true;
 		}
 
 		if (badBounds || Vec3Compare (out->c.mins, out->c.maxs)) {
 			Com_DevPrintf (PRNT_WARNING, "WARNING: bad node %i bounds:\n", i);
 			Com_DevPrintf (PRNT_WARNING, "mins: %i %i %i\n", Q_rint (out->c.mins[0]), Q_rint (out->c.mins[1]), Q_rint (out->c.mins[2]));
 			Com_DevPrintf (PRNT_WARNING, "maxs: %i %i %i\n", Q_rint (out->c.maxs[0]), Q_rint (out->c.maxs[1]), Q_rint (out->c.maxs[2]));
-			out->c.badBounds = qTrue;
+			out->c.badBounds = true;
 		}
 	}
 
-	return qTrue;
+	return true;
 }
 
 
@@ -3355,24 +3355,24 @@ static qBool R_LoadQ3BSPFogs (refModel_t *model, byte *byteBase, const dQ3BspLum
 	inBrushes = (void *)(byteBase + brLump->fileOfs);
 	if (brLump->fileLen % sizeof (*inBrushes)) {
 		Com_Printf (PRNT_ERROR, "R_LoadQ3BSPFogs: funny lump size in %s", model->name);
-		return qFalse;
+		return false;
 	}
 
 	inBrushSides = (void *)(byteBase + brSidesLump->fileOfs);
 	if (brSidesLump->fileLen % sizeof (*inBrushSides)) {
 		Com_Printf (PRNT_ERROR, "R_LoadQ3BSPFogs: funny lump size in %s", model->name);
-		return qFalse;
+		return false;
 	}
 
 	in = (void *)(byteBase + lump->fileOfs);
 	if (lump->fileLen % sizeof (*in)) {
 		Com_Printf (PRNT_ERROR, "R_LoadQ3BSPFogs: funny lump size in %s", model->name);
-		return qFalse;
+		return false;
 	}
 
 	model->q3BspModel.numFogs = lump->fileLen / sizeof (*in);
 	if (!model->q3BspModel.numFogs)
-		return qTrue;
+		return true;
 
 	model->q3BspModel.fogs = out = R_ModAlloc (model, model->q3BspModel.numFogs * sizeof (*out));
 
@@ -3408,7 +3408,7 @@ static qBool R_LoadQ3BSPFogs (refModel_t *model, byte *byteBase, const dQ3BspLum
 			out->planes[j] = *(model->bspModel.planes + LittleLong (brushSide[j].planeNum));
 	}
 
-	return qTrue;
+	return true;
 }
 
 
@@ -3433,26 +3433,26 @@ static qBool R_LoadQ3BSPLeafs (refModel_t *model, byte *byteBase, const dQ3BspLu
 	inMarkSurfaces = (void *)(byteBase + msLump->fileOfs);
 	if (msLump->fileLen % sizeof (*inMarkSurfaces)) {
 		Com_Printf (PRNT_ERROR, "R_LoadQ3BSPLeafs: funny lump size in %s", model->name);
-		return qFalse;
+		return false;
 	}
 	countMarkSurfaces = msLump->fileLen / sizeof (*inMarkSurfaces);
 
 	in = (void *)(byteBase + lump->fileOfs);
 	if (lump->fileLen % sizeof (*in)) {
 		Com_Printf (PRNT_ERROR, "R_LoadQ3BSPLeafs: funny lump size in %s", model->name);
-		return qFalse;
+		return false;
 	}
 
 	model->bspModel.numLeafs = lump->fileLen / sizeof (*in);
 	model->bspModel.leafs = out = R_ModAlloc (model, model->bspModel.numLeafs * sizeof (*out));
 
 	for (i=0 ; i<model->bspModel.numLeafs ; i++, in++, out++) {
-		badBounds = qFalse;
+		badBounds = false;
 		for (j=0 ; j<3 ; j++) {
 			out->c.mins[j] = (float)LittleLong (in->mins[j]);
 			out->c.maxs[j] = (float)LittleLong (in->maxs[j]);
 			if (out->c.mins[j] > out->c.maxs[j])
-				badBounds = qTrue;
+				badBounds = true;
 		}
 		out->cluster = LittleLong (in->cluster);
 
@@ -3463,13 +3463,13 @@ static qBool R_LoadQ3BSPLeafs (refModel_t *model, byte *byteBase, const dQ3BspLu
 			Com_DevPrintf (PRNT_WARNING, "cluster: %i\n", out->cluster);
 			Com_DevPrintf (PRNT_WARNING, "surfaces: %i\n", LittleLong (in->numLeafFaces));
 			Com_DevPrintf (PRNT_WARNING, "brushes: %i\n", LittleLong (in->numLeafBrushes));
-			out->c.badBounds = qTrue;
+			out->c.badBounds = true;
 			out->cluster = -1;
 		}
 
 		if (model->q3BspModel.vis && out->cluster >= model->q3BspModel.vis->numClusters) {
 			Com_Printf (PRNT_ERROR, "MOD_LoadBmodel: leaf cluster > numclusters");
-			return qFalse;
+			return false;
 		}
 
 		out->c.plane = NULL;
@@ -3482,7 +3482,7 @@ static qBool R_LoadQ3BSPLeafs (refModel_t *model, byte *byteBase, const dQ3BspLu
 		firstMarkSurface = LittleLong (in->firstLeafFace);
 		if (firstMarkSurface < 0 || numMarkSurfaces + firstMarkSurface > countMarkSurfaces) {
 			Com_Printf (PRNT_ERROR, "MOD_LoadBmodel: bad marksurfaces in leaf %i", i);
-			return qFalse;
+			return false;
 		}
 
 		// Count how many surfaces we're going to have in our lists
@@ -3491,7 +3491,7 @@ static qBool R_LoadQ3BSPLeafs (refModel_t *model, byte *byteBase, const dQ3BspLu
 			k = LittleLong (inMarkSurfaces[firstMarkSurface + j]);
 			if (k < 0 || k >= model->bspModel.numSurfaces) {
 				Com_Printf (PRNT_ERROR, "R_LoadQ3BSPLeafs: bad surface number");
-				return qFalse;
+				return false;
 			}
 
 			if (R_Q3BSP_SurfPotentiallyVisible (model->bspModel.surfaces + k)) {
@@ -3546,7 +3546,7 @@ static qBool R_LoadQ3BSPLeafs (refModel_t *model, byte *byteBase, const dQ3BspLu
 		}
 	}
 
-	return qTrue;
+	return true;
 }
 
 
@@ -3567,15 +3567,15 @@ static qBool R_LoadQ3BSPEntities (refModel_t *model, byte *byteBase, const dQ3Bs
 
 	data = (char *)byteBase + lump->fileOfs;
 	if (!data || !data[0])
-		return qTrue;
+		return true;
 
 	Vec3Clear (gridsizei);
 	Vec3Clear (gridsizef);
 
 	ps = PS_StartSession (data, PSP_COMMENT_BLOCK|PSP_COMMENT_LINE);
 	for (total=0 ; PS_ParseToken (ps, PSF_ALLOW_NEWLINES, &token) && token[0] == '{' ; ) {
-		isLight = qFalse;
-		isWorld = qFalse;
+		isLight = false;
+		isWorld = false;
 
 		for ( ; ; ) {
 			if (!PS_ParseToken (ps, PSF_ALLOW_NEWLINES, &token))
@@ -3595,9 +3595,9 @@ static qBool R_LoadQ3BSPEntities (refModel_t *model, byte *byteBase, const dQ3Bs
 			// Now that we have the key pair worked out...
 			if (!strcmp (key, "classname")) {
 				if (!strncmp (value, "light", 5))
-					isLight = qTrue;
+					isLight = true;
 				else if (!strcmp (value, "worldspawn"))
-					isWorld = qTrue;
+					isWorld = true;
 			}
 			else if (!strcmp (key, "gridsize")) {
 				sscanf (value, "%f %f %f", &gridsizef[0], &gridsizef[1], &gridsizef[2]);
@@ -3624,7 +3624,7 @@ static qBool R_LoadQ3BSPEntities (refModel_t *model, byte *byteBase, const dQ3Bs
 #endif
 
 	if (!total)
-		return qTrue;
+		return true;
 
 	out = R_ModAlloc (model, total * sizeof (*out));
 	model->q3BspModel.worldLights = out;
@@ -3636,7 +3636,7 @@ static qBool R_LoadQ3BSPEntities (refModel_t *model, byte *byteBase, const dQ3Bs
 		if (count == total)
 			break;
 
-		isLight = qFalse;
+		isLight = false;
 
 		for ( ; ; ) {
 			if (!PS_ParseToken (ps, PSF_ALLOW_NEWLINES, &token))
@@ -3662,7 +3662,7 @@ static qBool R_LoadQ3BSPEntities (refModel_t *model, byte *byteBase, const dQ3Bs
 				out->intensity = atof (value);
 			else if (!strcmp (key, "classname")) {
 				if (!strncmp (value, "light", 5))
-					isLight = qTrue;
+					isLight = true;
 			}
 			else if (!strcmp (key, "target"))
 				Q_strncpyz (target, value, sizeof (target));
@@ -3692,7 +3692,7 @@ static qBool R_LoadQ3BSPEntities (refModel_t *model, byte *byteBase, const dQ3Bs
 	}
 	PS_EndSession (ps);
 
-	return qTrue;
+	return true;
 }
 
 
@@ -3708,7 +3708,7 @@ static qBool R_LoadQ3BSPIndexes (refModel_t *model, byte *byteBase, const dQ3Bsp
 	in = (void *)(byteBase + lump->fileOfs);
 	if (lump->fileLen % sizeof (*in)) {
 		Com_Printf (PRNT_ERROR, "R_LoadQ3BSPIndexes: funny lump size in %s", model->name);
-		return qFalse;
+		return false;
 	}
 
 	model->q3BspModel.numSurfIndexes = lump->fileLen / sizeof (*in);
@@ -3717,7 +3717,7 @@ static qBool R_LoadQ3BSPIndexes (refModel_t *model, byte *byteBase, const dQ3Bsp
 	for (i=0 ; i<model->q3BspModel.numSurfIndexes ; i++)
 		out[i] = LittleLong (in[i]);
 
-	return qTrue;
+	return true;
 }
 
 
@@ -3735,7 +3735,7 @@ static qBool R_LoadQ3BSPPlanes (refModel_t *model, byte *byteBase, const dQ3BspL
 	in = (void *)(byteBase + lump->fileOfs);
 	if (lump->fileLen % sizeof (*in)) {
 		Com_Printf (PRNT_ERROR, "R_LoadQ3BSPPlanes: funny lump size in %s", model->name);
-		return qFalse;
+		return false;
 	}
 
 	model->bspModel.numPlanes = lump->fileLen / sizeof (*in);
@@ -3755,7 +3755,7 @@ static qBool R_LoadQ3BSPPlanes (refModel_t *model, byte *byteBase, const dQ3BspL
 		out->dist = LittleFloat (in->dist);
 	}
 
-	return qTrue;
+	return true;
 }
 
 
@@ -3824,7 +3824,7 @@ static qBool R_LoadQ3BSPModel (refModel_t *model, byte *buffer)
 	version = LittleLong (header->version);
 	if (version != Q3BSP_VERSION) {
 		Com_Printf (PRNT_ERROR, "R_LoadQ3BSPModel: %s has wrong version number (%i should be %i)", model->name, version, Q3BSP_VERSION);
-		return qFalse;
+		return false;
 	}
 
 	//
@@ -3849,7 +3849,7 @@ static qBool R_LoadQ3BSPModel (refModel_t *model, byte *buffer)
 	|| !R_LoadQ3BSPLeafs		(model, modBase, &header->lumps[Q3BSP_LUMP_LEAFS], &header->lumps[Q3BSP_LUMP_LEAFFACES])
 	|| !R_LoadQ3BSPNodes		(model, modBase, &header->lumps[Q3BSP_LUMP_NODES])
 	|| !R_LoadQ3BSPSubmodels	(model, modBase, &header->lumps[Q3BSP_LUMP_MODELS]))
-		return qFalse;
+		return false;
 
 	// Finishing touches
 	R_FinishQ3BSPModel			(model, modBase, &header->lumps[Q3BSP_LUMP_LIGHTING]);
@@ -3889,7 +3889,7 @@ static qBool R_LoadQ3BSPModel (refModel_t *model, byte *buffer)
 	}
 	model->q3BspModel.gridBounds[3] = model->q3BspModel.gridBounds[1] * model->q3BspModel.gridBounds[0];
 
-	return qTrue;
+	return true;
 }
 
 /*
@@ -4211,7 +4211,7 @@ static refModel_t *R_LoadBSPModel (char *name)
 	// Store values
 	model->hashValue = Com_HashGeneric (bareName, MAX_REF_MODEL_HASH);
 	model->memSize = Mem_TagSize (ri.modelSysPool, model->memTag);
-	model->isBspModel = qTrue;
+	model->isBspModel = true;
 	model->touchFrame = ri.reg.registerFrame;
 
 	// Link into hash tree
@@ -4355,7 +4355,7 @@ loadModel:
 	Q_strncpyz (model->bareName, bareName, sizeof (model->bareName));
 	model->hashValue = Com_HashGeneric (bareName, MAX_REF_MODEL_HASH);
 	model->memSize = Mem_TagSize (ri.modelSysPool, model->memTag);
-	model->isBspModel = qFalse;
+	model->isBspModel = false;
 	model->touchFrame = ri.reg.registerFrame;
 
 	// Link into hash tree

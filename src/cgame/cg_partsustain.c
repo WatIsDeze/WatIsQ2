@@ -124,7 +124,7 @@ static void CG_Nukeblast (cgSustainPfx_t *self)
 				0.9f,								-1.5f / (0.6f + (crand () * 0.15f)),
 				0.3f,								0.4f,
 				PT_SPARK,							0,
-				pSparkGrowThink,					qTrue,
+				pSparkGrowThink,					true,
 				PART_STYLE_DIRECTION,
 				(16 + (crand () * 4)) * 3);
 		}
@@ -143,7 +143,7 @@ static void CG_Nukeblast (cgSustainPfx_t *self)
 				0.75f + (crand () * 0.1f),		-2.0f / (1.5f + (cg.smokeLingerScale * 4.0f) + (crand () * 0.2f)),
 				(150 + (crand () * 5)),			(150 + (crand () * 20)),
 				pRandSmoke (),					PF_SHADE,
-				pSmokeThink,					qTrue,
+				pSmokeThink,					true,
 				PART_STYLE_QUAD,
 				frand () * 361);
 		}
@@ -160,7 +160,7 @@ static void CG_Nukeblast (cgSustainPfx_t *self)
 				0.75f,								-2.5f + (crand () * 0.1f) + 0.33f,
 				(40 + (crand () * 5)),				(260 + (crand () * 20)),
 				PT_EXPLO1,							PF_NOCLOSECULL,
-				pExploAnimThink,					qTrue,
+				pExploAnimThink,					true,
 				PART_STYLE_QUAD,
 				crand () * 12);
 		}
@@ -175,7 +175,7 @@ static void CG_Nukeblast (cgSustainPfx_t *self)
 				0.75f,								-2.5f + (crand () * 0.1f) + 0.33f,
 				(40 + (crand () * 5)),				(260 + (crand () * 20)),
 				PT_EXPLO1,							PF_NOCLOSECULL,
-				NULL,								qFalse,
+				NULL,								false,
 				PART_STYLE_QUAD,
 				crand () * 12);
 		}
@@ -192,7 +192,7 @@ static void CG_Nukeblast (cgSustainPfx_t *self)
 				0.75f,								-3 + (crand () * 0.1f) + 0.33f,
 				(60 + (crand () * 20)),				(150 + (crand () * 10)),
 				PT_EXPLO1,							PF_NOCLOSECULL,
-				pExploAnimThink,					qTrue,
+				pExploAnimThink,					true,
 				PART_STYLE_QUAD,
 				crand () * 12);
 		}
@@ -207,7 +207,7 @@ static void CG_Nukeblast (cgSustainPfx_t *self)
 				0.75f,								-3 + (crand () * 0.1f) + 0.33f,
 				(60 + (crand () * 20)),				(150 + (crand () * 10)),
 				PT_EXPLO1,							PF_NOCLOSECULL,
-				NULL,								qFalse,
+				NULL,								false,
 				PART_STYLE_QUAD,
 				crand () * 12);
 		}
@@ -224,7 +224,7 @@ static void CG_Nukeblast (cgSustainPfx_t *self)
 				0.75f,								-3 + (crand () * 0.1f) + 0.33f,
 				(80 + (crand () * 5)),				(350 + (crand () * 50)),
 				PT_EXPLO1,							PF_NOCLOSECULL,
-				pExploAnimThink,					qTrue,
+				pExploAnimThink,					true,
 				PART_STYLE_QUAD,
 				crand () * 12);
 		}
@@ -239,7 +239,7 @@ static void CG_Nukeblast (cgSustainPfx_t *self)
 				0.75f,								-3 + (crand () * 0.1f) + 0.33f,
 				(80 + (crand () * 5)),				(350 + (crand () * 50)),
 				PT_EXPLO1,							PF_NOCLOSECULL,
-				NULL,								qFalse,
+				NULL,								false,
 				PART_STYLE_QUAD,
 				crand () * 12);
 		}
@@ -266,7 +266,7 @@ static void CG_Nukeblast (cgSustainPfx_t *self)
 				1.0,							PART_INSTANT,
 				1.0f,							1.0f,
 				PT_GENERIC,						PF_SCALED,
-				0,								qFalse,
+				0,								false,
 				PART_STYLE_QUAD,
 				0);
 		}
@@ -307,7 +307,7 @@ void CG_ParticleSteamEffect (vec3_t org, vec3_t dir, int color, int count, int m
 			0.9f + (crand () * 0.1f),		-1.0f / (0.5f + (frand () * 0.3f)),
 			3 + (frand () * 3),				8 + (frand () * 4),
 			pRandSmoke (),					PF_SHADE,
-			0,								qFalse,
+			0,								false,
 			PART_STYLE_QUAD,
 			0);
 	}
@@ -349,7 +349,7 @@ void CG_ParticleSteamEffect2 (cgSustainPfx_t *self)
 			0.9f + (crand () * 0.1f),		-1.0f / (0.5f + (frand () * 0.3f)),
 			3 + (frand () * 3),				8 + (frand () * 4),
 			pRandSmoke (),					PF_SHADE,
-			0,								qFalse,
+			0,								false,
 			PART_STYLE_QUAD,
 			0);
 	}
@@ -390,7 +390,7 @@ void CG_Widowbeamout (cgSustainPfx_t *self)
 			1.0,							PART_INSTANT,
 			1.0f,							1.0f,
 			PT_GENERIC,						PF_SCALED,
-			0,								qFalse,
+			0,								false,
 			PART_STYLE_QUAD,
 			0);
 	}
@@ -457,7 +457,7 @@ void CG_ParseNuke (void)
 					0.9f + (crand () * 0.1f),			0.8f,
 					(35 + (frand () * 5)) * 3,
 					dRandExploMark (),					DF_ALPHACOLOR,
-					0,									qFalse,
+					0,									false,
 					0,									frand () * 360);
 			}
 		}

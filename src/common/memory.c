@@ -144,7 +144,7 @@ memPool_t *_Mem_CreatePool (const char *name, const char *fileName, const int fi
 	pool->byteCount = 0;
 	pool->createFile = fileName;
 	pool->createLine = fileLine;
-	pool->inUse = qTrue;
+	pool->inUse = true;
 	Q_strncpyz (pool->name, name, sizeof (pool->name));
 	return pool;
 }
@@ -166,7 +166,7 @@ size_t _Mem_DeletePool (struct memPool_s *pool, const char *fileName, const int 
 	size = _Mem_FreePool (pool, fileName, fileLine);
 
 	// Simple, yes?
-	pool->inUse = qFalse;
+	pool->inUse = false;
 	pool->name[0] = '\0';
 
 	return size;

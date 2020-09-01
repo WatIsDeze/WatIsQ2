@@ -97,13 +97,13 @@ static qBool R_CullQ2SurfacePlanar (mBspSurface_t *surf, material_t *mat, float 
 			if (surf->q2_flags & SURF_PLANEBACK) {
 				if (dist <= SMALL_EPSILON) {
 					ri.pc.cullPlanar[CULL_PASS]++;
-					return qTrue;	// Wrong side
+					return true;	// Wrong side
 				}
 			}
 			else {
 				if (dist >= -SMALL_EPSILON) {
 					ri.pc.cullPlanar[CULL_PASS]++;
-					return qTrue;	// Wrong side
+					return true;	// Wrong side
 				}
 			}
 			break;
@@ -112,13 +112,13 @@ static qBool R_CullQ2SurfacePlanar (mBspSurface_t *surf, material_t *mat, float 
 			if (surf->q2_flags & SURF_PLANEBACK) {
 				if (dist >= -SMALL_EPSILON) {
 					ri.pc.cullPlanar[CULL_PASS]++;
-					return qTrue;	// Wrong side
+					return true;	// Wrong side
 				}
 			}
 			else {
 				if (dist <= SMALL_EPSILON) {
 					ri.pc.cullPlanar[CULL_PASS]++;
-					return qTrue;	// Wrong side
+					return true;	// Wrong side
 				}
 			}
 			break;
@@ -126,7 +126,7 @@ static qBool R_CullQ2SurfacePlanar (mBspSurface_t *surf, material_t *mat, float 
 	}
 
 	ri.pc.cullPlanar[CULL_FAIL]++;
-	return qFalse;
+	return false;
 }
 
 
@@ -438,7 +438,7 @@ static qBool R_CullQ3FlareSurface (mBspSurface_t *surf, refEntity_t *ent, int cl
 
 	// Check if flares/culling are disabled
 	if (!r_flares->intVal || !r_flareFade->floatVal)
-		return qTrue;
+		return true;
 
 	// Find the origin
 	if (ent == ri.scn.worldEntity) {
@@ -454,16 +454,16 @@ static qBool R_CullQ3FlareSurface (mBspSurface_t *surf, refEntity_t *ent, int cl
 	+ (origin[1]-ri.def.viewOrigin[1])*ri.def.viewAxis[0][1]
 	+ (origin[2]-ri.def.viewOrigin[2])*ri.def.viewAxis[0][2] < 0) {
 		ri.pc.cullRadius[CULL_PASS]++;
-		return qTrue;
+		return true;
 	}
 	ri.pc.cullRadius[CULL_FAIL]++;
 
 	// Radius cull
 	if (clipFlags && R_CullSphere (origin, r_flareSize->floatVal, clipFlags))
-		return qTrue;
+		return true;
 
 	// Visible
-	return qFalse;
+	return false;
 }
 
 
@@ -480,7 +480,7 @@ static qBool R_CullQ3SurfacePlanar (mBspSurface_t *surf, material_t *mat, vec3_t
 	if (!r_facePlaneCull->intVal
 	|| Vec3Compare (surf->q3_origin, vec3Origin)
 	|| mat->cullType == MAT_CULL_NONE)
-		return qFalse;
+		return false;
 
 	// Plane culling
 	if (surf->q3_origin[0] == 1.0f)
@@ -497,18 +497,18 @@ static qBool R_CullQ3SurfacePlanar (mBspSurface_t *surf, material_t *mat, vec3_t
 	if (mat->cullType == MAT_CULL_FRONT || ri.scn.mirrorView) {
 		if (dot <= SMALL_EPSILON) {
 			ri.pc.cullPlanar[CULL_PASS]++;
-			return qTrue;
+			return true;
 		}
 	}
 	else {
 		if (dot >= -SMALL_EPSILON) {
 			ri.pc.cullPlanar[CULL_PASS]++;
-			return qTrue;
+			return true;
 		}
 	}
 
 	ri.pc.cullPlanar[CULL_FAIL]++;
-	return qFalse;
+	return false;
 }
 
 

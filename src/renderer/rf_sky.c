@@ -128,16 +128,16 @@ static void ClipSkyPolygon (int nump, vec3_t vecs, int stage)
 		return;
 	}
 
-	front = back = qFalse;
+	front = back = false;
 	norm = r_skyClip[stage];
 	for (i=0, v=vecs ; i<nump ; i++, v+=3) {
 		d = DotProduct (v, norm);
 		if (d > LARGE_EPSILON) {
-			front = qTrue;
+			front = true;
 			sides[i] = SIDE_FRONT;
 		}
 		else if (d < -LARGE_EPSILON) {
-			back = qTrue;
+			back = true;
 			sides[i] = SIDE_BACK;
 		}
 		else
@@ -320,7 +320,7 @@ void R_DrawSky (meshBuffer_t *mb)
 
 		mb->mat = r_skyState.materials[r_skyTexOrder[i]];
 		RB_PushMesh (&r_skyState.meshes[i], MF_NONBATCHED|MF_TRIFAN|mb->mat->features);
-		RB_RenderMeshBuffer (mb, qFalse);
+		RB_RenderMeshBuffer (mb, false);
 	}
 
 	if (r_skyState.rotation)
@@ -332,7 +332,7 @@ void R_DrawSky (meshBuffer_t *mb)
 =================
 R_CheckLoadSky
 
-Returns qTrue if there are ANY sky surfaces in the map, called on map load
+Returns true if there are ANY sky surfaces in the map, called on map load
 =================
 */
 static qBool R_CheckLoadSky (mBspNode_t *node)
@@ -342,7 +342,7 @@ static qBool R_CheckLoadSky (mBspNode_t *node)
 	int				i;
 
 	if (node->c.q2_contents == CONTENTS_SOLID)
-		return qFalse;		// Solid
+		return false;		// Solid
 
 	// Recurse down the children
 	if (node->c.q2_contents == -1)
@@ -351,16 +351,16 @@ static qBool R_CheckLoadSky (mBspNode_t *node)
 	// If this is a leaf node, draw it
 	leaf = (mBspLeaf_t *)node;
 	if (!leaf->q2_numMarkSurfaces)
-		return qFalse;
+		return false;
 
 	// Search
 	for (i=0, mark=leaf->q2_firstMarkSurface ; i<leaf->q2_numMarkSurfaces ; i++, mark++) {
 		surf = *mark;
 		if (surf->q2_texInfo->flags & SURF_TEXINFO_SKY)
-			return qTrue;
+			return true;
 	}
 
-	return qFalse;
+	return false;
 }
 
 
@@ -375,7 +375,7 @@ void R_SetSky (char *name, float rotate, vec3_t axis)
 	int		i;
 
 	if (ri.scn.worldModel->type == MODEL_Q3BSP) {
-		r_skyState.loaded = qTrue;
+		r_skyState.loaded = true;
 	}
 	else {
 		r_skyState.loaded = R_CheckLoadSky (ri.scn.worldModel->bspModel.nodes);

@@ -91,9 +91,9 @@ void CG_LoadLocations (char *mapName)
 	}
 
 	token = strtok (buf, "\t ");
-	finished = qFalse;
+	finished = false;
 	while (token) {
-		finished = qFalse;
+		finished = false;
 
 		// X coordinate
 		location[0] = (float)atoi (token)*0.125f;
@@ -127,7 +127,7 @@ void CG_LoadLocations (char *mapName)
 		// Go to the next x coord
 		token = strtok (NULL, "\n\r\t ");
 		if (!token)
-			finished = qTrue;
+			finished = true;
 	}
 
 	if (!finished) {
@@ -202,7 +202,7 @@ void CG_Say_Preprocessor (void)
 					end[0] = cg.refDef.viewOrigin[0] + cg.refDef.viewAxis[0][0] * 65536 - cg.refDef.viewAxis[1][0];
 					end[1] = cg.refDef.viewOrigin[1] + cg.refDef.viewAxis[0][1] * 65536 - cg.refDef.viewAxis[1][1];
 					end[2] = cg.refDef.viewOrigin[2] + cg.refDef.viewAxis[0][2] * 65536 - cg.refDef.viewAxis[1][2];
-					CG_PMTrace (&tr, cg.refDef.viewOrigin, NULL, NULL, end, qFalse);
+					CG_PMTrace (&tr, cg.refDef.viewOrigin, NULL, NULL, end, false);
 					if (tr.fraction < 1) {
 						locName = CG_GetLocation (tr.endPos);
 						if (locName)

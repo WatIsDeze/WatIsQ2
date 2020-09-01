@@ -117,7 +117,7 @@ static void MultiplayerMenu_Init (void)
 
 	UI_AddItem (&m_multiPlayerMenu.frameWork,		&m_multiPlayerMenu.back_action);
 
-	UI_FinishFramework (&m_multiPlayerMenu.frameWork, qTrue);
+	UI_FinishFramework (&m_multiPlayerMenu.frameWork, true);
 }
 
 

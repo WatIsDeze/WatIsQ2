@@ -121,12 +121,12 @@ static void flareThink (struct cgParticle_s *p, vec3_t org, vec3_t angle, vec4_t
 
 static void mfxFlareThink (struct cgParticle_s *p, vec3_t org, vec3_t angle, vec4_t color, float *size, float *orient, float *time)
 {
-	flareThink (p, org, angle, color, size, orient, time, qFalse);
+	flareThink (p, org, angle, color, size, orient, time, false);
 }
 
 static void mfxFlareEntThink (struct cgParticle_s *p, vec3_t org, vec3_t angle, vec4_t color, float *size, float *orient, float *time)
 {
-	flareThink (p, org, angle, color, size, orient, time, qTrue);
+	flareThink (p, org, angle, color, size, orient, time, true);
 }
 
 /*
@@ -146,7 +146,7 @@ static void CG_GenericOrigin (struct mapEffect_s *effect)
 		effect->color[3],				effect->colorVel[3],
 		effect->scale * 10,				effect->scale * 10,
 		MFX_WHITE,						PF_NOCLOSECULL|PF_SCALED,
-		0,								qFalse,
+		0,								false,
 		PART_STYLE_QUAD,
 		0);
 }
@@ -169,7 +169,7 @@ static void CG_CoronaEffectOne (struct mapEffect_s *effect)
 		effect->color[3],				effect->colorVel[3],
 		effect->scale * 10,				effect->scale * 10,
 		MFX_CORONA,						PF_NOCLOSECULL|PF_SCALED,
-		mfxFlareThink,					qTrue,
+		mfxFlareThink,					true,
 		PART_STYLE_QUAD,
 		0);
 }
@@ -194,7 +194,7 @@ static void CG_CoronaEffectTwo (struct mapEffect_s *effect)
 		effect->color[3],				effect->colorVel[3],
 		effect->scale * 10,				effect->scale * 10,
 		MFX_CORONA,						PF_NOCLOSECULL|PF_SCALED,
-		mfxFlareEntThink,				qTrue,
+		mfxFlareEntThink,				true,
 		PART_STYLE_QUAD,
 		0);
 }
@@ -262,7 +262,7 @@ void CG_MapFXClear (void)
 	cg_numMapEffects = 0;
 	memset (&cg_mapEffectList, 0, sizeof (cg_mapEffectList));
 
-	cg_mfxInitialized = qFalse;
+	cg_mfxInitialized = false;
 }
 
 
@@ -354,7 +354,7 @@ void CG_MapFXLoad (char *mapName)
 		CG_MapFXClear ();
 	}
 	else {
-		cg_mfxInitialized = qTrue;
+		cg_mfxInitialized = true;
 	}
 
 	CG_FS_FreeFile (buf);
@@ -446,7 +446,7 @@ static void CG_MFX_AddTrace_f (void)
 	Angles_Vectors (cg.refDef.viewAngles, forward, NULL, NULL);
 	Vec3Scale (forward, 2048, forward);
 	Vec3Add (forward, cg.refDef.viewOrigin, forward);
-	CG_PMTrace (&tr, cg.refDef.viewOrigin, mins, maxs, forward, qFalse);
+	CG_PMTrace (&tr, cg.refDef.viewOrigin, mins, maxs, forward, false);
 	if (tr.startSolid || tr.allSolid) {
 		Com_Printf (PRNT_ERROR, "ERROR: outside world!\n");
 		fclose (f);

@@ -72,7 +72,7 @@ void CG_BeamTrail (vec3_t start, vec3_t end, int color, float size, float alpha,
 			alpha,								alphaVel,
 			size / 3.0f,						0.1f + (frand () * 0.1f),
 			PT_FLAREGLOW,						0,
-			0,									qFalse,
+			0,									false,
 			PART_STYLE_QUAD,
 			0);
 	}
@@ -102,7 +102,7 @@ void CG_BfgTrail (refEntity_t *ent)
 		0.66f,							PART_INSTANT,
 		60,								60,
 		PT_BFG_DOT,						PF_SCALED,
-		0,								qFalse,
+		0,								false,
 		PART_STYLE_QUAD,
 		0);
 
@@ -144,7 +144,7 @@ void CG_BfgTrail (refEntity_t *ent)
 			0.95f - dist/2.0f,					-100,
 			size,								size,
 			PT_BFG_DOT,							PF_SCALED|PF_NOCLOSECULL,
-			0,									qFalse,
+			0,									false,
 			PART_STYLE_QUAD,
 			0);
 
@@ -160,7 +160,7 @@ void CG_BfgTrail (refEntity_t *ent)
 				1.0f,								-0.9f / (0.4f + (frand () * 0.3f)),
 				0.5f + (frand () * 0.25f),			0.4f + (frand () * 0.25f),
 				PT_BFG_DOT,							PF_SCALED,
-				pSplashThink,						qTrue,
+				pSplashThink,						true,
 				PART_STYLE_DIRECTION,
 				PMAXSPLASHLEN);
 		}
@@ -215,7 +215,7 @@ void CG_BlasterGoldTrail (vec3_t start, vec3_t end)
 			1.0f,								-1.0f / (0.25f + (crand () * 0.05f)),
 			7 + crand (),						frand () * 5,
 			PT_BLASTER_RED,						PF_NOCLOSECULL,
-			0,									qFalse,
+			0,									false,
 			PART_STYLE_QUAD,
 			0);
 	}
@@ -269,7 +269,7 @@ void CG_BlasterGreenTrail (vec3_t start, vec3_t end)
 			1.0f,								-1.0f / (0.25f + (crand () * 0.05f)),
 			5,									1,
 			PT_BLASTER_GREEN,					PF_NOCLOSECULL,
-			0,									qFalse,
+			0,									false,
 			PART_STYLE_QUAD,
 			0);
 	}
@@ -309,7 +309,7 @@ void CG_BubbleTrail (vec3_t start, vec3_t end)
 			0.9f + (crand () * 0.1f),		-1.0f / (3 + (frand () * 0.2f)),
 			0.1f + frand (),				0.1f + frand (),
 			PT_WATERBUBBLE,					PF_SHADE|PF_LAVAONLY|PF_SLIMEONLY|PF_WATERONLY|PF_NOCLOSECULL,
-			0,								qFalse,
+			0,								false,
 			PART_STYLE_QUAD,
 			0);
 	}
@@ -351,7 +351,7 @@ void CG_BubbleTrail2 (vec3_t start, vec3_t end, int dist)
 			0.9f + (crand () * 0.1f),		-1.0f / (3 + (frand () * 0.1f)),
 			0.1f + frand (),				0.1f + frand (),
 			PT_WATERBUBBLE,					PF_SHADE|PF_LAVAONLY|PF_SLIMEONLY|PF_WATERONLY|PF_NOCLOSECULL,
-			0,								qFalse,
+			0,								false,
 			PART_STYLE_QUAD,
 			0);
 	}
@@ -393,7 +393,7 @@ void CG_DebugTrail (vec3_t start, vec3_t end)
 			1.0f,							-0.1f,
 			3.0f,							1.0f,
 			PT_BLASTER_BLUE,				PF_SCALED|PF_NOCLOSECULL,
-			0,								qFalse,
+			0,								false,
 			PART_STYLE_QUAD,
 			0);
 	}
@@ -434,7 +434,7 @@ void CG_FlagTrail (vec3_t start, vec3_t end, int flags)
 				1.0f,							-1.0f / (0.8f + (frand () * 0.2f)),
 				5,								2,
 				PT_FLAREGLOW,					PF_SCALED|PF_NOCLOSECULL,
-				0,								qFalse,
+				0,								false,
 				PART_STYLE_QUAD,
 				0);
 		}
@@ -456,7 +456,7 @@ void CG_FlagTrail (vec3_t start, vec3_t end, int flags)
 				1.0f,							-1.0f / (0.8f + (frand () * 0.2f)),
 				5,								2,
 				PT_FLAREGLOW,					PF_SCALED|PF_NOCLOSECULL,
-				0,								qFalse,
+				0,								false,
 				PART_STYLE_QUAD,
 				0);
 		}
@@ -509,7 +509,7 @@ void CG_GibTrail (vec3_t start, vec3_t end, int flags)
 					1.0f,							-0.5f / (0.4f + (frand () * 0.3f)),
 					7.5f + (crand () * 2),			9 + (crand () * 2),
 					pRandBloodTrail (),				partFlags,
-					pBloodThink,					qTrue,
+					pBloodThink,					true,
 					PART_STYLE_QUAD,
 					frand () * 360);
 			}
@@ -531,7 +531,7 @@ void CG_GibTrail (vec3_t start, vec3_t end, int flags)
 						1.0f,							-0.5f / (0.6f + (frand ()* 0.3f)),
 						1.25f + (frand () * 0.2f),		1.35f + (frand () * 0.2f),
 						pRandBloodDrip (),				partFlags,
-						pBloodDripThink,				qTrue,
+						pBloodDripThink,				true,
 						PART_STYLE_DIRECTION,
 						PMAXBLDDRIPLEN*0.5f + (frand () * PMAXBLDDRIPLEN));
 				}
@@ -563,7 +563,7 @@ void CG_GibTrail (vec3_t start, vec3_t end, int flags)
 					0.8f + (frand () * 0.2f),		-1.0f / (0.5f + (frand () * 0.3f)),
 					4 + (crand () * 2),				6 + (crand () * 2),
 					pRandGrnBloodTrail (),			partFlags,
-					pBloodThink,					qTrue,
+					pBloodThink,					true,
 					PART_STYLE_QUAD,
 					frand () * 360);
 			}
@@ -585,7 +585,7 @@ void CG_GibTrail (vec3_t start, vec3_t end, int flags)
 						1.0f,							-0.5f / (0.6f + (frand () * 0.3f)),
 						1.25f + (frand () * 0.2f),		1.35f + (frand () * 0.2f),
 						pRandGrnBloodDrip (),			partFlags,
-						pBloodDripThink,				qTrue,
+						pBloodDripThink,				true,
 						PART_STYLE_DIRECTION,
 						PMAXBLDDRIPLEN*0.5f + (frand () * PMAXBLDDRIPLEN));
 				}
@@ -645,7 +645,7 @@ void CG_GrenadeTrail (vec3_t start, vec3_t end)
 			0.8f + (crand () * 0.1f),		-3.5f / (1.0f + (cg.smokeLingerScale*10.0f) + (crand () * 0.15f)),
 			6 + (crand () * 3),				20 + (crand () * 5),
 			pRandSmoke (),					PF_NOCLOSECULL,
-			pGrenadeSmokeThink,				qTrue,
+			pGrenadeSmokeThink,				true,
 			PART_STYLE_QUAD,
 			frand () * 360);
 	}
@@ -717,7 +717,7 @@ void CG_Heatbeam (vec3_t start, vec3_t forward)
 				0.5,							-1000.0,
 				1.0f,							1.0f,
 				PT_GENERIC_GLOW,				PF_SCALED|PF_NOCLOSECULL,
-				0,								qFalse,
+				0,								false,
 				PART_STYLE_QUAD,
 				0);
 		}
@@ -781,7 +781,7 @@ void CG_IonripperTrail (vec3_t start, vec3_t end)
 					0.9f,							-1.0f / (0.3f + (frand () * 0.2f)),
 					3.5f,							1.8f,
 					PT_IONTAIL,						PF_SCALED|PF_NOCLOSECULL,
-					0,								qFalse,
+					0,								false,
 					PART_STYLE_QUAD,
 					0);
 
@@ -816,7 +816,7 @@ void CG_IonripperTrail (vec3_t start, vec3_t end)
 			0.85f,								-1.0f / (0.33f + (frand () * 0.2f)),
 			8,									3,
 			PT_IONTIP,							PF_SCALED|PF_NOCLOSECULL,
-			0,									qFalse,
+			0,									false,
 			PART_STYLE_QUAD,
 			0);
 
@@ -856,7 +856,7 @@ void CG_QuadTrail (vec3_t start, vec3_t end)
 			1.0f,							-1.0f / (0.8f + (frand () * 0.2f)),
 			5,								2,
 			PT_FLAREGLOW,					PF_SCALED|PF_NOCLOSECULL,
-			0,								qFalse,
+			0,								false,
 			PART_STYLE_QUAD,
 			0);
 	}
@@ -892,7 +892,7 @@ void CG_RailTrail (vec3_t start, vec3_t end)
 		1.0f,							-0.7f,
 		1.2f,							1.4f,
 		PT_RAIL_CORE,					0,
-		0,								qFalse,
+		0,								false,
 		PART_STYLE_BEAM,
 		0);
 
@@ -918,7 +918,7 @@ void CG_RailTrail (vec3_t start, vec3_t end)
 			0.33f,							-1.0f,
 			1.2f,							1.4f,
 			PT_GENERIC_GLOW,				PF_NOCLOSECULL,
-			NULL,							qFalse,
+			NULL,							false,
 			PART_STYLE_QUAD,
 			frand () * 360);
 	}
@@ -947,7 +947,7 @@ void CG_RailTrail (vec3_t start, vec3_t end)
 				0.75f + (crand () * 0.1f),		-(0.5f + ((len/dist)*0.4f)),
 				5 + crand (),					15 + (crand () * 3),
 				PT_RAIL_SPIRAL,					PF_NOCLOSECULL,
-				NULL,							qFalse,
+				NULL,							false,
 				PART_STYLE_QUAD,
 				frand () * 360);
 
@@ -980,7 +980,7 @@ void CG_RailTrail (vec3_t start, vec3_t end)
 			0.7f + (crand () * 0.1f),			-1.0f / (0.3f + (frand () * 0.1f)),
 			5 + (crand () * 2),					30 + (crand () * 5),
 			PT_RAIL_WAVE,						PF_SCALED,
-			NULL,								qFalse,
+			NULL,								false,
 			PART_STYLE_ANGLED,
 			0);
 
@@ -993,7 +993,7 @@ void CG_RailTrail (vec3_t start, vec3_t end)
 			1.0f,								0,
 			10 + crand (),
 			DT_RAIL_WHITE,						DF_FIXED_LIFE,
-			0,									qFalse,
+			0,									false,
 			0.25f + (frand () * 0.25f),			frand () * 360.0f);
 
 		// burn mark
@@ -1005,7 +1005,7 @@ void CG_RailTrail (vec3_t start, vec3_t end)
 			0.9f + (crand () * 0.1f),			0.8f,
 			10 + crand (),
 			DT_RAIL_BURNMARK,					DF_ALPHACOLOR,
-			0,									qFalse,
+			0,									false,
 			0,									frand () * 360.0f);
 
 		// "flashing" glow marks
@@ -1017,7 +1017,7 @@ void CG_RailTrail (vec3_t start, vec3_t end)
 			1.0f,							0,
 			30,
 			DT_RAIL_GLOWMARK,				DF_FIXED_LIFE,
-			0,								qFalse,
+			0,								false,
 			0.25f + (frand () * 0.25f),		frand () * 360.0f);
 
 		if (!cg_railSpiral->intVal) {
@@ -1029,7 +1029,7 @@ void CG_RailTrail (vec3_t start, vec3_t end)
 				1.0f,							0,
 				12,
 				DT_RAIL_GLOWMARK,				DF_FIXED_LIFE,
-				0,								qFalse,
+				0,								false,
 				0.25f + (frand () * 0.25f),		frand () * 360.0f);
 		}
 	}
@@ -1051,9 +1051,9 @@ void CG_RocketTrail (vec3_t start, vec3_t end)
 
 	// Check if in water
 	if (cgi.CM_PointContents (start, 0) & MASK_WATER)
-		inWater = qTrue;
+		inWater = true;
 	else
-		inWater = qFalse;
+		inWater = false;
 
 	// Distance and vectors for trails
 	Vec3Copy (start, move);
@@ -1083,7 +1083,7 @@ void CG_RocketTrail (vec3_t start, vec3_t end)
 			0.5f + (crand () * 0.2f),		PART_INSTANT,
 			12 + crand (),					15,
 			PT_FLAREGLOW,					0,
-			0,								qFalse,
+			0,								false,
 			PART_STYLE_QUAD,
 			0);
 	}
@@ -1098,7 +1098,7 @@ void CG_RocketTrail (vec3_t start, vec3_t end)
 			0.5f + (crand () * 0.2f),		PART_INSTANT,
 			12 + crand (),					15,
 			PT_FLAREGLOW,					0,
-			0,								qFalse,
+			0,								false,
 			PART_STYLE_QUAD,
 			0);
 	}
@@ -1114,7 +1114,7 @@ void CG_RocketTrail (vec3_t start, vec3_t end)
 		0.5f + (crand () * 0.2f),		PART_INSTANT,
 		10 + crand (),					15,
 		PT_FLAREGLOW,					0,
-		0,								qFalse,
+		0,								false,
 		PART_STYLE_QUAD,
 		0);
 
@@ -1135,7 +1135,7 @@ void CG_RocketTrail (vec3_t start, vec3_t end)
 				0.9f + (crand () * 0.1f),			-1.0f / (0.2f + (crand () * 0.05f)),
 				3 + (frand () * 4),					10 + (frand () * 5),
 				fire,								PF_NOCLOSECULL,
-				pFireThink,							qTrue,
+				pFireThink,							true,
 				PART_STYLE_QUAD,
 				frand () * 360);
 
@@ -1151,7 +1151,7 @@ void CG_RocketTrail (vec3_t start, vec3_t end)
 					0.8f + (crand () * 0.1f),			-1.0f / (0.15f + (crand () * 0.05f)),
 					5 + (crand () * 4.5f),				2 + (frand () * 3),
 					pRandEmbers (),						PF_NOCLOSECULL,
-					pFireThink,							qTrue,
+					pFireThink,							true,
 					PART_STYLE_QUAD,
 					frand () * 360);
 		}
@@ -1167,7 +1167,7 @@ void CG_RocketTrail (vec3_t start, vec3_t end)
 				0.9f + (crand () * 0.1f),			-1.0f / (0.25f + (crand () * 0.05f)),
 				5 + (frand () * 4),					4 + (frand () * 5),
 				fire,								PF_NOCLOSECULL,
-				pFireThink,							qTrue,
+				pFireThink,							true,
 				PART_STYLE_QUAD,
 				frand () * 360);
 
@@ -1183,7 +1183,7 @@ void CG_RocketTrail (vec3_t start, vec3_t end)
 					0.9f + (crand () * 0.1f),			-1.0f / (0.25f + (crand () * 0.05f)),
 					1 + (crand () * 0.5f),				0.5f + (crand () * 0.25f),
 					PT_GENERIC,							PF_NOCLOSECULL,
-					pFireThink,							qTrue,
+					pFireThink,							true,
 					PART_STYLE_QUAD,
 					frand () * 360);
 		}
@@ -1212,7 +1212,7 @@ void CG_RocketTrail (vec3_t start, vec3_t end)
 			0.4f + (crand () * 0.1f),			-1.5f / (1.0f + (cg.smokeLingerScale*10.0f) + (crand () * 0.15f)),
 			9 + (crand () * 4),					40 + (frand () * 20),
 			pRandSmoke (),						0,
-			pLight70Think,						qFalse,
+			pLight70Think,						false,
 			PART_STYLE_QUAD,
 			frand () * 360.0f);
 	}
@@ -1249,7 +1249,7 @@ void CG_TagTrail (vec3_t start, vec3_t end)
 			1.0f,							-1.0f / (0.8f + (frand () * 0.2f)),
 			1.0f,							1.0f,
 			PT_GENERIC,						PF_SCALED,
-			0,								qFalse,
+			0,								false,
 			PART_STYLE_QUAD,
 			0);
 
@@ -1296,7 +1296,7 @@ void CG_TrackerTrail (vec3_t start, vec3_t end)
 			1.0,							-2.0,
 			1.0f,							1.0f,
 			PT_GENERIC,						PF_SCALED,
-			0,								qFalse,
+			0,								false,
 			PART_STYLE_QUAD,
 			0);
 	}

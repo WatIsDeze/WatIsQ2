@@ -167,7 +167,7 @@ void CG_LoadClientinfo (clientInfo_t *ci, char *skin)
 		// Find out gloom class
 		if (cg.gloomCheckClass) {
 			cg.gloomClassType = GLM_DEFAULT;
-			cg.gloomCheckClass = qFalse;
+			cg.gloomCheckClass = false;
 			if (cg.currGameMod == GAME_MOD_GLOOM)
 				cg.gloomClassType = CG_GloomClassForModel (modelName, skinName);
 		}
@@ -263,7 +263,7 @@ void CG_FixUpGender (void)
 
 	if (gender->modified) {
 		// Was set directly, don't override the user
-		gender->modified = qFalse;
+		gender->modified = false;
 		return;
 	}
 
@@ -272,10 +272,10 @@ void CG_FixUpGender (void)
 		*p = 0;
 
 	if (!Q_stricmp (sk, "male") || !Q_stricmp (sk, "cyborg"))
-		cgi.Cvar_Set ("gender", "male", qFalse);
+		cgi.Cvar_Set ("gender", "male", false);
 	else if (!Q_stricmp (sk, "female") || !Q_stricmp (sk, "crackhor"))
-		cgi.Cvar_Set ("gender", "female", qFalse);
+		cgi.Cvar_Set ("gender", "female", false);
 	else
-		cgi.Cvar_Set ("gender", "none", qFalse);
-	gender->modified = qFalse;
+		cgi.Cvar_Set ("gender", "none", false);
+	gender->modified = false;
 }

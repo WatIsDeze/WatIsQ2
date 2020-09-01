@@ -291,11 +291,11 @@ NO_RETURN void Com_Error (comError_t code, char *fmt, ...)
 {
 	va_list			argptr;
 	static char		msg[MAX_COMPRINT];
-	static qBool	recursive = qFalse;
+	static qBool	recursive = false;
 
 	if (recursive)
 		Sys_Error ("Com_Error: Recursive error after: %s", msg);
-	recursive = qTrue;
+	recursive = true;
 
 	// Evaluate args
 	va_start (argptr, fmt);
@@ -306,10 +306,10 @@ NO_RETURN void Com_Error (comError_t code, char *fmt, ...)
 	case ERR_DISCONNECT:
 #ifndef DEDICATED_ONLY
 		if (!dedicated->intVal)
-			CL_Disconnect (qTrue);
+			CL_Disconnect (true);
 #endif
 
-		recursive = qFalse;
+		recursive = false;
 		if (!com_initialized)
 			Sys_Error ("%s", msg);
 		longjmp (abortframe, -1);
@@ -318,13 +318,13 @@ NO_RETURN void Com_Error (comError_t code, char *fmt, ...)
 	case ERR_DROP:
 		Com_Printf (0, "********************\nERROR: %s\n********************\n", msg);
 
-		SV_ServerShutdown (Q_VarArgs ("Server exited: %s\n", msg), qFalse, qFalse);
+		SV_ServerShutdown (Q_VarArgs ("Server exited: %s\n", msg), false, false);
 #ifndef DEDICATED_ONLY
 		if (!dedicated->intVal)
-			CL_Disconnect (qTrue);
+			CL_Disconnect (true);
 #endif
 
-		recursive = qFalse;
+		recursive = false;
 		if (!com_initialized)
 			Sys_Error ("%s", msg);
 		longjmp (abortframe, -1);
@@ -336,10 +336,10 @@ NO_RETURN void Com_Error (comError_t code, char *fmt, ...)
 		DebugBreak();
 #endif
 
-		SV_ServerShutdown (Q_VarArgs ("Server fatal crashed: %s\n", msg), qFalse, qTrue);
+		SV_ServerShutdown (Q_VarArgs ("Server fatal crashed: %s\n", msg), false, true);
 #ifndef DEDICATED_ONLY
 		if (!dedicated->intVal)
-			CL_ClientShutdown (qTrue);
+			CL_ClientShutdown (true);
 #endif
 		break;
 	}
@@ -376,9 +376,9 @@ Both client and server can use this, and it will do the apropriate things.
 void Com_Quit (qBool error)
 {
 	if (Cmd_Argc () > 1)
-		SV_ServerShutdown (Q_VarArgs ("Server has shut down: %s\n", Cmd_Args ()), qFalse, error);
+		SV_ServerShutdown (Q_VarArgs ("Server has shut down: %s\n", Cmd_Args ()), false, error);
 	else
-		SV_ServerShutdown ("Server has shut down\n", qFalse, error);
+		SV_ServerShutdown ("Server has shut down\n", false, error);
 
 	if (com_logFile) {
 		fclose (com_logFile);
@@ -396,7 +396,7 @@ Com_Quit_f
 */
 static void Com_Quit_f (void)
 {
-	Com_Quit (qFalse);
+	Com_Quit (false);
 }
 
 /*
@@ -570,7 +570,7 @@ Adds command line parameters as script statements
 Commands lead with a + and continue until another + or -
 egl +map amlev1 +
 
-Returns qTrue if any late commands were added, which
+Returns true if any late commands were added, which
 will keep the demoloop from immediately starting
 =================
 */
@@ -589,7 +589,7 @@ static qBool Com_AddLateCommands (void)
 		s += strlen (Com_Argv (i)) + 1;
 
 	if (!s)
-		return qFalse;
+		return false;
 		
 	text = Mem_Alloc (s+1);
 	text[0] = 0;
@@ -686,7 +686,7 @@ void Com_Init (int argc, char **argv)
 	** we need to add the early commands twice, because a basedir or cddir needs to be set before execing
 	** config files, but we want other parms to override the settings of the config files
 	*/
-	Com_AddEarlyCommands (qFalse);
+	Com_AddEarlyCommands (false);
 	Cbuf_Execute ();
 
 #ifdef DEDICATED_ONLY
@@ -723,7 +723,7 @@ void Com_Init (int argc, char **argv)
 	}
 #endif
 
-	Com_AddEarlyCommands (qTrue);
+	Com_AddEarlyCommands (true);
 	Cbuf_Execute ();
 
 	// Init commands and vars
@@ -758,7 +758,7 @@ void Com_Init (int argc, char **argv)
 
 #ifndef DEDICATED_ONLY
 	if (!dedicated->intVal) {
-		Sys_ShowConsole (0, qFalse);
+		Sys_ShowConsole (0, false);
 		CL_ClientInit ();
 	}
 #endif
@@ -784,7 +784,7 @@ void Com_Init (int argc, char **argv)
 	// Touch memory
 	Mem_TouchGlobal ();
 
-	com_initialized = qTrue;
+	com_initialized = true;
 
 	Com_Printf (0, "\nCOMMON - %i error(s), %i warning(s)\n", com_numErrors, com_numWarnings);
 	Com_Printf (0, "====== Common Initialized %6ums =====\n\n", Sys_UMilliseconds()-initTime);

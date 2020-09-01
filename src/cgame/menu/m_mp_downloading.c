@@ -54,15 +54,15 @@ static void DownloadCallback (void *self)
 	uiList_t *f = (uiList_t *) self;
 
 	if (f == &m_downloadOptionsMenu.download_toggle)
-		cgi.Cvar_SetValue ("allow_download", f->curValue, qFalse);
+		cgi.Cvar_SetValue ("allow_download", f->curValue, false);
 	else if (f == &m_downloadOptionsMenu.download_maps_toggle)
-		cgi.Cvar_SetValue ("allow_download_maps", f->curValue, qFalse);
+		cgi.Cvar_SetValue ("allow_download_maps", f->curValue, false);
 	else if (f == &m_downloadOptionsMenu.download_models_toggle)
-		cgi.Cvar_SetValue ("allow_download_models", f->curValue, qFalse);
+		cgi.Cvar_SetValue ("allow_download_models", f->curValue, false);
 	else if (f == &m_downloadOptionsMenu.download_players_toggle)
-		cgi.Cvar_SetValue ("allow_download_players", f->curValue, qFalse);
+		cgi.Cvar_SetValue ("allow_download_players", f->curValue, false);
 	else if (f == &m_downloadOptionsMenu.download_sounds_box)
-		cgi.Cvar_SetValue ("allow_download_sounds", f->curValue, qFalse);
+		cgi.Cvar_SetValue ("allow_download_sounds", f->curValue, false);
 }
 
 
@@ -73,19 +73,19 @@ DLOptionsMenu_SetValues
 */
 static void DLOptionsMenu_SetValues (void)
 {
-	cgi.Cvar_SetValue ("allow_download", clamp (cgi.Cvar_GetIntegerValue ("allow_download"), 0, 1), qFalse);
+	cgi.Cvar_SetValue ("allow_download", clamp (cgi.Cvar_GetIntegerValue ("allow_download"), 0, 1), false);
 	m_downloadOptionsMenu.download_toggle.curValue	= (cgi.Cvar_GetFloatValue("allow_download") != 0);
 
-	cgi.Cvar_SetValue ("allow_download_maps", clamp (cgi.Cvar_GetIntegerValue ("allow_download_maps"), 0, 1), qFalse);
+	cgi.Cvar_SetValue ("allow_download_maps", clamp (cgi.Cvar_GetIntegerValue ("allow_download_maps"), 0, 1), false);
 	m_downloadOptionsMenu.download_maps_toggle.curValue	= (cgi.Cvar_GetFloatValue("allow_download_maps") != 0);
 
-	cgi.Cvar_SetValue ("allow_download_players", clamp (cgi.Cvar_GetIntegerValue ("allow_download_players"), 0, 1), qFalse);
+	cgi.Cvar_SetValue ("allow_download_players", clamp (cgi.Cvar_GetIntegerValue ("allow_download_players"), 0, 1), false);
 	m_downloadOptionsMenu.download_players_toggle.curValue	= (cgi.Cvar_GetFloatValue("allow_download_players") != 0);
 
-	cgi.Cvar_SetValue ("allow_download_models", clamp (cgi.Cvar_GetIntegerValue ("allow_download_models"), 0, 1), qFalse);
+	cgi.Cvar_SetValue ("allow_download_models", clamp (cgi.Cvar_GetIntegerValue ("allow_download_models"), 0, 1), false);
 	m_downloadOptionsMenu.download_models_toggle.curValue	= (cgi.Cvar_GetFloatValue("allow_download_models") != 0);
 
-	cgi.Cvar_SetValue ("allow_download_sounds", clamp (cgi.Cvar_GetIntegerValue ("allow_download_sounds"), 0, 1), qFalse);
+	cgi.Cvar_SetValue ("allow_download_sounds", clamp (cgi.Cvar_GetIntegerValue ("allow_download_sounds"), 0, 1), false);
 	m_downloadOptionsMenu.download_sounds_box.curValue	= (cgi.Cvar_GetFloatValue("allow_download_sounds") != 0);
 }
 
@@ -163,7 +163,7 @@ static void DLOptionsMenu_Init (void)
 
 	UI_AddItem (&m_downloadOptionsMenu.frameWork,				&m_downloadOptionsMenu.back_action);
 
-	UI_FinishFramework (&m_downloadOptionsMenu.frameWork, qTrue);
+	UI_FinishFramework (&m_downloadOptionsMenu.frameWork, true);
 }
 
 

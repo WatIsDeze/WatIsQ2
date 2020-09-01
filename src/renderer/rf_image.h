@@ -106,8 +106,8 @@ void	GL_TextureMode (qBool verbose, qBool verboseOnly);
 
 void	GL_ResetAnisotropy (void);
 
-#define R_Load2DImage(name,pic,width,height,flags,samples)			R_LoadImage((name),NULL,(pic),(width),(height),1,(flags),(samples),qFalse,qFalse)
-#define R_Load3DImage(name,pic,width,height,depth,flags,samples)	R_LoadImage((name),NULL,(pic),(width),(height),(depth),(flags),(samples),qFalse,qFalse)
+#define R_Load2DImage(name,pic,width,height,flags,samples)			R_LoadImage((name),NULL,(pic),(width),(height),1,(flags),(samples),false,false)
+#define R_Load3DImage(name,pic,width,height,depth,flags,samples)	R_LoadImage((name),NULL,(pic),(width),(height),(depth),(flags),(samples),false,false)
 
 image_t	*R_LoadImage (char *name, const char *bareName, byte **pic, int width, int height, int depth, texFlags_t flags, int samples, qBool upload8, qBool isPCX);
 

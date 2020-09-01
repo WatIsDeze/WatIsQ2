@@ -266,14 +266,14 @@ static void HUD_ExecuteLayoutString (char *layout)
 			// Draw a string
 			if (!strcmp (token, "cstring")) {
 				token = Com_Parse (&layout);
-				HUD_DrawString (token, x, y, 320.0f * cg.hudScale[0], qFalse);
+				HUD_DrawString (token, x, y, 320.0f * cg.hudScale[0], false);
 				continue;
 			}
 
 			// Draw a high-bit string
 			if (!strcmp (token, "cstring2")) {
 				token = Com_Parse (&layout);
-				HUD_DrawString (token, x, y, 320.0f * cg.hudScale[0], qTrue);
+				HUD_DrawString (token, x, y, 320.0f * cg.hudScale[0], true);
 				continue;
 			}
 

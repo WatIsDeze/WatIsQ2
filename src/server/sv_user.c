@@ -211,7 +211,7 @@ static void SV_Baselines_f (void)
 		base = &sv.baseLines[start];
 		if (base->modelIndex || base->sound || base->effects) {
 			MSG_WriteByte (&sv_currentClient->netChan.message, SVC_SPAWNBASELINE);
-			MSG_WriteDeltaEntity (&sv_currentClient->netChan.message, &nullstate, base, qTrue, qTrue);
+			MSG_WriteDeltaEntity (&sv_currentClient->netChan.message, &nullstate, base, true, true);
 		}
 
 		start++;
@@ -410,7 +410,7 @@ void SV_Nextserver (void)
 		Cbuf_AddText ("\n");
 	}
 
-	Cvar_Set ("nextserver","", qFalse);
+	Cvar_Set ("nextserver","", false);
 }
 
 
@@ -482,7 +482,7 @@ static void SV_ExecuteUserCommand (char *s)
 		return;
 	}
 
-	Cmd_TokenizeString (s, qFalse);
+	Cmd_TokenizeString (s, false);
 	sv_currentEdict = sv_currentClient->edict;
 
 	for (u=sv_userCommands ; u->name ; u++) {
@@ -550,7 +550,7 @@ void SV_ExecuteClientMessage (svClient_t *cl)
 	sv_currentEdict = sv_currentClient->edict;
 
 	// Only allow one move command
-	moveIssued = qFalse;
+	moveIssued = false;
 
 	// Throttle the amount of string commands and userinfo changes in a packet
 	stringCmdCount = 0;
@@ -601,7 +601,7 @@ void SV_ExecuteClientMessage (svClient_t *cl)
 				return;		// Someone is trying to cheat...
 			}
 
-			moveIssued = qTrue;
+			moveIssued = true;
 			checksumIndex = sv_netMessage.readCount;
 			checksum = MSG_ReadByte (&sv_netMessage);
 			lastFrame = MSG_ReadLong (&sv_netMessage);

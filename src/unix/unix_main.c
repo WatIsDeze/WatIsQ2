@@ -275,7 +275,7 @@ void Sys_Error (char *error, ...)
     fcntl (0, F_SETFL, fcntl (0, F_GETFL, 0) & ~FNDELAY);
 
 #ifndef DEDICATED_ONLY
-	CL_ClientShutdown (qTrue);
+	CL_ClientShutdown (true);
 #endif
 	Com_Shutdown ();
     
@@ -427,20 +427,20 @@ static qBool CompareAttributes(char *path, char *name, unsigned musthave, unsign
 
 	// '.' and '..' never match
 	if ((strcmp (name, ".") == 0) || (strcmp (name, "..") == 0))
-		return qFalse;
+		return false;
 
-	return qTrue;
+	return true;
 
 	if (stat(fn, &st) == -1)
-		return qFalse; // shouldn't happen
+		return false; // shouldn't happen
 
 	if ((st.st_mode & S_IFDIR) && (canthave & SFF_SUBDIR))
-		return qFalse;
+		return false;
 
 	if ((musthave & SFF_SUBDIR) && !(st.st_mode & S_IFDIR))
-		return qFalse;
+		return false;
 
-	return qTrue;
+	return true;
 }
 
 

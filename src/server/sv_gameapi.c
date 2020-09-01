@@ -71,9 +71,9 @@ static int SV_ItemIndex (char *name, int start, int max, qBool create)
 	return i;
 }
 
-static int GI_ModelIndex (char *name) { return SV_ItemIndex (name, CS_MODELS, MAX_CS_MODELS, qTrue); }
-static int GI_SoundIndex (char *name) { return SV_ItemIndex (name, CS_SOUNDS, MAX_CS_SOUNDS, qTrue); }
-static int GI_ImageIndex (char *name) { return SV_ItemIndex (name, CS_IMAGES, MAX_CS_IMAGES, qTrue); }
+static int GI_ModelIndex (char *name) { return SV_ItemIndex (name, CS_MODELS, MAX_CS_MODELS, true); }
+static int GI_SoundIndex (char *name) { return SV_ItemIndex (name, CS_SOUNDS, MAX_CS_SOUNDS, true); }
+static int GI_ImageIndex (char *name) { return SV_ItemIndex (name, CS_IMAGES, MAX_CS_IMAGES, true); }
 
 
 /*
@@ -169,12 +169,12 @@ static qBool GI_IsInPVS (vec3_t p1, vec3_t p2)
 	area2 = CM_LeafArea (leafnum);
 
 	if (mask && (!(mask[cluster>>3] & (1<<(cluster&7)))))
-		return qFalse;
+		return false;
 
 	if (!CM_AreasConnected (area1, area2))
-		return qFalse;		// A door blocks sight
+		return false;		// A door blocks sight
 
-	return qTrue;
+	return true;
 }
 
 
@@ -202,12 +202,12 @@ static qBool GI_IsInPHS (vec3_t p1, vec3_t p2)
 	area2 = CM_LeafArea (leafnum);
 
 	if (mask && (!(mask[cluster>>3] & (1<<(cluster&7)))))
-		return qFalse;		// More than one bounce away
+		return false;		// More than one bounce away
 
 	if (!CM_AreasConnected (area1, area2))
-		return qFalse;		// A door blocks hearing
+		return false;		// A door blocks hearing
 
-	return qTrue;
+	return true;
 }
 
 // ==========================================================================
@@ -304,7 +304,7 @@ static void GI_CenterPrintf (edict_t *ent, char *fmt, ...)
 
 	MSG_WriteByte (&sv.multiCast, SVC_CENTERPRINT);
 	MSG_WriteString (&sv.multiCast, msg);
-	SV_Unicast (ent, qTrue);
+	SV_Unicast (ent, true);
 }
 
 
@@ -431,7 +431,7 @@ GI_Cvar_Set
 */
 static cVar_t *GI_Cvar_Set (char *varName, char *value)
 {
-	return Cvar_Set (varName, value, qFalse);
+	return Cvar_Set (varName, value, false);
 }
 
 
@@ -442,7 +442,7 @@ GI_Cvar_ForceSet
 */
 static cVar_t *GI_Cvar_ForceSet (char *varName, char *value)
 {
-	return Cvar_Set (varName, value, qTrue);
+	return Cvar_Set (varName, value, true);
 }
 
 // ==========================================================================

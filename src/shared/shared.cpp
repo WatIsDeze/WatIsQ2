@@ -221,7 +221,7 @@ void Com_NormalizePath (char *dest, size_t size, const char *source)
 	// the len check in the loop makes certain that there's room for ".ext\0"
 	//
 	lastDot = -1;
-	twoDots = qFalse;
+	twoDots = false;
 	for (i=(source[0] == '\\' || source[0] == '/')?1:0, len=0 ; source[i] && (len < size-2) ; i++) {
 		switch (source[i]) {
 		case '\\':
@@ -236,9 +236,9 @@ void Com_NormalizePath (char *dest, size_t size, const char *source)
 		case '.':
 			// Store the location of the last dot for later extension stripping
 			if (lastDot == (int) (len-1))
-				twoDots = qTrue;
+				twoDots = true;
 			else
-				twoDots = qFalse;
+				twoDots = false;
 			lastDot = (int) len;
 
 			// Intentional fall through
@@ -311,7 +311,7 @@ char *Com_SkipWhiteSpace (char *dataPtr, qBool *hasNewLines)
 			return NULL;
 
 		case '\n':
-			*hasNewLines = qTrue;
+			*hasNewLines = true;
 			break;
 		}
 
@@ -345,14 +345,14 @@ Removes spaces from the left/right of the string
 */
 void Com_StripPadding (char *in, char *dest)
 {
-	qBool	hitChar = qFalse;
+	qBool	hitChar = false;
 
 	while (*in) {
 		if (hitChar) {
 			*dest++ = *in++;
 		}
 		else if (*in != ' ') {
-			hitChar = qTrue;
+			hitChar = true;
 			*dest++ = *in++;
 		}
 		else

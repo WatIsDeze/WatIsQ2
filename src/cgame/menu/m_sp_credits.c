@@ -478,7 +478,7 @@ static void CreditsMenu_Init (void)
 		m_creditsMenu.startTime = cg.realTime;
 
 		UI_StartFramework (&m_creditsMenu.frameWork, FWF_CENTERHEIGHT);
-		UI_FinishFramework (&m_creditsMenu.frameWork, qFalse);
+		UI_FinishFramework (&m_creditsMenu.frameWork, false);
 		return;
 	}
 
@@ -562,7 +562,7 @@ static void CreditsMenu_Init (void)
 
 	UI_AddItem (&m_creditsMenu.frameWork,			&m_creditsMenu.back_action);
 
-	UI_FinishFramework (&m_creditsMenu.frameWork, qTrue);
+	UI_FinishFramework (&m_creditsMenu.frameWork, true);
 }
 
 

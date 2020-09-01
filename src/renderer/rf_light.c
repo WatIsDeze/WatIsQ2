@@ -268,17 +268,17 @@ static qBool R_Q2BSP_RecursiveLightPoint (vec3_t point, vec3_t end)
 
 	if (ri.def.rdFlags & RDF_NOWORLDMODEL || !ri.scn.worldModel->q2BspModel.lightData) {
 		Vec3Set (r_q2_pointColor, 1, 1, 1);
-		return qFalse;
+		return false;
 	}
 
 	r = Q2BSP_RecursiveLightPoint (ri.scn.worldModel->bspModel.nodes, point, end);
 	
 	if (r == -1) {
 		Vec3Clear (r_q2_pointColor);
-		return qFalse;
+		return false;
 	}
 
-	return qTrue;
+	return true;
 }
 
 
@@ -296,12 +296,12 @@ static qBool R_Q2BSP_ShadowForEntity (refEntity_t *ent, vec3_t shadowSpot)
 	if (R_Q2BSP_RecursiveLightPoint (ent->origin, end)) {
 		// Found!
 		Vec3Copy (r_q2_lightSpot, shadowSpot);
-		return qTrue;
+		return true;
 	}
 
 	// Not found!
 	Vec3Clear (shadowSpot);
-	return qFalse;
+	return false;
 
 }
 
@@ -354,15 +354,15 @@ static void R_Q2BSP_LightForEntity (refEntity_t *ent, int numVerts, byte *bArray
 		// the same as the mono value returned by software
 		if (r_q2_pointColor[0] > r_q2_pointColor[1]) {
 			if (r_q2_pointColor[0] > r_q2_pointColor[2])
-				Cvar_VariableSetValue (r_lightlevel, 150 * r_q2_pointColor[0], qTrue);
+				Cvar_VariableSetValue (r_lightlevel, 150 * r_q2_pointColor[0], true);
 			else
-				Cvar_VariableSetValue (r_lightlevel, 150 * r_q2_pointColor[2], qTrue);
+				Cvar_VariableSetValue (r_lightlevel, 150 * r_q2_pointColor[2], true);
 		}
 		else {
 			if (r_q2_pointColor[1] > r_q2_pointColor[2])
-				Cvar_VariableSetValue (r_lightlevel, 150 * r_q2_pointColor[1], qTrue);
+				Cvar_VariableSetValue (r_lightlevel, 150 * r_q2_pointColor[1], true);
 			else
-				Cvar_VariableSetValue (r_lightlevel, 150 * r_q2_pointColor[2], qTrue);
+				Cvar_VariableSetValue (r_lightlevel, 150 * r_q2_pointColor[2], true);
 		}
 
 	}
@@ -534,15 +534,15 @@ static void R_Q2BSP_SetLightLevel (void)
 	// the same as the mono value returned by software
 	if (shadelight[0] > shadelight[1]) {
 		if (shadelight[0] > shadelight[2])
-			Cvar_VariableSetValue (r_lightlevel, 150 * shadelight[0], qTrue);
+			Cvar_VariableSetValue (r_lightlevel, 150 * shadelight[0], true);
 		else
-			Cvar_VariableSetValue (r_lightlevel, 150 * shadelight[2], qTrue);
+			Cvar_VariableSetValue (r_lightlevel, 150 * shadelight[2], true);
 	}
 	else {
 		if (shadelight[1] > shadelight[2])
-			Cvar_VariableSetValue (r_lightlevel, 150 * shadelight[1], qTrue);
+			Cvar_VariableSetValue (r_lightlevel, 150 * shadelight[1], true);
 		else
-			Cvar_VariableSetValue (r_lightlevel, 150 * shadelight[2], qTrue);
+			Cvar_VariableSetValue (r_lightlevel, 150 * shadelight[2], true);
 	}
 
 }
@@ -917,12 +917,12 @@ static qBool R_Q2BSP_AllocLMBlock (int w, int h, int *x, int *y)
 	}
 
 	if (best + h > r_q2_lmSize)
-		return qFalse;
+		return false;
 
 	for (i=0 ; i<w ; i++)
 		r_q2_lmAllocated[*x + i] = best + h;
 
-	return qTrue;
+	return true;
 }
 
 
@@ -1622,12 +1622,12 @@ R_ShadowForEntity
 qBool R_ShadowForEntity (refEntity_t *ent, vec3_t shadowSpot)
 {
 	if (ri.def.rdFlags & RDF_NOWORLDMODEL)
-		return qFalse;
+		return false;
 
 	if (ri.scn.worldModel->type == MODEL_Q2BSP)
 		return R_Q2BSP_ShadowForEntity (ent, shadowSpot);
 
-	return qFalse;
+	return false;
 }
 
 

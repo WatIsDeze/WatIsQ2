@@ -115,7 +115,7 @@ void GUI_CursorUpdate (gui_t *gui)
 
 	if (!gui->shared->cursor.mouseMoved)
 		return;
-	gui->shared->cursor.mouseMoved = qFalse;
+	gui->shared->cursor.mouseMoved = false;
 
 	cl_guiState.inputWindow = NULL;
 	gui_bestWindow = NULL;
@@ -178,7 +178,7 @@ void GUI_MoveMouse (int xMove, int yMove)
 	// Let open GUIs know the cursor moved
 	if (xMove || yMove) {
 		for (i=0 ; i<cl_guiState.numLayers ; i++)
-			cl_guiState.openLayers[i]->shared->cursor.mouseMoved = qTrue;
+			cl_guiState.openLayers[i]->shared->cursor.mouseMoved = true;
 	}
 
 	// Move for the input window
@@ -333,7 +333,7 @@ void GUI_AdjustCursor (keyNum_t keyNum)
 	// If nothing is found, try the complete opposite direction
 	if (!gui_bestKeyWindow) {
 		if (!gui_bestFurthest) {
-			gui_bestFurthest = qTrue;
+			gui_bestFurthest = true;
 			gui_bestKeyDist = -999999;
 			switch (keyNum) {
 			case K_UPARROW:
@@ -356,7 +356,7 @@ void GUI_AdjustCursor (keyNum_t keyNum)
 				GUI_AdjustCursor (K_LEFTARROW);
 				break;
 			}
-			gui_bestFurthest = qFalse;
+			gui_bestFurthest = false;
 		}
 		return;
 	}

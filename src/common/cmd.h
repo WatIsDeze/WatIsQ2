@@ -31,7 +31,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 extern qBool		com_cmdWait;
 
-#define		Cmd_AddCommand(name,func,desc)	_Cmd_AddCommand(qFalse,(name),(func),(desc))
+#define		Cmd_AddCommand(name,func,desc)	_Cmd_AddCommand(false,(name),(func),(desc))
 
 void		*Cmd_Exists (char *name);
 void		Cmd_CallBack (void (*callBack) (const char *name));

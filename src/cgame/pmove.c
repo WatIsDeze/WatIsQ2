@@ -94,7 +94,7 @@ sliding along it.
 Returns a new origin, velocity, and contact entity
 Does not modify any world state?
 
-Returns qTrue if going onto a step.
+Returns true if going onto a step.
 ==================
 */
 static qBool PM_StepSlideMove_ (void)
@@ -109,7 +109,7 @@ static qBool PM_StepSlideMove_ (void)
 	trace_t		trace;
 	vec3_t		end;
 	float		time_left;
-	qBool		step = qFalse;
+	qBool		step = false;
 	
 	numbumps = 4;
 	
@@ -147,7 +147,7 @@ static qBool PM_StepSlideMove_ (void)
 		}
 
 		if (trace.plane.normal[2] < MIN_STEP_NORMAL)
-			step = qTrue;	// Step
+			step = true;	// Step
 		
 		time_left -= time_left * trace.fraction;
 
@@ -256,7 +256,7 @@ static void PM_StepSlideMove (void)
 	}
 
 	if (step || trace.plane.normal[2] == 1)
-		pm->step = qTrue;
+		pm->step = true;
 
 	// !! Special case !!
 	// if we were walking along a plane, then we need to copy the Z over
@@ -734,7 +734,7 @@ static void PM_CheckSpecialMovement (void)
 	if (pm->state.pmTime)
 		return;
 
-	pml.ladder = qFalse;
+	pml.ladder = false;
 
 	// Check for ladder
 	flatforward[0] = pml.forward[0];
@@ -745,7 +745,7 @@ static void PM_CheckSpecialMovement (void)
 	Vec3MA (pml.origin, 1, flatforward, spot);
 	trace = pm->trace (pml.origin, pm->mins, pm->maxs, spot);
 	if ((trace.fraction < 1) && (trace.contents & CONTENTS_LADDER))
-		pml.ladder = qTrue;
+		pml.ladder = true;
 
 	// Check for water jump
 	if (pm->waterLevel != 2)
@@ -945,7 +945,7 @@ static qBool PM_GoodPosition (void)
 	vec3_t	origin, end;
 
 	if (pm->state.pmType == PMT_SPECTATOR)
-		return qTrue;
+		return true;
 
 	origin[0] = end[0] = pm->state.origin[0]*(1.0f/8.0f);
 	origin[1] = end[1] = pm->state.origin[1]*(1.0f/8.0f);
@@ -1091,7 +1091,7 @@ void Pmove (pMoveNew_t *pMove, float airAcceleration)
 	pm->groundEntity = 0;
 	pm->waterType = 0;
 	pm->waterLevel = 0;
-	pm->step = qFalse;
+	pm->step = false;
 
 	// clear all pmove local vars
 	memset (&pml, 0, sizeof (pml));
@@ -1114,7 +1114,7 @@ void Pmove (pMoveNew_t *pMove, float airAcceleration)
 
 	if (pm->state.pmType == PMT_SPECTATOR) {
 		pml.frameTime *= pm->multiplier;
-		PM_FlyMove (qFalse);
+		PM_FlyMove (false);
 		PM_SnapPosition ();
 		return;
 	}

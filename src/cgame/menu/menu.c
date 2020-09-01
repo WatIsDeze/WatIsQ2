@@ -132,7 +132,7 @@ M_Shutdown
 void M_Shutdown (void)
 {
 	// Don't play the menu exit sound
-	menuState.playExitSound = qFalse;
+	menuState.playExitSound = false;
 
 	// Get rid of the menu
 	M_ForceMenuOff ();
@@ -191,12 +191,12 @@ void M_Refresh (void)
 	// been drawn, to avoid delay while caching images
 	if (menuState.playEnterSound) {
 		cgi.Snd_StartLocalSound (uiMedia.sounds.menuIn, 1);
-		menuState.playEnterSound = qFalse;
+		menuState.playEnterSound = false;
 	}
 	else if (uiState.newCursorItem) {
 		// Play menu open sound
 		cgi.Snd_StartLocalSound (uiMedia.sounds.menuMove, 1);
-		uiState.newCursorItem = qFalse;
+		uiState.newCursorItem = false;
 	}
 }
 
@@ -208,15 +208,15 @@ M_ForceMenuOff
 */
 void M_ForceMenuOff (void)
 {
-	cg.menuOpen = qFalse;
+	cg.menuOpen = false;
 
 	// Unpause
-	cgi.Cvar_Set ("paused", "0", qFalse);
+	cgi.Cvar_Set ("paused", "0", false);
 
 	// Play exit sound
 	if (menuState.playExitSound) {
 		cgi.Snd_StartLocalSound (uiMedia.sounds.menuOut, 1);
-		menuState.playExitSound = qFalse;
+		menuState.playExitSound = false;
 	}
 
 	// Update mouse position
@@ -254,14 +254,14 @@ void M_PushMenu (uiFrameWork_t *frameWork, void (*drawFunc) (void), struct sfx_s
 {
 	// Pause single-player games
 	if (cgi.Cvar_GetFloatValue ("maxclients") == 1 && cgi.Com_ServerState ())
-		cgi.Cvar_Set ("paused", "1", qFalse);
+		cgi.Cvar_Set ("paused", "1", false);
 
-	menuState.playEnterSound = qTrue;
-	menuState.playExitSound = qTrue;
+	menuState.playEnterSound = true;
+	menuState.playExitSound = true;
 
 	UI_PushInterface (frameWork, drawFunc, closeFunc, keyFunc);
 
-	cg.menuOpen = qTrue;
+	cg.menuOpen = true;
 }
 
 

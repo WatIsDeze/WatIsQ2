@@ -162,10 +162,10 @@ qBool Pickup_Powerup (edict_t *ent, edict_t *other)
 
 	quantity = other->client->pers.inventory[ITEM_INDEX(ent->item)];
 	if ((skill->floatVal == 1 && quantity >= 2) || (skill->floatVal >= 2 && quantity >= 1))
-		return qFalse;
+		return false;
 
 	if ((coop->floatVal) && (ent->item->flags & IT_STAY_COOP) && (quantity > 0))
-		return qFalse;
+		return false;
 
 	other->client->pers.inventory[ITEM_INDEX(ent->item)]++;
 
@@ -181,7 +181,7 @@ qBool Pickup_Powerup (edict_t *ent, edict_t *other)
 		}
 	}
 
-	return qTrue;
+	return true;
 }
 
 void Drop_General (edict_t *ent, gitem_t *item)
@@ -205,7 +205,7 @@ qBool Pickup_Adrenaline (edict_t *ent, edict_t *other)
 	if (!(ent->spawnflags & DROPPED_ITEM) && (deathmatch->floatVal))
 		SetRespawn (ent, ent->item->quantity);
 
-	return qTrue;
+	return true;
 }
 
 qBool Pickup_AncientHead (edict_t *ent, edict_t *other)
@@ -215,7 +215,7 @@ qBool Pickup_AncientHead (edict_t *ent, edict_t *other)
 	if (!(ent->spawnflags & DROPPED_ITEM) && (deathmatch->floatVal))
 		SetRespawn (ent, ent->item->quantity);
 
-	return qTrue;
+	return true;
 }
 
 qBool Pickup_Bandolier (edict_t *ent, edict_t *other)
@@ -253,7 +253,7 @@ qBool Pickup_Bandolier (edict_t *ent, edict_t *other)
 	if (!(ent->spawnflags & DROPPED_ITEM) && (deathmatch->floatVal))
 		SetRespawn (ent, ent->item->quantity);
 
-	return qTrue;
+	return true;
 }
 
 qBool Pickup_Pack (edict_t *ent, edict_t *other)
@@ -331,7 +331,7 @@ qBool Pickup_Pack (edict_t *ent, edict_t *other)
 	if (!(ent->spawnflags & DROPPED_ITEM) && (deathmatch->floatVal))
 		SetRespawn (ent, ent->item->quantity);
 
-	return qTrue;
+	return true;
 }
 
 //======================================================================
@@ -426,20 +426,20 @@ qBool Pickup_Key (edict_t *ent, edict_t *other)
 		if (strcmp(ent->classname, "key_power_cube") == 0)
 		{
 			if (other->client->pers.power_cubes & ((ent->spawnflags & 0x0000ff00)>> 8))
-				return qFalse;
+				return false;
 			other->client->pers.inventory[ITEM_INDEX(ent->item)]++;
 			other->client->pers.power_cubes |= ((ent->spawnflags & 0x0000ff00) >> 8);
 		}
 		else
 		{
 			if (other->client->pers.inventory[ITEM_INDEX(ent->item)])
-				return qFalse;
+				return false;
 			other->client->pers.inventory[ITEM_INDEX(ent->item)] = 1;
 		}
-		return qTrue;
+		return true;
 	}
 	other->client->pers.inventory[ITEM_INDEX(ent->item)]++;
-	return qTrue;
+	return true;
 }
 
 //======================================================================
@@ -450,7 +450,7 @@ qBool Add_Ammo (edict_t *ent, gitem_t *item, int count)
 	int			max;
 
 	if (!ent->client)
-		return qFalse;
+		return false;
 
 	if (item->tag == AMMO_BULLETS)
 		max = ent->client->pers.max_bullets;
@@ -465,19 +465,19 @@ qBool Add_Ammo (edict_t *ent, gitem_t *item, int count)
 	else if (item->tag == AMMO_SLUGS)
 		max = ent->client->pers.max_slugs;
 	else
-		return qFalse;
+		return false;
 
 	index = ITEM_INDEX(item);
 
 	if (ent->client->pers.inventory[index] == max)
-		return qFalse;
+		return false;
 
 	ent->client->pers.inventory[index] += count;
 
 	if (ent->client->pers.inventory[index] > max)
 		ent->client->pers.inventory[index] = max;
 
-	return qTrue;
+	return true;
 }
 
 qBool Pickup_Ammo (edict_t *ent, edict_t *other)
@@ -497,7 +497,7 @@ qBool Pickup_Ammo (edict_t *ent, edict_t *other)
 	oldcount = other->client->pers.inventory[ITEM_INDEX(ent->item)];
 
 	if (!Add_Ammo (other, ent->item, count))
-		return qFalse;
+		return false;
 
 	if (weapon && !oldcount)
 	{
@@ -507,7 +507,7 @@ qBool Pickup_Ammo (edict_t *ent, edict_t *other)
 
 	if (!(ent->spawnflags & (DROPPED_ITEM | DROPPED_PLAYER_ITEM)) && (deathmatch->floatVal))
 		SetRespawn (ent, 30);
-	return qTrue;
+	return true;
 }
 
 void Drop_Ammo (edict_t *ent, gitem_t *item)
@@ -557,7 +557,7 @@ qBool Pickup_Health (edict_t *ent, edict_t *other)
 {
 	if (!(ent->style & HEALTH_IGNORE_MAX))
 		if (other->health >= other->max_health)
-			return qFalse;
+			return false;
 
 	other->health += ent->count;
 
@@ -582,7 +582,7 @@ qBool Pickup_Health (edict_t *ent, edict_t *other)
 			SetRespawn (ent, 30);
 	}
 
-	return qTrue;
+	return true;
 }
 
 //======================================================================
@@ -670,7 +670,7 @@ qBool Pickup_Armor (edict_t *ent, edict_t *other)
 
 			// if we're already maxed out then we don't need the new armor
 			if (other->client->pers.inventory[old_armor_index] >= newcount)
-				return qFalse;
+				return false;
 
 			// update current armor value
 			other->client->pers.inventory[old_armor_index] = newcount;
@@ -680,7 +680,7 @@ qBool Pickup_Armor (edict_t *ent, edict_t *other)
 	if (!(ent->spawnflags & DROPPED_ITEM) && (deathmatch->floatVal))
 		SetRespawn (ent, 20);
 
-	return qTrue;
+	return true;
 }
 
 //======================================================================
@@ -741,7 +741,7 @@ qBool Pickup_PowerArmor (edict_t *ent, edict_t *other)
 			ent->item->use (other, ent->item);
 	}
 
-	return qTrue;
+	return true;
 }
 
 void Drop_PowerArmor (edict_t *ent, gitem_t *item)
