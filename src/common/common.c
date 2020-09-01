@@ -183,7 +183,7 @@ Doesn't evaluate args. Com_Printf and Com_DevPrintf use this to hand off
 console messages to the appropriate targets.
 =============
 */
-void Com_ConPrint (comPrint_t flags, char *string)
+void Com_ConPrint (comPrint_t flags = PRNT_DEFAULT, char *string = "")
 {
 	// Tallying purposes
 	if (flags & PRNT_ERROR)

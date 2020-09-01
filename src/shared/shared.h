@@ -771,6 +771,7 @@ typedef enum fsSeekOrigin_s {
 
 // Com_Printf
 typedef enum {
+	PRNT_DEFAULT			= 0,
 	PRNT_WARNING			= 1 << 0,
 	PRNT_ERROR				= 1 << 1,
 	PRNT_CONSOLE			= 1 << 2,
