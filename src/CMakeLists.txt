@@ -1,18 +1,157 @@
 cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 
+#############################################################################
+# Fetch architecture                                                        #
+#                                                                           #
+# Found at: https://github.com/axr/solar-cmake/blob/master/TargetArch.cmake #
+#############################################################################
+set(archdetect_c_code "
+#if defined(__arm__) || defined(__TARGET_ARCH_ARM)
+    #if defined(__ARM_ARCH_7__) \\
+        || defined(__ARM_ARCH_7A__) \\
+        || defined(__ARM_ARCH_7R__) \\
+        || defined(__ARM_ARCH_7M__) \\
+        || (defined(__TARGET_ARCH_ARM) && __TARGET_ARCH_ARM-0 >= 7)
+        #error cmake_ARCH armv7
+    #elif defined(__ARM_ARCH_6__) \\
+        || defined(__ARM_ARCH_6J__) \\
+        || defined(__ARM_ARCH_6T2__) \\
+        || defined(__ARM_ARCH_6Z__) \\
+        || defined(__ARM_ARCH_6K__) \\
+        || defined(__ARM_ARCH_6ZK__) \\
+        || defined(__ARM_ARCH_6M__) \\
+        || (defined(__TARGET_ARCH_ARM) && __TARGET_ARCH_ARM-0 >= 6)
+        #error cmake_ARCH armv6
+    #elif defined(__ARM_ARCH_5TEJ__) \\
+        || (defined(__TARGET_ARCH_ARM) && __TARGET_ARCH_ARM-0 >= 5)
+        #error cmake_ARCH armv5
+    #else
+        #error cmake_ARCH arm
+    #endif
+#elif defined(__i386) || defined(__i386__) || defined(_M_IX86)
+    #error cmake_ARCH i386
+#elif defined(__x86_64) || defined(__x86_64__) || defined(__amd64) || defined(_M_X64)
+    #error cmake_ARCH x86_64
+#elif defined(__ia64) || defined(__ia64__) || defined(_M_IA64)
+    #error cmake_ARCH ia64
+#elif defined(__ppc__) || defined(__ppc) || defined(__powerpc__) \\
+      || defined(_ARCH_COM) || defined(_ARCH_PWR) || defined(_ARCH_PPC)  \\
+      || defined(_M_MPPC) || defined(_M_PPC)
+    #if defined(__ppc64__) || defined(__powerpc64__) || defined(__64BIT__)
+        #error cmake_ARCH ppc64
+    #else
+        #error cmake_ARCH ppc
+    #endif
+#endif
+#error cmake_ARCH unknown
+")
+
+# Set ppc_support to TRUE before including this file or ppc and ppc64
+# will be treated as invalid architectures since they are no longer supported by Apple
+
+function(target_architecture output_var)
+    if(APPLE AND CMAKE_OSX_ARCHITECTURES)
+        # On OS X we use CMAKE_OSX_ARCHITECTURES *if* it was set
+        # First let's normalize the order of the values
+
+        # Note that it's not possible to compile PowerPC applications if you are using
+        # the OS X SDK version 10.6 or later - you'll need 10.4/10.5 for that, so we
+        # disable it by default
+        # See this page for more information:
+        # http://stackoverflow.com/questions/5333490/how-can-we-restore-ppc-ppc64-as-well-as-full-10-4-10-5-sdk-support-to-xcode-4
+
+        # Architecture defaults to i386 or ppc on OS X 10.5 and earlier, depending on the CPU type detected at runtime.
+        # On OS X 10.6+ the default is x86_64 if the CPU supports it, i386 otherwise.
+
+        foreach(osx_arch ${CMAKE_OSX_ARCHITECTURES})
+            if("${osx_arch}" STREQUAL "ppc" AND ppc_support)
+                set(osx_arch_ppc TRUE)
+            elseif("${osx_arch}" STREQUAL "i386")
+                set(osx_arch_i386 TRUE)
+            elseif("${osx_arch}" STREQUAL "x86_64")
+                set(osx_arch_x86_64 TRUE)
+            elseif("${osx_arch}" STREQUAL "ppc64" AND ppc_support)
+                set(osx_arch_ppc64 TRUE)
+            else()
+                message(FATAL_ERROR "Invalid OS X arch name: ${osx_arch}")
+            endif()
+        endforeach()
+
+        # Now add all the architectures in our normalized order
+        if(osx_arch_ppc)
+            list(APPEND ARCH ppc)
+        endif()
+
+        if(osx_arch_i386)
+            list(APPEND ARCH i386)
+        endif()
+
+        if(osx_arch_x86_64)
+            list(APPEND ARCH x86_64)
+        endif()
+
+        if(osx_arch_ppc64)
+            list(APPEND ARCH ppc64)
+        endif()
+    else()
+        file(WRITE "${CMAKE_BINARY_DIR}/arch.c" "${archdetect_c_code}")
+
+        enable_language(C)
+
+        # Detect the architecture in a rather creative way...
+        # This compiles a small C program which is a series of ifdefs that selects a
+        # particular #error preprocessor directive whose message string contains the
+        # target architecture. The program will always fail to compile (both because
+        # file is not a valid C program, and obviously because of the presence of the
+        # #error preprocessor directives... but by exploiting the preprocessor in this
+        # way, we can detect the correct target architecture even when cross-compiling,
+        # since the program itself never needs to be run (only the compiler/preprocessor)
+        try_run(
+            run_result_unused
+            compile_result_unused
+            "${CMAKE_BINARY_DIR}"
+            "${CMAKE_BINARY_DIR}/arch.c"
+            COMPILE_OUTPUT_VARIABLE ARCH
+            CMAKE_FLAGS CMAKE_OSX_ARCHITECTURES=${CMAKE_OSX_ARCHITECTURES}
+        )
+
+        # Parse the architecture name from the compiler output
+        string(REGEX MATCH "cmake_ARCH ([a-zA-Z0-9_]+)" ARCH "${ARCH}")
+
+        # Get rid of the value marker leaving just the architecture name
+        string(REPLACE "cmake_ARCH " "" ARCH "${ARCH}")
+
+        # If we are compiling with an unknown architecture this variable should
+        # already be set to "unknown" but in the case that it's empty (i.e. due
+        # to a typo in the code), then set it to unknown
+        if (NOT ARCH)
+            set(ARCH unknown)
+        endif()
+    endif()
+
+    set(${output_var} "${ARCH}" PARENT_SCOPE)
+endfunction()
+
+# Find arch and set arch variable.
+target_architecture(ARCH)
+
 # Enforce "Debug" as standard build type.
 if(NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel." FORCE)
 endif()
 
 # CMake project configuration.
-project(EGL)
+project(WIQ2)
 
 # Cmake module search path.
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/stuff/cmake/modules ${CMAKE_MODULE_PATH})
 
 # Add extended path for FreeBSD and Homebrew on OS X.
 list(APPEND CMAKE_PREFIX_PATH /usr/local)
+
+# Define LIBARCH to architecture found.
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}-DLIBARCH=${ARCH}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}-DLIBARCH=${ARCH}")
 
 # Enforce C compiler flags:
 #  -Wall                -> More warnings
@@ -21,10 +160,10 @@ list(APPEND CMAKE_PREFIX_PATH /usr/local)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu99 -Wall -fno-strict-aliasing -fwrapv")
 
 # Enforce CXX compiler flags:
-#  -Wall                -> More warnings
-#  -fno-strict-aliasing -> Quake 2 is far away from strict aliasing
-#  -fwrapv              -> Make signed integer overflows defined
-#  -fno-writable-strings	-> Prevent 'warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]' warnings.
+#  -Wall                    -> More warnings
+#  -fno-strict-aliasing     -> Quake 2 is far away from strict aliasing
+#  -fwrapv                  -> Make signed integer overflows defined
+#  -fno-writable-strings	-> Prevent 'warning: ISO C++11 and up does not allow conversion from string literal to 'char *' [-Wwritable-strings]' warnings.
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall -fno-strict-aliasing -Wno-writable-strings -fwrapv")
 
 # Switch of some annoying warnings
@@ -36,26 +175,26 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 	endif()
 endif()
 
-# Use -O2 as maximum optimization level. -O3 has it's problems with GoldQuake2.
-string(REPLACE "-O3" "-O2" CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE}")
+# Use -O2 as maximum optimization level. -O3 has it's problems with .
+#string(REPLACE "-O3" "-O2" CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE}")
 
 # Build Targets.
-option(BUILD_EGL "Build GoldQuake II executable" ON)
-option(BUILD_EGL_DED "Build GoldQuake II dedicated server executable" OFF)
-option(BUILD_EGL_GAME "Build Game DLL" ON)
-option(BUILD_EGL_CGAME "Build Client CGame DLL" ON)
+option(BUILD_WIQ2 "Build WatIsQ2 executable" ON)
+option(BUILD_WIQ2_DED "Build WatIsQ2 dedicated server executable" OFF)
+option(BUILD_WIQ2_GAME "Build WatIsQ2 Game DLL" ON)
+option(BUILD_WIQ2_CGAME "Build WatIsQ2 Client CGame DLL" ON)
 
 # Set directory locations (allowing us to move directories easily)
-set(EGL_SRCDIR_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR})
-set(EGL_SRCDIR_CGAME ${EGL_SRCDIR_ROOT_DIR}/cgame)
-set(EGL_SRCDIR_CLIENT ${EGL_SRCDIR_ROOT_DIR}/client)
-set(EGL_SRCDIR_COMMON ${EGL_SRCDIR_ROOT_DIR}/common)
-set(EGL_SRCDIR_GAME ${EGL_SRCDIR_ROOT_DIR}/game)
-set(EGL_SRCDIR_RENDERER ${EGL_SRCDIR_ROOT_DIR}/renderer)
-set(EGL_SRCDIR_SERVER ${EGL_SRCDIR_ROOT_DIR}/server)
-set(EGL_SRCDIR_SHARED ${EGL_SRCDIR_ROOT_DIR}/shared)
-set(EGL_SRCDIR_UNIX ${EGL_SRCDIR_ROOT_DIR}/unix)
-set(EGL_SRCDIR_WIN32_DIR ${EGL_SRCDIR_ROOT_DIR}/win32)
+set(WIQ2_SRCDIR_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR})
+set(WIQ2_SRCDIR_CGAME ${WIQ2_SRCDIR_ROOT_DIR}/cgame)
+set(WIQ2_SRCDIR_CLIENT ${WIQ2_SRCDIR_ROOT_DIR}/client)
+set(WIQ2_SRCDIR_COMMON ${WIQ2_SRCDIR_ROOT_DIR}/common)
+set(WIQ2_SRCDIR_GAME ${WIQ2_SRCDIR_ROOT_DIR}/game)
+set(WIQ2_SRCDIR_RENDERER ${WIQ2_SRCDIR_ROOT_DIR}/renderer)
+set(WIQ2_SRCDIR_SERVER ${WIQ2_SRCDIR_ROOT_DIR}/server)
+set(WIQ2_SRCDIR_SHARED ${WIQ2_SRCDIR_ROOT_DIR}/shared)
+set(WIQ2_SRCDIR_UNIX ${WIQ2_SRCDIR_ROOT_DIR}/unix)
+set(WIQ2_SRCDIR_WIN32_DIR ${WIQ2_SRCDIR_ROOT_DIR}/win32)
 
 # Required libraries to build the different components of the binaries. Find
 find_package(SDL REQUIRED)
@@ -73,329 +212,331 @@ if (PKG_CONFIG_FOUND)
 endif (PKG_CONFIG_FOUND)
 
 # General linker flags.
-set(EGL_LINKER_FLAGS "")
+set(WIQ2_LINKER_FLAGS "")
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-	list(APPEND EGL_LINKER_FLAGS "-lm -static-libgcc")
+	list(APPEND WIQ2_LINKER_FLAGS "-lm -static-libgcc")
 else()
 	if (NOT ${CMAKE_SYSTEM_NAME} MATCHES "Haiku")
-		list(APPEND EGL_LINKER_FLAGS "-lm -rdynamic")
+		list(APPEND WIQ2_LINKER_FLAGS "-lm -rdynamic")
 	else()
-		list(APPEND EGL_LINKER_FLAGS "-lm -lnetwork")
+		list(APPEND WIQ2_LINKER_FLAGS "-lm -lnetwork")
 	endif()
 endif()
 
-list(APPEND EGL_LINKER_FLAGS ${CMAKE_DL_LIBS})
+list(APPEND WIQ2_LINKER_FLAGS ${CMAKE_DL_LIBS})
 
 ###
 # Set CGAME Source Files.
 ###
-set(EGL_SRC_CGAME
-#    ${EGL_SRCDIR_CGAME}/gmenu/menu_id_1.c
+set(WIQ2_SRC_CGAME
+#    ${WIQ2_SRCDIR_CGAME}/gmenu/menu_id_1.c
     
-    ${EGL_SRCDIR_CGAME}/menu/m_local.h
-    ${EGL_SRCDIR_CGAME}/menu/m_main.c 
-    ${EGL_SRCDIR_CGAME}/menu/m_mp.c 
-    ${EGL_SRCDIR_CGAME}/menu/m_mp_downloading.c
-    ${EGL_SRCDIR_CGAME}/menu/m_mp_join.c 
-    ${EGL_SRCDIR_CGAME}/menu/m_mp_join_addrbook.c 
-    ${EGL_SRCDIR_CGAME}/menu/m_mp_player.c 
-    ${EGL_SRCDIR_CGAME}/menu/m_mp_start.c 
-    ${EGL_SRCDIR_CGAME}/menu/m_mp_start_dmflags.c 
-    ${EGL_SRCDIR_CGAME}/menu/m_opts.c 
-    ${EGL_SRCDIR_CGAME}/menu/m_opts_controls.c 
-    ${EGL_SRCDIR_CGAME}/menu/m_opts_effects.c 
-    ${EGL_SRCDIR_CGAME}/menu/m_opts_gloom.c 
-    ${EGL_SRCDIR_CGAME}/menu/m_opts_hud.c 
-    ${EGL_SRCDIR_CGAME}/menu/m_opts_input.c 
-    ${EGL_SRCDIR_CGAME}/menu/m_opts_misc.c 
-    ${EGL_SRCDIR_CGAME}/menu/m_opts_screen.c 
-    ${EGL_SRCDIR_CGAME}/menu/m_opts_sound.c 
-    ${EGL_SRCDIR_CGAME}/menu/m_quit.c
-    ${EGL_SRCDIR_CGAME}/menu/m_sp.c
-    ${EGL_SRCDIR_CGAME}/menu/m_sp_credits.c 
-    ${EGL_SRCDIR_CGAME}/menu/m_sp_loadgame.c 
-    ${EGL_SRCDIR_CGAME}/menu/m_sp_savegame.c 
-    ${EGL_SRCDIR_CGAME}/menu/m_vid.c
-    ${EGL_SRCDIR_CGAME}/menu/m_vid_exts.c
-    ${EGL_SRCDIR_CGAME}/menu/m_vid_settings.c 
-    ${EGL_SRCDIR_CGAME}/menu/menu.c
-    ${EGL_SRCDIR_CGAME}/menu/menu.h
+    ${WIQ2_SRCDIR_CGAME}/menu/m_local.h
+    ${WIQ2_SRCDIR_CGAME}/menu/m_main.c 
+    ${WIQ2_SRCDIR_CGAME}/menu/m_mp.c 
+    ${WIQ2_SRCDIR_CGAME}/menu/m_mp_downloading.c
+    ${WIQ2_SRCDIR_CGAME}/menu/m_mp_join.c 
+    ${WIQ2_SRCDIR_CGAME}/menu/m_mp_join_addrbook.c 
+    ${WIQ2_SRCDIR_CGAME}/menu/m_mp_player.c 
+    ${WIQ2_SRCDIR_CGAME}/menu/m_mp_start.c 
+    ${WIQ2_SRCDIR_CGAME}/menu/m_mp_start_dmflags.c 
+    ${WIQ2_SRCDIR_CGAME}/menu/m_opts.c 
+    ${WIQ2_SRCDIR_CGAME}/menu/m_opts_controls.c 
+    ${WIQ2_SRCDIR_CGAME}/menu/m_opts_effects.c 
+    ${WIQ2_SRCDIR_CGAME}/menu/m_opts_gloom.c 
+    ${WIQ2_SRCDIR_CGAME}/menu/m_opts_hud.c 
+    ${WIQ2_SRCDIR_CGAME}/menu/m_opts_input.c 
+    ${WIQ2_SRCDIR_CGAME}/menu/m_opts_misc.c 
+    ${WIQ2_SRCDIR_CGAME}/menu/m_opts_screen.c 
+    ${WIQ2_SRCDIR_CGAME}/menu/m_opts_sound.c 
+    ${WIQ2_SRCDIR_CGAME}/menu/m_quit.c
+    ${WIQ2_SRCDIR_CGAME}/menu/m_sp.c
+    ${WIQ2_SRCDIR_CGAME}/menu/m_sp_credits.c 
+    ${WIQ2_SRCDIR_CGAME}/menu/m_sp_loadgame.c 
+    ${WIQ2_SRCDIR_CGAME}/menu/m_sp_savegame.c 
+    ${WIQ2_SRCDIR_CGAME}/menu/m_vid.c
+    ${WIQ2_SRCDIR_CGAME}/menu/m_vid_exts.c
+    ${WIQ2_SRCDIR_CGAME}/menu/m_vid_settings.c 
+    ${WIQ2_SRCDIR_CGAME}/menu/menu.c
+    ${WIQ2_SRCDIR_CGAME}/menu/menu.h
     
-    ${EGL_SRCDIR_CGAME}/ui/ui_backend.c
-    ${EGL_SRCDIR_CGAME}/ui/ui_cursor.c
-    ${EGL_SRCDIR_CGAME}/ui/ui_draw.c
-    ${EGL_SRCDIR_CGAME}/ui/ui_items.c
-    ${EGL_SRCDIR_CGAME}/ui/ui_keys.c
-    ${EGL_SRCDIR_CGAME}/ui/ui_local.h
+    ${WIQ2_SRCDIR_CGAME}/ui/ui_backend.c
+    ${WIQ2_SRCDIR_CGAME}/ui/ui_cursor.c
+    ${WIQ2_SRCDIR_CGAME}/ui/ui_draw.c
+    ${WIQ2_SRCDIR_CGAME}/ui/ui_items.c
+    ${WIQ2_SRCDIR_CGAME}/ui/ui_keys.c
+    ${WIQ2_SRCDIR_CGAME}/ui/ui_local.h
     
-    ${EGL_SRCDIR_CGAME}/cg_api.c 
-    ${EGL_SRCDIR_CGAME}/cg_decals.c 
-    ${EGL_SRCDIR_CGAME}/cg_draw.c 
-    ${EGL_SRCDIR_CGAME}/cg_entities.c
-    ${EGL_SRCDIR_CGAME}/cg_hud.c 
-    ${EGL_SRCDIR_CGAME}/cg_inventory.c 
-    ${EGL_SRCDIR_CGAME}/cg_keys.c 
-    ${EGL_SRCDIR_CGAME}/cg_light.c 
-    ${EGL_SRCDIR_CGAME}/cg_loadscreen.c 
-    ${EGL_SRCDIR_CGAME}/cg_localents.c 
-    ${EGL_SRCDIR_CGAME}/cg_location.c 
-    ${EGL_SRCDIR_CGAME}/cg_main.c 
-    ${EGL_SRCDIR_CGAME}/cg_mapeffects.c 
-    ${EGL_SRCDIR_CGAME}/cg_media.c 
-    ${EGL_SRCDIR_CGAME}/cg_muzzleflash.c 
-    ${EGL_SRCDIR_CGAME}/cg_parse.c 
-    ${EGL_SRCDIR_CGAME}/cg_parteffects.c 
-    ${EGL_SRCDIR_CGAME}/cg_partgloom.c 
-    ${EGL_SRCDIR_CGAME}/cg_particles.c 
-    ${EGL_SRCDIR_CGAME}/cg_partsustain.c 
-    ${EGL_SRCDIR_CGAME}/cg_partthink.c 
-    ${EGL_SRCDIR_CGAME}/cg_parttrail.c 
-    ${EGL_SRCDIR_CGAME}/cg_players.c 
-    ${EGL_SRCDIR_CGAME}/cg_predict.c 
-    ${EGL_SRCDIR_CGAME}/cg_screen.c 
-    ${EGL_SRCDIR_CGAME}/cg_tempents.c
-    ${EGL_SRCDIR_CGAME}/cg_view.c 
-    ${EGL_SRCDIR_CGAME}/cg_weapon.c 
+    ${WIQ2_SRCDIR_CGAME}/cg_api.c 
+    ${WIQ2_SRCDIR_CGAME}/cg_decals.c 
+    ${WIQ2_SRCDIR_CGAME}/cg_draw.c 
+    ${WIQ2_SRCDIR_CGAME}/cg_entities.c
+    ${WIQ2_SRCDIR_CGAME}/cg_hud.c 
+    ${WIQ2_SRCDIR_CGAME}/cg_inventory.c 
+    ${WIQ2_SRCDIR_CGAME}/cg_keys.c 
+    ${WIQ2_SRCDIR_CGAME}/cg_light.c 
+    ${WIQ2_SRCDIR_CGAME}/cg_loadscreen.c 
+    ${WIQ2_SRCDIR_CGAME}/cg_localents.c 
+    ${WIQ2_SRCDIR_CGAME}/cg_location.c 
+    ${WIQ2_SRCDIR_CGAME}/cg_main.c 
+    ${WIQ2_SRCDIR_CGAME}/cg_mapeffects.c 
+    ${WIQ2_SRCDIR_CGAME}/cg_media.c 
+    ${WIQ2_SRCDIR_CGAME}/cg_muzzleflash.c 
+    ${WIQ2_SRCDIR_CGAME}/cg_parse.c 
+    ${WIQ2_SRCDIR_CGAME}/cg_parteffects.c 
+    ${WIQ2_SRCDIR_CGAME}/cg_partgloom.c 
+    ${WIQ2_SRCDIR_CGAME}/cg_particles.c 
+    ${WIQ2_SRCDIR_CGAME}/cg_partsustain.c 
+    ${WIQ2_SRCDIR_CGAME}/cg_partthink.c 
+    ${WIQ2_SRCDIR_CGAME}/cg_parttrail.c 
+    ${WIQ2_SRCDIR_CGAME}/cg_players.c 
+    ${WIQ2_SRCDIR_CGAME}/cg_predict.c 
+    ${WIQ2_SRCDIR_CGAME}/cg_screen.c 
+    ${WIQ2_SRCDIR_CGAME}/cg_tempents.c
+    ${WIQ2_SRCDIR_CGAME}/cg_view.c 
+    ${WIQ2_SRCDIR_CGAME}/cg_weapon.c 
     
-    ${EGL_SRCDIR_CGAME}/pmove.c
+    ${WIQ2_SRCDIR_CGAME}/pmove.c
 
-    ${EGL_SRCDIR_SHARED}/byteswap.c
-    ${EGL_SRCDIR_SHARED}/infostrings.c 
-    ${EGL_SRCDIR_SHARED}/m_angles.c 
-    ${EGL_SRCDIR_SHARED}/m_bounds.c 
-    ${EGL_SRCDIR_SHARED}/m_flash.c 
-    ${EGL_SRCDIR_SHARED}/m_mat3.c 
-    ${EGL_SRCDIR_SHARED}/m_mat4.c 
-    ${EGL_SRCDIR_SHARED}/m_plane.c 
-    ${EGL_SRCDIR_SHARED}/m_quat.c 
-    ${EGL_SRCDIR_SHARED}/mathlib.c 
-    ${EGL_SRCDIR_SHARED}/mersennetwister.c
-    ${EGL_SRCDIR_SHARED}/shared.c 
-    ${EGL_SRCDIR_SHARED}/string.c
+    ${WIQ2_SRCDIR_SHARED}/byteswap.cpp
+    ${WIQ2_SRCDIR_SHARED}/infostrings.cpp 
+    ${WIQ2_SRCDIR_SHARED}/m_angles.cpp 
+    ${WIQ2_SRCDIR_SHARED}/m_bounds.cpp 
+    ${WIQ2_SRCDIR_SHARED}/m_flash.cpp 
+    ${WIQ2_SRCDIR_SHARED}/m_mat3.cpp 
+    ${WIQ2_SRCDIR_SHARED}/m_mat4.cpp 
+    ${WIQ2_SRCDIR_SHARED}/m_plane.cpp 
+    ${WIQ2_SRCDIR_SHARED}/m_quat.cpp 
+    ${WIQ2_SRCDIR_SHARED}/mathlib.cpp 
+    ${WIQ2_SRCDIR_SHARED}/mersennetwister.cpp
+    ${WIQ2_SRCDIR_SHARED}/shared.cpp 
+    ${WIQ2_SRCDIR_SHARED}/string.cpp
 )
 
 ###
 # Set GAME Source Files.
 ###
-set(EGL_SRC_GAME
-    ${EGL_SRCDIR_GAME}/g_ai.cpp 
-    ${EGL_SRCDIR_GAME}/g_chase.cpp
-    ${EGL_SRCDIR_GAME}/g_cmds.cpp
-    ${EGL_SRCDIR_GAME}/g_combat.cpp 
-    ${EGL_SRCDIR_GAME}/g_func.cpp 
-    ${EGL_SRCDIR_GAME}/g_items.cpp 
-    ${EGL_SRCDIR_GAME}/g_main.cpp 
-    ${EGL_SRCDIR_GAME}/g_menus.cpp 
-    ${EGL_SRCDIR_GAME}/g_misc.cpp 
-    ${EGL_SRCDIR_GAME}/g_monster.cpp 
-    ${EGL_SRCDIR_GAME}/g_phys.cpp 
-    ${EGL_SRCDIR_GAME}/g_save.cpp 
-    ${EGL_SRCDIR_GAME}/g_spawn.cpp 
-    ${EGL_SRCDIR_GAME}/g_svcmds.cpp 
-    ${EGL_SRCDIR_GAME}/g_target.cpp 
-    ${EGL_SRCDIR_GAME}/g_trigger.cpp 
-    ${EGL_SRCDIR_GAME}/g_turret.cpp 
-    ${EGL_SRCDIR_GAME}/g_utils.cpp 
-    ${EGL_SRCDIR_GAME}/g_weapon.cpp 
-    ${EGL_SRCDIR_GAME}/m_actor.cpp 
-    ${EGL_SRCDIR_GAME}/m_berserk.cpp 
-    ${EGL_SRCDIR_GAME}/m_boss2.cpp 
-    ${EGL_SRCDIR_GAME}/m_boss3.cpp 
-    ${EGL_SRCDIR_GAME}/m_boss31.cpp 
-    ${EGL_SRCDIR_GAME}/m_boss32.cpp 
-    ${EGL_SRCDIR_GAME}/m_brain.cpp 
-    ${EGL_SRCDIR_GAME}/m_chick.cpp 
-    ${EGL_SRCDIR_GAME}/m_flipper.cpp 
-    ${EGL_SRCDIR_GAME}/m_float.cpp 
-    ${EGL_SRCDIR_GAME}/m_flyer.cpp 
-    ${EGL_SRCDIR_GAME}/m_gladiator.cpp 
-    ${EGL_SRCDIR_GAME}/m_gunner.cpp 
-    ${EGL_SRCDIR_GAME}/m_hover.cpp 
-    ${EGL_SRCDIR_GAME}/m_infantry.cpp 
-    ${EGL_SRCDIR_GAME}/m_insane.cpp 
-    ${EGL_SRCDIR_GAME}/m_medic.cpp 
-    ${EGL_SRCDIR_GAME}/m_move.cpp 
-    ${EGL_SRCDIR_GAME}/m_mutant.cpp 
-    ${EGL_SRCDIR_GAME}/m_parasite.cpp 
-    ${EGL_SRCDIR_GAME}/m_soldier.cpp 
-    ${EGL_SRCDIR_GAME}/m_supertank.cpp 
-    ${EGL_SRCDIR_GAME}/m_tank.cpp 
-    ${EGL_SRCDIR_GAME}/p_client.cpp 
-    ${EGL_SRCDIR_GAME}/p_hud.cpp 
-    ${EGL_SRCDIR_GAME}/p_trail.cpp 
-    ${EGL_SRCDIR_GAME}/p_view.cpp 
-    ${EGL_SRCDIR_GAME}/p_weapon.cpp
+set(WIQ2_SRC_GAME
+    ${WIQ2_SRCDIR_GAME}/g_ai.cpp 
+    ${WIQ2_SRCDIR_GAME}/g_chase.cpp
+    ${WIQ2_SRCDIR_GAME}/g_cmds.cpp
+    ${WIQ2_SRCDIR_GAME}/g_combat.cpp 
+    ${WIQ2_SRCDIR_GAME}/g_func.cpp 
+    ${WIQ2_SRCDIR_GAME}/g_items.cpp 
+    ${WIQ2_SRCDIR_GAME}/g_main.cpp 
+    ${WIQ2_SRCDIR_GAME}/g_menus.cpp 
+    ${WIQ2_SRCDIR_GAME}/g_misc.cpp 
+    ${WIQ2_SRCDIR_GAME}/g_monster.cpp 
+    ${WIQ2_SRCDIR_GAME}/g_phys.cpp 
+    ${WIQ2_SRCDIR_GAME}/g_save.cpp 
+    ${WIQ2_SRCDIR_GAME}/g_spawn.cpp 
+    ${WIQ2_SRCDIR_GAME}/g_svcmds.cpp 
+    ${WIQ2_SRCDIR_GAME}/g_target.cpp 
+    ${WIQ2_SRCDIR_GAME}/g_trigger.cpp 
+    ${WIQ2_SRCDIR_GAME}/g_turret.cpp 
+    ${WIQ2_SRCDIR_GAME}/g_utils.cpp 
+    ${WIQ2_SRCDIR_GAME}/g_weapon.cpp 
+    ${WIQ2_SRCDIR_GAME}/m_actor.cpp 
+    ${WIQ2_SRCDIR_GAME}/m_berserk.cpp 
+    ${WIQ2_SRCDIR_GAME}/m_boss2.cpp 
+    ${WIQ2_SRCDIR_GAME}/m_boss3.cpp 
+    ${WIQ2_SRCDIR_GAME}/m_boss31.cpp 
+    ${WIQ2_SRCDIR_GAME}/m_boss32.cpp 
+    ${WIQ2_SRCDIR_GAME}/m_brain.cpp 
+    ${WIQ2_SRCDIR_GAME}/m_chick.cpp 
+    ${WIQ2_SRCDIR_GAME}/m_flipper.cpp 
+    ${WIQ2_SRCDIR_GAME}/m_float.cpp 
+    ${WIQ2_SRCDIR_GAME}/m_flyer.cpp 
+    ${WIQ2_SRCDIR_GAME}/m_gladiator.cpp 
+    ${WIQ2_SRCDIR_GAME}/m_gunner.cpp 
+    ${WIQ2_SRCDIR_GAME}/m_hover.cpp 
+    ${WIQ2_SRCDIR_GAME}/m_infantry.cpp 
+    ${WIQ2_SRCDIR_GAME}/m_insane.cpp 
+    ${WIQ2_SRCDIR_GAME}/m_medic.cpp 
+    ${WIQ2_SRCDIR_GAME}/m_move.cpp 
+    ${WIQ2_SRCDIR_GAME}/m_mutant.cpp 
+    ${WIQ2_SRCDIR_GAME}/m_parasite.cpp 
+    ${WIQ2_SRCDIR_GAME}/m_soldier.cpp 
+    ${WIQ2_SRCDIR_GAME}/m_supertank.cpp 
+    ${WIQ2_SRCDIR_GAME}/m_tank.cpp 
+    ${WIQ2_SRCDIR_GAME}/p_client.cpp 
+    ${WIQ2_SRCDIR_GAME}/p_hud.cpp 
+    ${WIQ2_SRCDIR_GAME}/p_trail.cpp 
+    ${WIQ2_SRCDIR_GAME}/p_view.cpp 
+    ${WIQ2_SRCDIR_GAME}/p_weapon.cpp
 
-    ${EGL_SRCDIR_SHARED}/byteswap.cpp
-    ${EGL_SRCDIR_SHARED}/infostrings.cpp 
-    ${EGL_SRCDIR_SHARED}/m_angles.cpp 
-    ${EGL_SRCDIR_SHARED}/m_bounds.cpp 
-    ${EGL_SRCDIR_SHARED}/m_flash.cpp 
-    ${EGL_SRCDIR_SHARED}/m_mat3.cpp 
-    ${EGL_SRCDIR_SHARED}/m_mat4.cpp 
-    ${EGL_SRCDIR_SHARED}/m_plane.cpp 
-    ${EGL_SRCDIR_SHARED}/m_quat.cpp 
-    ${EGL_SRCDIR_SHARED}/mathlib.cpp 
-    ${EGL_SRCDIR_SHARED}/mersennetwister.cpp
-    ${EGL_SRCDIR_SHARED}/shared.cpp 
-    ${EGL_SRCDIR_SHARED}/string.cpp
+    ${WIQ2_SRCDIR_SHARED}/byteswap.cpp
+    ${WIQ2_SRCDIR_SHARED}/infostrings.cpp 
+    ${WIQ2_SRCDIR_SHARED}/m_angles.cpp 
+    ${WIQ2_SRCDIR_SHARED}/m_bounds.cpp 
+    ${WIQ2_SRCDIR_SHARED}/m_flash.cpp 
+    ${WIQ2_SRCDIR_SHARED}/m_mat3.cpp 
+    ${WIQ2_SRCDIR_SHARED}/m_mat4.cpp 
+    ${WIQ2_SRCDIR_SHARED}/m_plane.cpp 
+    ${WIQ2_SRCDIR_SHARED}/m_quat.cpp 
+    ${WIQ2_SRCDIR_SHARED}/mathlib.cpp 
+    ${WIQ2_SRCDIR_SHARED}/mersennetwister.cpp
+    ${WIQ2_SRCDIR_SHARED}/shared.cpp 
+    ${WIQ2_SRCDIR_SHARED}/string.cpp
 )
 
 ###
 # Set ENGINE EXECUTABLE Source Files.
 ###
-set(EGL_SRC_ENGINE
-    ${EGL_SRCDIR_CLIENT}/cl_acapi.c
-    ${EGL_SRCDIR_CLIENT}/cl_cgapi.c 
-    ${EGL_SRCDIR_CLIENT}/cl_cin.c 
-    ${EGL_SRCDIR_CLIENT}/cl_console.c 
-    ${EGL_SRCDIR_CLIENT}/cl_demo.c 
-    ${EGL_SRCDIR_CLIENT}/cl_download.c 
-    ${EGL_SRCDIR_CLIENT}/cl_input.c 
-    ${EGL_SRCDIR_CLIENT}/cl_keys.c 
-    ${EGL_SRCDIR_CLIENT}/cl_main.c 
-    ${EGL_SRCDIR_CLIENT}/cl_parse.c 
-    ${EGL_SRCDIR_CLIENT}/cl_screen.c 
-    ${EGL_SRCDIR_CLIENT}/gui_cursor.c 
-    ${EGL_SRCDIR_CLIENT}/gui_draw.c 
-    ${EGL_SRCDIR_CLIENT}/gui_events.c 
-    ${EGL_SRCDIR_CLIENT}/gui_items.c 
-    ${EGL_SRCDIR_CLIENT}/gui_init.c
-    ${EGL_SRCDIR_CLIENT}/gui_keys.c 
-    ${EGL_SRCDIR_CLIENT}/gui_main.c 
-    ${EGL_SRCDIR_CLIENT}/gui_vars.c
-    ${EGL_SRCDIR_CLIENT}/sdl_main.c 
-    ${EGL_SRCDIR_CLIENT}/sdl_glimp.c
-    ${EGL_SRCDIR_CLIENT}/snd_dma.c 
-    ${EGL_SRCDIR_CLIENT}/snd_main.c
-    ${EGL_SRCDIR_CLIENT}/snd_openal.c
-    ${EGL_SRCDIR_CLIENT}/snd_sdl.c
+set(WIQ2_SRC_ENGINE
+    ${WIQ2_SRCDIR_CLIENT}/cl_acapi.c
+    ${WIQ2_SRCDIR_CLIENT}/cl_cgapi.c 
+    ${WIQ2_SRCDIR_CLIENT}/cl_cin.c 
+    ${WIQ2_SRCDIR_CLIENT}/cl_console.c 
+    ${WIQ2_SRCDIR_CLIENT}/cl_demo.c 
+    ${WIQ2_SRCDIR_CLIENT}/cl_download.c 
+    ${WIQ2_SRCDIR_CLIENT}/cl_input.c 
+    ${WIQ2_SRCDIR_CLIENT}/cl_keys.c 
+    ${WIQ2_SRCDIR_CLIENT}/cl_main.c 
+    ${WIQ2_SRCDIR_CLIENT}/cl_parse.c 
+    ${WIQ2_SRCDIR_CLIENT}/cl_screen.c 
+    ${WIQ2_SRCDIR_CLIENT}/gui_cursor.c 
+    ${WIQ2_SRCDIR_CLIENT}/gui_draw.c 
+    ${WIQ2_SRCDIR_CLIENT}/gui_events.c 
+    ${WIQ2_SRCDIR_CLIENT}/gui_items.c 
+    ${WIQ2_SRCDIR_CLIENT}/gui_init.c
+    ${WIQ2_SRCDIR_CLIENT}/gui_keys.c 
+    ${WIQ2_SRCDIR_CLIENT}/gui_main.c 
+    ${WIQ2_SRCDIR_CLIENT}/gui_vars.c
+    ${WIQ2_SRCDIR_CLIENT}/sdl_main.c 
+    ${WIQ2_SRCDIR_CLIENT}/sdl_glimp.c
+    ${WIQ2_SRCDIR_CLIENT}/snd_dma.c 
+    ${WIQ2_SRCDIR_CLIENT}/snd_main.c
+    ${WIQ2_SRCDIR_CLIENT}/snd_openal.c
+    ${WIQ2_SRCDIR_CLIENT}/snd_sdl.c
 
-    ${EGL_SRCDIR_COMMON}/alias.c
-    ${EGL_SRCDIR_COMMON}/cbuf.c 
-    ${EGL_SRCDIR_COMMON}/cm_common.c 
-    ${EGL_SRCDIR_COMMON}/cm_q2_main.c
-    ${EGL_SRCDIR_COMMON}/cm_q2_trace.c
-    ${EGL_SRCDIR_COMMON}/cm_q3_main.c
-    ${EGL_SRCDIR_COMMON}/cm_q3_trace.c 
-    ${EGL_SRCDIR_COMMON}/cm_q3_patch.c 
-    ${EGL_SRCDIR_COMMON}/cmd.c 
-    ${EGL_SRCDIR_COMMON}/common.c 
-    ${EGL_SRCDIR_COMMON}/crc.c 
-    ${EGL_SRCDIR_COMMON}/cvar.c 
-    ${EGL_SRCDIR_COMMON}/files.c 
-    ${EGL_SRCDIR_COMMON}/md4.c 
-    ${EGL_SRCDIR_COMMON}/memory.c 
-    ${EGL_SRCDIR_COMMON}/net_chan.c 
-    ${EGL_SRCDIR_COMMON}/net_msg.c 
-    ${EGL_SRCDIR_COMMON}/parse.c
+    ${WIQ2_SRCDIR_COMMON}/alias.c
+    ${WIQ2_SRCDIR_COMMON}/cbuf.c 
+    ${WIQ2_SRCDIR_COMMON}/cm_common.c 
+    ${WIQ2_SRCDIR_COMMON}/cm_q2_main.c
+    ${WIQ2_SRCDIR_COMMON}/cm_q2_trace.c
+    ${WIQ2_SRCDIR_COMMON}/cm_q3_main.c
+    ${WIQ2_SRCDIR_COMMON}/cm_q3_trace.c 
+    ${WIQ2_SRCDIR_COMMON}/cm_q3_patch.c 
+    ${WIQ2_SRCDIR_COMMON}/cmd.c 
+    ${WIQ2_SRCDIR_COMMON}/common.c 
+    ${WIQ2_SRCDIR_COMMON}/crc.c 
+    ${WIQ2_SRCDIR_COMMON}/cvar.c 
+    ${WIQ2_SRCDIR_COMMON}/files.c 
+    ${WIQ2_SRCDIR_COMMON}/md4.c 
+    ${WIQ2_SRCDIR_COMMON}/memory.c 
+    ${WIQ2_SRCDIR_COMMON}/net_chan.c 
+    ${WIQ2_SRCDIR_COMMON}/net_msg.c 
+    ${WIQ2_SRCDIR_COMMON}/parse.c
 
-    ${EGL_SRCDIR_RENDERER}/r_math.c
-    ${EGL_SRCDIR_RENDERER}/rb_batch.c 
-    ${EGL_SRCDIR_RENDERER}/rb_entity.c 
-    ${EGL_SRCDIR_RENDERER}/rb_light.c 
-    ${EGL_SRCDIR_RENDERER}/rb_math.c 
-    ${EGL_SRCDIR_RENDERER}/rb_qgl.c 
-    ${EGL_SRCDIR_RENDERER}/rb_render.c 
-    ${EGL_SRCDIR_RENDERER}/rb_shadow.c 
-    ${EGL_SRCDIR_RENDERER}/rb_state.c 
+    ${WIQ2_SRCDIR_RENDERER}/r_math.c
+    ${WIQ2_SRCDIR_RENDERER}/rb_batch.c 
+    ${WIQ2_SRCDIR_RENDERER}/rb_entity.c 
+    ${WIQ2_SRCDIR_RENDERER}/rb_light.c 
+    ${WIQ2_SRCDIR_RENDERER}/rb_math.c 
+    ${WIQ2_SRCDIR_RENDERER}/rb_qgl.c 
+    ${WIQ2_SRCDIR_RENDERER}/rb_render.c 
+    ${WIQ2_SRCDIR_RENDERER}/rb_shadow.c 
+    ${WIQ2_SRCDIR_RENDERER}/rb_state.c 
 
-    ${EGL_SRCDIR_RENDERER}/rf_2d.c 
-    ${EGL_SRCDIR_RENDERER}/rf_alias.c 
-    ${EGL_SRCDIR_RENDERER}/rf_cull.c 
-    ${EGL_SRCDIR_RENDERER}/rf_decal.c 
-    ${EGL_SRCDIR_RENDERER}/rf_font.c 
-    ${EGL_SRCDIR_RENDERER}/rf_image.c 
-    ${EGL_SRCDIR_RENDERER}/rf_init.c 
-    ${EGL_SRCDIR_RENDERER}/rf_light.c
-    ${EGL_SRCDIR_RENDERER}/rf_main.c 
-    ${EGL_SRCDIR_RENDERER}/rf_material.c 
-    ${EGL_SRCDIR_RENDERER}/rf_meshbuffer.c 
-    ${EGL_SRCDIR_RENDERER}/rf_model.c 
-    ${EGL_SRCDIR_RENDERER}/rf_program.c 
-    ${EGL_SRCDIR_RENDERER}/rf_sky.c 
-    ${EGL_SRCDIR_RENDERER}/rf_sprite.c 
-    ${EGL_SRCDIR_RENDERER}/rf_world.c
+    ${WIQ2_SRCDIR_RENDERER}/rf_2d.c 
+    ${WIQ2_SRCDIR_RENDERER}/rf_alias.c 
+    ${WIQ2_SRCDIR_RENDERER}/rf_cull.c 
+    ${WIQ2_SRCDIR_RENDERER}/rf_decal.c 
+    ${WIQ2_SRCDIR_RENDERER}/rf_font.c 
+    ${WIQ2_SRCDIR_RENDERER}/rf_image.c 
+    ${WIQ2_SRCDIR_RENDERER}/rf_init.c 
+    ${WIQ2_SRCDIR_RENDERER}/rf_light.c
+    ${WIQ2_SRCDIR_RENDERER}/rf_main.c 
+    ${WIQ2_SRCDIR_RENDERER}/rf_material.c 
+    ${WIQ2_SRCDIR_RENDERER}/rf_meshbuffer.c 
+    ${WIQ2_SRCDIR_RENDERER}/rf_model.c 
+    ${WIQ2_SRCDIR_RENDERER}/rf_program.c 
+    ${WIQ2_SRCDIR_RENDERER}/rf_sky.c 
+    ${WIQ2_SRCDIR_RENDERER}/rf_sprite.c 
+    ${WIQ2_SRCDIR_RENDERER}/rf_world.c
 
-    ${EGL_SRCDIR_SERVER}/sv_ccmds.c 
-    ${EGL_SRCDIR_SERVER}/sv_ents.c 
-    ${EGL_SRCDIR_SERVER}/sv_gameapi.c 
-    ${EGL_SRCDIR_SERVER}/sv_init.c 
-    ${EGL_SRCDIR_SERVER}/sv_main.c 
-    ${EGL_SRCDIR_SERVER}/sv_pmove.c 
-    ${EGL_SRCDIR_SERVER}/sv_send.c 
-    ${EGL_SRCDIR_SERVER}/sv_user.c 
-    ${EGL_SRCDIR_SERVER}/sv_world.c 
+    ${WIQ2_SRCDIR_SERVER}/sv_ccmds.c 
+    ${WIQ2_SRCDIR_SERVER}/sv_ents.c 
+    ${WIQ2_SRCDIR_SERVER}/sv_gameapi.c 
+    ${WIQ2_SRCDIR_SERVER}/sv_init.c 
+    ${WIQ2_SRCDIR_SERVER}/sv_main.c 
+    ${WIQ2_SRCDIR_SERVER}/sv_pmove.c 
+    ${WIQ2_SRCDIR_SERVER}/sv_send.c 
+    ${WIQ2_SRCDIR_SERVER}/sv_user.c 
+    ${WIQ2_SRCDIR_SERVER}/sv_world.c 
 
-    ${EGL_SRCDIR_SHARED}/byteswap.c
-    ${EGL_SRCDIR_SHARED}/infostrings.c 
-    ${EGL_SRCDIR_SHARED}/m_angles.c 
-    ${EGL_SRCDIR_SHARED}/m_bounds.c 
-    ${EGL_SRCDIR_SHARED}/m_flash.c 
-    ${EGL_SRCDIR_SHARED}/m_mat3.c
-    ${EGL_SRCDIR_SHARED}/m_mat4.c
-    ${EGL_SRCDIR_SHARED}/m_plane.c 
-    ${EGL_SRCDIR_SHARED}/m_quat.c 
-    ${EGL_SRCDIR_SHARED}/mathlib.c 
-    ${EGL_SRCDIR_SHARED}/mersennetwister.c 
-    ${EGL_SRCDIR_SHARED}/shared.c 
-    ${EGL_SRCDIR_SHARED}/string.c 
+    ${WIQ2_SRCDIR_SHARED}/byteswap.cpp
+    ${WIQ2_SRCDIR_SHARED}/infostrings.cpp 
+    ${WIQ2_SRCDIR_SHARED}/m_angles.cpp 
+    ${WIQ2_SRCDIR_SHARED}/m_bounds.cpp 
+    ${WIQ2_SRCDIR_SHARED}/m_flash.cpp 
+    ${WIQ2_SRCDIR_SHARED}/m_mat3.cpp
+    ${WIQ2_SRCDIR_SHARED}/m_mat4.cpp
+    ${WIQ2_SRCDIR_SHARED}/m_plane.cpp 
+    ${WIQ2_SRCDIR_SHARED}/m_quat.cpp 
+    ${WIQ2_SRCDIR_SHARED}/mathlib.cpp 
+    ${WIQ2_SRCDIR_SHARED}/mersennetwister.cpp 
+    ${WIQ2_SRCDIR_SHARED}/shared.cpp 
+    ${WIQ2_SRCDIR_SHARED}/string.cpp 
 )
 
 # Append the proper Operating System specific code to the executable file its sources.
 if(UNIX)
-    list(APPEND EGL_SRC_ENGINE
-        ${EGL_SRCDIR_UNIX}/unix_console.c
-        ${EGL_SRCDIR_UNIX}/unix_main.c 
-        ${EGL_SRCDIR_UNIX}/unix_snd_cd.c 
-        ${EGL_SRCDIR_UNIX}/unix_udp.c
+    list(APPEND WIQ2_SRC_ENGINE
+        ${WIQ2_SRCDIR_UNIX}/unix_console.c
+        ${WIQ2_SRCDIR_UNIX}/unix_main.c 
+        ${WIQ2_SRCDIR_UNIX}/unix_snd_cd.c 
+        ${WIQ2_SRCDIR_UNIX}/unix_udp.c
     )
 elseif(WIN32)
-    list(APPEND EGL_SRC_ENGINE 
-        ${EGL_SRCDIR_WIN32}/win_console.c 
-        ${EGL_SRCDIR_WIN32}/win_glimp.c
-        ${EGL_SRCDIR_WIN32}/win_input.c 
-        ${EGL_SRCDIR_WIN32}/win_main.c 
-        ${EGL_SRCDIR_WIN32}/win_snd.c 
-        ${EGL_SRCDIR_WIN32}/win_snd_cd.c 
-        ${EGL_SRCDIR_WIN32}/win_sock.c 
-        ${EGL_SRCDIR_WIN32}/win_vid.c
+    list(APPEND WIQ2_SRC_ENGINE 
+        ${WIQ2_SRCDIR_WIN32}/win_console.c 
+        ${WIQ2_SRCDIR_WIN32}/win_glimp.c
+        ${WIQ2_SRCDIR_WIN32}/win_input.c 
+        ${WIQ2_SRCDIR_WIN32}/win_main.c 
+        ${WIQ2_SRCDIR_WIN32}/win_snd.c 
+        ${WIQ2_SRCDIR_WIN32}/win_snd_cd.c 
+        ${WIQ2_SRCDIR_WIN32}/win_sock.c 
+        ${WIQ2_SRCDIR_WIN32}/win_vid.c
     )
 endif()
 
 # Build the cgame(client game) dynamic library
-if (${BUILD_EGL_CGAME})
-	add_library(cgame MODULE ${EGL_SRC_CGAME})
-	set_target_properties(cgame PROPERTIES
+if (${BUILD_WIQ2_CGAME})
+	add_library(cgame_${ARCH} MODULE ${WIQ2_SRC_CGAME})
+	set_target_properties(cgame_${ARCH} PROPERTIES
 			PREFIX ""
 			LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/baseq2
 			RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/baseq2
 			SUFFIX ${CMAKE_SHARED_LIBRARY_SUFFIX}
 			)
-	target_link_libraries(cgame ${EGL_LINKER_FLAGS})
+	target_link_libraries(cgame_${ARCH} ${WIQ2_LINKER_FLAGS})
 endif()
 
 # Build the game dynamic library
-if (${BUILD_EGL_GAME})
-	add_library(game MODULE ${EGL_SRC_GAME})
-	set_target_properties(game PROPERTIES
+if (${BUILD_WIQ2_GAME})
+    set(tname game)
+    set(tname ${tname}_${ARCH})
+	add_library(game_${ARCH} MODULE ${WIQ2_SRC_GAME})
+	set_target_properties(game_${ARCH} PROPERTIES
 			PREFIX ""
 			LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/baseq2
 			RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/baseq2
 			SUFFIX ${CMAKE_SHARED_LIBRARY_SUFFIX}
 			)
-	target_link_libraries(game ${EGL_LINKER_FLAGS})
+	target_link_libraries(game_${ARCH} ${WIQ2_LINKER_FLAGS})
 endif()
 
-# Build the EGL executable
-if(${BUILD_EGL})
-    add_executable(EGL ${EGL_SRC_ENGINE})
-    set_target_properties(EGL PROPERTIES
+# Build the WIQ2 executable
+if(${BUILD_WIQ2})
+    add_executable(WIQ2_${ARCH} ${WIQ2_SRC_ENGINE})
+    set_target_properties(WIQ2_${ARCH} PROPERTIES
             RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/
             )
     if(UNIX)
-        target_link_libraries(EGL
-            ${EGL_LINKER_FLAGS} 
+        target_link_libraries(WIQ2_${ARCH}
+            ${WIQ2_LINKER_FLAGS} 
             ${SDL_LIBRARY} 
             ${OPENAL_LIBRARY} 
             ${PNG_LIBRARIES} 
@@ -405,8 +546,8 @@ if(${BUILD_EGL})
             ${X11_LIBRARIES}
         )# ws2_32 winmm)
     elseif(WIN32)
-        target_link_libraries(EGL
-            ${EGL_LINKER_FLAGS} 
+        target_link_libraries(WIQ2_${ARCH}
+            ${WIQ2_LINKER_FLAGS} 
             ${SDL_LIBRARY} 
             ${OPENAL_LIBRARY} 
             ${PNG_LIBRARIES} 

@@ -603,17 +603,9 @@ int Sys_FindFiles (char *path, char *pattern, char **fileList, int maxFiles, int
 ========================================================================
 */
 
-#if defined __i386__
-# define LIBARCH "i386"
-#elif defined __alpha__
-# define LIBARCH "axp"
-#elif defined __powerpc__
-# define LIBARCH "axp"
-#elif defined __sparc__
-# define LIBARCH "sparc"
-#else
-# define LIBARCH
-#endif
+#if !defined(LIBARCH)
+#define LIBARCH
+#endif 
 
 typedef struct libList_s {
 	const char		*title;
@@ -623,8 +615,8 @@ typedef struct libList_s {
 } libList_t;
 
 static libList_t sys_libList[LIB_MAX] = {
-	{ "LIB_CGAME",	NULL,	"cgame" LIBARCH ".so",	"GetCGameAPI"	},
-	{ "LIB_GAME",	NULL,	"game" LIBARCH ".so",		"GetGameAPI"	},
+	{ "LIB_CGAME",	NULL,	"cgame_" LIBARCH ".so",	"GetCGameAPI"	},
+	{ "LIB_GAME",	NULL,	"game_" LIBARCH ".so",		"GetGameAPI"	},
 };
 
 /*

@@ -495,11 +495,9 @@ int Sys_FindFiles (char *path, char *pattern, char **fileList, int maxFiles, int
 ==============================================================================
 */
 
-# ifdef _M_X64 || __x86_64__
-#  define LIBARCH		"x64"
-# else
-#  define LIBARCH		"x86"
-#endif
+#if !defined(LIBARCH)
+#define LIBARCH
+#endif 
 
 # ifdef _DEBUG
 #  define LIBDEBUGDIR	"debug"
@@ -515,7 +513,7 @@ typedef struct libList_s {
 } libList_t;
 
 static libList_t sys_libList[LIB_MAX] = {
-	{ "LIB_CGAME",	NULL,	"cgame" LIBARCH ".dll",	"GetCGameAPI"	},
+	{ "LIB_CGAME",	NULL,	"cgame" LIBARCH ".dll",		"GetCGameAPI"	},
 	{ "LIB_GAME",	NULL,	"game" LIBARCH ".dll",		"GetGameAPI"	},
 };
 
