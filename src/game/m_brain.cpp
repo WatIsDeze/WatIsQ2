@@ -243,15 +243,15 @@ void brain_walk (edict_t *self)
 
 mframe_t brain_frames_defense [] =
 {
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL}
 };
 mmove_t brain_move_defense = {FRAME_defens01, FRAME_defens08, brain_frames_defense, NULL};
 
@@ -261,7 +261,7 @@ mframe_t brain_frames_pain3 [] =
 	ai_move,	2,	NULL,
 	ai_move,	1,	NULL,
 	ai_move,	3,	NULL,
-	ai_move,	0,	NULL,
+	{ ai_move,	0,	NULL},
 	ai_move,	-4,	NULL
 };
 mmove_t brain_move_pain3 = {FRAME_pain301, FRAME_pain306, brain_frames_pain3, brain_run};
@@ -269,10 +269,10 @@ mmove_t brain_move_pain3 = {FRAME_pain301, FRAME_pain306, brain_frames_pain3, br
 mframe_t brain_frames_pain2 [] =
 {
 	ai_move,	-2,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
 	ai_move,	3,	NULL,
 	ai_move,	1,	NULL,
 	ai_move,	-2,	NULL
@@ -284,22 +284,22 @@ mframe_t brain_frames_pain1 [] =
 	ai_move,	-6,	NULL,
 	ai_move,	-2,	NULL,
 	ai_move,	-6,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
 	ai_move,	2,	NULL,
-	ai_move,	0,	NULL,
+	{ ai_move,	0,	NULL},
 	ai_move,	2,	NULL,
 	ai_move,	1,	NULL,
 	ai_move,	7,	NULL,
-	ai_move,	0,	NULL,
+	{ ai_move,	0,	NULL},
 	ai_move,	3,	NULL,
 	ai_move,	-1,	NULL
 };
@@ -338,7 +338,7 @@ void brain_duck_up (edict_t *self)
 
 mframe_t brain_frames_duck [] =
 {
-	ai_move,	0,	NULL,
+	{ ai_move,	0,	NULL},
 	ai_move,	-2,	brain_duck_down,
 	ai_move,	17,	brain_duck_hold,
 	ai_move,	-3,	NULL,
@@ -364,34 +364,34 @@ void brain_dodge (edict_t *self, edict_t *attacker, float eta)
 
 mframe_t brain_frames_death2 [] =
 {
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
 	ai_move,	9,	NULL,
-	ai_move,	0,	NULL
+	{ ai_move,	0,	NULL}
 };
 mmove_t brain_move_death2 = {FRAME_death201, FRAME_death205, brain_frames_death2, brain_dead};
 
 mframe_t brain_frames_death1 [] =
 {
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
 	ai_move,	-2,	NULL,
 	ai_move,	9,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL}
 };
 mmove_t brain_move_death1 = {FRAME_death101, FRAME_death118, brain_frames_death1, brain_dead};
 
@@ -433,12 +433,12 @@ mframe_t brain_frames_attack1 [] =
 	ai_charge,	8,	NULL,
 	ai_charge,	3,	NULL,
 	ai_charge,	5,	NULL,
-	ai_charge,	0,	NULL,
+	{ ai_charge,	0,	NULL },
 	ai_charge,	-3,	brain_swing_right,
-	ai_charge,	0,	NULL,
+	{ ai_charge,	0,	NULL },
 	ai_charge,	-5,	NULL,
 	ai_charge,	-7,	brain_hit_right,
-	ai_charge,	0,	NULL,
+	{ ai_charge,	0,	NULL },
 	ai_charge,	6,	brain_swing_left,
 	ai_charge,	1,	NULL,
 	ai_charge,	2,	brain_hit_left,
@@ -485,13 +485,13 @@ mframe_t brain_frames_attack2 [] =
 	ai_charge,	-4,	NULL,
 	ai_charge,	-3,	NULL,
 	ai_charge,	0,	brain_chest_open,
-	ai_charge,	0,	NULL,
+	{ ai_charge,	0,	NULL },
 	ai_charge,	13,	brain_tentacle_attack,
-	ai_charge,	0,	NULL,
+	{ ai_charge,	0,	NULL },
 	ai_charge,	2,	NULL,
-	ai_charge,	0,	NULL,
+	{ ai_charge,	0,	NULL },
 	ai_charge,	-9,	brain_chest_closed,
-	ai_charge,	0,	NULL,
+	{ ai_charge,	0,	NULL },
 	ai_charge,	4,	NULL,
 	ai_charge,	3,	NULL,
 	ai_charge,	2,	NULL,

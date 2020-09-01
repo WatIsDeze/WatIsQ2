@@ -89,7 +89,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #  define AL_DRIVERNAME		"libopenal.so"
 #  define GL_FORCEFINISH
 
-#  define NO_RETURN __attribute__((noreturn))
+#define NO_RETURN //#  define NO_RETURN __attribute__((noreturn))
 
 #  define HAVE_INLINE
 #  define HAVE_STRCASECMP
@@ -713,13 +713,6 @@ qBool	Info_Validate (char *s);
  
 ==============================================================================
 */
-
-float		(*LittleFloat) (float f);
-int			(*LittleLong) (int l);
-int16		(*LittleShort) (int16 s);
-float		(*BigFloat) (float f);
-int			(*BigLong) (int l);
-int16		(*BigShort) (int16 s);
 
 void		Swap_Init (void);
 

@@ -398,21 +398,26 @@ void M_MoveFrame (edict_t *self)
 			if (!(self->monsterinfo.aiflags & AI_HOLD_FRAME))
 			{
 				self->s.frame++;
-				if (self->s.frame > move->lastframe)
+				if (self->s.frame > move->lastframe) {
 					self->s.frame = move->firstframe;
+				}
 			}
 		}
 	}
 
 	index = self->s.frame - move->firstframe;
 	if (move->frame[index].aifunc)
-		if (!(self->monsterinfo.aiflags & AI_HOLD_FRAME))
+	{
+		if (!(self->monsterinfo.aiflags & AI_HOLD_FRAME)) { 
 			move->frame[index].aifunc (self, move->frame[index].dist * self->monsterinfo.scale);
-		else
+		} else {
 			move->frame[index].aifunc (self, 0);
+		}
+	}
 
-	if (move->frame[index].thinkfunc)
+	if (move->frame[index].thinkfunc) {
 		move->frame[index].thinkfunc (self);
+	}
 }
 
 

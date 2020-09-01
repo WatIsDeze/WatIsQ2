@@ -58,10 +58,10 @@ void Info_Print (char *s)
 		}
 		else
 			*o = 0;
-		Com_Printf (0, "%s", key);
+		Com_Printf (PRNT_DEFAULT, "%s", key);
 
 		if (!*s) {
-			Com_Printf (0, "MISSING VALUE\n");
+			Com_Printf (PRNT_DEFAULT, "MISSING VALUE\n");
 			return;
 		}
 
@@ -73,7 +73,7 @@ void Info_Print (char *s)
 
 		if (*s)
 			s++;
-		Com_Printf (0, "%s\n", value);
+		Com_Printf (PRNT_DEFAULT, "%s\n", value);
 	}
 }
 

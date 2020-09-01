@@ -63,13 +63,13 @@ void gladiator_cleaver_swing (edict_t *self)
 
 mframe_t gladiator_frames_stand [] =
 {
-	ai_stand, 0, NULL,
-	ai_stand, 0, NULL,
-	ai_stand, 0, NULL,
-	ai_stand, 0, NULL,
-	ai_stand, 0, NULL,
-	ai_stand, 0, NULL,
-	ai_stand, 0, NULL
+	{ ai_stand, 0, NULL },
+	{ ai_stand, 0, NULL },
+	{ ai_stand, 0, NULL },
+	{ ai_stand, 0, NULL },
+	{ ai_stand, 0, NULL },
+	{ ai_stand, 0, NULL },
+	{ ai_stand, 0, NULL }
 };
 mmove_t gladiator_move_stand = {FRAME_stand1, FRAME_stand7, gladiator_frames_stand, NULL};
 

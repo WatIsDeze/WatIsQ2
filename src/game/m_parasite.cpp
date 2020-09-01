@@ -85,34 +85,34 @@ void parasite_search (edict_t *self)
 
 mframe_t parasite_frames_start_fidget [] =
 {
-	ai_stand, 0, NULL,
-	ai_stand, 0, NULL,
-	ai_stand, 0, NULL,
-	ai_stand, 0, NULL
+	{ ai_stand, 0, NULL },
+	{ ai_stand, 0, NULL },
+	{ ai_stand, 0, NULL },
+	{ ai_stand, 0, NULL }
 };
 mmove_t parasite_move_start_fidget = {FRAME_stand18, FRAME_stand21, parasite_frames_start_fidget, parasite_do_fidget};
 
 mframe_t parasite_frames_fidget [] =
 {	
 	ai_stand, 0, parasite_scratch,
-	ai_stand, 0, NULL,
-	ai_stand, 0, NULL,
+	{ ai_stand, 0, NULL },
+	{ ai_stand, 0, NULL },
 	ai_stand, 0, parasite_scratch,
-	ai_stand, 0, NULL,
-	ai_stand, 0, NULL
+	{ ai_stand, 0, NULL },
+	{ ai_stand, 0, NULL }
 };
 mmove_t parasite_move_fidget = {FRAME_stand22, FRAME_stand27, parasite_frames_fidget, parasite_refidget};
 
 mframe_t parasite_frames_end_fidget [] =
 {
 	ai_stand, 0, parasite_scratch,
-	ai_stand, 0, NULL,
-	ai_stand, 0, NULL,
-	ai_stand, 0, NULL,
-	ai_stand, 0, NULL,
-	ai_stand, 0, NULL,
-	ai_stand, 0, NULL,
-	ai_stand, 0, NULL
+	{ ai_stand, 0, NULL },
+	{ ai_stand, 0, NULL },
+	{ ai_stand, 0, NULL },
+	{ ai_stand, 0, NULL },
+	{ ai_stand, 0, NULL },
+	{ ai_stand, 0, NULL },
+	{ ai_stand, 0, NULL }
 };
 mmove_t parasite_move_end_fidget = {FRAME_stand28, FRAME_stand35, parasite_frames_end_fidget, parasite_stand};
 
@@ -142,22 +142,22 @@ void parasite_idle (edict_t *self)
 
 mframe_t parasite_frames_stand [] =
 {
-	ai_stand, 0, NULL,
-	ai_stand, 0, NULL,
+	{ ai_stand, 0, NULL },
+	{ ai_stand, 0, NULL },
 	ai_stand, 0, parasite_tap,
-	ai_stand, 0, NULL,
+	{ ai_stand, 0, NULL },
 	ai_stand, 0, parasite_tap,
-	ai_stand, 0, NULL,
-	ai_stand, 0, NULL,
-	ai_stand, 0, NULL,
+	{ ai_stand, 0, NULL },
+	{ ai_stand, 0, NULL },
+	{ ai_stand, 0, NULL },
 	ai_stand, 0, parasite_tap,
-	ai_stand, 0, NULL,
+	{ ai_stand, 0, NULL },
 	ai_stand, 0, parasite_tap,
-	ai_stand, 0, NULL,
-	ai_stand, 0, NULL,
-	ai_stand, 0, NULL,
+	{ ai_stand, 0, NULL },
+	{ ai_stand, 0, NULL },
+	{ ai_stand, 0, NULL },
 	ai_stand, 0, parasite_tap,
-	ai_stand, 0, NULL,
+	{ ai_stand, 0, NULL },
 	ai_stand, 0, parasite_tap
 };
 mmove_t	parasite_move_stand = {FRAME_stand01, FRAME_stand17, parasite_frames_stand, parasite_stand};

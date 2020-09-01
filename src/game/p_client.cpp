@@ -1577,7 +1577,7 @@ void PrintPmove (pMove_t *pm)
 
 	c1 = CheckBlock (&pm->state, sizeof (pm->state));
 	c2 = CheckBlock (&pm->cmd, sizeof (pm->cmd));
-	Com_Printf (0, "sv %3i:%i %i\n", pm->cmd.impulse, c1, c2);
+	Com_Printf (PRNT_DEFAULT, "sv %3i:%i %i\n", pm->cmd.impulse, c1, c2);
 }
 
 /*

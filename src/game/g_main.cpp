@@ -108,6 +108,7 @@ Returns a pointer to the structure with all entry points
 and global variables
 =================
 */
+extern "C" {
 gameExport_t *GetGameAPI (gameImport_t *import)
 {
 	gi = *import;
@@ -139,6 +140,7 @@ gameExport_t *GetGameAPI (gameImport_t *import)
 
 	return &globals;
 }
+} // extern "C"
 
 #ifndef GAME_HARD_LINKED
 // this is only here so the functions in q_shared.c and q_shwin.c can link

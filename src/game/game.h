@@ -227,5 +227,7 @@ typedef struct gameExport_s {
 	int				maxEdicts;
 } gameExport_t;
 
-gameExport_t *GetGameApi (gameImport_t *import);
+extern "C" {
+	gameExport_t *GetGameApi (gameImport_t *import);
+}
 

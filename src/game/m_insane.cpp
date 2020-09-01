@@ -67,11 +67,11 @@ void insane_onground (edict_t *self);
 
 mframe_t insane_frames_stand_normal [] =
 {
-	ai_stand, 0, NULL,
-	ai_stand, 0, NULL,
-	ai_stand, 0, NULL,
-	ai_stand, 0, NULL,
-	ai_stand, 0, NULL,
+	{ ai_stand, 0, NULL },
+	{ ai_stand, 0, NULL },
+	{ ai_stand, 0, NULL },
+	{ ai_stand, 0, NULL },
+	{ ai_stand, 0, NULL },
 	ai_stand, 0, insane_checkdown
 };
 mmove_t insane_move_stand_normal = {FRAME_stand60, FRAME_stand65, insane_frames_stand_normal, insane_stand};
@@ -113,49 +113,49 @@ mmove_t insane_move_stand_insane = {FRAME_stand65, FRAME_stand94, insane_frames_
 
 mframe_t insane_frames_uptodown [] =
 {
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
 	ai_move,	0,	insane_moan,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
 
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
 
 	ai_move,	2.7f,	NULL,
 	ai_move,	4.1f,	NULL,
 	ai_move,	6,		NULL,
 	ai_move,	7.6f,	NULL,
 	ai_move,	3.6f,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
 	ai_move,	0,	insane_fist,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
 
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
 	ai_move,	0,	insane_fist,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL,
-	ai_move,	0,	NULL
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL},
+	{ ai_move,	0,	NULL}
 };
 mmove_t insane_move_uptodown = {FRAME_stand1, FRAME_stand40, insane_frames_uptodown, insane_onground};
 
@@ -168,19 +168,19 @@ mframe_t insane_frames_downtoup [] =
 	ai_move,	-4.5f,		NULL,		// 44
 	ai_move,	-3.5f,	NULL,			// 45
 	ai_move,	-0.2f,	NULL,			// 46
-	ai_move,	0,	NULL,			// 47
+	{ ai_move,	0,	NULL},			// 47
 	ai_move,	-1.3f,	NULL,			// 48
 	ai_move,	-3,	NULL,				// 49
 	ai_move,	-2,	NULL,			// 50
-	ai_move,	0,	NULL,				// 51
-	ai_move,	0,	NULL,				// 52
-	ai_move,	0,	NULL,				// 53
+	{ ai_move,	0,	NULL},				// 51
+	{ ai_move,	0,	NULL},				// 52
+	{ ai_move,	0,	NULL},				// 53
 	ai_move,	-3.3f,	NULL,			// 54
 	ai_move,	-1.6f,	NULL,			// 55
 	ai_move,	-0.3f,	NULL,			// 56
-	ai_move,	0,	NULL,				// 57
-	ai_move,	0,	NULL,				// 58
-	ai_move,	0,	NULL				// 59
+	{ ai_move,	0,	NULL},				// 57
+	{ ai_move,	0,	NULL},				// 58
+	{ ai_move,	0,	NULL}				// 59
 };
 mmove_t insane_move_downtoup = {FRAME_stand41, FRAME_stand59, insane_frames_downtoup, insane_stand};
 
@@ -190,7 +190,7 @@ mframe_t insane_frames_jumpdown [] =
 	ai_move,	11.5f,	NULL,
 	ai_move,	5.1f,	NULL,
 	ai_move,	7.1f,	NULL,
-	ai_move,	0,	NULL
+	{ ai_move,	0,	NULL}
 };
 mmove_t insane_move_jumpdown = {FRAME_stand96, FRAME_stand100, insane_frames_jumpdown, insane_onground};
 

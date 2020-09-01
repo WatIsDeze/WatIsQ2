@@ -23,6 +23,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 #include "shared.h"
 
+float		(*LittleFloat) (float f);
+int			(*LittleLong) (int l);
+int16		(*LittleShort) (int16 s);
+float		(*BigFloat) (float f);
+int			(*BigLong) (int l);
+int16		(*BigShort) (int16 s);
+
 /*
 ===============
 _FloatSwap

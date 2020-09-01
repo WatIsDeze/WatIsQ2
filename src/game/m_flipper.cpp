@@ -43,7 +43,7 @@ void flipper_stand (edict_t *self);
 
 mframe_t flipper_frames_stand [] =
 {
-	ai_stand, 0, NULL
+	{ ai_stand, 0, NULL }
 };
 	
 mmove_t	flipper_move_stand = {FRAME_flphor01, FRAME_flphor01, flipper_frames_stand, NULL};

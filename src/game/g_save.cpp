@@ -506,7 +506,7 @@ void ReadGame (char *filename)
 		Com_Error (ERR_FATAL, "Savegame from an older version.\n");
 	}
 
-	g_edicts =  static_cast<gedict_t*>(gi.TagMalloc (game.maxentities * sizeof(g_edicts[0]), TAG_GAME));
+	g_edicts =  static_cast<edict_t*>(gi.TagMalloc (game.maxentities * sizeof(g_edicts[0]), TAG_GAME));
 	globals.edicts = g_edicts;
 
 	fread (&game, sizeof(game), 1, f);
