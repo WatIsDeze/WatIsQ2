@@ -927,7 +927,7 @@ void ClientCommand (edict_t *ent)
             return;
         }
         e = G_Spawn();
-        e->classname = gi.TagMalloc(strlen(gi.argv(1)) + 1, TAG_LEVEL);
+        e->classname = static_cast<char*>(gi.TagMalloc(strlen(gi.argv(1)) + 1, TAG_LEVEL));
         strcpy(e->classname, gi.argv(1));
         Angles_Vectors(ent->client->v_angle, forward, NULL, NULL);
         //Vec3Angle(ent->client->v_angle, forward, NULL, NULL);
