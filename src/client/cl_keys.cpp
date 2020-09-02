@@ -155,9 +155,9 @@ static keyName_t key_Names[] = {
 
 	{"PAUSE",		K_PAUSE},
 
-	{"SEMICOLON",	';'},	// because a raw semicolon seperates commands
+	{"SEMICOLON",	(keyNum_t)';'},	// because a raw semicolon seperates commands
 
-	{NULL,			0}
+	{NULL,			(keyNum_t)0}
 };
 
 /*
@@ -1036,7 +1036,7 @@ the given string.  Single ascii characters return themselves, while
 the K_* names are matched up.
 ===================
 */
-keyNum_t Key_StringToKeynum (char *str)
+int Key_StringToKeynum (char *str)
 {
 	keyName_t	*kn;
 	

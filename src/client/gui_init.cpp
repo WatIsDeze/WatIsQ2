@@ -1329,7 +1329,7 @@ bindDef_bind
 static qBool bindDef_bind (char *fileName, gui_t *gui, parse_t *ps, char *keyName)
 {
 	char		*str;
-	keyNum_t	keyNum;
+	int	keyNum;
 
 	if (!PS_ParseToken (ps, PSF_TO_LOWER, &str)) {
 		GUI_PrintPos (PRNT_ERROR, ps, fileName, gui);

@@ -43,7 +43,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 =============================================================================
 */
 
-typedef enum keyNum_s {
+enum eKeyNum_t : int32 {
 	K_BADKEY		=	-1,
 
 	K_TAB			=	9,
@@ -161,7 +161,8 @@ typedef enum keyNum_s {
 	K_PAUSE			=	255,
 
 	K_MAXKEYS
-} keyNum_t;
+};
+typedef int32 keyNum_t;
 
 typedef enum keyDest_s {
 	KD_MINDEST		=	0,

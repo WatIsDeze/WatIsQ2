@@ -1622,7 +1622,7 @@ enum {
 // channel 0 never willingly overrides other channels (1-7) allways override
 // a playing sound on that channel
 //
-typedef enum entChannel_s {
+enum eEntChannel_t : uint32 {
 	CHAN_AUTO,
 	CHAN_WEAPON,
 	CHAN_VOICE,
@@ -1632,7 +1632,8 @@ typedef enum entChannel_s {
 	// modifier flags
 	CHAN_NO_PHS_ADD		= 8,	// send to all clients, not just ones in PHS (ATTN 0 will also do this)
 	CHAN_RELIABLE		= 16	// send by reliable message, not datagram
-} entChannel_t;
+};
+typedef uint32 entChannel_t;
 
 //
 // sound attenuation values
