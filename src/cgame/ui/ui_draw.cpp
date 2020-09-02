@@ -395,7 +395,7 @@ void UI_DrawInterface (uiFrameWork_t *fw)
 	// Blinking cursor
 	//
 
-	item = UI_ItemAtCursor (fw);
+	item = static_cast<uiCommon_t*>(UI_ItemAtCursor (fw));
 	if (item && item->cursorDraw)
 		item->cursorDraw (item);
 	else if (fw->cursorDraw)

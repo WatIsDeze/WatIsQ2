@@ -162,9 +162,9 @@ static void LE_BrassThink (localEnt_t *le)
 			if (tr.plane.normal[2] > 0.7f) {
 				// Play crash sound
 				if (le->type == LE_SGSHELL)
-					cgi.Snd_StartSound (tr.endPos, 0, 0, cgMedia.sfx.sgShell[(rand()&1)], 1, ATTN_NORM, 0);
+					cgi.Snd_StartSound (tr.endPos, 0, CHAN_AUTO, cgMedia.sfx.sgShell[(rand()&1)], 1, ATTN_NORM, 0);
 				else
-					cgi.Snd_StartSound (tr.endPos, 0, 0, cgMedia.sfx.mgShell[(rand()&1)], 1, ATTN_NORM, 0);
+					cgi.Snd_StartSound (tr.endPos, 0, CHAN_AUTO, cgMedia.sfx.mgShell[(rand()&1)], 1, ATTN_NORM, 0);
 
 				// Store current angles
 				Vec3Copy (le->angles, le->privFloatParms);

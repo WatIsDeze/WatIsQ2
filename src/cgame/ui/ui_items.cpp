@@ -45,7 +45,7 @@ void UI_SetupItem (void *item)
 	citem = (uiCommon_t *)item;
 	switch (citem->type) {
 	case UITYPE_SPINCONTROL:
-		list = item;
+		list = static_cast<uiList_t*>(item);
 
 		for (i=0 ; list->itemNames[i] ; i++) ;
 		list->numItemNames = i;
@@ -137,7 +137,7 @@ void UI_AdjustCursor (uiFrameWork_t *fw, int dir)
 
 	// Move in the specified direction until a valid item is hit
 	while (dir) {
-		curItem = UI_ItemAtCursor (fw);
+		curItem = static_cast<uiCommon_t*>(UI_ItemAtCursor (fw));
 		if (curItem) {
 			uiState.cursorItem = curItem;
 			break;

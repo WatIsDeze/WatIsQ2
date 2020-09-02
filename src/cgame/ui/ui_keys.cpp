@@ -75,20 +75,20 @@ static qBool UI_FieldKeyFunc (uiField_t *f, keyNum_t keyNum)
 		return false;
 
 	switch (keyNum) {
-	case K_KP_SLASH:		keyNum = '/';	break;
-	case K_KP_MINUS:		keyNum = '-';	break;
-	case K_KP_PLUS:			keyNum = '+';	break;
-	case K_KP_HOME:			keyNum = '7';	break;
-	case K_KP_UPARROW:		keyNum = '8';	break;
-	case K_KP_PGUP:			keyNum = '9';	break;
-	case K_KP_LEFTARROW:	keyNum = '4';	break;
-	case K_KP_FIVE:			keyNum = '5';	break;
-	case K_KP_RIGHTARROW:	keyNum = '6';	break;
-	case K_KP_END:			keyNum = '1';	break;
-	case K_KP_DOWNARROW:	keyNum = '2';	break;
-	case K_KP_PGDN:			keyNum = '3';	break;
-	case K_KP_INS:			keyNum = '0';	break;
-	case K_KP_DEL:			keyNum = '.';	break;
+	case K_KP_SLASH:		keyNum = static_cast<keyNum_t>('/');	break;
+	case K_KP_MINUS:		keyNum = static_cast<keyNum_t>('-');	break;
+	case K_KP_PLUS:			keyNum = static_cast<keyNum_t>('+');	break;
+	case K_KP_HOME:			keyNum = static_cast<keyNum_t>('7');	break;
+	case K_KP_UPARROW:		keyNum = static_cast<keyNum_t>('8');	break;
+	case K_KP_PGUP:			keyNum = static_cast<keyNum_t>('9');	break;
+	case K_KP_LEFTARROW:	keyNum = static_cast<keyNum_t>('4');	break;
+	case K_KP_FIVE:			keyNum = static_cast<keyNum_t>('5');	break;
+	case K_KP_RIGHTARROW:	keyNum = static_cast<keyNum_t>('6');	break;
+	case K_KP_END:			keyNum = static_cast<keyNum_t>('1');	break;
+	case K_KP_DOWNARROW:	keyNum = static_cast<keyNum_t>('2');	break;
+	case K_KP_PGDN:			keyNum = static_cast<keyNum_t>('3');	break;
+	case K_KP_INS:			keyNum = static_cast<keyNum_t>('0');	break;
+	case K_KP_DEL:			keyNum = static_cast<keyNum_t>('.');	break;
 	}
 
 	//
@@ -166,7 +166,7 @@ struct sfx_s *UI_DefaultKeyFunc (uiFrameWork_t *fw, keyNum_t keyNum)
 		return NULL;
 
 	// Handle field items special
-	item = UI_ItemAtCursor (fw);
+	item = static_cast<uiCommon_t*>(UI_ItemAtCursor (fw));
 	if (item && item->type == UITYPE_FIELD) {
 		if (UI_FieldKeyFunc ((uiField_t *) item, keyNum))
 			return NULL;

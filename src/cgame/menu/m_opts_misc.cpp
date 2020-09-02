@@ -111,17 +111,17 @@ static void MiscMenu_Init (void)
 	m_miscMenu.header.generic.flags		= UIF_NOSELECT|UIF_CENTERED|UIF_MEDIUM|UIF_SHADOW;
 	m_miscMenu.header.generic.name		= "Misc Settings";
 
-	m_miscMenu.shadows_list.generic.type		= UITYPE_SPINCONTROL;
-	m_miscMenu.shadows_list.generic.name		= "Alias shadows";
-	m_miscMenu.shadows_list.generic.callBack	= ShadowFunc;
-	m_miscMenu.shadows_list.itemNames			= shadow_names;
-	m_miscMenu.shadows_list.generic.statusBar	= "Entity Shadows options";
+	// m_miscMenu.shadows_list.generic.type		= UITYPE_SPINCONTROL;
+	// m_miscMenu.shadows_list.generic.name		= "Alias shadows";
+	// m_miscMenu.shadows_list.generic.callBack	= ShadowFunc;
+	// m_miscMenu.shadows_list.itemNames			= shadow_names;
+	// m_miscMenu.shadows_list.generic.statusBar	= "Entity Shadows options";
 
-	m_miscMenu.screenshot_list.generic.type			= UITYPE_SPINCONTROL;
-	m_miscMenu.screenshot_list.generic.name			= "Screenshot type";
-	m_miscMenu.screenshot_list.generic.callBack		= ScreenshotFunc;
-	m_miscMenu.screenshot_list.itemNames			= screenshot_names;
-	m_miscMenu.screenshot_list.generic.statusBar	= "Selects screenshot output format";
+	// m_miscMenu.screenshot_list.generic.type			= UITYPE_SPINCONTROL;
+	// m_miscMenu.screenshot_list.generic.name			= "Screenshot type";
+	// m_miscMenu.screenshot_list.generic.callBack		= ScreenshotFunc;
+	// m_miscMenu.screenshot_list.itemNames			= screenshot_names;
+	// m_miscMenu.screenshot_list.generic.statusBar	= "Selects screenshot output format";
 
 	m_miscMenu.flashblend_list.generic.type			= UITYPE_SPINCONTROL;
 	m_miscMenu.flashblend_list.generic.name			= "Flashblend";

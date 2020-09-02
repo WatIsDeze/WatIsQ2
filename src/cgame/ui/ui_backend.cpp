@@ -283,7 +283,7 @@ void UI_FinishFramework (uiFrameWork_t *fw, qBool lock)
 	for (i=0 ; i<fw->numItems ; i++) {
 		switch (((uiCommon_t *) fw->items[i])->type) {
 		case UITYPE_IMAGE:
-			image = fw->items[i];
+			image = static_cast<uiImage_t*>(fw->items[i]);
 
 			cgi.R_GetImageSize (image->mat, &image->width, &image->height);
 			break;
