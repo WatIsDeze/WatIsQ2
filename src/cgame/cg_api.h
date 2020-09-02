@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 #define CGAME_APIVERSION	031		// Just the engine version number
 
+extern "C" {
 typedef struct cgExport_s {
 	int			apiVersion;
 
@@ -239,5 +240,5 @@ typedef struct cgImport_s {
 } cgImport_t;
 
 typedef cgExport_t (*GetCGameAPI_t) (cgImport_t);
-
+};
 #endif // __CGAMEAPI_H__

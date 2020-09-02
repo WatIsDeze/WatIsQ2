@@ -202,7 +202,7 @@ CG_Gun_FrameNext_f
 */
 static void CG_Gun_FrameNext_f (void)
 {
-	Com_Printf (0, "Gun frame %i\n", ++cg_gunFrame);
+	Com_Printf (PRNT_DEFAULT, "Gun frame %i\n", ++cg_gunFrame);
 }
 
 
@@ -215,7 +215,7 @@ static void CG_Gun_FramePrev_f (void)
 {
 	if (--cg_gunFrame < 0)
 		cg_gunFrame = 0;
-	Com_Printf (0, "Gun frame %i\n", cg_gunFrame);
+	Com_Printf (PRNT_DEFAULT, "Gun frame %i\n", cg_gunFrame);
 }
 
 

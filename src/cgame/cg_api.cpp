@@ -38,6 +38,7 @@ cgImport_t	cgi;
 GetCGameAPI
 ===============
 */
+extern "C" {
 cgExport_t *GetCGameAPI (cgImport_t *cgimp)
 {
 	static cgExport_t	cge;
@@ -89,3 +90,4 @@ cgExport_t *GetCGameAPI (cgImport_t *cgimp)
 
 	return &cge;
 }
+}; // Extern "C"

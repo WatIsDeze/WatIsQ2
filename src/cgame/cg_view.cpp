@@ -612,7 +612,7 @@ V_Viewpos_f
 */
 static void V_Viewpos_f (void)
 {
-	Com_Printf (0, "(x%i y%i z%i) : yaw%i\n",
+	Com_Printf (PRNT_DEFAULT, "(x%i y%i z%i) : yaw%i\n",
 				(int)cg.refDef.viewOrigin[0],
 				(int)cg.refDef.viewOrigin[1],
 				(int)cg.refDef.viewOrigin[2], 
@@ -678,7 +678,7 @@ static void V_Benchmark_f (void)
 		result += 128.0 / time;
 	}
 
-	Com_Printf (0, "%f secs, %f fps total\n", timeinc, result/times);
+	Com_Printf (PRNT_DEFAULT, "%f secs, %f fps total\n", timeinc, result/times);
 }
 
 
@@ -728,7 +728,7 @@ static void V_TimeRefresh_f (void)
 	}
 
 	time = (cgi.Sys_Milliseconds () - start) / 1000.0;
-	Com_Printf (0, "%f seconds (%f fps)\n", time, 128/time);
+	Com_Printf (PRNT_DEFAULT, "%f seconds (%f fps)\n", time, 128/time);
 }
 
 /*

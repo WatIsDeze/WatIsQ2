@@ -297,7 +297,7 @@ void CG_MapFXLoad (char *mapName)
 		return;
 	}
 
-	Com_DevPrintf (0, "...loading '%s'\n", cg_mfxFileName);
+	Com_DevPrintf (PRNT_DEFAULT, "...loading '%s'\n", cg_mfxFileName);
 
 	stageNum = 0;
 	numFx = 0;
@@ -379,7 +379,7 @@ static void CG_MFX_AddOrigin_f (void)
 	char	path[MAX_QPATH];
 
 	if (!cg.mapLoaded) {
-		Com_Printf (0, "CG_MFX_AddOrigin_f: No map loaded!\n");
+		Com_Printf (PRNT_DEFAULT, "CG_MFX_AddOrigin_f: No map loaded!\n");
 		return;
 	}
 	if (!cg_mfxInitialized)
@@ -402,7 +402,7 @@ static void CG_MFX_AddOrigin_f (void)
 	fclose (f);
 
 	// Echo
-	Com_Printf (0, "Saved (x%i y%i z%i) to '%s', reloading file to display...\n",
+	Com_Printf (PRNT_DEFAULT, "Saved (x%i y%i z%i) to '%s', reloading file to display...\n",
 		(int)cg.refDef.viewOrigin[0],
 		(int)cg.refDef.viewOrigin[1],
 		(int)cg.refDef.viewOrigin[2],
@@ -428,7 +428,7 @@ static void CG_MFX_AddTrace_f (void)
 	vec3_t	forward;
 
 	if (!cg.mapLoaded) {
-		Com_Printf (0, "CG_MFX_AddTrace_f: No map loaded!\n");
+		Com_Printf (PRNT_DEFAULT, "CG_MFX_AddTrace_f: No map loaded!\n");
 		return;
 	}
 	if (!cg_mfxInitialized)
@@ -467,7 +467,7 @@ static void CG_MFX_AddTrace_f (void)
 	fclose (f);
 
 	// Echo
-	Com_Printf (0, "Saved (x%i y%i z%i) to '%s', reloading file to display...\n",
+	Com_Printf (PRNT_DEFAULT, "Saved (x%i y%i z%i) to '%s', reloading file to display...\n",
 		(int)(tr.endPos[0] + tr.plane.normal[0]),
 		(int)(tr.endPos[1] + tr.plane.normal[1]),
 		(int)(tr.endPos[2] + tr.plane.normal[2]),
@@ -487,11 +487,11 @@ CG_MFX_Restart_f
 static void CG_MFX_Restart_f (void)
 {
 	if (!cg.mapLoaded) {
-		Com_Printf (0, "CG_MFX_Restart_f: No map loaded!\n");
+		Com_Printf (PRNT_DEFAULT, "CG_MFX_Restart_f: No map loaded!\n");
 		return;
 	}
 
-	Com_Printf (0, "Reloading mapfx...\n");
+	Com_Printf (PRNT_DEFAULT, "Reloading mapfx...\n");
 
 	CG_MapFXClear ();
 	CG_MapFXLoad (cg.configStrings[CS_MODELS+1]);

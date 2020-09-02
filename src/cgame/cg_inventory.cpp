@@ -123,8 +123,8 @@ void Inv_DrawInventory (void)
 		Q_snprintfz (binding, sizeof (binding), "use %s", cg.configStrings[CS_ITEMS+item]);
 		bind = "";
 		for (j=0 ; j<256 ; j++) {
-			if (cgi.Key_GetBindingBuf (j) && !Q_stricmp (cgi.Key_GetBindingBuf (j), binding)) {
-				bind = cgi.Key_KeynumToString (j);
+			if (cgi.Key_GetBindingBuf (static_cast<keyNum_t>(j)) && !Q_stricmp (cgi.Key_GetBindingBuf (static_cast<keyNum_t>(j)), binding)) {
+				bind = cgi.Key_KeynumToString (static_cast<keyNum_t>(j));
 				break;
 			}
 		}

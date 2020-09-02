@@ -384,87 +384,87 @@ set(WIQ2_SRC_GAME
 # Set ENGINE EXECUTABLE Source Files.
 ###
 set(WIQ2_SRC_ENGINE
-    ${WIQ2_SRCDIR_CLIENT}/cl_acapi.c
-    ${WIQ2_SRCDIR_CLIENT}/cl_cgapi.c 
-    ${WIQ2_SRCDIR_CLIENT}/cl_cin.c 
-    ${WIQ2_SRCDIR_CLIENT}/cl_console.c 
-    ${WIQ2_SRCDIR_CLIENT}/cl_demo.c 
-    ${WIQ2_SRCDIR_CLIENT}/cl_download.c 
-    ${WIQ2_SRCDIR_CLIENT}/cl_input.c 
-    ${WIQ2_SRCDIR_CLIENT}/cl_keys.c 
-    ${WIQ2_SRCDIR_CLIENT}/cl_main.c 
-    ${WIQ2_SRCDIR_CLIENT}/cl_parse.c 
-    ${WIQ2_SRCDIR_CLIENT}/cl_screen.c 
-    ${WIQ2_SRCDIR_CLIENT}/gui_cursor.c 
-    ${WIQ2_SRCDIR_CLIENT}/gui_draw.c 
-    ${WIQ2_SRCDIR_CLIENT}/gui_events.c 
-    ${WIQ2_SRCDIR_CLIENT}/gui_items.c 
-    ${WIQ2_SRCDIR_CLIENT}/gui_init.c
-    ${WIQ2_SRCDIR_CLIENT}/gui_keys.c 
-    ${WIQ2_SRCDIR_CLIENT}/gui_main.c 
-    ${WIQ2_SRCDIR_CLIENT}/gui_vars.c
-    ${WIQ2_SRCDIR_CLIENT}/sdl_main.c 
-    ${WIQ2_SRCDIR_CLIENT}/sdl_glimp.c
-    ${WIQ2_SRCDIR_CLIENT}/snd_dma.c 
-    ${WIQ2_SRCDIR_CLIENT}/snd_main.c
-    ${WIQ2_SRCDIR_CLIENT}/snd_openal.c
-    ${WIQ2_SRCDIR_CLIENT}/snd_sdl.c
+    ${WIQ2_SRCDIR_CLIENT}/cl_acapi.cpp
+    ${WIQ2_SRCDIR_CLIENT}/cl_cgapi.cpp 
+    ${WIQ2_SRCDIR_CLIENT}/cl_cin.cpp 
+    ${WIQ2_SRCDIR_CLIENT}/cl_console.cpp 
+    ${WIQ2_SRCDIR_CLIENT}/cl_demo.cpp 
+    ${WIQ2_SRCDIR_CLIENT}/cl_download.cpp 
+    ${WIQ2_SRCDIR_CLIENT}/cl_input.cpp 
+    ${WIQ2_SRCDIR_CLIENT}/cl_keys.cpp 
+    ${WIQ2_SRCDIR_CLIENT}/cl_main.cpp 
+    ${WIQ2_SRCDIR_CLIENT}/cl_parse.cpp 
+    ${WIQ2_SRCDIR_CLIENT}/cl_screen.cpp 
+    ${WIQ2_SRCDIR_CLIENT}/gui_cursor.cpp 
+    ${WIQ2_SRCDIR_CLIENT}/gui_draw.cpp 
+    ${WIQ2_SRCDIR_CLIENT}/gui_events.cpp 
+    ${WIQ2_SRCDIR_CLIENT}/gui_items.cpp 
+    ${WIQ2_SRCDIR_CLIENT}/gui_init.cpp
+    ${WIQ2_SRCDIR_CLIENT}/gui_keys.cpp 
+    ${WIQ2_SRCDIR_CLIENT}/gui_main.cpp 
+    ${WIQ2_SRCDIR_CLIENT}/gui_vars.cpp
+    ${WIQ2_SRCDIR_CLIENT}/sdl_main.cpp 
+    ${WIQ2_SRCDIR_CLIENT}/sdl_glimp.cpp
+    ${WIQ2_SRCDIR_CLIENT}/snd_dma.cpp 
+    ${WIQ2_SRCDIR_CLIENT}/snd_main.cpp
+    ${WIQ2_SRCDIR_CLIENT}/snd_openal.cpp
+    ${WIQ2_SRCDIR_CLIENT}/snd_sdl.cpp
 
-    ${WIQ2_SRCDIR_COMMON}/alias.c
-    ${WIQ2_SRCDIR_COMMON}/cbuf.c 
-    ${WIQ2_SRCDIR_COMMON}/cm_common.c 
-    ${WIQ2_SRCDIR_COMMON}/cm_q2_main.c
-    ${WIQ2_SRCDIR_COMMON}/cm_q2_trace.c
-    ${WIQ2_SRCDIR_COMMON}/cm_q3_main.c
-    ${WIQ2_SRCDIR_COMMON}/cm_q3_trace.c 
-    ${WIQ2_SRCDIR_COMMON}/cm_q3_patch.c 
-    ${WIQ2_SRCDIR_COMMON}/cmd.c 
-    ${WIQ2_SRCDIR_COMMON}/common.c 
-    ${WIQ2_SRCDIR_COMMON}/crc.c 
-    ${WIQ2_SRCDIR_COMMON}/cvar.c 
-    ${WIQ2_SRCDIR_COMMON}/files.c 
-    ${WIQ2_SRCDIR_COMMON}/md4.c 
-    ${WIQ2_SRCDIR_COMMON}/memory.c 
-    ${WIQ2_SRCDIR_COMMON}/net_chan.c 
-    ${WIQ2_SRCDIR_COMMON}/net_msg.c 
-    ${WIQ2_SRCDIR_COMMON}/parse.c
+    ${WIQ2_SRCDIR_COMMON}/alias.cpp
+    ${WIQ2_SRCDIR_COMMON}/cbuf.cpp 
+    ${WIQ2_SRCDIR_COMMON}/cm_common.cpp 
+    ${WIQ2_SRCDIR_COMMON}/cm_q2_main.cpp
+    ${WIQ2_SRCDIR_COMMON}/cm_q2_trace.cpp
+    ${WIQ2_SRCDIR_COMMON}/cm_q3_main.cpp
+    ${WIQ2_SRCDIR_COMMON}/cm_q3_trace.cpp 
+    ${WIQ2_SRCDIR_COMMON}/cm_q3_patch.cpp 
+    ${WIQ2_SRCDIR_COMMON}/cmd.cpp 
+    ${WIQ2_SRCDIR_COMMON}/common.cpp 
+    ${WIQ2_SRCDIR_COMMON}/crc.cpp 
+    ${WIQ2_SRCDIR_COMMON}/cvar.cpp 
+    ${WIQ2_SRCDIR_COMMON}/files.cpp 
+    ${WIQ2_SRCDIR_COMMON}/md4.cpp 
+    ${WIQ2_SRCDIR_COMMON}/memory.cpp 
+    ${WIQ2_SRCDIR_COMMON}/net_chan.cpp 
+    ${WIQ2_SRCDIR_COMMON}/net_msg.cpp 
+    ${WIQ2_SRCDIR_COMMON}/parse.cpp
 
-    ${WIQ2_SRCDIR_RENDERER}/r_math.c
-    ${WIQ2_SRCDIR_RENDERER}/rb_batch.c 
-    ${WIQ2_SRCDIR_RENDERER}/rb_entity.c 
-    ${WIQ2_SRCDIR_RENDERER}/rb_light.c 
-    ${WIQ2_SRCDIR_RENDERER}/rb_math.c 
-    ${WIQ2_SRCDIR_RENDERER}/rb_qgl.c 
-    ${WIQ2_SRCDIR_RENDERER}/rb_render.c 
-    ${WIQ2_SRCDIR_RENDERER}/rb_shadow.c 
-    ${WIQ2_SRCDIR_RENDERER}/rb_state.c 
+    ${WIQ2_SRCDIR_RENDERER}/r_math.cpp
+    ${WIQ2_SRCDIR_RENDERER}/rb_batch.cpp 
+    ${WIQ2_SRCDIR_RENDERER}/rb_entity.cpp 
+    ${WIQ2_SRCDIR_RENDERER}/rb_light.cpp 
+    ${WIQ2_SRCDIR_RENDERER}/rb_math.cpp 
+    ${WIQ2_SRCDIR_RENDERER}/rb_qgl.cpp 
+    ${WIQ2_SRCDIR_RENDERER}/rb_render.cpp 
+    ${WIQ2_SRCDIR_RENDERER}/rb_shadow.cpp 
+    ${WIQ2_SRCDIR_RENDERER}/rb_state.cpp 
 
-    ${WIQ2_SRCDIR_RENDERER}/rf_2d.c 
-    ${WIQ2_SRCDIR_RENDERER}/rf_alias.c 
-    ${WIQ2_SRCDIR_RENDERER}/rf_cull.c 
-    ${WIQ2_SRCDIR_RENDERER}/rf_decal.c 
-    ${WIQ2_SRCDIR_RENDERER}/rf_font.c 
-    ${WIQ2_SRCDIR_RENDERER}/rf_image.c 
-    ${WIQ2_SRCDIR_RENDERER}/rf_init.c 
-    ${WIQ2_SRCDIR_RENDERER}/rf_light.c
-    ${WIQ2_SRCDIR_RENDERER}/rf_main.c 
-    ${WIQ2_SRCDIR_RENDERER}/rf_material.c 
-    ${WIQ2_SRCDIR_RENDERER}/rf_meshbuffer.c 
-    ${WIQ2_SRCDIR_RENDERER}/rf_model.c 
-    ${WIQ2_SRCDIR_RENDERER}/rf_program.c 
-    ${WIQ2_SRCDIR_RENDERER}/rf_sky.c 
-    ${WIQ2_SRCDIR_RENDERER}/rf_sprite.c 
-    ${WIQ2_SRCDIR_RENDERER}/rf_world.c
+    ${WIQ2_SRCDIR_RENDERER}/rf_2d.cpp 
+    ${WIQ2_SRCDIR_RENDERER}/rf_alias.cpp 
+    ${WIQ2_SRCDIR_RENDERER}/rf_cull.cpp 
+    ${WIQ2_SRCDIR_RENDERER}/rf_decal.cpp 
+    ${WIQ2_SRCDIR_RENDERER}/rf_font.cpp 
+    ${WIQ2_SRCDIR_RENDERER}/rf_image.cpp 
+    ${WIQ2_SRCDIR_RENDERER}/rf_init.cpp 
+    ${WIQ2_SRCDIR_RENDERER}/rf_light.cpp
+    ${WIQ2_SRCDIR_RENDERER}/rf_main.cpp 
+    ${WIQ2_SRCDIR_RENDERER}/rf_material.cpp 
+    ${WIQ2_SRCDIR_RENDERER}/rf_meshbuffer.cpp 
+    ${WIQ2_SRCDIR_RENDERER}/rf_model.cpp 
+    ${WIQ2_SRCDIR_RENDERER}/rf_program.cpp 
+    ${WIQ2_SRCDIR_RENDERER}/rf_sky.cpp 
+    ${WIQ2_SRCDIR_RENDERER}/rf_sprite.cpp 
+    ${WIQ2_SRCDIR_RENDERER}/rf_world.cpp
 
-    ${WIQ2_SRCDIR_SERVER}/sv_ccmds.c 
-    ${WIQ2_SRCDIR_SERVER}/sv_ents.c 
-    ${WIQ2_SRCDIR_SERVER}/sv_gameapi.c 
-    ${WIQ2_SRCDIR_SERVER}/sv_init.c 
-    ${WIQ2_SRCDIR_SERVER}/sv_main.c 
-    ${WIQ2_SRCDIR_SERVER}/sv_pmove.c 
-    ${WIQ2_SRCDIR_SERVER}/sv_send.c 
-    ${WIQ2_SRCDIR_SERVER}/sv_user.c 
-    ${WIQ2_SRCDIR_SERVER}/sv_world.c 
+    ${WIQ2_SRCDIR_SERVER}/sv_ccmds.cpp 
+    ${WIQ2_SRCDIR_SERVER}/sv_ents.cpp 
+    ${WIQ2_SRCDIR_SERVER}/sv_gameapi.cpp 
+    ${WIQ2_SRCDIR_SERVER}/sv_init.cpp 
+    ${WIQ2_SRCDIR_SERVER}/sv_main.cpp 
+    ${WIQ2_SRCDIR_SERVER}/sv_pmove.cpp 
+    ${WIQ2_SRCDIR_SERVER}/sv_send.cpp 
+    ${WIQ2_SRCDIR_SERVER}/sv_user.cpp 
+    ${WIQ2_SRCDIR_SERVER}/sv_world.cpp 
 
     ${WIQ2_SRCDIR_SHARED}/byteswap.cpp
     ${WIQ2_SRCDIR_SHARED}/infostrings.cpp 
@@ -484,21 +484,17 @@ set(WIQ2_SRC_ENGINE
 # Append the proper Operating System specific code to the executable file its sources.
 if(UNIX)
     list(APPEND WIQ2_SRC_ENGINE
-        ${WIQ2_SRCDIR_UNIX}/unix_console.c
-        ${WIQ2_SRCDIR_UNIX}/unix_main.c 
-        ${WIQ2_SRCDIR_UNIX}/unix_snd_cd.c 
-        ${WIQ2_SRCDIR_UNIX}/unix_udp.c
+        ${WIQ2_SRCDIR_UNIX}/unix_console.cpp
+        ${WIQ2_SRCDIR_UNIX}/unix_main.cpp 
+        ${WIQ2_SRCDIR_UNIX}/unix_snd_cd.cpp 
+        ${WIQ2_SRCDIR_UNIX}/unix_udp.cpp
     )
 elseif(WIN32)
     list(APPEND WIQ2_SRC_ENGINE 
-        ${WIQ2_SRCDIR_WIN32}/win_console.c 
-        ${WIQ2_SRCDIR_WIN32}/win_glimp.c
-        ${WIQ2_SRCDIR_WIN32}/win_input.c 
-        ${WIQ2_SRCDIR_WIN32}/win_main.c 
-        ${WIQ2_SRCDIR_WIN32}/win_snd.c 
-        ${WIQ2_SRCDIR_WIN32}/win_snd_cd.c 
-        ${WIQ2_SRCDIR_WIN32}/win_sock.c 
-        ${WIQ2_SRCDIR_WIN32}/win_vid.c
+        ${WIQ2_SRCDIR_WIN32}/win_console.cpp 
+        ${WIQ2_SRCDIR_WIN32}/win_main.cpp 
+        ${WIQ2_SRCDIR_WIN32}/win_snd_cd.cpp 
+        ${WIQ2_SRCDIR_WIN32}/win_sock.cpp 
     )
 endif()
 

@@ -116,7 +116,7 @@ void CG_LoadLocations (char *mapName)
 			break;
 
 		// Allocate
-		loc = CG_AllocTag (sizeof (cg_location_t), CGTAG_LOCATION);
+		loc = static_cast<cg_location_t*>(CG_AllocTag (sizeof (cg_location_t), CGTAG_LOCATION));
 		loc->name = CG_TagStrDup (token, CGTAG_LOCATION);
 		Vec3Copy (location, loc->location);
 
@@ -224,7 +224,7 @@ void CG_Say_Preprocessor (void)
 
 					// Check if it will fit
 					if (cmdLen + locLen >= MAX_STRING_CHARS) {
-						Com_DevPrintf (0, "CG_Say_Preprocessor: location expansion aborted, not enough space\n");
+						Com_DevPrintf (PRNT_DEFAULT, "CG_Say_Preprocessor: location expansion aborted, not enough space\n");
 						break;
 					}
 
@@ -242,7 +242,7 @@ void CG_Say_Preprocessor (void)
 		return;
 
 	// Command unknown (shouldn't honestly happen but oh well)
-	Com_Printf (0, "Unknown command \"%s" S_STYLE_RETURN "\"\n", cgi.Cmd_Argv (0));
+	Com_Printf (PRNT_DEFAULT, "Unknown command \"%s" S_STYLE_RETURN "\"\n", cgi.Cmd_Argv (0));
 }
 
 /*
@@ -264,12 +264,12 @@ static void CG_AddLoc_f (void)
 	char	path[MAX_QPATH];
 
 	if (cgi.Cmd_Argc () < 2) {
-		Com_Printf (0, "syntax: addloc <message>\n");
+		Com_Printf (PRNT_DEFAULT, "syntax: addloc <message>\n");
 		return;
 	}
 
 	if (!cg_locFileName[0]) {
-		Com_Printf (0, "CG_AddLoc_f: No map loaded!\n");
+		Com_Printf (PRNT_DEFAULT, "CG_AddLoc_f: No map loaded!\n");
 		return;
 	}
 
@@ -290,7 +290,7 @@ static void CG_AddLoc_f (void)
 	fclose (f);
 
 	// Tell them
-	Com_Printf (0, "Saved location (x%i y%i z%i): \"%s\"\n",
+	Com_Printf (PRNT_DEFAULT, "Saved location (x%i y%i z%i): \"%s\"\n",
 		(int)cg.refDef.viewOrigin[0],
 		(int)cg.refDef.viewOrigin[1],
 		(int)cg.refDef.viewOrigin[2],

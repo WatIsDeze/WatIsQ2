@@ -262,7 +262,7 @@ static void CG_Skins_f (void)
 		if (!cg.configStrings[CS_PLAYERSKINS+i][0])
 			continue;
 
-		Com_Printf (0, "client %i: %s\n", i, cg.configStrings[CS_PLAYERSKINS+i]); 
+		Com_Printf (PRNT_DEFAULT, "client %i: %s\n", i, cg.configStrings[CS_PLAYERSKINS+i]); 
 		cgi.R_UpdateScreen ();
 		cgi.Sys_SendKeyEvents ();	// pump message loop
 		CG_ParseClientinfo (i);

@@ -558,7 +558,7 @@ void *Sys_LoadLibrary (libType_t libType, void *parms)
 	char		name[MAX_OSPATH];
 	char		cwd[MAX_OSPATH];
 	char		*path;
-
+	
 	// Sanity check
 	if (libType < 0 || libType > LIB_MAX)
 		Com_Error (ERR_FATAL, "Sys_UnloadLibrary: Bad libType (%i)", libType);
