@@ -173,7 +173,7 @@ static qBool PlayerConfig_ScanDirectories (void)
 			continue;
 
 		// Copy valid skins to list
-		modelSkins = CG_AllocTag (sizeof (char *) * (numModelSkins + 1), CGTAG_MENU);
+		modelSkins = static_cast<char**>(CG_AllocTag (sizeof (char *) * (numModelSkins + 1), CGTAG_MENU));
 
 		for (j=0, numModelSkins=0 ; j<numSkins ; j++) {
 			if (strstr (skinList[j], "_i.pcx"))

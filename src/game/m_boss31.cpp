@@ -82,7 +82,7 @@ void jorg_death_hit(edict_t *self);
 
 mframe_t jorg_frames_stand []=
 {
-	ai_stand, 0, jorg_idle,
+	{ ai_stand, 0, jorg_idle },
 	{ ai_stand, 0, NULL },
 	{ ai_stand, 0, NULL },
 	{ ai_stand, 0, NULL },
@@ -115,12 +115,12 @@ mframe_t jorg_frames_stand []=
 	{ ai_stand, 0, NULL },
 	{ ai_stand, 0, NULL },
 	{ ai_stand, 0, NULL },
-	ai_stand, 19, NULL,
-	ai_stand, 11, jorg_step_left,
+	{ ai_stand, 19, NULL },
+	{ ai_stand, 11, jorg_step_left },
 	{ ai_stand, 0, NULL },
 	{ ai_stand, 0, NULL },
-	ai_stand, 6, NULL,
-	ai_stand, 9, jorg_step_right,
+	{ ai_stand, 6, NULL },
+	{ ai_stand, 9, jorg_step_right },
 	{ ai_stand, 0, NULL },		// 40
 	{ ai_stand, 0, NULL },
 	{ ai_stand, 0, NULL },
@@ -128,11 +128,11 @@ mframe_t jorg_frames_stand []=
 	{ ai_stand, 0, NULL },
 	{ ai_stand, 0, NULL },
 	{ ai_stand, 0, NULL },
-	ai_stand, -2, NULL,
-	ai_stand, -17, jorg_step_left,
+	{ ai_stand, -2, NULL },
+	{ ai_stand, -17, jorg_step_left },
 	{ ai_stand, 0, NULL },
-	ai_stand, -12, NULL,		// 50
-	ai_stand, -14, jorg_step_right	// 51
+	{ ai_stand, -12, NULL },		// 50
+	{ ai_stand, -14, jorg_step_right }		// 51
 };
 mmove_t	jorg_move_stand = {FRAME_stand01, FRAME_stand51, jorg_frames_stand, NULL};
 
@@ -165,20 +165,20 @@ void jorg_stand (edict_t *self)
 
 mframe_t jorg_frames_run [] =
 {
-	ai_run, 17,	jorg_step_left,
-	ai_run, 0,	NULL,
-	ai_run, 0,	NULL,
-	ai_run, 0,	NULL,
-	ai_run, 12,	NULL,
-	ai_run, 8,	NULL,
-	ai_run, 10,	NULL,
-	ai_run, 33,	jorg_step_right,
-	ai_run, 0,	NULL,
-	ai_run, 0,	NULL,
-	ai_run, 0,	NULL,
-	ai_run, 9,	NULL,
-	ai_run, 9,	NULL,
-	ai_run, 9,	NULL
+	{ ai_run, 17,	jorg_step_left },
+	{ ai_run, 0,	NULL },
+	{ ai_run, 0,	NULL },
+	{ ai_run, 0,	NULL },
+	{ ai_run, 12,	NULL },
+	{ ai_run, 8,	NULL },
+	{ ai_run, 10,	NULL },
+	{ ai_run, 33,	jorg_step_right },
+	{ ai_run, 0,	NULL },
+	{ ai_run, 0,	NULL },
+	{ ai_run, 0,	NULL },
+	{ ai_run, 9,	NULL },
+	{ ai_run, 9,	NULL },
+	{ ai_run, 9,	NULL }
 };
 mmove_t	jorg_move_run = {FRAME_walk06, FRAME_walk19, jorg_frames_run, NULL};
 
@@ -188,41 +188,41 @@ mmove_t	jorg_move_run = {FRAME_walk06, FRAME_walk19, jorg_frames_run, NULL};
 
 mframe_t jorg_frames_start_walk [] =
 {
-	ai_walk,	5,	NULL,
-	ai_walk,	6,	NULL,
-	ai_walk,	7,	NULL,
-	ai_walk,	9,	NULL,
-	ai_walk,	15,	NULL
+	{ ai_walk,	5,	NULL },
+	{ ai_walk,	6,	NULL },
+	{ ai_walk,	7,	NULL },
+	{ ai_walk,	9,	NULL },
+	{ ai_walk,	15,	NULL }
 };
 mmove_t jorg_move_start_walk = {FRAME_walk01, FRAME_walk05, jorg_frames_start_walk, NULL};
 
 mframe_t jorg_frames_walk [] =
 {
-	ai_walk, 17,	NULL,
-	ai_walk, 0,	NULL,
-	ai_walk, 0,	NULL,
-	ai_walk, 0,	NULL,
-	ai_walk, 12,	NULL,
-	ai_walk, 8,	NULL,
-	ai_walk, 10,	NULL,
-	ai_walk, 33,	NULL,
-	ai_walk, 0,	NULL,
-	ai_walk, 0,	NULL,
-	ai_walk, 0,	NULL,
-	ai_walk, 9,	NULL,
-	ai_walk, 9,	NULL,
-	ai_walk, 9,	NULL
+	{ ai_walk, 17,	NULL },
+	{ ai_walk, 0,	NULL },
+	{ ai_walk, 0,	NULL },
+	{ ai_walk, 0,	NULL },
+	{ ai_walk, 12,	NULL },
+	{ ai_walk, 8,	NULL },
+	{ ai_walk, 10,	NULL },
+	{ ai_walk, 33,	NULL },
+	{ ai_walk, 0,	NULL },
+	{ ai_walk, 0,	NULL },
+	{ ai_walk, 0,	NULL },
+	{ ai_walk, 9,	NULL },
+	{ ai_walk, 9,	NULL },
+	{ ai_walk, 9,	NULL }
 };
 mmove_t	jorg_move_walk = {FRAME_walk06, FRAME_walk19, jorg_frames_walk, NULL};
 
 mframe_t jorg_frames_end_walk [] =
 {
-	ai_walk,	11,	NULL,
-	ai_walk,	0,	NULL,
-	ai_walk,	0,	NULL,
-	ai_walk,	0,	NULL,
-	ai_walk,	8,	NULL,
-	ai_walk,	-8,	NULL
+	{ ai_walk,	11,	NULL },
+	{ ai_walk,	0,	NULL },
+	{ ai_walk,	0,	NULL },
+	{ ai_walk,	0,	NULL },
+	{ ai_walk,	8,	NULL },
+	{ ai_walk,	-8,	NULL }
 };
 mmove_t jorg_move_end_walk = {FRAME_walk20, FRAME_walk25, jorg_frames_end_walk, NULL};
 
