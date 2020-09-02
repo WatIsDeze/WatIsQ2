@@ -64,7 +64,7 @@ uint32		Com_HashGenericFast (const char *name, const int hashSize);
 // client/server interactions
 void		Com_BeginRedirect (int target, char *buffer, int bufferSize, void (*flush)(int target, char *buffer));
 void		Com_EndRedirect (void);
-void		Com_ConPrint (comPrint_t flags, char *string); // Does not evaluate args
+void		Com_ConPrint (int flags, char *string); // Does not evaluate args
 void		Com_Quit (qBool error);
 
 // client/server states

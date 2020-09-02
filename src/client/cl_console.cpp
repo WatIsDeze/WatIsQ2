@@ -205,7 +205,7 @@ All console printing must go through this in order to be logged to disk
 If no console is visible, the text will appear at the top of the game window
 ================
 */
-static void CL_PrintToConsole (console_t *console, comPrint_t flags, const char *txt)
+static void CL_PrintToConsole (console_t *console, int flags, const char *txt)
 {
 	int			y, l;
 	int			orMask;
@@ -316,7 +316,7 @@ static void CL_PrintToConsole (console_t *console, comPrint_t flags, const char 
 	}
 }
 
-void CL_ConsolePrintf (comPrint_t flags, const char *txt)
+void CL_ConsolePrintf (int flags, const char *txt)
 {
 	// Error/warning color coding
 	if (flags & PRNT_ERROR)
