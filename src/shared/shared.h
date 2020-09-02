@@ -713,6 +713,13 @@ qBool	Info_Validate (char *s);
  
 ==============================================================================
 */
+extern float		(*LittleFloat) (float f);
+extern int			(*LittleLong) (int l);
+extern int16		(*LittleShort) (int16 s);
+extern float		(*BigFloat) (float f);
+extern int			(*BigLong) (int l);
+extern int16		(*BigShort) (int16 s);
+
 
 void		Swap_Init (void);
 
@@ -770,8 +777,8 @@ typedef enum {
 	PRNT_CONSOLE			= 1 << 2,
 	PRNT_CHATHUD			= 1 << 3
 } comPrint_t;
-void	Com_Printf (comPrint_t flags, char *fmt, ...);
-void	Com_DevPrintf (comPrint_t flags, char *fmt, ...);
+void	Com_Printf (int flags, char *fmt, ...);
+void	Com_DevPrintf (int flags, char *fmt, ...);
 
 // Com_Error
 typedef enum {

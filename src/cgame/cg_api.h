@@ -99,8 +99,8 @@ typedef struct cgImport_s {
 	char		*(*Cmd_Argv) (int arg);
 
 	void		(*Com_Error) (comError_t code, char *text);
-	void		(*Com_Printf) (comPrint_t flags, char *text);
-	void		(*Com_DevPrintf) (comPrint_t flags, char *text);
+	void		(*Com_Printf) (int flags, char *text);
+	void		(*Com_DevPrintf) (int flags, char *text);
 	caState_t	(*Com_ClientState) (void);
 	ssState_t	(*Com_ServerState) (void);
 

@@ -402,7 +402,7 @@ static void CGI_Com_Error (comError_t code, char *text)
 CGI_Com_Printf
 ==================
 */
-static void CGI_Com_Printf (comPrint_t flags, char *text)
+static void CGI_Com_Printf (int flags, char *text)
 {
 	Com_ConPrint (flags, text);
 }
@@ -413,7 +413,7 @@ static void CGI_Com_Printf (comPrint_t flags, char *text)
 CGI_Com_DevPrintf
 ==================
 */
-static void CGI_Com_DevPrintf (comPrint_t flags, char *text)
+static void CGI_Com_DevPrintf (int flags, char *text)
 {
 	if (!cg_developer->intVal && !developer->intVal)
 		return;
