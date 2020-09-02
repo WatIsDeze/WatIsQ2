@@ -270,8 +270,8 @@ qBool UI_ParseServerInfo (char *adr, char *info)
 	server->statusPacket = false;
 
 	// print information
-	Com_Printf (0, "%s %s ", server->hostName, server->mapName);
-	Com_Printf (0, "%i/%i %ims\n", server->numPlayers, server->maxPlayers, server->ping);
+	Com_Printf (PRNT_DEFAULT, "%s %s ", server->hostName, server->mapName);
+	Com_Printf (PRNT_DEFAULT, "%i/%i %ims\n", server->numPlayers, server->maxPlayers, server->ping);
 
 	// refresh menu
 	// do after printing so that sorting doesn't throw the pointers off
@@ -356,8 +356,8 @@ qBool UI_ParseServerStatus (char *adr, char *info)
 	server->statusPacket = true;
 
 	// Print information
-	Com_Printf (0, "%s %s ", server->hostName, server->mapName);
-	Com_Printf (0, "%i/%i %ims\n", server->numPlayers, server->maxPlayers, server->ping);
+	Com_Printf (PRNT_DEFAULT, "%s %s ", server->hostName, server->mapName);
+	Com_Printf (PRNT_DEFAULT, "%i/%i %ims\n", server->numPlayers, server->maxPlayers, server->ping);
 
 	// Refresh menu
 	// Do after printing so that sorting doesn't throw the pointers off

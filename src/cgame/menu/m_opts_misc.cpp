@@ -100,19 +100,6 @@ static void MiscMenu_Init (void)
 		0
 	};
 
-	static char *screenshot_names[] = {
-		"tga",
-		"png",
-		0
-	};
-
-	static char *shadow_names[] = {
-		"off",
-		"normal",
-		"stencil",
-		0
-	};
-
 	UI_StartFramework (&m_miscMenu.frameWork, FWF_CENTERHEIGHT);
 
 	m_miscMenu.banner.generic.type		= UITYPE_IMAGE;

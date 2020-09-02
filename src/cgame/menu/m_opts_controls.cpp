@@ -176,12 +176,12 @@ static void M_UnbindCommand (char *command)
 	l = static_cast<int>(strlen (command));
 
 	for (j=0 ; j<K_MAXKEYS ; j++) {
-		b = cgi.Key_GetBindingBuf (static_cast<int>(j));
+		b = cgi.Key_GetBindingBuf (static_cast<keyNum_t>(j));
 		if (!b)
 			continue;
 
 		if (!Q_strnicmp (b, command, l))
-			cgi.Key_SetBinding (static_cast<int>(j), "");
+			cgi.Key_SetBinding (static_cast<keyNum_t>(j), "");
 	}
 }
 
@@ -190,17 +190,17 @@ static void M_FindKeysForCommand (char *command, keyNum_t *twokeys)
 	int		count, j, l;
 	char	*b;
 
-	twokeys[0] = twokeys[1] = -1;
+	twokeys[0] = twokeys[1] = static_cast<keyNum_t>(-1);
 	l = (int)strlen (command);
 	count = 0;
 
 	for (j=0 ; j<K_MAXKEYS ; j++) {
-		b = cgi.Key_GetBindingBuf (j);
+		b = cgi.Key_GetBindingBuf (static_cast<keyNum_t>(j));
 		if (!b)
 			continue;
 
 		if (!Q_stricmp (b, command)) {
-			twokeys[count++] = j;
+			twokeys[count++] = static_cast<keyNum_t>(j);
 			if (count >= 2)
 				break;
 		}
@@ -214,7 +214,7 @@ static void KeyCursorDrawFunc (uiFrameWork_t *menu)
 
 	cursor = (uiState.cursorLock) ? '=' : ((int)(cg.realTime/250)&1) + 12;
 
-	item = UI_ItemAtCursor (menu);
+	item = static_cast<uiCommon_t*>(UI_ItemAtCursor(menu));
 	if (item->flags & UIF_LEFT_JUSTIFY)
 		cgi.R_DrawChar (NULL, menu->x + item->x + LCOLUMN_OFFSET + item->cursorOffset, menu->y + item->y, UISCALE_TYPE (item->flags), UISCALE_TYPE (item->flags), 0, cursor, Q_colorWhite);
 	else if (item->flags & UIF_CENTERED)
