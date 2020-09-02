@@ -100,18 +100,6 @@ static void MiscMenu_Init (void)
 		0
 	};
 
-	static char *noyes_names[] = {
-		"yes",
-		"no",
-		0
-	};
-
-	static char *onoff_names[] = {
-		"off",
-		"on",
-		0
-	};
-
 	static char *screenshot_names[] = {
 		"tga",
 		"png",

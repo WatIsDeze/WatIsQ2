@@ -55,9 +55,9 @@ typedef struct m_startServerMenu_s {
 
 static m_startServerMenu_t m_startServerMenu;
 
-static void DMFlagsFunc (void *_self)
+static void DMFlagsFunc (void *self)
 {
-	self = _self;
+	self = self;
 
 	if (m_startServerMenu.rules_box.curValue == 1)
 		return;
@@ -67,7 +67,7 @@ static void DMFlagsFunc (void *_self)
 
 static void RulesChangeFunc (void *self)
 {
-	self = _self;
+	self = self;
 
 	// DM
 	if (m_startServerMenu.rules_box.curValue == 0) {
@@ -90,7 +90,7 @@ static void RulesChangeFunc (void *self)
 	}
 }
 
-static void StartServerActionFunc (void *_self)
+static void StartServerActionFunc (void *self)
 {
 	char	startmap[1024];
 	int		timelimit;
@@ -98,7 +98,7 @@ static void StartServerActionFunc (void *_self)
 	int		maxclients;
 	char	*spot;
 
-	self = _self;
+	self = self;
 	Q_strncpyz (startmap, strchr (m_startServerMenu.mapNames[m_startServerMenu.startmap_list.curValue], '\n') + 1, sizeof (startmap));
 
 	maxclients  = atoi (m_startServerMenu.maxclients_field.buffer);

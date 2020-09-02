@@ -173,15 +173,15 @@ static void M_UnbindCommand (char *command)
 	int		j, l;
 	char	*b;
 
-	l = (int)strlen (command);
+	l = static_cast<int>(strlen (command));
 
 	for (j=0 ; j<K_MAXKEYS ; j++) {
-		b = cgi.Key_GetBindingBuf (j);
+		b = cgi.Key_GetBindingBuf (static_cast<int>(j));
 		if (!b)
 			continue;
 
 		if (!Q_strnicmp (b, command, l))
-			cgi.Key_SetBinding (j, "");
+			cgi.Key_SetBinding (static_cast<int>(j), "");
 	}
 }
 
