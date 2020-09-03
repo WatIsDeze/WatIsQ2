@@ -766,7 +766,7 @@ static int FS_OpenFileRead (fsHandleIndex_t *handle)
 					if (fs_developer->intVal)
 						Com_Printf (0, "FS_OpenFileRead: pkz file %s : %s\n", package->name, handle->name);
 
-					handle->pkzFile = unzOpen (package->name);
+					handle->pkzFile = (unzFile*)unzOpen (package->name);
 					if (handle->pkzFile) {
 						if (unzSetOffset (handle->pkzFile, searchFile->filePos) == UNZ_OK) {
 							if (unzOpenCurrentFile (handle->pkzFile) == UNZ_OK)
@@ -925,7 +925,7 @@ int FS_LoadFile (char *path, void **buffer, char *terminate)
 		termLen = strlen (terminate);
 	else
 		termLen = 0;
-	buf = Mem_PoolAlloc (fileLen+termLen, com_fileSysPool, 0);
+	buf = reinterpret_cast<byte*>(Mem_PoolAlloc (fileLen+termLen, com_fileSysPool, 0));
 	*buffer = buf;
 
 	// Copy the file data to a local buffer
@@ -1037,8 +1037,8 @@ mPack_t *FS_LoadPAK (char *fileName, qBool complain)
 	fread (info, 1, header.dirLen, handle);
 
 	// Create pak
-	outPack = Mem_PoolAlloc (sizeof (mPack_t), com_fileSysPool, 0);
-	outPackFile = Mem_PoolAlloc (sizeof (mPackFile_t) * numFiles, com_fileSysPool, 0);
+	outPack = reinterpret_cast<mPack_t*>(Mem_PoolAlloc (sizeof (mPack_t), com_fileSysPool, 0));
+	outPackFile = reinterpret_cast<mPackFile_t*>(Mem_PoolAlloc (sizeof (mPackFile_t) * numFiles, com_fileSysPool, 0));
 
 	Q_strncpyz (outPack->name, fileName, sizeof (outPack->name));
 	outPack->pak = handle;
@@ -1084,7 +1084,7 @@ mPack_t *FS_LoadPKZ (char *fileName, qBool complain)
 	uint32			hashValue;
 
 	// Open
-	handle = unzOpen (fileName);
+	handle = (unzFile*)unzOpen (fileName);
 	if (!handle) {
 		if (complain)
 			Com_Printf (PRNT_ERROR, "FS_LoadPKZ: couldn't open \"%s\"\n", fileName);
@@ -1109,8 +1109,8 @@ mPack_t *FS_LoadPKZ (char *fileName, qBool complain)
 	}
 
 	// Create pak
-	outPkz = Mem_PoolAlloc (sizeof (mPack_t), com_fileSysPool, 0);
-	outPkzFile = Mem_PoolAlloc (sizeof (mPackFile_t) * numFiles, com_fileSysPool, 0);
+	outPkz = reinterpret_cast<mPack_t*>(Mem_PoolAlloc (sizeof (mPack_t), com_fileSysPool, 0));
+	outPkzFile = reinterpret_cast<mPackFile_t*>(Mem_PoolAlloc (sizeof (mPackFile_t) * numFiles, com_fileSysPool, 0));
 
 	Q_strncpyz (outPkz->name, fileName, sizeof (outPkz->name));
 	outPkz->pkz = handle;
@@ -1166,7 +1166,7 @@ static void FS_AddGameDirectory (char *dir, char *gamePath)
 	Q_strncpyz (fs_gameDir, dir, sizeof (fs_gameDir));
 
 	// Add the directory to the search path
-	search = Mem_PoolAlloc (sizeof (fsPath_t), com_fileSysPool, 0);
+	search = reinterpret_cast<fsPath_t*>(Mem_PoolAlloc (sizeof (fsPath_t), com_fileSysPool, 0));
 	Q_strncpyz (search->pathName, dir, sizeof (search->pathName));
 	Q_strncpyz (search->gamePath, gamePath, sizeof (search->gamePath));
 	search->next = fs_searchPaths;
@@ -1178,7 +1178,7 @@ static void FS_AddGameDirectory (char *dir, char *gamePath)
 		pak = FS_LoadPAK (searchName, false);
 		if (!pak)
 			continue;
-		search = Mem_PoolAlloc (sizeof (fsPath_t), com_fileSysPool, 0);
+		search = reinterpret_cast<fsPath_t*>(Mem_PoolAlloc (sizeof (fsPath_t), com_fileSysPool, 0));
 		search->package = pak;
 		search->next = fs_searchPaths;
 		fs_searchPaths = search;
@@ -1199,7 +1199,7 @@ static void FS_AddGameDirectory (char *dir, char *gamePath)
 			pak = FS_LoadPAK (packFiles[i], true);
 			if (!pak)
 				continue;
-			search = Mem_PoolAlloc (sizeof (fsPath_t), com_fileSysPool, 0);
+			search = reinterpret_cast<fsPath_t*>(Mem_PoolAlloc (sizeof (fsPath_t), com_fileSysPool, 0));
 			Q_strncpyz (search->pathName, dir, sizeof (search->pathName));
 			Q_strncpyz (search->gamePath, gamePath, sizeof (search->gamePath));
 			search->package = pak;
@@ -1217,7 +1217,7 @@ static void FS_AddGameDirectory (char *dir, char *gamePath)
 		pkz = FS_LoadPKZ (packFiles[i], true);
 		if (!pkz)
 			continue;
-		search = Mem_PoolAlloc (sizeof (fsPath_t), com_fileSysPool, 0);
+		search = reinterpret_cast<fsPath_t*>(Mem_PoolAlloc (sizeof (fsPath_t), com_fileSysPool, 0));
 		Q_strncpyz (search->pathName, dir, sizeof (search->pathName));
 		Q_strncpyz (search->gamePath, gamePath, sizeof (search->gamePath));
 		search->package = pkz;
@@ -1234,7 +1234,7 @@ static void FS_AddGameDirectory (char *dir, char *gamePath)
 		pkz = FS_LoadPKZ (packFiles[i], true);
 		if (!pkz)
 			continue;
-		search = Mem_PoolAlloc (sizeof (fsPath_t), com_fileSysPool, 0);
+		search = reinterpret_cast<fsPath_t*>(Mem_PoolAlloc (sizeof (fsPath_t), com_fileSysPool, 0));
 		Q_strncpyz (search->pathName, dir, sizeof (search->pathName));
 		Q_strncpyz (search->gamePath, gamePath, sizeof (search->gamePath));
 		search->package = pkz;
@@ -1330,7 +1330,7 @@ void FS_SetGamedir (char *dir, qBool firstTime)
 
 	// Store a copy of the search paths inverted for FS_FindFiles
 	for (fs_numInvSearchPaths=0, next=fs_searchPaths ; next ; next=next->next, fs_numInvSearchPaths++);
-	fs_invSearchPaths = Mem_PoolAlloc (sizeof (fsPath_t) * fs_numInvSearchPaths, com_fileSysPool, 0);
+	fs_invSearchPaths = reinterpret_cast<fsPath_t**>(Mem_PoolAlloc (sizeof (fsPath_t) * fs_numInvSearchPaths, com_fileSysPool, 0));
 	for (i=fs_numInvSearchPaths-1, next=fs_searchPaths ; ; next=next->next)
 	{
 		fs_invSearchPaths[i] = next;
@@ -1610,7 +1610,7 @@ static void FS_Link_f (void)
 	}
 
 	// Create a new link
-	l = Mem_PoolAlloc (sizeof (*l), com_fileSysPool, 0);
+	l = reinterpret_cast<fsLink_t*>(Mem_PoolAlloc (sizeof (*l), com_fileSysPool, 0));
 	l->from = Mem_PoolStrDup (Cmd_Argv (1), com_fileSysPool, 0);
 	l->fromLength = strlen (l->from);
 	l->to = Mem_PoolStrDup (Cmd_Argv (2), com_fileSysPool, 0);
@@ -1709,9 +1709,11 @@ void FS_Init (void)
 
 	// Load pak files
 	if (fs_cddir->string[0])
-		FS_AddGameDirectory (Q_VarArgs ("%s/"BASE_MODDIRNAME, fs_cddir->string), BASE_MODDIRNAME);
+		FS_AddGameDirectory (Q_VarArgs ("%s/%s", fs_cddir->string, BASE_MODDIRNAME), BASE_MODDIRNAME);
+		//FS_AddGameDirectory (Q_VarArgs ("%s/"BASE_MODDIRNAME, fs_cddir->string), BASE_MODDIRNAME);
 
-	FS_AddGameDirectory (Q_VarArgs ("%s/"BASE_MODDIRNAME, fs_basedir->string), BASE_MODDIRNAME);
+	FS_AddGameDirectory (Q_VarArgs ("%s/%s", fs_basedir->string, BASE_MODDIRNAME), BASE_MODDIRNAME);
+	//FS_AddGameDirectory (Q_VarArgs ("%s/"BASE_MODDIRNAME, fs_basedir->string), BASE_MODDIRNAME);
 
 	// Any set gamedirs will be freed up to here
 	fs_baseSearchPath = fs_searchPaths;
@@ -1723,7 +1725,7 @@ void FS_Init (void)
 	else {
 		// Store a copy of the search paths inverted for FS_FindFiles
 		for (fs_numInvSearchPaths=0, next=fs_searchPaths ; next ; next=next->next, fs_numInvSearchPaths++);
-		fs_invSearchPaths = Mem_PoolAlloc (sizeof (fsPath_t) * fs_numInvSearchPaths, com_fileSysPool, 0);
+		fs_invSearchPaths = reinterpret_cast<fsPath_t**>(Mem_PoolAlloc (sizeof (fsPath_t) * fs_numInvSearchPaths, com_fileSysPool, 0));
 		for (i=fs_numInvSearchPaths-1, next=fs_searchPaths ; ; next=next->next)
 		{
 			fs_invSearchPaths[i] = next;

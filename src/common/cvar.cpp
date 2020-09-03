@@ -864,7 +864,7 @@ static void Cvar_List_f (void)
 		return;
 	}
 
-	sortedList = Mem_PoolAlloc (matching * sizeof (cVar_t), com_cvarSysPool, 0);
+	sortedList = reinterpret_cast<cVar_t*>(Mem_PoolAlloc (matching * sizeof (cVar_t), com_cvarSysPool, 0));
 	for (matching=0, i=0, var=com_cvarList ; i<com_numCvars ; var++, i++) {
 		if (!Q_WildcardMatch (wildCard, var->name, 1))
 			continue;

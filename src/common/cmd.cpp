@@ -304,7 +304,7 @@ void Cmd_ExecuteString (char *text)
 		return;		// no tokens
 
 	// Check functions
-	cmd = Cmd_Exists (com_cmdArgv[0]);
+	cmd = reinterpret_cast<cmdFunc_t*>(Cmd_Exists (com_cmdArgv[0]));
 	if (cmd) {
 		if (!cmd->function) {
 			// Forward to server command
@@ -572,7 +572,7 @@ static void Cmd_List_f (void) {
 		return;
 	}
 
-	sortedList = Mem_PoolAlloc (matching * sizeof (cmdFunc_t), com_cmdSysPool, 0);
+	sortedList = reinterpret_cast<cmdFunc_t*>(Mem_PoolAlloc (matching * sizeof (cmdFunc_t), com_cmdSysPool, 0));
 	for (matching=0, longest=0, c=0, cmd=com_cmdFuncList ; c<com_numCmdFuncs ; cmd++, c++) {
 		if (!Q_WildcardMatch (wildCard, cmd->name, 1))
 			continue;

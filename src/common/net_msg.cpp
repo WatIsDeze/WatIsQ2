@@ -120,7 +120,7 @@ void MSG_WriteByte (netMsg_t *dest, int c)
 
 	assert (!(c < 0 || c > 255));
 
-	buf = MSG_GetWriteSpace (dest, 1);
+	buf = reinterpret_cast<byte*>(MSG_GetWriteSpace (dest, 1));
 	buf[0] = c;
 }
 
@@ -136,7 +136,7 @@ void MSG_WriteChar (netMsg_t *dest, int c)
 
 	assert (!(c < -128 || c > 127));
 
-	buf = MSG_GetWriteSpace (dest, 1);
+	buf = reinterpret_cast<byte*>(MSG_GetWriteSpace (dest, 1));
 	buf[0] = c;
 }
 
@@ -434,7 +434,7 @@ void MSG_WriteInt3 (netMsg_t *dest, int c)
 {
 	byte	*buf;
 
-	buf = MSG_GetWriteSpace (dest, 3);
+	buf = reinterpret_cast<byte*>(MSG_GetWriteSpace (dest, 3));
 	buf[0] = c&0xff;
 	buf[1] = (c>>8)&0xff;
 	buf[2] = (c>>16)&0xff;
@@ -450,7 +450,7 @@ void MSG_WriteLong (netMsg_t *dest, int c)
 {
 	byte	*buf;
 
-	buf = MSG_GetWriteSpace (dest, 4);
+	buf = reinterpret_cast<byte*>(MSG_GetWriteSpace (dest, 4));
 	buf[0] = c&0xff;
 	buf[1] = (c>>8)&0xff;
 	buf[2] = (c>>16)&0xff;
@@ -479,7 +479,7 @@ void MSG_WriteShort (netMsg_t *dest, int c)
 {
 	byte	*buf;
 
-	buf = MSG_GetWriteSpace (dest, 2);
+	buf = reinterpret_cast<byte*>(MSG_GetWriteSpace (dest, 2));
 	buf[0] = c&0xff;
 	buf[1] = c>>8;
 }
@@ -493,7 +493,7 @@ MSG_WriteString
 void MSG_WriteString (netMsg_t *dest, char *s)
 {
 	if (!s)
-		MSG_WriteRaw (dest, "", 1);
+		MSG_WriteRaw (dest, (void*)"", 1);
 	else
 		MSG_WriteRaw (dest, s, (int)strlen(s)+1);
 }

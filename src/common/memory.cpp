@@ -331,7 +331,7 @@ void *_Mem_Alloc (size_t size, struct memPool_s *pool, const int tagNum, const c
 
 	// Add header and round to cacheline
 	size = (size + sizeof (memBlock_t) + sizeof (memBlockFoot_t) + 31) & ~31;
-	mem = calloc (1, size);
+	mem = reinterpret_cast<memBlock_t*>(calloc (1, size));
 
 	if (!mem)
 		Com_Error (ERR_FATAL, "Mem_Alloc: failed on allocation of %i bytes\n" "alloc: %s:#%i", size, fileName, fileLine);
@@ -381,7 +381,7 @@ char *_Mem_PoolStrDup (const char *in, struct memPool_s *pool, const int tagNum,
 {
 	char	*out;
 
-	out = _Mem_Alloc ((size_t)(strlen (in) + 1), pool, tagNum, fileName, fileLine);
+	out = reinterpret_cast<char*>(_Mem_Alloc ((size_t)(strlen (in) + 1), pool, tagNum, fileName, fileLine));
 	strcpy (out, in);
 
 	return out;

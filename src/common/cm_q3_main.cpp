@@ -548,7 +548,7 @@ static void CM_Q3BSP_LoadVertexes (dQ3BspLump_t *l)
 	int				i;
 
 	// Check lump size
-	in = (void *)(cm_q3_mapBuffer + l->fileOfs);
+	in = reinterpret_cast<dQ3BspVertex_t*>(cm_q3_mapBuffer + l->fileOfs);
 	if (l->fileLen % sizeof (*in))
 		Com_Error (ERR_DROP, "CM_Q3BSP_LoadVertexes: funny lump size");
 
@@ -556,7 +556,7 @@ static void CM_Q3BSP_LoadVertexes (dQ3BspLump_t *l)
 	cm_q3_numVertexes = l->fileLen / sizeof (*in);
 	if (cm_q3_numVertexes > MAX_Q3BSP_CM_VERTEXES)
 		Com_Error (ERR_DROP, "CM_Q3BSP_LoadVertexes: Map has too many vertexes");
-	cm_q3_mapVerts = out = Mem_Alloc (cm_q3_numVertexes * sizeof (*out));
+	cm_q3_mapVerts = out = reinterpret_cast<vec4_t*>(Mem_Alloc (cm_q3_numVertexes * sizeof (*out)));
 
 	// Byte swap
 	for (i=0 ; i<cm_q3_numVertexes ; i++, in++) {
@@ -579,7 +579,7 @@ static void CM_Q3BSP_LoadFaces (dQ3BspLump_t *l)
 	int				i;
 
 	// Check lump size
-	in = (void *)(cm_q3_mapBuffer + l->fileOfs);
+	in = reinterpret_cast<dQ3BspFace_t*>(cm_q3_mapBuffer + l->fileOfs);
 	if (l->fileLen % sizeof (*in))
 		Com_Error (ERR_DROP, "CM_Q3BSP_LoadFaces: funny lump size");
 
@@ -587,7 +587,7 @@ static void CM_Q3BSP_LoadFaces (dQ3BspLump_t *l)
 	cm_q3_numFaces = l->fileLen / sizeof (*in);
 	if (cm_q3_numFaces > MAX_Q3BSP_CM_FACES)
 		Com_Error (ERR_DROP, "CM_Q3BSP_LoadFaces: Map has too many faces");
-	cm_q3_mapFaces = out = Mem_Alloc (cm_q3_numFaces * sizeof (*out));
+	cm_q3_mapFaces = out = reinterpret_cast<cface_t*>(Mem_Alloc (cm_q3_numFaces * sizeof (*out)));
 
 	// Byte swap
 	for (i=0 ; i<cm_q3_numFaces ; i++, in++, out++) {
@@ -615,7 +615,7 @@ static void CM_Q3BSP_LoadLeafFaces (dQ3BspLump_t *l)
 	int		*out;
 
 	// Check lump size
-	in = (void *)(cm_q3_mapBuffer + l->fileOfs);
+	in = reinterpret_cast<int*>(cm_q3_mapBuffer + l->fileOfs);
 	if (l->fileLen % sizeof (*in))
 		Com_Error (ERR_DROP, "CM_Q3BSP_LoadLeafFaces: funny lump size");
 
@@ -623,7 +623,7 @@ static void CM_Q3BSP_LoadLeafFaces (dQ3BspLump_t *l)
 	cm_q3_numLeafFaces = l->fileLen / sizeof(*in);
 	if (cm_q3_numLeafFaces > MAX_Q3BSP_CM_LEAFFACES) 
 		Com_Error (ERR_DROP, "CM_Q3BSP_LoadLeafFaces: Map has too many leaffaces"); 
-	cm_q3_leafFaces = out = Mem_Alloc (cm_q3_numLeafFaces*sizeof(*out));
+	cm_q3_leafFaces = out = reinterpret_cast<int*>(Mem_Alloc (cm_q3_numLeafFaces*sizeof(*out)));
 
 	// Byte swap
 	for (i=0 ; i<cm_q3_numLeafFaces ; i++) {
@@ -650,7 +650,7 @@ static void CM_Q3BSP_LoadSubmodels (dQ3BspLump_t *l)
 	int				i, j;
 
 	// Check lump size
-	in = (void *)(cm_q3_mapBuffer + l->fileOfs);
+	in = reinterpret_cast<dQ3BspModel_t*>(cm_q3_mapBuffer + l->fileOfs);
 	if (l->fileLen % sizeof (*in))
 		Com_Error (ERR_DROP, "CM_Q3BSP_LoadSubmodels: funny lump size");
 
@@ -706,7 +706,7 @@ static void CM_Q3BSP_LoadSurfaces (dQ3BspLump_t *l)
 	int					i;
 
 	// Sanity check lump size
-	in = (void *)(cm_q3_mapBuffer + l->fileOfs);
+	in = reinterpret_cast<dQ3BspShaderRef_t*>(cm_q3_mapBuffer + l->fileOfs);
 	if (l->fileLen % sizeof(*in))
 		Com_Error (ERR_DROP, "CM_Q3BSP_LoadSurfaces: funny lump size");
 
@@ -716,7 +716,7 @@ static void CM_Q3BSP_LoadSurfaces (dQ3BspLump_t *l)
 		Com_Error (ERR_DROP, "CM_Q3BSP_LoadSurfaces: Map with no shaders");
 	else if (cm_q3_numShaderRefs > MAX_Q3BSP_CM_SHADERS)
 		Com_Error (ERR_DROP, "CM_Q3BSP_LoadSurfaces: Map has too many shaders");
-	cm_q3_surfaces = Mem_PoolAlloc (sizeof(cBspSurface_t) * cm_q3_numShaderRefs, com_cmodelSysPool, 0);
+	cm_q3_surfaces = reinterpret_cast<cBspSurface_t*>(Mem_PoolAlloc (sizeof(cBspSurface_t) * cm_q3_numShaderRefs, com_cmodelSysPool, 0));
 
 	// Byte swap
 	out = cm_q3_surfaces;
@@ -742,7 +742,7 @@ static void CM_Q3BSP_LoadNodes (dQ3BspLump_t *l)
 	int				i, j;
 
 	// Sanity check lump size
-	in = (void *)(cm_q3_mapBuffer + l->fileOfs);
+	in = reinterpret_cast<dQ3BspNode_t*>(cm_q3_mapBuffer + l->fileOfs);
 	if (l->fileLen % sizeof(*in))
 		Com_Error (ERR_DROP, "CM_Q3BSP_LoadNodes: funny lump size");
 
@@ -752,7 +752,7 @@ static void CM_Q3BSP_LoadNodes (dQ3BspLump_t *l)
 		Com_Error (ERR_DROP, "CM_Q3BSP_LoadNodes: Map has no nodes");
 	else if (cm_q3_numNodes > MAX_Q3BSP_CM_NODES)
 		Com_Error (ERR_DROP, "CM_Q3BSP_LoadNodes: Map has too many nodes");
-	cm_q3_nodes = Mem_PoolAlloc (sizeof(cnode_t) * (cm_q3_numNodes+6), com_cmodelSysPool, 0);
+	cm_q3_nodes = reinterpret_cast<cnode_t*>(Mem_PoolAlloc (sizeof(cnode_t) * (cm_q3_numNodes+6), com_cmodelSysPool, 0));
 
 	// Byte swap
 	out = cm_q3_nodes;
@@ -778,7 +778,7 @@ static void CM_Q3BSP_LoadBrushes (dQ3BspLump_t *l)
 	int				i, shaderRef;
 
 	// Check lump size
-	in = (void *)(cm_q3_mapBuffer + l->fileOfs);
+	in = reinterpret_cast<dQ3BspBrush_t*>(cm_q3_mapBuffer + l->fileOfs);
 	if (l->fileLen % sizeof(*in))
 		Com_Error (ERR_DROP, "CM_Q3BSP_LoadBrushes: funny lump size");
 
@@ -811,7 +811,7 @@ static void CM_Q3BSP_LoadLeafs (dQ3BspLump_t *l)
 	cbrush_t		*brush;
 
 	// Check lump size
-	in = (void *)(cm_q3_mapBuffer + l->fileOfs);
+	in = reinterpret_cast<dQ3BspLeaf_t*>(cm_q3_mapBuffer + l->fileOfs);
 	if (l->fileLen % sizeof(*in))
 		Com_Error (ERR_DROP, "CM_Q3BSP_LoadLeafs: funny lump size");
 
@@ -876,7 +876,7 @@ static void CM_Q3BSP_LoadPlanes (dQ3BspLump_t *l)
 	dQ3BspPlane_t 	*in;
 
 	// Sanity check lump size
-	in = (void *)(cm_q3_mapBuffer + l->fileOfs);
+	in = reinterpret_cast<dQ3BspPlane_t*>(cm_q3_mapBuffer + l->fileOfs);
 	if (l->fileLen % sizeof(*in))
 		Com_Error (ERR_DROP, "CM_Q3BSP_LoadPlanes: funny lump size");
 
@@ -886,7 +886,7 @@ static void CM_Q3BSP_LoadPlanes (dQ3BspLump_t *l)
 		Com_Error (ERR_DROP, "CM_Q3BSP_LoadPlanes: Map with no planes");
 	else if (cm_q3_numPlanes > MAX_Q3BSP_CM_PLANES)
 		Com_Error (ERR_DROP, "CM_Q3BSP_LoadPlanes: Map has too many planes");
-	cm_q3_planes = Mem_PoolAlloc (sizeof(cBspPlane_t) * (MAX_Q3BSP_CM_PLANES+12), com_cmodelSysPool, 0);	// FIXME
+	cm_q3_planes = reinterpret_cast<cBspPlane_t*>(Mem_PoolAlloc (sizeof(cBspPlane_t) * (MAX_Q3BSP_CM_PLANES+12), com_cmodelSysPool, 0)); // FIXME (whatfor? lol)
 
 	// Byte swap
 	out = cm_q3_planes;
@@ -914,7 +914,7 @@ static void CM_Q3BSP_LoadLeafBrushes (dQ3BspLump_t *l)
 	int		 	*in;
 
 	// Check lump size
-	in = (void *)(cm_q3_mapBuffer + l->fileOfs);
+	in = reinterpret_cast<int*>((cm_q3_mapBuffer + l->fileOfs));
 	if (l->fileLen % sizeof(*in))
 		Com_Error (ERR_DROP, "CM_Q3BSP_LoadLeafBrushes: funny lump size");
 
@@ -944,7 +944,7 @@ static void CM_Q3BSP_LoadBrushSides (dQ3BspLump_t *l)
 	dQ3BspBrushSide_t 	*in;
 
 	// Check lump size
-	in = (void *)(cm_q3_mapBuffer + l->fileOfs);
+	in = reinterpret_cast<dQ3BspBrushSide_t*>(cm_q3_mapBuffer + l->fileOfs);
 	if (l->fileLen % sizeof(*in))
 		Com_Error (ERR_DROP, "CM_Q3BSP_LoadBrushSides: funny lump size");
 
@@ -996,7 +996,7 @@ static void CM_Q3BSP_LoadEntityString (dQ3BspLump_t *l)
 	cm_q3_numEntityChars = l->fileLen;
 	if (l->fileLen > MAX_Q3BSP_CM_ENTSTRING)
 		Com_Error (ERR_DROP, "CM_Q3BSP_LoadEntityString: Map has too large entity lump");
-	cm_q3_entityString = Mem_PoolAlloc (sizeof(char) * (cm_q3_numEntityChars+1), com_cmodelSysPool, 0);
+	cm_q3_entityString = static_cast<char*>(Mem_PoolAlloc (sizeof(char) * (cm_q3_numEntityChars+1), com_cmodelSysPool, 0));
 
 	// Copy data
 	memcpy (cm_q3_entityString, cm_q3_mapBuffer + l->fileOfs, l->fileLen);
@@ -1085,17 +1085,17 @@ cBspModel_t *CM_Q3BSP_LoadMap (uint32 *buffer)
 	//
 	// Allocate space
 	//
-	cm_q3_areaPortals = Mem_PoolAlloc (sizeof(careaportal_t) * MAX_Q3BSP_CM_AREAPORTALS, com_cmodelSysPool, 0);
-	cm_q3_areas = Mem_PoolAlloc (sizeof(carea_t) * MAX_Q3BSP_CM_AREAS, com_cmodelSysPool, 0);
-	cm_q3_brushes = Mem_PoolAlloc (sizeof(cbrush_t) * (MAX_Q3BSP_CM_BRUSHES+1), com_cmodelSysPool, 0);				// extra for box hull
-	cm_q3_brushSides = Mem_PoolAlloc (sizeof(cbrushside_t) * (MAX_Q3BSP_CM_BRUSHSIDES+6), com_cmodelSysPool, 0);	// extra for box hull
-	cm_q3_hearData = Mem_PoolAlloc (sizeof(byte) * MAX_Q3BSP_CM_VISIBILITY, com_cmodelSysPool, 0);
-	cm_q3_leafBrushes = Mem_PoolAlloc (sizeof(int) * (MAX_Q3BSP_CM_LEAFBRUSHES+1), com_cmodelSysPool, 0);			// extra for box hull
-	cm_q3_leafPatches = Mem_PoolAlloc (sizeof(int) * MAX_Q3BSP_CM_LEAFFACES, com_cmodelSysPool, 0);
-	cm_q3_leafs = Mem_PoolAlloc (sizeof(cleaf_t) * MAX_Q3BSP_CM_LEAFS, com_cmodelSysPool, 0);
-	cm_q3_nullRow = Mem_PoolAlloc (sizeof(byte) * (MAX_Q3BSP_CM_LEAFS / 8), com_cmodelSysPool, 0);
-	cm_q3_patches = Mem_PoolAlloc (sizeof(cpatch_t) * MAX_Q3BSP_CM_PATCHES, com_cmodelSysPool, 0);
-	cm_q3_visData = Mem_PoolAlloc (sizeof(byte) * MAX_Q3BSP_CM_VISIBILITY, com_cmodelSysPool, 0);
+	cm_q3_areaPortals = reinterpret_cast<careaportal_t*>(Mem_PoolAlloc (sizeof(careaportal_t) * MAX_Q3BSP_CM_AREAPORTALS, com_cmodelSysPool, 0));
+	cm_q3_areas = reinterpret_cast<carea_t*>(Mem_PoolAlloc (sizeof(carea_t) * MAX_Q3BSP_CM_AREAS, com_cmodelSysPool, 0));
+	cm_q3_brushes = reinterpret_cast<cbrush_t*>(Mem_PoolAlloc (sizeof(cbrush_t) * (MAX_Q3BSP_CM_BRUSHES+1), com_cmodelSysPool, 0));					// extra for box hull
+	cm_q3_brushSides = reinterpret_cast<cbrushside_t*>(Mem_PoolAlloc (sizeof(cbrushside_t) * (MAX_Q3BSP_CM_BRUSHSIDES+6), com_cmodelSysPool, 0));	// extra for box hull
+	cm_q3_hearData = reinterpret_cast<dQ3BspVis_t*>(Mem_PoolAlloc (sizeof(byte) * MAX_Q3BSP_CM_VISIBILITY, com_cmodelSysPool, 0));
+	cm_q3_leafBrushes = reinterpret_cast<int*>(Mem_PoolAlloc (sizeof(int) * (MAX_Q3BSP_CM_LEAFBRUSHES+1), com_cmodelSysPool, 0));			// extra for box hull
+	cm_q3_leafPatches = reinterpret_cast<int*>(Mem_PoolAlloc (sizeof(int) * MAX_Q3BSP_CM_LEAFFACES, com_cmodelSysPool, 0));
+	cm_q3_leafs = reinterpret_cast<cleaf_t*>(Mem_PoolAlloc (sizeof(cleaf_t) * MAX_Q3BSP_CM_LEAFS, com_cmodelSysPool, 0));
+	cm_q3_nullRow = reinterpret_cast<byte*>(Mem_PoolAlloc (sizeof(byte) * (MAX_Q3BSP_CM_LEAFS / 8), com_cmodelSysPool, 0));
+	cm_q3_patches = reinterpret_cast<cpatch_t*>(Mem_PoolAlloc (sizeof(cpatch_t) * MAX_Q3BSP_CM_PATCHES, com_cmodelSysPool, 0));
+	cm_q3_visData = reinterpret_cast<dQ3BspVis_t*>(Mem_PoolAlloc (sizeof(byte) * MAX_Q3BSP_CM_VISIBILITY, com_cmodelSysPool, 0));
 
 	// Default values
 	memset (cm_q3_nullRow, 255, MAX_Q3BSP_CM_LEAFS / 8);

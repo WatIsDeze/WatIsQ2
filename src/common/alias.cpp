@@ -116,7 +116,7 @@ static void Alias_AddAlias (char *aliasName)
 		Mem_Free (alias->value);
 	}
 	else {
-		alias = Mem_PoolAlloc (sizeof (aliasCmd_t), com_aliasSysPool, 0);
+		alias = reinterpret_cast<aliasCmd_t*>(Mem_PoolAlloc (sizeof (aliasCmd_t), com_aliasSysPool, 0));
 		alias->hashValue = Com_HashGeneric (aliasName, MAX_ALIAS_HASH);
 
 		// Link it in
@@ -279,7 +279,7 @@ static void Cmd_AliasList_f (void)
 		return;
 	}
 
-	sortedList = Mem_PoolAlloc (matching * sizeof (aliasCmd_t), com_aliasSysPool, 0);
+	sortedList = reinterpret_cast<aliasCmd_t*>(Mem_PoolAlloc (matching * sizeof (aliasCmd_t), com_aliasSysPool, 0));
 	for (matching=0, longest=0, alias=com_aliasList ; alias ; alias=alias->next) {
 		if (!Q_WildcardMatch (wildCard, alias->name, 1))
 			continue;

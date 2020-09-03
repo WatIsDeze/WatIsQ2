@@ -790,11 +790,11 @@ qBool R_CreateDecal (refDecal_t *d, struct material_s *material, vec4_t subUVs, 
 	d->numSurfaces = totalSurfaces;
 
 	// Allocate space
-	buffer = Mem_PoolAlloc ((d->poly.numVerts * sizeof (vec3_t) * 2)
+	buffer = reinterpret_cast<byte*>(Mem_PoolAlloc ((d->poly.numVerts * sizeof (vec3_t) * 2)
 							+ (d->numIndexes * sizeof (index_t))
 							+ (d->poly.numVerts * sizeof (vec2_t))
 							+ (d->poly.numVerts * sizeof (bvec4_t))
-							+ (d->numSurfaces * sizeof (struct mBspSurface_s *)), ri.decalSysPool, 0);
+							+ (d->numSurfaces * sizeof (struct mBspSurface_s *)), ri.decalSysPool, 0));
 	outVerts = (float *)buffer;
 	d->poly.vertices = (vec3_t *)buffer;
 

@@ -617,11 +617,11 @@ static void R_LoadPNG (char *name, byte **pic, int *width, int *height, int *sam
 		FS_FreeFile (PngFileBuffer.buffer);
 	}
 
-	pic_ptr = Mem_PoolAlloc (png_get_image_height(png_ptr, info_ptr) * rowbytes, ri.imageSysPool, r_imageAllocTag);
+	pic_ptr = reinterpret_cast<png_bytep>(Mem_PoolAlloc (png_get_image_height(png_ptr, info_ptr) * rowbytes, ri.imageSysPool, r_imageAllocTag));
 	if (pic)
 		*pic = pic_ptr;
 
-	row_pointers = Mem_PoolAlloc (sizeof (png_bytep) * png_get_image_height(png_ptr, info_ptr), ri.imageSysPool, r_imageAllocTag);
+	row_pointers = reinterpret_cast<png_bytepp>(Mem_PoolAlloc (sizeof (png_bytep) * png_get_image_height(png_ptr, info_ptr), ri.imageSysPool, r_imageAllocTag));
 
 	for (i=0 ; i<png_get_image_height(png_ptr, info_ptr) ; i++) {
 		row_pointers[i] = pic_ptr;

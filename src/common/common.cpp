@@ -591,7 +591,7 @@ static qBool Com_AddLateCommands (void)
 	if (!s)
 		return false;
 		
-	text = Mem_Alloc (s+1);
+	text = static_cast<char*>(Mem_Alloc (s+1));
 	text[0] = 0;
 	for (i=1 ; i<argc ; i++) {
 		strcat (text, Com_Argv (i));
@@ -600,7 +600,7 @@ static qBool Com_AddLateCommands (void)
 	}
 	
 	// Pull out the commands
-	build = Mem_Alloc (s+1);
+	build = static_cast<char*>(Mem_Alloc (s+1));
 	build[0] = 0;
 	
 	for (i=0 ; i<s-1 ; i++) {
@@ -708,7 +708,7 @@ void Com_Init (int argc, char **argv)
 
 	Com_Printf (0, "========= Common Initialization ========\n");
 	Com_Printf (0, "WatIsQ2 v%s by WatIsDeze\nhttps://github.com/WatIsDeze/WatIsQ2\n", WATISQ2_VERSTR);
-	Com_Printf (0, "Compiled: "__DATE__" @ "__TIME__"\n");
+	Com_Printf (0, "Compiled: %s @ %s\n", __DATE__, __TIME__);
 	Com_Printf (0, "----------------------------------------\n");
 
 	FS_Init ();

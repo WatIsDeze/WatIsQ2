@@ -91,7 +91,7 @@ static void CM_Q2BSP_LoadSurfaces (dQ2BspLump_t *l)
 	int				unique;
 
 	// Sanity check lump size
-	in = (void *)(cm_q2_mapBuffer + l->fileOfs);
+	in = reinterpret_cast<dQ2BspTexInfo_t*>(cm_q2_mapBuffer + l->fileOfs);
 	if (l->fileLen % sizeof (*in))
 		Com_Error (ERR_DROP, "CM_Q2BSP_LoadSurfaces: funny lump size");
 
@@ -101,7 +101,7 @@ static void CM_Q2BSP_LoadSurfaces (dQ2BspLump_t *l)
 		Com_Error (ERR_DROP, "CM_Q2BSP_LoadSurfaces: Map with no surfaces");
 	if (cm_q2_numTexInfo > Q2BSP_MAX_TEXINFO)
 		Com_Error (ERR_DROP, "CM_Q2BSP_LoadSurfaces: Map has too many surfaces");
-	cm_q2_surfaces = Mem_PoolAlloc (sizeof(cBspSurface_t) * cm_q2_numTexInfo, com_cmodelSysPool, 0);
+	cm_q2_surfaces = reinterpret_cast<cBspSurface_t*>(Mem_PoolAlloc (sizeof(cBspSurface_t) * cm_q2_numTexInfo, com_cmodelSysPool, 0));
 
 	// Byte swap
 	out = cm_q2_surfaces;
@@ -128,7 +128,7 @@ static void CM_Q2BSP_LoadSurfaces (dQ2BspLump_t *l)
 		return;
 
 	cm_q2_numTexInfoUnique = unique;
-	cm_q2_surfacesUnique = Mem_PoolAlloc (sizeof(cBspSurface_t *) * cm_q2_numTexInfoUnique, com_cmodelSysPool, 0);
+	cm_q2_surfacesUnique = reinterpret_cast<cBspSurface_t**>(Mem_PoolAlloc (sizeof(cBspSurface_t *) * cm_q2_numTexInfoUnique, com_cmodelSysPool, 0));
 	for (i=0, unique=0 ; i<cm_q2_numTexInfo ; i++) {
 		for (j=i-1 ; j>=0 ; j--) {
 			if (!Q_stricmp (cm_q2_surfaces[i].rname, cm_q2_surfaces[j].rname))
@@ -152,7 +152,7 @@ static void CM_Q2BSP_LoadLeafs (dQ2BspLump_t *l)
 	dQ2BspLeaf_t	*in;
 
 	// Sanity check lump size
-	in = (void *)(cm_q2_mapBuffer + l->fileOfs);
+	in = reinterpret_cast<dQ2BspLeaf_t*>(cm_q2_mapBuffer + l->fileOfs);
 	if (l->fileLen % sizeof (*in))
 		Com_Error (ERR_DROP, "CM_Q2BSP_LoadLeafs: funny lump size");
 
@@ -162,7 +162,7 @@ static void CM_Q2BSP_LoadLeafs (dQ2BspLump_t *l)
 		Com_Error (ERR_DROP, "CM_Q2BSP_LoadLeafs: Map with no leafs");
 	if (cm_q2_numLeafs > Q2BSP_MAX_PLANES)
 		Com_Error (ERR_DROP, "CM_Q2BSP_LoadLeafs: Map has too many planes");
-	cm_q2_leafs = Mem_PoolAlloc (sizeof(cQ2BspLeaf_t) * (cm_q2_numLeafs+6), com_cmodelSysPool, 0);
+	cm_q2_leafs = reinterpret_cast<cQ2BspLeaf_t*>(Mem_PoolAlloc (sizeof(cQ2BspLeaf_t) * (cm_q2_numLeafs+6), com_cmodelSysPool, 0));
 
 	// Byte swap
 	out = cm_q2_leafs;
@@ -206,7 +206,7 @@ static void CM_Q2BSP_LoadLeafBrushes (dQ2BspLump_t *l)
 	uint16	*in;
 
 	// Sanity check lump size
-	in = (void *)(cm_q2_mapBuffer + l->fileOfs);
+	in = reinterpret_cast<uint16*>(cm_q2_mapBuffer + l->fileOfs);
 	if (l->fileLen % sizeof (*in))
 		Com_Error (ERR_DROP, "CM_Q2BSP_LoadLeafBrushes: funny lump size");
 
@@ -216,7 +216,7 @@ static void CM_Q2BSP_LoadLeafBrushes (dQ2BspLump_t *l)
 		Com_Error (ERR_DROP, "CM_Q2BSP_LoadLeafBrushes: Map with no planes");
 	if (cm_q2_numLeafBrushes > Q2BSP_MAX_LEAFBRUSHES)
 		Com_Error (ERR_DROP, "CM_Q2BSP_LoadLeafBrushes: Map has too many leafbrushes");
-	cm_q2_leafBrushes = Mem_PoolAlloc (sizeof(uint16) * (cm_q2_numLeafBrushes+1), com_cmodelSysPool, 0);
+	cm_q2_leafBrushes = reinterpret_cast<uint16*>(Mem_PoolAlloc (sizeof(uint16) * (cm_q2_numLeafBrushes+1), com_cmodelSysPool, 0));
 
 	// Byte swap
 	out = cm_q2_leafBrushes;
@@ -238,7 +238,7 @@ static void CM_Q2BSP_LoadPlanes (dQ2BspLump_t *l)
 	int				bits;
 
 	// Sanity check lump size
-	in = (void *)(cm_q2_mapBuffer + l->fileOfs);
+	in = reinterpret_cast<dQ2BspPlane_t*>(cm_q2_mapBuffer + l->fileOfs);
 	if (l->fileLen % sizeof (*in))
 		Com_Error (ERR_DROP, "CM_Q2BSP_LoadPlanes: funny lump size");
 
@@ -248,7 +248,7 @@ static void CM_Q2BSP_LoadPlanes (dQ2BspLump_t *l)
 		Com_Error (ERR_DROP, "CM_Q2BSP_LoadPlanes: Map with no planes");
 	if (cm_q2_numPlanes > Q2BSP_MAX_PLANES)
 		Com_Error (ERR_DROP, "CM_Q2BSP_LoadPlanes: Map has too many planes");
-	cm_q2_planes = Mem_PoolAlloc (sizeof(cBspPlane_t) * (cm_q2_numPlanes+12), com_cmodelSysPool, 0);
+	cm_q2_planes = reinterpret_cast<cBspPlane_t*>(Mem_PoolAlloc (sizeof(cBspPlane_t) * (cm_q2_numPlanes+12), com_cmodelSysPool, 0));
 
 	// Byte swap
 	out = cm_q2_planes;
@@ -279,7 +279,7 @@ static void CM_Q2BSP_LoadBrushes (dQ2BspLump_t *l)
 	int				i;
 
 	// Sanity check lump size
-	in = (void *)(cm_q2_mapBuffer + l->fileOfs);
+	in = reinterpret_cast<dQ2BspBrush_t*>(cm_q2_mapBuffer + l->fileOfs);
 	if (l->fileLen % sizeof (*in))
 		Com_Error (ERR_DROP, "CM_Q2BSP_LoadBrushes: funny lump size");
 
@@ -287,7 +287,7 @@ static void CM_Q2BSP_LoadBrushes (dQ2BspLump_t *l)
 	cm_q2_numBrushes = l->fileLen / sizeof (*in);
 	if (cm_q2_numBrushes > Q2BSP_MAX_BRUSHES)
 		Com_Error (ERR_DROP, "CM_Q2BSP_LoadBrushes: Map has too many brushes");
-	cm_q2_brushes = Mem_PoolAlloc (sizeof(cQ2BspBrush_t) * (cm_q2_numBrushes+1), com_cmodelSysPool, 0);
+	cm_q2_brushes = reinterpret_cast<cQ2BspBrush_t*>(Mem_PoolAlloc (sizeof(cQ2BspBrush_t) * (cm_q2_numBrushes+1), com_cmodelSysPool, 0));
 
 	// Byte swap
 	out = cm_q2_brushes;
@@ -312,7 +312,7 @@ static void CM_Q2BSP_LoadBrushSides (dQ2BspLump_t *l)
 	int					num;
 
 	// Sanity check lump size
-	in = (void *)(cm_q2_mapBuffer + l->fileOfs);
+	in = reinterpret_cast<dQ2BspBrushSide_t*>(cm_q2_mapBuffer + l->fileOfs);
 	if (l->fileLen % sizeof (*in))
 		Com_Error (ERR_DROP, "CM_Q2BSP_LoadBrushSides: funny lump size");
 
@@ -320,7 +320,7 @@ static void CM_Q2BSP_LoadBrushSides (dQ2BspLump_t *l)
 	cm_q2_numBrushSides = l->fileLen / sizeof (*in);
 	if (cm_q2_numBrushSides > Q2BSP_MAX_BRUSHSIDES)
 		Com_Error (ERR_DROP, "CM_Q2BSP_LoadBrushSides: Map has too many planes");
-	cm_q2_brushSides = Mem_PoolAlloc (sizeof(cQ2BspBrushSide_t) * (cm_q2_numBrushSides+6), com_cmodelSysPool, 0);
+	cm_q2_brushSides = reinterpret_cast<cQ2BspBrushSide_t*>(Mem_PoolAlloc (sizeof(cQ2BspBrushSide_t) * (cm_q2_numBrushSides+6), com_cmodelSysPool, 0));
 
 	// Byte swap
 	out = cm_q2_brushSides;
@@ -347,7 +347,7 @@ static void CM_Q2BSP_LoadSubmodels (dQ2BspLump_t *l)
 	int				i;
 
 	// Sanity check lump size
-	in = (void *)(cm_q2_mapBuffer + l->fileOfs);
+	in = reinterpret_cast<dQ2BspModel_t*>(cm_q2_mapBuffer + l->fileOfs);
 	if (l->fileLen % sizeof (*in))
 		Com_Error (ERR_DROP, "CM_Q2BSP_LoadSubmodels: funny lump size");
 
@@ -388,7 +388,7 @@ static void CM_Q2BSP_LoadNodes (dQ2BspLump_t *l)
 	int				i;
 
 	// Sanity check lump size
-	in = (void *)(cm_q2_mapBuffer + l->fileOfs);
+	in = reinterpret_cast<dQ2BspNode_t*>(cm_q2_mapBuffer + l->fileOfs);
 	if (l->fileLen % sizeof (*in))
 		Com_Error (ERR_DROP, "CM_Q2BSP_LoadNodes: funny lump size");
 
@@ -398,7 +398,7 @@ static void CM_Q2BSP_LoadNodes (dQ2BspLump_t *l)
 		Com_Error (ERR_DROP, "CM_Q2BSP_LoadNodes: Map has no nodes");
 	if (cm_q2_numNodes > Q2BSP_MAX_NODES)
 		Com_Error (ERR_DROP, "CM_Q2BSP_LoadNodes: Map has too many nodes");
-	cm_q2_nodes = Mem_PoolAlloc (sizeof(cQ2BspNode_t) * (cm_q2_numNodes+6), com_cmodelSysPool, 0);
+	cm_q2_nodes = reinterpret_cast<cQ2BspNode_t*>(Mem_PoolAlloc (sizeof(cQ2BspNode_t) * (cm_q2_numNodes+6), com_cmodelSysPool, 0));
 
 	// Byte swap
 	out = cm_q2_nodes;
@@ -422,7 +422,7 @@ static void CM_Q2BSP_LoadAreas (dQ2BspLump_t *l)
 	dQ2BspArea_t	*in;
 
 	// Sanity check lump size
-	in = (void *)(cm_q2_mapBuffer + l->fileOfs);
+	in = reinterpret_cast<dQ2BspArea_t*>(cm_q2_mapBuffer + l->fileOfs);
 	if (l->fileLen % sizeof (*in))
 		Com_Error (ERR_DROP, "CM_Q2BSP_LoadAreas: funny lump size");
 
@@ -430,7 +430,7 @@ static void CM_Q2BSP_LoadAreas (dQ2BspLump_t *l)
 	cm_q2_numAreas = l->fileLen / sizeof (*in);
 	if (cm_q2_numAreas > Q2BSP_MAX_AREAS)
 		Com_Error (ERR_DROP, "CM_Q2BSP_LoadAreas: Map has too many areas");
-	cm_q2_areas = Mem_PoolAlloc (sizeof(cQ2BspArea_t) * cm_q2_numAreas, com_cmodelSysPool, 0);
+	cm_q2_areas = reinterpret_cast<cQ2BspArea_t*>(Mem_PoolAlloc (sizeof(cQ2BspArea_t) * cm_q2_numAreas, com_cmodelSysPool, 0));
 
 	// Byte swap
 	out = cm_q2_areas;
@@ -455,7 +455,7 @@ static void CM_Q2BSP_LoadAreaPortals (dQ2BspLump_t *l)
 	dQ2BspAreaPortal_t	*in;
 
 	// Sanity check lump size
-	in = (void *)(cm_q2_mapBuffer + l->fileOfs);
+	in = reinterpret_cast<dQ2BspAreaPortal_t*>(cm_q2_mapBuffer + l->fileOfs);
 	if (l->fileLen % sizeof (*in))
 		Com_Error (ERR_DROP, "CM_Q2BSP_LoadAreaPortals: funny lump size");
 
@@ -463,7 +463,7 @@ static void CM_Q2BSP_LoadAreaPortals (dQ2BspLump_t *l)
 	cm_q2_numAreaPortals = l->fileLen / sizeof (*in);
 	if (cm_q2_numAreaPortals > Q2BSP_MAX_AREAS)
 		Com_Error (ERR_DROP, "CM_Q2BSP_LoadAreaPortals: Map has too many areas");
-	cm_q2_areaPortals = Mem_PoolAlloc (sizeof(dQ2BspAreaPortal_t) * cm_q2_numAreaPortals, com_cmodelSysPool, 0);
+	cm_q2_areaPortals = reinterpret_cast<dQ2BspAreaPortal_t*>(Mem_PoolAlloc (sizeof(dQ2BspAreaPortal_t) * cm_q2_numAreaPortals, com_cmodelSysPool, 0));
 
 	// Byte swap
 	out = cm_q2_areaPortals;
@@ -490,13 +490,13 @@ static void CM_Q2BSP_LoadVisibility (dQ2BspLump_t *l)
 
 	// If there's no visibility, just store the number of clusters
 	if (!cm_q2_numVisibility) {
-		cm_q2_visData = Mem_PoolAlloc (sizeof(int), com_cmodelSysPool, 0);
+		cm_q2_visData = reinterpret_cast<dQ2BspVis_t*>(Mem_PoolAlloc (sizeof(int), com_cmodelSysPool, 0));
 		cm_q2_visData->numClusters = 0;
 		return;
 	}
 
 	// Byte swap
-	cm_q2_visData = Mem_PoolAlloc (sizeof(int) + (sizeof(byte) * cm_q2_numVisibility), com_cmodelSysPool, 0);
+	cm_q2_visData = reinterpret_cast<dQ2BspVis_t*>(Mem_PoolAlloc (sizeof(int) + (sizeof(byte) * cm_q2_numVisibility), com_cmodelSysPool, 0));
 	memcpy (cm_q2_visData, cm_q2_mapBuffer + l->fileOfs, l->fileLen);
 	cm_q2_visData->numClusters = LittleLong (cm_q2_visData->numClusters);
 	for (i=0 ; i<cm_q2_visData->numClusters ; i++) {
@@ -517,7 +517,7 @@ static void CM_Q2BSP_LoadEntityString (dQ2BspLump_t *l)
 	cm_q2_numEntityChars = l->fileLen;
 	if (l->fileLen > Q2BSP_MAX_ENTSTRING)
 		Com_Error (ERR_DROP, "CM_Q2BSP_LoadEntityString: Map has too large entity lump");
-	cm_q2_entityString = Mem_PoolAlloc (sizeof(char) * (cm_q2_numEntityChars+1), com_cmodelSysPool, 0);
+	cm_q2_entityString = reinterpret_cast<char*>(Mem_PoolAlloc (sizeof(char) * (cm_q2_numEntityChars+1), com_cmodelSysPool, 0));
 
 	// Copy data
 	memcpy (cm_q2_entityString, cm_q2_mapBuffer + l->fileOfs, l->fileLen);
@@ -540,7 +540,8 @@ cBspModel_t *CM_Q2BSP_LoadMap (uint32 *buffer)
 	//
 	// Allocate space
 	//
-	cm_q2_portalOpen = Mem_PoolAlloc (sizeof(qBool) * Q2BSP_MAX_AREAPORTALS, com_cmodelSysPool, 0);
+	// TODO: qBool == int.. ?
+	cm_q2_portalOpen = reinterpret_cast<qBool*>(Mem_PoolAlloc (sizeof(qBool) * Q2BSP_MAX_AREAPORTALS, com_cmodelSysPool, 0));
 
 	//
 	// Byte swap
