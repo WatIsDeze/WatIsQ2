@@ -491,8 +491,8 @@ static void GL_InitExtensions (void)
 	if (r_ext_multitexture->intVal) {
 		// GL_ARB_multitexture
 		if (ExtensionFound (ri.extensionString, "GL_ARB_multitexture")) {
-			qglActiveTextureARB = QGL_GetProcAddress ("glActiveTextureARB");
-			if (qglActiveTextureARB)	qglClientActiveTextureARB = QGL_GetProcAddress ("glClientActiveTextureARB");
+			qglActiveTextureARB = (PFNGLACTIVETEXTUREARBPROC)QGL_GetProcAddress ("glActiveTextureARB");
+			if (qglActiveTextureARB)	qglClientActiveTextureARB = (PFNGLCLIENTACTIVETEXTUREARBPROC)QGL_GetProcAddress ("glClientActiveTextureARB");
 
 			if (!qglClientActiveTextureARB) {
 				Com_Printf (PRNT_ERROR, "...GL_ARB_multitexture not properly supported!\n");
@@ -508,24 +508,24 @@ static void GL_InitExtensions (void)
 			Com_Printf (0, "...GL_ARB_multitexture not found\n");
 
 		// GL_SGIS_multitexture
-		if (!ri.config.extArbMultitexture) {
-			Com_Printf (0, "...attempting GL_SGIS_multitexture\n");
+		// if (!ri.config.extArbMultitexture) {
+		// 	Com_Printf (0, "...attempting GL_SGIS_multitexture\n");
 
-			if (ExtensionFound (ri.extensionString, "GL_SGIS_multitexture")) {
-				qglSelectTextureSGIS = QGL_GetProcAddress ("glSelectTextureSGIS");
+		// 	if (ExtensionFound (ri.extensionString, "GL_SGIS_multitexture")) {
+		// 		qglSelectTextureSGIS = (SETTEXTURE)QGL_GetProcAddress ("glSelectTextureSGIS");
 
-				if (!qglSelectTextureSGIS) {
-					Com_Printf (PRNT_ERROR, "...GL_SGIS_multitexture not properly supported!\n");
-					qglSelectTextureSGIS	= NULL;
-				}
-				else {
-					Com_Printf (0, "...enabling GL_SGIS_multitexture\n");
-					ri.config.extSGISMultiTexture = true;
-				}
-			}
-			else
-				Com_Printf (0, "...GL_SGIS_multitexture not found\n");
-		}
+		// 		if (!qglSelectTextureSGIS) {
+		// 			Com_Printf (PRNT_ERROR, "...GL_SGIS_multitexture not properly supported!\n");
+		// 			qglSelectTextureSGIS	= NULL;
+		// 		}
+		// 		else {
+		// 			Com_Printf (0, "...enabling GL_SGIS_multitexture\n");
+		// 			ri.config.extSGISMultiTexture = true;
+		// 		}
+		// 	}
+		// 	else
+		// 		Com_Printf (0, "...GL_SGIS_multitexture not found\n");
+		// }
 	}
 	else {
 		qglActiveTextureARB			= NULL;

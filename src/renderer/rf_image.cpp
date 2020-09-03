@@ -315,8 +315,8 @@ static void R_LoadJPG (char *name, byte **pic, int *width, int *height)
 	if (height)
 		*height = cinfo.output_height;
 
-	img = Mem_PoolAlloc (cinfo.output_width * cinfo.output_height * 4, ri.imageSysPool, r_imageAllocTag);
-	dummy = Mem_PoolAlloc (cinfo.output_width * components, ri.imageSysPool, r_imageAllocTag);
+	img = reinterpret_cast<byte*>(Mem_PoolAlloc (cinfo.output_width * cinfo.output_height * 4, ri.imageSysPool, r_imageAllocTag));
+	dummy = reinterpret_cast<byte*>(Mem_PoolAlloc (cinfo.output_width * components, ri.imageSysPool, r_imageAllocTag));
 
 	if (pic)
 		*pic = img;
@@ -455,12 +455,12 @@ static void R_LoadPCX (char *name, byte **pic, byte **palette, int *width, int *
 
 	// FIXME: Some images with weird dimensions will crash if I don't do this...
 	x = max (pcx->yMax+1, pcx->xMax+1);
-	pix = out = Mem_PoolAlloc (x * x, ri.imageSysPool, r_imageAllocTag);
+	pix = out = reinterpret_cast<byte*>(Mem_PoolAlloc (x * x, ri.imageSysPool, r_imageAllocTag));
 	if (pic)
 		*pic = out;
 
 	if (palette) {
-		*palette = Mem_PoolAlloc (768, ri.imageSysPool, r_imageAllocTag);
+		*palette = reinterpret_cast<byte*>(Mem_PoolAlloc (768, ri.imageSysPool, r_imageAllocTag));
 		memcpy (*palette, (byte *)pcx + fileLen - 768, 768);
 	}
 
@@ -680,7 +680,7 @@ static void R_WritePNG (FILE *f, byte *buffer, int width, int height)
 
 	png_write_info (png_ptr, info_ptr);
 
-	row_pointers = Mem_PoolAlloc (height * sizeof (png_bytep), ri.imageSysPool, IMGTAG_DEFAULT);
+	row_pointers = reinterpret_cast<png_bytep*>(Mem_PoolAlloc (height * sizeof (png_bytep), ri.imageSysPool, IMGTAG_DEFAULT));
 	for (i=0 ; i<height ; i++)
 		row_pointers[i] = buffer + (height - 1 - i) * 3 * width;
 
@@ -835,7 +835,7 @@ static void R_LoadTGA (char *name, byte **pic, int *width, int *height, int *sam
 	if (height)
 		*height = rows;
 
-	targaRGBA = Mem_PoolAlloc (columns * rows * 4, ri.imageSysPool, r_imageAllocTag);
+	targaRGBA = reinterpret_cast<byte*>(Mem_PoolAlloc (columns * rows * 4, ri.imageSysPool, r_imageAllocTag));
 	*pic = targaRGBA;
 
 	// If bit 5 of attributes isn't set, the image has been stored from bottom to top
@@ -928,7 +928,7 @@ static void R_WriteTGA (FILE *f, byte *buffer, int width, int height, qBool rgb)
 
 	// Allocate an output buffer
 	size = (width * height * 3) + 18;
-	out = Mem_PoolAlloc (size, ri.imageSysPool, IMGTAG_DEFAULT);
+	out = reinterpret_cast<byte*>(Mem_PoolAlloc (size, ri.imageSysPool, IMGTAG_DEFAULT));
 
 	// Fill in header
 	out[2] = 2;		// Uncompressed type
@@ -1001,7 +1001,7 @@ static void R_LoadWal (char *name, byte **pic, int *width, int *height)
 		*height = mt->height;
 
 	// Copy data
-	*pic = out = Mem_PoolAlloc (mt->width*mt->height, ri.imageSysPool, r_imageAllocTag);
+	*pic = out = reinterpret_cast<byte*>(Mem_PoolAlloc (mt->width*mt->height, ri.imageSysPool, r_imageAllocTag));
 	for (i=0 ; i<mt->width*mt->height ; i++)
 		*out++ = *(buffer + mt->offsets[0] + i);
 
@@ -1200,7 +1200,7 @@ static void R_ResampleImage (uint32 *in, int inWidth, int inHeight, uint32 *out,
 		noFree = true;
 	}
 	else {
-		resampleBuffer = Mem_PoolAlloc (outWidth * outHeight * sizeof (uint32), ri.imageSysPool, r_imageAllocTag);
+		resampleBuffer = reinterpret_cast<uint32*>(Mem_PoolAlloc (outWidth * outHeight * sizeof (uint32), ri.imageSysPool, r_imageAllocTag));
 		noFree = false;
 	}
 
@@ -1350,7 +1350,7 @@ static void R_UploadCMImage (char *name, byte **data, int width, int height, tex
 		noFree = true;
 	}
 	else {
-		scaledData = Mem_PoolAlloc (scaledWidth * scaledHeight * 4, ri.imageSysPool, r_imageAllocTag);
+		scaledData = reinterpret_cast<uint32*>(Mem_PoolAlloc (scaledWidth * scaledHeight * 4, ri.imageSysPool, r_imageAllocTag));
 		noFree = false;
 	}
 
@@ -1521,7 +1521,7 @@ static void R_Upload2DImage (char *name, byte *data, int width, int height, texF
 		noFree = true;
 	}
 	else {
-		scaledData = Mem_PoolAlloc (scaledWidth * scaledHeight * 4, ri.imageSysPool, r_imageAllocTag);
+		scaledData = reinterpret_cast<uint32*>(Mem_PoolAlloc (scaledWidth * scaledHeight * 4, ri.imageSysPool, r_imageAllocTag));
 		noFree = false;
 	}
 
@@ -1813,7 +1813,7 @@ static void R_PalToRGBA (char *name, byte *data, int width, int height, texFlags
 		noFree = true;
 	}
 	else {
-		trans = Mem_PoolAlloc (s * 4, ri.imageSysPool, r_imageAllocTag);
+		trans = reinterpret_cast<uint32*>(Mem_PoolAlloc (s * 4, ri.imageSysPool, r_imageAllocTag));
 		noFree = false;
 	}
 
@@ -2268,9 +2268,9 @@ R_BeginImageRegistration
 void R_BeginImageRegistration (void)
 {
 	// Allocate a registration scratch space
-	r_palScratch = Mem_PoolAlloc (MAX_IMAGE_SCRATCHSIZE*MAX_IMAGE_SCRATCHSIZE*4, ri.imageSysPool, IMGTAG_REG);
-	r_imageScaleScratch = Mem_PoolAlloc (MAX_IMAGE_SCRATCHSIZE*MAX_IMAGE_SCRATCHSIZE*sizeof(uint32), ri.imageSysPool, IMGTAG_REG);
-	r_imageResampleScratch = Mem_PoolAlloc (MAX_IMAGE_SCRATCHSIZE*MAX_IMAGE_SCRATCHSIZE*sizeof(uint32), ri.imageSysPool, IMGTAG_REG);
+	r_palScratch = reinterpret_cast<byte*>(Mem_PoolAlloc (MAX_IMAGE_SCRATCHSIZE*MAX_IMAGE_SCRATCHSIZE*4, ri.imageSysPool, IMGTAG_REG));
+	r_imageScaleScratch = reinterpret_cast<uint32*>(Mem_PoolAlloc (MAX_IMAGE_SCRATCHSIZE*MAX_IMAGE_SCRATCHSIZE*sizeof(uint32), ri.imageSysPool, IMGTAG_REG));
+	r_imageResampleScratch = reinterpret_cast<uint32*>(Mem_PoolAlloc (MAX_IMAGE_SCRATCHSIZE*MAX_IMAGE_SCRATCHSIZE*sizeof(uint32), ri.imageSysPool, IMGTAG_REG));
 }
 
 
@@ -2585,7 +2585,7 @@ static void R_ScreenShot_f (void)
 	}
 
 	// Allocate room for a copy of the framebuffer
-	buffer = Mem_PoolAlloc (ri.config.vidWidth * ri.config.vidHeight * 3, ri.imageSysPool, IMGTAG_DEFAULT);
+	buffer = reinterpret_cast<byte*>(Mem_PoolAlloc (ri.config.vidWidth * ri.config.vidHeight * 3, ri.imageSysPool, IMGTAG_DEFAULT));
 
 	// Read the framebuffer into our storage
 	if (ri.config.extBGRA && type == SSHOTTYPE_TGA) {
@@ -2695,7 +2695,7 @@ static void R_InitSpecialTextures (void)
 	/*
 	** ri.noTexture
 	*/
-	data = Mem_PoolAlloc (INTTEXSIZE * INTTEXSIZE * INTTEXBYTES, ri.imageSysPool, IMGTAG_BATCH);
+	data = reinterpret_cast<byte*>(Mem_PoolAlloc (INTTEXSIZE * INTTEXSIZE * INTTEXBYTES, ri.imageSysPool, IMGTAG_BATCH));
 	for (x=0 ; x<INTTEXSIZE ; x++) {
 		for (y=0 ; y<INTTEXSIZE ; y++) {
 			data[(y*INTTEXSIZE + x)*4+3] = 255;
@@ -2737,7 +2737,7 @@ static void R_InitSpecialTextures (void)
 	** ri.cinTexture
 	** Reserve a texNum for cinematics
 	*/
-	data = Mem_PoolAlloc (256 * 256 * 4, ri.imageSysPool, IMGTAG_BATCH);
+	data = reinterpret_cast<byte*>(Mem_PoolAlloc (256 * 256 * 4, ri.imageSysPool, IMGTAG_BATCH));
 	memset (data, 0, 256 * 256 * 4);
 	memset (&ri.cinTexture, 0, sizeof (ri.cinTexture));
 	ri.cinTexture = R_Load2DImage ("***r_cinTexture***", &data, 256, 256,
@@ -2748,11 +2748,11 @@ static void R_InitSpecialTextures (void)
 	*/
 	if (ri.config.extTex3D) {
 		size = 32;
-		data = Mem_PoolAlloc (size * size * size * 4, ri.imageSysPool, IMGTAG_BATCH);
+		data = reinterpret_cast<byte*>(Mem_PoolAlloc (size * size * size * 4, ri.imageSysPool, IMGTAG_BATCH));
 	}
 	else {
 		size = 64;
-		data = Mem_PoolAlloc (size * size * 4, ri.imageSysPool, IMGTAG_BATCH);
+		data = reinterpret_cast<byte*>(Mem_PoolAlloc (size * size * 4, ri.imageSysPool, IMGTAG_BATCH));
 	}
 
 	for (x=0 ; x<size ; x++) {
@@ -2795,7 +2795,7 @@ static void R_InitSpecialTextures (void)
 	tw = 1.0f / ((float)FOGTEX_WIDTH - 1.0f);
 	th = 1.0f / ((float)FOGTEX_HEIGHT - 1.0f);
 
-	data = Mem_PoolAlloc (FOGTEX_WIDTH * FOGTEX_HEIGHT * 4, ri.imageSysPool, IMGTAG_BATCH);
+	data = reinterpret_cast<byte*>(Mem_PoolAlloc (FOGTEX_WIDTH * FOGTEX_HEIGHT * 4, ri.imageSysPool, IMGTAG_BATCH));
 	memset (data, 255, FOGTEX_WIDTH*FOGTEX_HEIGHT*4);
 
 	for (y=0, ty=0.0f ; y<FOGTEX_HEIGHT ; y++, ty+=th) {
