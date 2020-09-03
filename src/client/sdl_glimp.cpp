@@ -35,6 +35,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #include "../renderer/r_local.h"
 #include "cl_local.h"
 #include "sdl_glimp.h"
+#include "sdl_main.h"
 #ifdef _WIN32
 #include "../win32/win_local.h"
 #else
@@ -77,7 +78,7 @@ TODO: Only error check if active, and don't swap if not active an you're in full
 */
 void GLimp_EndFrame (void)
 {
-	SDLGL_SwapBuffers ();
+	GLSDL_SwapBuffers ();
 }
 
 /*

@@ -170,7 +170,7 @@ void GLSDL_Shutdown() {
 		SDL_QuitSubSystem(SDL_INIT_VIDEO);
 }
 
-void SDLGL_SwapBuffers() {
+void GLSDL_SwapBuffers() {
     SDL_GL_SwapBuffers();
 }
 
@@ -338,7 +338,8 @@ void SDLGL_HandleEvents(void)
 {
 	SDL_Event event;
 	int _tempMouseButtonStates;
-
+	int key;
+	
 	// Reset mouse deltas.
 	mouseDeltaX = 0;
 	mouseDeltaY = 0;
@@ -378,7 +379,7 @@ void SDLGL_HandleEvents(void)
 					mouseDeltaX = event.motion.xrel;
 					mouseDeltaY = event.motion.yrel;
 				break;
-			case SDL_KEYDOWN:
+			case SDL_KEYDOWN: {
 				if ( (KeyStates[SDLK_LALT] || KeyStates[SDLK_RALT]) &&
 					(event.key.keysym.sym == SDLK_RETURN) ) {
 					cVar_t	*_fullscreen;
@@ -411,13 +412,14 @@ void SDLGL_HandleEvents(void)
 
 				KeyStates[event.key.keysym.sym] = 1;
 
-				int key = XLateKey(event.key.keysym.sym);
+				key = XLateKey(event.key.keysym.sym);
 				if (key) {
 					keyq[keyq_head].key = key;
 					keyq[keyq_head].down = true;
 					keyq_head = (keyq_head + 1) & 63;
 				}
 				break;
+			}
 			case SDL_KEYUP:
 				if (KeyStates[event.key.keysym.sym]) {
 					KeyStates[event.key.keysym.sym] = 0;

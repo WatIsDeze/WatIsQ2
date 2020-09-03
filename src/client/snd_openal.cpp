@@ -900,14 +900,18 @@ ALSnd_Init
 */
 qBool ALSnd_Init (void)
 {
-	char	*libName;
+	char	*libName = AL_DRIVERNAME;
 	char	*device;
 	int		i;
 
 	Com_Printf (0, "Initializing OpenAL\n");
 
+	// TODO: Revert to old if statement in case of crashes?
+	//libName = al_driver->string[0] ? al_driver->string : AL_DRIVERNAME;
 	// Load our OpenAL library
-	libName = al_driver->string[0] ? al_driver->string : AL_DRIVERNAME;
+	if (al_driver->string[0])
+		libName = al_driver->string;
+		
 	Com_Printf (0, "...LoadLibrary (\"%s\")\n", libName);
 	if (!(snd_alLibrary = AL_LOADLIB (libName))) {
 		Com_Printf (PRNT_ERROR, "failed!\n");

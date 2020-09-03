@@ -915,8 +915,8 @@ void CL_ParseZPacket (void)
 	if (compressedLen <= 0)
 		Com_Error (ERR_DROP, "CL_ParseZPacket: compressedLen <= 0");
 
-	buff_in = Mem_Alloc (compressedLen);
-	buff_out = Mem_Alloc (uncompressedLen);
+	buff_in = static_cast<byte*>(Mem_Alloc (compressedLen));
+	buff_out = static_cast<byte*>(Mem_Alloc (uncompressedLen));
 
 	MSG_ReadData (&cls.netMessage, buff_in, compressedLen);
 

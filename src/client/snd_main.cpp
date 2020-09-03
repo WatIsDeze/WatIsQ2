@@ -385,7 +385,7 @@ sfxCache_t *Snd_LoadSound (sfx_t *s)
 		len = 0;
 	}
 
-	sc = s->cache = Mem_PoolAlloc (len + sizeof (sfxCache_t), cl_soundSysPool, 0);
+	sc = s->cache = reinterpret_cast<sfxCache_t*>(Mem_PoolAlloc (len + sizeof (sfxCache_t), cl_soundSysPool, 0));
 	if (!sc) {
 		FS_FreeFile (data);
 		return NULL;

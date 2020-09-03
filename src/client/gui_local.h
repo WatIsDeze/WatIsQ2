@@ -69,12 +69,13 @@ typedef enum guiType_s {
 // Window flags
 // FIXME: yyuucckk
 //
-typedef enum guiFlags_s {
+typedef enum eGuiFlags_t {
 	WFL_CURSOR			= 1 << 0,
 	WFL_FILL_COLOR		= 1 << 1,
 	WFL_MATERIAL		= 1 << 2,
 	WFL_ITEM			= 1 << 3,
-} guiFlags_t;
+};
+typedef uint32 guiFlags_t;
 
 /*
 =============================================================================
@@ -242,20 +243,22 @@ typedef struct eva_named_s {
 //
 // EVA_SET
 //
-typedef enum set_destType_s {
+enum eSet_destType_t{
 	EVA_SETDEST_FLOAT	= 1 << 0,
 	EVA_SETDEST_VEC		= 1 << 1,
 
 	// Or'd with what's above
 	EVA_SETDEST_STORAGE	= 1 << 2,
 	EVA_SETDEST_DEF		= 1 << 3
-} set_destType_t;
+};
+typedef uint32 set_destType_t;
 
-typedef enum set_srcType_s {
+typedef enum eSet_srcType_t {
 	EVA_SETSRC_STORAGE,
 	EVA_SETSRC_DEF,
 	EVA_SETSRC_GUIVAR,
-} set_srcType_t;
+};
+typedef uint32 set_srcType_t;
 
 typedef struct eva_set_s {
 	// Destination
@@ -327,7 +330,7 @@ typedef struct evAction_s {
 =============================================================================
 */
 
-typedef enum evType_s {
+enum eEvType_t {
 	WEV_NONE,
 
 	WEV_ACTION,
@@ -341,7 +344,8 @@ typedef enum evType_s {
 	WEV_TIME,
 
 	WEV_MAX
-} evType_t;
+};
+typedef int32 evType_t;
 
 typedef struct event_s {
 	evType_t			type;
