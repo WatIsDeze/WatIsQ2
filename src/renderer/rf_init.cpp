@@ -1263,8 +1263,8 @@ static void R_Register (void)
 	// Add the various commands
 	cmd_gfxInfo			= Cmd_AddCommand ("gfxinfo",		R_GfxInfo_f,			"Prints out renderer information");
 	cmd_rendererClass	= Cmd_AddCommand ("rendererclass",	R_RendererClass_f,		"Prints out the renderer class");
-	cmd_eglRenderer		= Cmd_AddCommand ("egl_renderer",	R_RendererMsg_f,		"Spams to the server your renderer information");
-	cmd_eglVersion		= Cmd_AddCommand ("egl_version",	R_VersionMsg_f,			"Spams to the server your client version");
+	cmd_eglRenderer		= Cmd_AddCommand ("wiq2_renderer",	R_RendererMsg_f,		"Spams to the server your renderer information");
+	cmd_eglVersion		= Cmd_AddCommand ("wiq2_version",	R_VersionMsg_f,			"Spams to the server your client version");
 }
 
 
@@ -1514,8 +1514,8 @@ void R_Shutdown (qBool full)
 	// Remove commands
 	Cmd_RemoveCommand ("gfxinfo", cmd_gfxInfo);
 	Cmd_RemoveCommand ("rendererclass", cmd_rendererClass);
-	Cmd_RemoveCommand ("egl_renderer", cmd_eglRenderer);
-	Cmd_RemoveCommand ("egl_version", cmd_eglVersion);
+	Cmd_RemoveCommand ("wiq2", cmd_eglRenderer);
+	Cmd_RemoveCommand ("wiq2", cmd_eglVersion);
 
 	// Shutdown subsystems
 	R_FontShutdown ();

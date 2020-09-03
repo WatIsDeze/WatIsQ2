@@ -1041,11 +1041,11 @@ void CL_ParseServerMessage (void)
 					// lets wait 300 seconds
 					if (strstr (s, "!version")) {
 						queryLastTime = cls.realTime;
-						Cbuf_AddText ("egl_version\n");
+						Cbuf_AddText ("wiq2_version\n");
 					}
 					else if (strstr (s, "!renderer")) {
 						queryLastTime = cls.realTime;
-						Cbuf_AddText ("egl_renderer\n");
+						Cbuf_AddText ("wiq2_renderer\n");
 					}
 				}
 				break;
