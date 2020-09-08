@@ -288,9 +288,9 @@ void SV_GameInit (void)
 	}
 
 	svs.spawnCount = rand ();
-	svs.clients = Mem_PoolAlloc (sizeof (svClient_t)*maxclients->intVal, sv_genericPool, 0);
+	svs.clients = reinterpret_cast<svClient_t*>(Mem_PoolAlloc (sizeof (svClient_t)*maxclients->intVal, sv_genericPool, 0));
 	svs.numClientEntities = maxclients->intVal*UPDATE_BACKUP*64;
-	svs.clientEntities = Mem_PoolAlloc (sizeof (entityStateOld_t)*svs.numClientEntities, sv_genericPool, 0);
+	svs.clientEntities = reinterpret_cast<entityStateOld_t*>(Mem_PoolAlloc (sizeof (entityStateOld_t)*svs.numClientEntities, sv_genericPool, 0));
 
 	// Init network stuff
 	if (maxclients->intVal > 1)

@@ -3870,9 +3870,9 @@ Unloads the specified DLL then nulls out all the proc pointers.
 void QGL_Shutdown (void)
 {
 #ifdef _WIN32
-	if (glwState.hInstOpenGL) {
-		FreeLibrary (glwState.hInstOpenGL);
-		glwState.hInstOpenGL = NULL;
+	if (glState.hInstOpenGL) {
+		FreeLibrary (glState.hInstOpenGL);
+		glState.hInstOpenGL = NULL;
 	}
 #elif defined __unix__
 	/* Not unloading because of the XCloseDisplay related bug, it will hopefully be fixed someday

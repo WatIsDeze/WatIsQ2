@@ -2663,7 +2663,7 @@ static material_t *R_RegisterMaterial (char *name, qBool forceDefault, matRegTyp
 		mat->cullType = MAT_CULL_FRONT;
 		mat->features = MF_STCOORDS|MF_NORMALS;
 		mat->flags = MAT_DEPTHWRITE;
-		mat->passes = Mem_PoolAlloc (sizeof (matPass_t), ri.matSysPool, 0);
+		mat->passes = reinterpret_cast<matPass_t*>(Mem_PoolAlloc (sizeof (matPass_t), ri.matSysPool, 0));
 		mat->numPasses = 1;
 		mat->sortKey = MAT_SORT_ENTITY;
 
@@ -2686,7 +2686,7 @@ static material_t *R_RegisterMaterial (char *name, qBool forceDefault, matRegTyp
 		mat->cullType = MAT_CULL_NONE;
 		mat->features = MF_STCOORDS|MF_COLORS;
 		mat->flags = 0;
-		mat->passes = Mem_PoolAlloc (sizeof (matPass_t), ri.matSysPool, 0);
+		mat->passes = reinterpret_cast<matPass_t*>(Mem_PoolAlloc (sizeof (matPass_t), ri.matSysPool, 0));
 		mat->numPasses = 1;
 		mat->sortKey = MAT_SORT_ADDITIVE;
 
@@ -2710,7 +2710,7 @@ static material_t *R_RegisterMaterial (char *name, qBool forceDefault, matRegTyp
 		mat->cullType = MAT_CULL_NONE;
 		mat->features = MF_STCOORDS|MF_COLORS;
 		mat->flags = MAT_ENTITY_MERGABLE;
-		mat->passes = Mem_PoolAlloc (sizeof (matPass_t), ri.matSysPool, 0);
+		mat->passes = reinterpret_cast<matPass_t*>(Mem_PoolAlloc (sizeof (matPass_t), ri.matSysPool, 0));
 		mat->numPasses = 1;
 		mat->sortKey = MAT_SORT_ENTITY;
 
@@ -2734,7 +2734,7 @@ static material_t *R_RegisterMaterial (char *name, qBool forceDefault, matRegTyp
 		mat->cullType = MAT_CULL_FRONT;
 		mat->features = MF_STCOORDS;
 		mat->flags = MAT_DEPTHWRITE|MAT_SKY|MAT_NOMARK;
-		mat->passes = Mem_PoolAlloc (sizeof (matPass_t), ri.matSysPool, 0);
+		mat->passes = reinterpret_cast<matPass_t*>(Mem_PoolAlloc (sizeof (matPass_t), ri.matSysPool, 0));
 		mat->numPasses = 1;
 		mat->sortKey = MAT_SORT_SKY;
 
@@ -2763,12 +2763,12 @@ static material_t *R_RegisterMaterial (char *name, qBool forceDefault, matRegTyp
 
 			// Add flowing if it's got the flag
 			if (surfParams & MAT_SURF_FLOWING) {
-				buffer = Mem_PoolAlloc (sizeof (matPass_t) + sizeof (tcMod_t), ri.matSysPool, 0);
+				buffer = static_cast<byte*>(Mem_PoolAlloc (sizeof (matPass_t) + sizeof (tcMod_t), ri.matSysPool, 0));
 				mat->passes = (matPass_t *)buffer;
 				buffer += sizeof (matPass_t);
 			}
 			else {
-				mat->passes = Mem_PoolAlloc (sizeof (matPass_t), ri.matSysPool, 0);
+				mat->passes = static_cast<byte*>(Mem_PoolAlloc (sizeof (matPass_t), ri.matSysPool, 0));
 			}
 			mat->numPasses = 1;
 

@@ -1322,11 +1322,11 @@ static qBool R_BuildQ2BSPSurface (refModel_t *model, mBspSurface_t *surf)
 
 	// Allocate space
 	if (ti->flags & (SURF_TEXINFO_SKY|SURF_TEXINFO_WARP)) {
-		buffer = static_cast<byte*>(R_ModAlloc (model, sizeof (mesh_t));
+		buffer = static_cast<byte*>(R_ModAlloc (model, sizeof (mesh_t)
 			+ (numVerts * sizeof (vec3_t) * 2)
 			+ (numIndexes * sizeof (index_t))
 			+ (numVerts * sizeof (vec2_t))
-			+ (numVerts * sizeof (bvec4_t)));
+			+ (numVerts * sizeof (bvec4_t))));
 	}
 	else {
 		buffer = static_cast<byte*>(R_ModAlloc (model, sizeof (mesh_t)
@@ -1811,7 +1811,7 @@ static qBool R_LoadQ2BSPSurfEdges (refModel_t *model, byte *byteBase, const dQ2B
 	int		*out;
 	int		i;
 
-	in = static_cast<int*>(byteBase + lump->fileOfs);
+	in = reinterpret_cast<int*>(byteBase + lump->fileOfs);
 	if (lump->fileLen % sizeof (*in)) {
 		Com_Printf (PRNT_ERROR, "R_LoadQ2BSPSurfEdges: funny lump size in %s", model->name);
 		return false;
@@ -2925,7 +2925,7 @@ static qBool R_LoadQ3BSPSubmodels (refModel_t *model, byte *byteBase, const dQ3B
 	}
 
 	model->bspModel.subModels = out = R_ModAlloc (model, model->bspModel.numSubModels * sizeof (*out));
-	model->bspModel.inlineModels = R_ModAlloc (model, sizeof (refModel_t) * model->bspModel.numSubModels);
+	model->bspModel.inlineModels = reinterpret_cast<refModel_s*>(R_ModAlloc (model, sizeof (refModel_t) * model->bspModel.numSubModels));
 
 	for (i=0 ; i<model->bspModel.numSubModels ; i++, in++, out++) {
 		// Spread the mins / maxs by a pixel
@@ -2956,14 +2956,14 @@ static qBool R_LoadQ3BSPShaderRefs (refModel_t *model, byte *byteBase, const dQ3
 	dQ3BspShaderRef_t	*in;
 	mQ3BspShaderRef_t	*out;
 
-	in = (void *)(byteBase + lump->fileOfs);
+	in = reinterpret_cast<dQ3BspShaderRef_t*>(byteBase + lump->fileOfs);
 	if (lump->fileLen % sizeof (*in)) {
 		Com_Printf (PRNT_ERROR, "R_LoadQ3BSPShaderRefs: funny lump size in %s", model->name);	
 		return false;
 	}
 
 	model->q3BspModel.numShaderRefs = lump->fileLen / sizeof (*in);
-	model->q3BspModel.shaderRefs = out = R_ModAlloc (model, model->q3BspModel.numShaderRefs * sizeof (*out));
+	model->q3BspModel.shaderRefs = out = reinterpret_cast<mQ3BspShaderRef_t*>(R_ModAlloc (model, model->q3BspModel.numShaderRefs * sizeof (*out)));
 
 	for (i=0 ; i<model->q3BspModel.numShaderRefs ; i++, in++, out++) {
 		Q_strncpyz (out->name, in->name, sizeof (out->name));
@@ -3053,11 +3053,11 @@ static mesh_t *R_CreateQ3BSPMeshForSurface (refModel_t *model, dQ3BspFace_t *in,
 			out->q3_patchWidth = size[0];
 			out->q3_patchHeight = size[1];
 
-			buffer = R_ModAlloc (model, sizeof (mesh_t)
+			buffer = static_cast<byte*>(R_ModAlloc (model, sizeof (mesh_t)
 				+ (numVerts * sizeof (vec2_t) * 2)
 				+ (numVerts * sizeof (vec3_t) * 2)
 				+ (numVerts * sizeof (bvec4_t))
-				+ (numVerts * sizeof (index_t) * ((size[0]-1) * (size[1]-1) * 6)));
+				+ (numVerts * sizeof (index_t) * ((size[0]-1) * (size[1]-1) * 6))));
 
 			mesh = (mesh_t *)buffer; buffer += sizeof (mesh_t);
 			mesh->numVerts = numVerts;
@@ -3187,14 +3187,14 @@ static qBool R_LoadQ3BSPFaces (refModel_t *model, byte *byteBase, const dQ3BspLu
 	int					shaderNum, fogNum, surfNum;
 	float				*vert;
 
-	in = (void *)(byteBase + lump->fileOfs);
+	in = reinterpret_cast<dQ3BspFace_t*>(byteBase + lump->fileOfs);
 	if (lump->fileLen % sizeof (*in)) {
 		Com_Printf (PRNT_ERROR, "Mod_LoadFaces: funny lump size in %s", model->name);
 		return false;
 	}
 
 	model->bspModel.numSurfaces = lump->fileLen / sizeof (*in);
-	model->bspModel.surfaces = out = R_ModAlloc (model, model->bspModel.numSurfaces * sizeof (*out));
+	model->bspModel.surfaces = out = reinterpret_cast<mBspSurface_t*>(R_ModAlloc (model, model->bspModel.numSurfaces * sizeof (*out)));
 
 	// Fill it in
 	for (surfNum=0 ; surfNum<model->bspModel.numSurfaces ; surfNum++, in++, out++) {
