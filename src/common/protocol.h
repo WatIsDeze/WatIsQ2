@@ -246,27 +246,30 @@ typedef struct netStats_s {
 
 extern netStats_t	netStats;
 
-typedef enum netAdrType_s {
+enum eNetAdrType_s {
 	NA_LOOPBACK,
 	NA_BROADCAST,
 	NA_IP,
 
 	NA_MAX
-} netAdrType_t;
+};
+typedef int32 netAdrType_t;
 
-typedef enum netSrc_s {
+enum eNetSrc_s {
 	NS_CLIENT,
 	NS_SERVER,
 
 	NS_MAX
-} netSrc_t;
+};
+typedef uint32 netSrc_t;
 
-typedef enum netConfig_s {
+enum eNetConfig_s {
 	NET_NONE,
 
 	NET_CLIENT		= 1 << 0,
 	NET_SERVER		= 1 << 1,
-} netConfig_t;
+};
+typedef int32 netConfig_t;
 
 typedef struct netAdr_s {
 	netAdrType_t	naType;

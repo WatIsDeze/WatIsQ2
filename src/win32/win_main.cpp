@@ -18,8 +18,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
 
 //
-// win_main.c
+// win_main.cpp
 //
+#include <string>
 
 #include "../common/common.h"
 #include "win_local.h"
@@ -32,6 +33,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #include <io.h>
 #include <conio.h>
 #include <VersionHelpers.h>
+
 
 #define MINIMUM_WIN_MEMORY	0x0a00000
 #define MAXIMUM_WIN_MEMORY	0x1000000
@@ -299,8 +301,8 @@ char *Sys_GetClipboardData (void)
 		HANDLE hClipboardData;
 
 		if ((hClipboardData = GetClipboardData (CF_TEXT)) != 0) {
-			if ((cliptext = GlobalLock (hClipboardData)) != 0) {
-				data = Mem_Alloc (GlobalSize (hClipboardData) + 1);
+			if ((cliptext = reinterpret_cast<char*>(GlobalLock (hClipboardData))) != 0) {
+				data = reinterpret_cast<char*>(Mem_Alloc (GlobalSize (hClipboardData) + 1));
 				strcpy (data, cliptext);
 				GlobalUnlock (hClipboardData);
 			}
@@ -508,13 +510,14 @@ int Sys_FindFiles (char *path, char *pattern, char **fileList, int maxFiles, int
 typedef struct libList_s {
 	const char		*title;
 	HINSTANCE		hInst;
-	const char		*fileName;
+	std::string		fileName;
 	LPCSTR			apiFuncName;
 } libList_t;
 
+#define LIBARCH "x86_64"
 static libList_t sys_libList[LIB_MAX] = {
-	{ "LIB_CGAME",	NULL,	"cgame" LIBARCH ".dll",		"GetCGameAPI"	},
-	{ "LIB_GAME",	NULL,	"game" LIBARCH ".dll",		"GetGameAPI"	},
+	{ "LIB_CGAME",	NULL,	"cgame" + std::string(LIBARCH) + ".dll",		"GetCGameAPI"	},
+	{ "LIB_GAME",	NULL,	"game" + std::string(LIBARCH) + ".dll",		"GetGameAPI"	},
 };
 
 /*
@@ -565,7 +568,7 @@ void *Sys_LoadLibrary (libType_t libType, void *parms)
 
 	// Find the library
 	lib = &sys_libList[libType].hInst;
-	libName = sys_libList[libType].fileName;
+	libName = sys_libList[libType].fileName.c_str();
 
 	// Make sure it's not already loaded first
 	if (*lib)

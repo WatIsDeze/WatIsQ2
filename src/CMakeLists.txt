@@ -150,8 +150,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/stuff/cmake/modules ${CMAKE_MODU
 list(APPEND CMAKE_PREFIX_PATH /usr/local)
 
 # Define LIBARCH to architecture found.
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}-DLIBARCH=${ARCH}")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}-DLIBARCH=${ARCH}")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}-DLIBARCH=\"${ARCH}\"")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}-DLIBARCH=\"${ARCH}\"")
 
 # Enforce C compiler flags:
 #  -Wall                -> More warnings
@@ -194,7 +194,7 @@ set(WIQ2_SRCDIR_RENDERER ${WIQ2_SRCDIR_ROOT_DIR}/renderer)
 set(WIQ2_SRCDIR_SERVER ${WIQ2_SRCDIR_ROOT_DIR}/server)
 set(WIQ2_SRCDIR_SHARED ${WIQ2_SRCDIR_ROOT_DIR}/shared)
 set(WIQ2_SRCDIR_UNIX ${WIQ2_SRCDIR_ROOT_DIR}/unix)
-set(WIQ2_SRCDIR_WIN32_DIR ${WIQ2_SRCDIR_ROOT_DIR}/win32)
+set(WIQ2_SRCDIR_WIN32 ${WIQ2_SRCDIR_ROOT_DIR}/win32)
 
 # Required libraries to build the different components of the binaries. Find
 find_package(SDL REQUIRED)
@@ -492,10 +492,10 @@ if(UNIX)
     )
 elseif(WIN32)
     list(APPEND WIQ2_SRC_ENGINE 
-        #${WIQ2_SRCDIR_WIN32}/win_console.cpp 
-        #${WIQ2_SRCDIR_WIN32}/win_main.cpp 
-        #${WIQ2_SRCDIR_WIN32}/win_snd_cd.cpp 
-        #${WIQ2_SRCDIR_WIN32}/win_sock.cpp 
+        ${WIQ2_SRCDIR_WIN32}/win_console.cpp 
+        ${WIQ2_SRCDIR_WIN32}/win_main.cpp 
+        ${WIQ2_SRCDIR_WIN32}/win_snd_cd.cpp 
+        ${WIQ2_SRCDIR_WIN32}/win_sock.cpp 
     )
 endif()
 
@@ -547,6 +547,8 @@ if(${BUILD_WIQ2})
             ${WIQ2_LINKER_FLAGS} 
             ${SDL_LIBRARY} 
             ${OPENAL_LIBRARY} 
+            ${OPENGL_LIBRARY}
+            ${GLEW_LIBRARY}
             ${PNG_LIBRARIES} 
             ${JPEG_LIBRARIES} 
             ${ZLIB_LIBRARIES} 

@@ -240,7 +240,7 @@ void Sys_CreateConsole (void)
 	wc.hInstance     = sys_winInfo.hInstance;
 	wc.hIcon         = LoadIcon (sys_winInfo.hInstance, MAKEINTRESOURCE (IDI_ICON1));
 	wc.hCursor       = LoadCursor (NULL,IDC_ARROW);
-	wc.hbrBackground = (void *)COLOR_WINDOW;
+	wc.hbrBackground = (HBRUSH)COLOR_WINDOW;
 	wc.lpszMenuName  = 0;
 	wc.lpszClassName = DEDCLASS;
 

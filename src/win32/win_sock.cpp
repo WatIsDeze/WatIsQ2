@@ -419,7 +419,7 @@ int NET_SendPacket (netSrc_t sock, size_t length, void *data, netAdr_t *to)
 
 	NET_NetAdrToSockAdr (to, &addr);
 
-	ret = sendto (netSocket, data, (int) length, 0, &addr, sizeof (addr));
+	ret = sendto (netSocket, reinterpret_cast<char*>(data), (int) length, 0, &addr, sizeof (addr));
 	if (ret == -1) {
 		int error = WSAGetLastError ();
 
@@ -509,7 +509,7 @@ static int NET_GetIPSocket (char *netInterface, int port)
 	address.sin_port = (port == PORT_ANY) ? 0 : htons((int16)port);
 	address.sin_family = AF_INET;
 
-	if (bind (newSocket, (void *)&address, sizeof (address)) == -1) {
+	if (bind (newSocket, (const sockaddr*)&address, sizeof (address)) == -1) {
 		Com_Printf (PRNT_WARNING, "WARNING: NET_GetIPSocket: bind: %s\n", NET_ErrorString (WSAGetLastError ()));
 		closesocket (newSocket);
 		return 0;
