@@ -444,11 +444,11 @@ void R_DrawAliasModel (meshBuffer_t *mb, qBool shadowPass)
 
 	// Depth hacking
 	if (ent->flags & RF_DEPTHHACK)
-		qglDepthRange (0, 0.3f);
+		glDepthRange (0, 0.3f);
 
 	// Flip it for lefty
 	if (ent->flags & RF_CULLHACK)
-		qglFrontFace (GL_CW);
+		glFrontFace (GL_CW);
 
 	// Interpolation calculations
 	backLerp = ent->backLerp;
@@ -601,9 +601,9 @@ void R_DrawAliasModel (meshBuffer_t *mb, qBool shadowPass)
 
 	// Flip it for lefty
 	if (ent->flags & RF_CULLHACK)
-		qglFrontFace (GL_CCW);
+		glFrontFace (GL_CCW);
 
 	// Depth hacking
 	if (ent->flags & RF_DEPTHHACK)
-		qglDepthRange (0, 1);
+		glDepthRange (0, 1);
 }

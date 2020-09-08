@@ -204,6 +204,7 @@ find_package(ZLIB REQUIRED)
 find_package(PNG REQUIRED)
 find_package(JPEG REQUIRED)
 find_package(X11 REQUIRED)
+find_package(GLEW REQUIRED)
 
 # Minizip..
 INCLUDE (FindPkgConfig)
@@ -434,7 +435,7 @@ set(WIQ2_SRC_ENGINE
     ${WIQ2_SRCDIR_RENDERER}/rb_entity.cpp 
     ${WIQ2_SRCDIR_RENDERER}/rb_light.cpp 
     ${WIQ2_SRCDIR_RENDERER}/rb_math.cpp 
-    ${WIQ2_SRCDIR_RENDERER}/rb_qgl.cpp 
+    ${WIQ2_SRCDIR_RENDERER}/rb_gl.cpp 
     ${WIQ2_SRCDIR_RENDERER}/rb_render.cpp 
     ${WIQ2_SRCDIR_RENDERER}/rb_shadow.cpp 
     ${WIQ2_SRCDIR_RENDERER}/rb_state.cpp 

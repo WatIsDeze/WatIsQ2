@@ -79,7 +79,7 @@ void RB_LockArrays (int numVerts)
 	if (!ri.config.extCompiledVertArray)
 		return;
 
-	qglLockArraysEXT (0, numVerts);
+	glLockArraysEXT (0, numVerts);
 	rb_arraysLocked = true;
 }
 
@@ -94,7 +94,7 @@ void RB_UnlockArrays (void)
 	if (!rb_arraysLocked)
 		return;
 
-	qglUnlockArraysEXT ();
+	glUnlockArraysEXT ();
 	rb_arraysLocked = false;
 }
 
@@ -338,8 +338,8 @@ static qBool RB_SetupColorFast (const matPass_t *pass)
 		return false;
 	}
 
-	qglDisableClientState (GL_COLOR_ARRAY);
-	qglColor4ubv (color);
+	glDisableClientState (GL_COLOR_ARRAY);
+	glColor4ubv (color);
 	return true;
 }
 
@@ -597,12 +597,12 @@ static void RB_SetupColor (const matPass_t *pass)
 
 	// Set color
 	if (numColors == 1) {
-		qglDisableClientState (GL_COLOR_ARRAY);
-		qglColor4ubv (rb_outColorArray[0]);
+		glDisableClientState (GL_COLOR_ARRAY);
+		glColor4ubv (rb_outColorArray[0]);
 	}
 	else {
-		qglEnableClientState (GL_COLOR_ARRAY);
-		qglColorPointer (4, GL_UNSIGNED_BYTE, 0, rb_outColorArray);
+		glEnableClientState (GL_COLOR_ARRAY);
+		glColorPointer (4, GL_UNSIGNED_BYTE, 0, rb_outColorArray);
 	}
 }
 
@@ -661,17 +661,17 @@ static void RB_VertexTCBaseGeneric (matPass_t *pass, texUnit_t texUnit)
 	// State
 	switch (pass->tcGen) {
 	case TC_GEN_REFLECTION:
-		qglEnable (GL_TEXTURE_GEN_S);
-		qglEnable (GL_TEXTURE_GEN_T);
-		qglEnable (GL_TEXTURE_GEN_R);
-		qglEnableClientState (GL_NORMAL_ARRAY);
+		glEnable (GL_TEXTURE_GEN_S);
+		glEnable (GL_TEXTURE_GEN_T);
+		glEnable (GL_TEXTURE_GEN_R);
+		glEnableClientState (GL_NORMAL_ARRAY);
 		break;
 
 	default:
-		qglDisable (GL_TEXTURE_GEN_S);
-		qglDisable (GL_TEXTURE_GEN_T);
-		qglDisable (GL_TEXTURE_GEN_R);
-		qglDisableClientState (GL_NORMAL_ARRAY);
+		glDisable (GL_TEXTURE_GEN_S);
+		glDisable (GL_TEXTURE_GEN_T);
+		glDisable (GL_TEXTURE_GEN_R);
+		glDisableClientState (GL_NORMAL_ARRAY);
 		break;
 	}
 
@@ -686,7 +686,7 @@ static void RB_VertexTCBaseGeneric (matPass_t *pass, texUnit_t texUnit)
 			break;
 		}
 
-		qglTexCoordPointer (2, GL_FLOAT, 0, rb.inCoords);
+		glTexCoordPointer (2, GL_FLOAT, 0, rb.inCoords);
 		return;
 
 	case TC_GEN_LIGHTMAP:
@@ -698,7 +698,7 @@ static void RB_VertexTCBaseGeneric (matPass_t *pass, texUnit_t texUnit)
 			break;
 		}
 
-		qglTexCoordPointer (2, GL_FLOAT, 0, rb.inLMCoords);
+		glTexCoordPointer (2, GL_FLOAT, 0, rb.inLMCoords);
 		return;
 
 	case TC_GEN_ENVIRONMENT:
@@ -751,11 +751,11 @@ static void RB_VertexTCBaseGeneric (matPass_t *pass, texUnit_t texUnit)
 		break;
 
 	case TC_GEN_REFLECTION:
-		qglTexGeni (GL_S, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP_ARB);
-		qglTexGeni (GL_T, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP_ARB);
-		qglTexGeni (GL_R, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP_ARB);
+		glTexGeni (GL_S, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP_ARB);
+		glTexGeni (GL_T, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP_ARB);
+		glTexGeni (GL_R, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP_ARB);
 
-		qglNormalPointer (GL_FLOAT, 12, rb.inNormals);
+		glNormalPointer (GL_FLOAT, 12, rb.inNormals);
 		break;
 
 
@@ -859,7 +859,7 @@ static void RB_VertexTCBaseGeneric (matPass_t *pass, texUnit_t texUnit)
 		break;
 	}
 
-	qglTexCoordPointer (2, GL_FLOAT, 0, rb_outCoordArray[texUnit][0]);
+	glTexCoordPointer (2, GL_FLOAT, 0, rb_outCoordArray[texUnit][0]);
 }
 static void RB_ModifyTextureCoordsGeneric (matPass_t *pass, texUnit_t texUnit)
 {
@@ -1026,35 +1026,35 @@ static qBool RB_VertexTCBaseMatrix (matPass_t *pass, texUnit_t texUnit, mat4x4_t
 	// State
 	switch (pass->tcGen) {
 	case TC_GEN_REFLECTION:
-		qglEnable (GL_TEXTURE_GEN_S);
-		qglEnable (GL_TEXTURE_GEN_T);
-		qglEnable (GL_TEXTURE_GEN_R);
-		qglEnableClientState (GL_NORMAL_ARRAY);
+		glEnable (GL_TEXTURE_GEN_S);
+		glEnable (GL_TEXTURE_GEN_T);
+		glEnable (GL_TEXTURE_GEN_R);
+		glEnableClientState (GL_NORMAL_ARRAY);
 		break;
 
 	case TC_GEN_VECTOR:
-		qglEnable (GL_TEXTURE_GEN_S);
-		qglEnable (GL_TEXTURE_GEN_T);
-		qglDisable (GL_TEXTURE_GEN_R);
-		qglDisableClientState (GL_NORMAL_ARRAY);
+		glEnable (GL_TEXTURE_GEN_S);
+		glEnable (GL_TEXTURE_GEN_T);
+		glDisable (GL_TEXTURE_GEN_R);
+		glDisableClientState (GL_NORMAL_ARRAY);
 		break;
 
 	default:
-		qglDisable (GL_TEXTURE_GEN_S);
-		qglDisable (GL_TEXTURE_GEN_T);
-		qglDisable (GL_TEXTURE_GEN_R);
-		qglDisableClientState (GL_NORMAL_ARRAY);
+		glDisable (GL_TEXTURE_GEN_S);
+		glDisable (GL_TEXTURE_GEN_T);
+		glDisable (GL_TEXTURE_GEN_R);
+		glDisableClientState (GL_NORMAL_ARRAY);
 		break;
 	}
 
 	// tcGen
 	switch (pass->tcGen) {
 	case TC_GEN_BASE:
-		qglTexCoordPointer (2, GL_FLOAT, 0, rb.inCoords);
+		glTexCoordPointer (2, GL_FLOAT, 0, rb.inCoords);
 		return true;
 
 	case TC_GEN_LIGHTMAP:
-		qglTexCoordPointer (2, GL_FLOAT, 0, rb.inLMCoords);
+		glTexCoordPointer (2, GL_FLOAT, 0, rb.inLMCoords);
 		return true;
 
 	case TC_GEN_ENVIRONMENT:
@@ -1100,7 +1100,7 @@ static qBool RB_VertexTCBaseMatrix (matPass_t *pass, texUnit_t texUnit, mat4x4_t
 			}
 		}
 
-		qglTexCoordPointer (2, GL_FLOAT, 0, rb_outCoordArray[texUnit][0]);
+		glTexCoordPointer (2, GL_FLOAT, 0, rb_outCoordArray[texUnit][0]);
 		return false;
 
 	case TC_GEN_VECTOR:
@@ -1116,19 +1116,19 @@ static qBool RB_VertexTCBaseMatrix (matPass_t *pass, texUnit_t texUnit, mat4x4_t
 			matrix[12] = pass->tcGenVec[0][3];
 			matrix[13] = pass->tcGenVec[1][3];
 
-			qglTexGeni (GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
-			qglTexGeni (GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
-			qglTexGenfv (GL_S, GL_OBJECT_PLANE, genVector[0]);
-			qglTexGenfv (GL_T, GL_OBJECT_PLANE, genVector[1]);
+			glTexGeni (GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
+			glTexGeni (GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
+			glTexGenfv (GL_S, GL_OBJECT_PLANE, genVector[0]);
+			glTexGenfv (GL_T, GL_OBJECT_PLANE, genVector[1]);
 			return false;
 		}
 
 	case TC_GEN_REFLECTION:
-		qglTexGeni (GL_S, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP_ARB);
-		qglTexGeni (GL_T, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP_ARB);
-		qglTexGeni (GL_R, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP_ARB);
+		glTexGeni (GL_S, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP_ARB);
+		glTexGeni (GL_T, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP_ARB);
+		glTexGeni (GL_R, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP_ARB);
 
-		qglNormalPointer (GL_FLOAT, 12, rb.inNormals);
+		glNormalPointer (GL_FLOAT, 12, rb.inNormals);
 		return true;
 
 	case TC_GEN_WARP:
@@ -1137,7 +1137,7 @@ static qBool RB_VertexTCBaseMatrix (matPass_t *pass, texUnit_t texUnit, mat4x4_t
 			rb_outCoordArray[texUnit][i][1] = rb.inCoords[i][1] + (r_warpSinTable[(uint8_t) (((rb.inCoords[i][0]*8.0f + rb_matTime) * (256.0f / (M_PI * 2.0f)))) & 255] * (1.0/64));
 		}
 
-		qglTexCoordPointer (2, GL_FLOAT, 0, rb_outCoordArray[texUnit][0]);
+		glTexCoordPointer (2, GL_FLOAT, 0, rb_outCoordArray[texUnit][0]);
 		return true;
 
 	case TC_GEN_DLIGHT:
@@ -1225,7 +1225,7 @@ static qBool RB_VertexTCBaseMatrix (matPass_t *pass, texUnit_t texUnit, mat4x4_t
 				}
 			}
 
-			qglTexCoordPointer (2, GL_FLOAT, 0, rb_outCoordArray[texUnit][0]);
+			glTexCoordPointer (2, GL_FLOAT, 0, rb_outCoordArray[texUnit][0]);
 			return false;
 		}
 	}
@@ -1243,7 +1243,7 @@ static void RB_ModifyTextureCoordsMatrix (matPass_t *pass, texUnit_t texUnit)
 	identityMatrix = RB_VertexTCBaseMatrix (pass, texUnit, result);
 
 	// Texture coordinate modifications
-	qglMatrixMode (GL_TEXTURE);
+	glMatrixMode (GL_TEXTURE);
 
 	if (pass->numTCMods) {
 		identityMatrix = false;
@@ -1607,9 +1607,9 @@ static void RB_DrawElements (void)
 
 	// Flush
 	if (ri.config.extDrawRangeElements)
-		qglDrawRangeElementsEXT (GL_TRIANGLES, 0, rb.numVerts, rb.numIndexes, GL_UNSIGNED_INT, rb.inIndices);
+		glDrawRangeElementsEXT (GL_TRIANGLES, 0, rb.numVerts, rb.numIndexes, GL_UNSIGNED_INT, rb.inIndices);
 	else
-		qglDrawElements (GL_TRIANGLES, rb.numIndexes, GL_UNSIGNED_INT, rb.inIndices);
+		glDrawElements (GL_TRIANGLES, rb.numIndexes, GL_UNSIGNED_INT, rb.inIndices);
 
 	// Increment performance counters
 	if (rb_triangleOutlines || !r_speeds->intVal)
@@ -1645,20 +1645,20 @@ static void RB_CleanUpTextureUnits (void)
 	texUnit_t		i;
 
 	if (rb_matrixCoords)
-		qglMatrixMode (GL_TEXTURE);
+		glMatrixMode (GL_TEXTURE);
 
 	for (i=rb_numOldPasses ; i>rb_numPasses ; i--) {
 		RB_SelectTexture (i-1);
 		RB_TextureTarget (0);
-		qglDisable (GL_TEXTURE_GEN_S);
-		qglDisable (GL_TEXTURE_GEN_T);
-		qglDisable (GL_TEXTURE_GEN_R);
-		qglDisableClientState (GL_TEXTURE_COORD_ARRAY);
+		glDisable (GL_TEXTURE_GEN_S);
+		glDisable (GL_TEXTURE_GEN_T);
+		glDisable (GL_TEXTURE_GEN_R);
+		glDisableClientState (GL_TEXTURE_COORD_ARRAY);
 		RB_LoadIdentityTexMatrix ();
 	}
 
 	if (rb_matrixCoords)
-		qglMatrixMode (GL_MODELVIEW);
+		glMatrixMode (GL_MODELVIEW);
 
 	rb_numOldPasses = rb_numPasses;
 }
@@ -1691,9 +1691,9 @@ static void RB_BindMaterialPass (matPass_t *pass, image_t *image, texUnit_t texU
 	// FIXME: This is kind of hacky
 	RB_TextureTarget (image->target);
 	if (image->flags & (IT_3D|IT_CUBEMAP))
-		qglDisableClientState (GL_TEXTURE_COORD_ARRAY);
+		glDisableClientState (GL_TEXTURE_COORD_ARRAY);
 	else
-		qglEnableClientState (GL_TEXTURE_COORD_ARRAY);
+		glEnableClientState (GL_TEXTURE_COORD_ARRAY);
 
 	// Modify the texture coordinates
 	RB_ModifyTextureCoords (pass, texUnit);
@@ -1716,41 +1716,41 @@ static void RB_SetupPassState (matPass_t *pass, qBool mTex)
 	if (pass->flags & MAT_PASS_VERTEXPROGRAM) {
 		program = pass->vertProgPtr;
 
-		qglEnable (GL_VERTEX_PROGRAM_ARB);
+		glEnable (GL_VERTEX_PROGRAM_ARB);
 		RB_BindProgram (program);
 
-		qglProgramLocalParameter4fARB (GL_VERTEX_PROGRAM_ARB, 0, ri.def.viewOrigin[0], ri.def.viewOrigin[1], ri.def.viewOrigin[2], 0);
-		qglProgramLocalParameter4fARB (GL_VERTEX_PROGRAM_ARB, 1, ri.def.viewAxis[0][0], ri.def.viewAxis[0][1], ri.def.viewAxis[0][2], 0);
-		qglProgramLocalParameter4fARB (GL_VERTEX_PROGRAM_ARB, 2, ri.def.rightVec[0], ri.def.rightVec[1], ri.def.rightVec[2], 0);
-		qglProgramLocalParameter4fARB (GL_VERTEX_PROGRAM_ARB, 3, ri.def.viewAxis[2][0], ri.def.viewAxis[2][1], ri.def.viewAxis[2][2], 0);
-		qglProgramLocalParameter4fARB (GL_VERTEX_PROGRAM_ARB, 4, rb.curEntity->origin[0], rb.curEntity->origin[1], rb.curEntity->origin[2], 0);
-		qglProgramLocalParameter4fARB (GL_VERTEX_PROGRAM_ARB, 5, rb.curEntity->axis[0][0], rb.curEntity->axis[0][1], rb.curEntity->axis[0][2], 0);
-		qglProgramLocalParameter4fARB (GL_VERTEX_PROGRAM_ARB, 6, rb.curEntity->axis[1][0], rb.curEntity->axis[1][1], rb.curEntity->axis[1][2], 0);
-		qglProgramLocalParameter4fARB (GL_VERTEX_PROGRAM_ARB, 7, rb.curEntity->axis[2][0], rb.curEntity->axis[2][1], rb.curEntity->axis[2][2], 0);
-		qglProgramLocalParameter4fARB (GL_VERTEX_PROGRAM_ARB, 8, rb_matTime, 0, 0, 0);
+		glProgramLocalParameter4fARB (GL_VERTEX_PROGRAM_ARB, 0, ri.def.viewOrigin[0], ri.def.viewOrigin[1], ri.def.viewOrigin[2], 0);
+		glProgramLocalParameter4fARB (GL_VERTEX_PROGRAM_ARB, 1, ri.def.viewAxis[0][0], ri.def.viewAxis[0][1], ri.def.viewAxis[0][2], 0);
+		glProgramLocalParameter4fARB (GL_VERTEX_PROGRAM_ARB, 2, ri.def.rightVec[0], ri.def.rightVec[1], ri.def.rightVec[2], 0);
+		glProgramLocalParameter4fARB (GL_VERTEX_PROGRAM_ARB, 3, ri.def.viewAxis[2][0], ri.def.viewAxis[2][1], ri.def.viewAxis[2][2], 0);
+		glProgramLocalParameter4fARB (GL_VERTEX_PROGRAM_ARB, 4, rb.curEntity->origin[0], rb.curEntity->origin[1], rb.curEntity->origin[2], 0);
+		glProgramLocalParameter4fARB (GL_VERTEX_PROGRAM_ARB, 5, rb.curEntity->axis[0][0], rb.curEntity->axis[0][1], rb.curEntity->axis[0][2], 0);
+		glProgramLocalParameter4fARB (GL_VERTEX_PROGRAM_ARB, 6, rb.curEntity->axis[1][0], rb.curEntity->axis[1][1], rb.curEntity->axis[1][2], 0);
+		glProgramLocalParameter4fARB (GL_VERTEX_PROGRAM_ARB, 7, rb.curEntity->axis[2][0], rb.curEntity->axis[2][1], rb.curEntity->axis[2][2], 0);
+		glProgramLocalParameter4fARB (GL_VERTEX_PROGRAM_ARB, 8, rb_matTime, 0, 0, 0);
 	}
 	else if (ri.config.extVertexProgram)
-		qglDisable (GL_VERTEX_PROGRAM_ARB);
+		glDisable (GL_VERTEX_PROGRAM_ARB);
 
 	// Fragment program
 	if (pass->flags & MAT_PASS_FRAGMENTPROGRAM) {
 		program = pass->fragProgPtr;
 
-		qglEnable (GL_FRAGMENT_PROGRAM_ARB);
+		glEnable (GL_FRAGMENT_PROGRAM_ARB);
 		RB_BindProgram (program);
 
-		qglProgramLocalParameter4fARB (GL_FRAGMENT_PROGRAM_ARB, 0, ri.def.viewOrigin[0], ri.def.viewOrigin[1], ri.def.viewOrigin[2], 0);
-		qglProgramLocalParameter4fARB (GL_FRAGMENT_PROGRAM_ARB, 1, ri.def.viewAxis[0][0], ri.def.viewAxis[0][1], ri.def.viewAxis[0][2], 0);
-		qglProgramLocalParameter4fARB (GL_FRAGMENT_PROGRAM_ARB, 2, ri.def.rightVec[0], ri.def.rightVec[1], ri.def.rightVec[2], 0);
-		qglProgramLocalParameter4fARB (GL_FRAGMENT_PROGRAM_ARB, 3, ri.def.viewAxis[2][0], ri.def.viewAxis[2][1], ri.def.viewAxis[2][2], 0);
-		qglProgramLocalParameter4fARB (GL_FRAGMENT_PROGRAM_ARB, 4, rb.curEntity->origin[0], rb.curEntity->origin[1], rb.curEntity->origin[2], 0);
-		qglProgramLocalParameter4fARB (GL_FRAGMENT_PROGRAM_ARB, 5, rb.curEntity->axis[0][0], rb.curEntity->axis[0][1], rb.curEntity->axis[0][2], 0);
-		qglProgramLocalParameter4fARB (GL_FRAGMENT_PROGRAM_ARB, 6, rb.curEntity->axis[1][0], rb.curEntity->axis[1][1], rb.curEntity->axis[1][2], 0);
-		qglProgramLocalParameter4fARB (GL_FRAGMENT_PROGRAM_ARB, 7, rb.curEntity->axis[2][0], rb.curEntity->axis[2][1], rb.curEntity->axis[2][2], 0);
-		qglProgramLocalParameter4fARB (GL_FRAGMENT_PROGRAM_ARB, 8, rb_matTime, 0, 0, 0);
+		glProgramLocalParameter4fARB (GL_FRAGMENT_PROGRAM_ARB, 0, ri.def.viewOrigin[0], ri.def.viewOrigin[1], ri.def.viewOrigin[2], 0);
+		glProgramLocalParameter4fARB (GL_FRAGMENT_PROGRAM_ARB, 1, ri.def.viewAxis[0][0], ri.def.viewAxis[0][1], ri.def.viewAxis[0][2], 0);
+		glProgramLocalParameter4fARB (GL_FRAGMENT_PROGRAM_ARB, 2, ri.def.rightVec[0], ri.def.rightVec[1], ri.def.rightVec[2], 0);
+		glProgramLocalParameter4fARB (GL_FRAGMENT_PROGRAM_ARB, 3, ri.def.viewAxis[2][0], ri.def.viewAxis[2][1], ri.def.viewAxis[2][2], 0);
+		glProgramLocalParameter4fARB (GL_FRAGMENT_PROGRAM_ARB, 4, rb.curEntity->origin[0], rb.curEntity->origin[1], rb.curEntity->origin[2], 0);
+		glProgramLocalParameter4fARB (GL_FRAGMENT_PROGRAM_ARB, 5, rb.curEntity->axis[0][0], rb.curEntity->axis[0][1], rb.curEntity->axis[0][2], 0);
+		glProgramLocalParameter4fARB (GL_FRAGMENT_PROGRAM_ARB, 6, rb.curEntity->axis[1][0], rb.curEntity->axis[1][1], rb.curEntity->axis[1][2], 0);
+		glProgramLocalParameter4fARB (GL_FRAGMENT_PROGRAM_ARB, 7, rb.curEntity->axis[2][0], rb.curEntity->axis[2][1], rb.curEntity->axis[2][2], 0);
+		glProgramLocalParameter4fARB (GL_FRAGMENT_PROGRAM_ARB, 8, rb_matTime, 0, 0, 0);
 	}
 	else if (ri.config.extFragmentProgram)
-		qglDisable (GL_FRAGMENT_PROGRAM_ARB);
+		glDisable (GL_FRAGMENT_PROGRAM_ARB);
 
 	// Blending
 	if (pass->flags & MAT_PASS_BLEND) {
@@ -1764,16 +1764,16 @@ static void RB_SetupPassState (matPass_t *pass, qBool mTex)
 
 	// Nasty hack!!!
 	if (!rb_glState.in2D) {
-		qglDepthFunc (pass->depthFunc);
+		glDepthFunc (pass->depthFunc);
 		if (pass->flags & MAT_PASS_DEPTHWRITE && !(rb.curEntity->flags & RF_TRANSLUCENT)) // FIXME: necessary Quake2 hack
 			sb1 |= SB1_DEPTHMASK_ON;
 	}
 
 	// Mask colors
 	if (pass->totalMask)
-		qglColorMask (!pass->maskRed, !pass->maskGreen, !pass->maskBlue, !pass->maskAlpha);
+		glColorMask (!pass->maskRed, !pass->maskGreen, !pass->maskBlue, !pass->maskAlpha);
 	else
-		qglColorMask (GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+		glColorMask (GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 
 	// Commit
 	RB_StateForBits (sb1);
@@ -1807,33 +1807,33 @@ static void RB_RenderDLights (void)
 
 	// Texture state
 	if (ri.config.extTex3D) {
-		qglEnable (GL_TEXTURE_GEN_S);
-		qglTexGeni (GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
+		glEnable (GL_TEXTURE_GEN_S);
+		glTexGeni (GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
 		s[1] = s[2] = 0;
 
-		qglEnable (GL_TEXTURE_GEN_T);
-		qglTexGeni (GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
+		glEnable (GL_TEXTURE_GEN_T);
+		glTexGeni (GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
 		t[0] = t[2] = 0;
 
-		qglEnable (GL_TEXTURE_GEN_R);
-		qglTexGeni (GL_R, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
+		glEnable (GL_TEXTURE_GEN_R);
+		glTexGeni (GL_R, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
 		r[0] = r[1] = 0;
 
-		qglDisableClientState (GL_COLOR_ARRAY);
+		glDisableClientState (GL_COLOR_ARRAY);
 	}
 	else {
-		qglEnable (GL_TEXTURE_GEN_S);
-		qglTexGeni (GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
+		glEnable (GL_TEXTURE_GEN_S);
+		glTexGeni (GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
 		s[1] = s[2] = 0;
 
-		qglEnable (GL_TEXTURE_GEN_T);
-		qglTexGeni (GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
+		glEnable (GL_TEXTURE_GEN_T);
+		glTexGeni (GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
 		t[0] = t[2] = 0;
 
-		qglDisable (GL_TEXTURE_GEN_R);
+		glDisable (GL_TEXTURE_GEN_R);
 
-		qglEnableClientState (GL_COLOR_ARRAY);
-		qglColorPointer (4, GL_UNSIGNED_BYTE, 0, rb.batch.colors);
+		glEnableClientState (GL_COLOR_ARRAY);
+		glColorPointer (4, GL_UNSIGNED_BYTE, 0, rb.batch.colors);
 	}
 
 	for (num=0, light=ri.scn.dLightList ; num<ri.scn.numDLights ; num++, light++) {
@@ -1852,20 +1852,20 @@ static void RB_RenderDLights (void)
 		// Calculate coordinates
 		s[0] = scale;
 		s[3] = (-lightOrigin[0] * scale) + 0.5f;
-		qglTexGenfv (GL_S, GL_OBJECT_PLANE, s);
+		glTexGenfv (GL_S, GL_OBJECT_PLANE, s);
 
 		t[1] = scale;
 		t[3] = (-lightOrigin[1] * scale) + 0.5f;
-		qglTexGenfv (GL_T, GL_OBJECT_PLANE, t);
+		glTexGenfv (GL_T, GL_OBJECT_PLANE, t);
 
 		if (ri.config.extTex3D) {
 			// Color
-			qglColor3fv (light->color);
+			glColor3fv (light->color);
 
 			// Depth coordinate
 			r[2] = scale;
 			r[3] = (-lightOrigin[2] * scale) + 0.5f;
-			qglTexGenfv (GL_R, GL_OBJECT_PLANE, r);
+			glTexGenfv (GL_R, GL_OBJECT_PLANE, r);
 		}
 		else {
 			// Color
@@ -1961,141 +1961,141 @@ static void RB_RenderCombine (void)
 			// this way it can be possible to use GL_DECAL in both texture-units, while still looking good
 			// normal mutlitexturing would multiply the alpha-channel which looks ugly
 			RB_TextureEnv (GL_COMBINE_ARB);
-			qglTexEnvi (GL_TEXTURE_ENV, GL_COMBINE_RGB_ARB, GL_INTERPOLATE_ARB);
-			qglTexEnvi (GL_TEXTURE_ENV, GL_COMBINE_ALPHA_ARB, GL_ADD);
+			glTexEnvi (GL_TEXTURE_ENV, GL_COMBINE_RGB_ARB, GL_INTERPOLATE_ARB);
+			glTexEnvi (GL_TEXTURE_ENV, GL_COMBINE_ALPHA_ARB, GL_ADD);
 
-			qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE0_RGB_ARB, GL_TEXTURE);
-			qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND0_RGB_ARB, GL_SRC_COLOR);
-			qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE0_ALPHA_ARB, GL_TEXTURE);
-			qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND0_ALPHA_ARB, GL_SRC_ALPHA);
+			glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE0_RGB_ARB, GL_TEXTURE);
+			glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND0_RGB_ARB, GL_SRC_COLOR);
+			glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE0_ALPHA_ARB, GL_TEXTURE);
+			glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND0_ALPHA_ARB, GL_SRC_ALPHA);
 
-			qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE1_RGB_ARB, GL_PREVIOUS_ARB);
-			qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND1_RGB_ARB, GL_SRC_COLOR);
-			qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE1_ALPHA_ARB, GL_PREVIOUS_ARB);
-			qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND1_ALPHA_ARB, GL_SRC_ALPHA);
+			glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE1_RGB_ARB, GL_PREVIOUS_ARB);
+			glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND1_RGB_ARB, GL_SRC_COLOR);
+			glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE1_ALPHA_ARB, GL_PREVIOUS_ARB);
+			glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND1_ALPHA_ARB, GL_SRC_ALPHA);
 
-			qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE2_RGB_ARB, GL_TEXTURE);
-			qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND2_RGB_ARB, GL_SRC_ALPHA);
+			glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE2_RGB_ARB, GL_TEXTURE);
+			glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND2_RGB_ARB, GL_SRC_ALPHA);
 			break;
 
 		default:
 			RB_TextureEnv (GL_COMBINE4_NV);
 
-			qglTexEnvi (GL_TEXTURE_ENV, GL_COMBINE_RGB_ARB, GL_ADD);
-			qglTexEnvi (GL_TEXTURE_ENV, GL_COMBINE_ALPHA_ARB, GL_ADD);
+			glTexEnvi (GL_TEXTURE_ENV, GL_COMBINE_RGB_ARB, GL_ADD);
+			glTexEnvi (GL_TEXTURE_ENV, GL_COMBINE_ALPHA_ARB, GL_ADD);
 
-			qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE0_RGB_ARB, GL_TEXTURE);
-			qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND0_RGB_ARB, GL_SRC_COLOR);
-			qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE0_ALPHA_ARB, GL_TEXTURE);
-			qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND0_ALPHA_ARB, GL_SRC_ALPHA);
+			glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE0_RGB_ARB, GL_TEXTURE);
+			glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND0_RGB_ARB, GL_SRC_COLOR);
+			glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE0_ALPHA_ARB, GL_TEXTURE);
+			glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND0_ALPHA_ARB, GL_SRC_ALPHA);
 
 			switch (pass->blendSource) {
 			case GL_ONE:
-				qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE1_RGB_ARB, GL_ZERO);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND1_RGB_ARB, GL_ONE_MINUS_SRC_COLOR);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE1_ALPHA_ARB, GL_ZERO);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND1_ALPHA_ARB, GL_ONE_MINUS_SRC_ALPHA);
+				glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE1_RGB_ARB, GL_ZERO);
+				glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND1_RGB_ARB, GL_ONE_MINUS_SRC_COLOR);
+				glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE1_ALPHA_ARB, GL_ZERO);
+				glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND1_ALPHA_ARB, GL_ONE_MINUS_SRC_ALPHA);
 				break;
 			case GL_ZERO:
-				qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE1_RGB_ARB, GL_ZERO);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND1_RGB_ARB, GL_SRC_COLOR);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE1_ALPHA_ARB, GL_ZERO);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND1_ALPHA_ARB, GL_SRC_ALPHA);
+				glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE1_RGB_ARB, GL_ZERO);
+				glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND1_RGB_ARB, GL_SRC_COLOR);
+				glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE1_ALPHA_ARB, GL_ZERO);
+				glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND1_ALPHA_ARB, GL_SRC_ALPHA);
 				break;
 			case GL_DST_COLOR:
-				qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE1_RGB_ARB, GL_PREVIOUS_ARB);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND1_RGB_ARB, GL_SRC_COLOR);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE1_ALPHA_ARB, GL_PREVIOUS_ARB);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND1_ALPHA_ARB, GL_SRC_ALPHA);
+				glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE1_RGB_ARB, GL_PREVIOUS_ARB);
+				glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND1_RGB_ARB, GL_SRC_COLOR);
+				glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE1_ALPHA_ARB, GL_PREVIOUS_ARB);
+				glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND1_ALPHA_ARB, GL_SRC_ALPHA);
 				break;
 			case GL_ONE_MINUS_DST_COLOR:
-				qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE1_RGB_ARB, GL_PREVIOUS_ARB);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND1_RGB_ARB, GL_ONE_MINUS_SRC_COLOR);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE1_ALPHA_ARB, GL_PREVIOUS_ARB);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND1_ALPHA_ARB, GL_ONE_MINUS_SRC_ALPHA);
+				glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE1_RGB_ARB, GL_PREVIOUS_ARB);
+				glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND1_RGB_ARB, GL_ONE_MINUS_SRC_COLOR);
+				glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE1_ALPHA_ARB, GL_PREVIOUS_ARB);
+				glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND1_ALPHA_ARB, GL_ONE_MINUS_SRC_ALPHA);
 				break;
 			case GL_SRC_ALPHA:
-				qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE1_RGB_ARB, GL_TEXTURE);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND1_RGB_ARB, GL_SRC_ALPHA);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE1_ALPHA_ARB, GL_TEXTURE);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND1_ALPHA_ARB, GL_SRC_ALPHA);
+				glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE1_RGB_ARB, GL_TEXTURE);
+				glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND1_RGB_ARB, GL_SRC_ALPHA);
+				glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE1_ALPHA_ARB, GL_TEXTURE);
+				glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND1_ALPHA_ARB, GL_SRC_ALPHA);
 				break;
 			case GL_ONE_MINUS_SRC_ALPHA:
-				qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE1_RGB_ARB, GL_TEXTURE);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND1_RGB_ARB, GL_ONE_MINUS_SRC_ALPHA);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE1_ALPHA_ARB, GL_TEXTURE);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND1_ALPHA_ARB, GL_ONE_MINUS_SRC_ALPHA);
+				glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE1_RGB_ARB, GL_TEXTURE);
+				glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND1_RGB_ARB, GL_ONE_MINUS_SRC_ALPHA);
+				glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE1_ALPHA_ARB, GL_TEXTURE);
+				glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND1_ALPHA_ARB, GL_ONE_MINUS_SRC_ALPHA);
 				break;
 			case GL_DST_ALPHA:
-				qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE1_RGB_ARB, GL_PREVIOUS_ARB);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE1_ALPHA_ARB, GL_PREVIOUS_ARB);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND1_RGB_ARB, GL_SRC_ALPHA);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND1_ALPHA_ARB, GL_SRC_ALPHA);
+				glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE1_RGB_ARB, GL_PREVIOUS_ARB);
+				glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE1_ALPHA_ARB, GL_PREVIOUS_ARB);
+				glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND1_RGB_ARB, GL_SRC_ALPHA);
+				glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND1_ALPHA_ARB, GL_SRC_ALPHA);
 				break;
 			case GL_ONE_MINUS_DST_ALPHA:
-				qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE1_RGB_ARB, GL_PREVIOUS_ARB);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE1_ALPHA_ARB, GL_PREVIOUS_ARB);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND1_RGB_ARB, GL_ONE_MINUS_SRC_ALPHA);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND1_ALPHA_ARB, GL_ONE_MINUS_SRC_ALPHA);
+				glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE1_RGB_ARB, GL_PREVIOUS_ARB);
+				glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE1_ALPHA_ARB, GL_PREVIOUS_ARB);
+				glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND1_RGB_ARB, GL_ONE_MINUS_SRC_ALPHA);
+				glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND1_ALPHA_ARB, GL_ONE_MINUS_SRC_ALPHA);
 				break;
 			default:
 				assert (0);
 				break;
 			}
 
-			qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE2_RGB_ARB, GL_PREVIOUS_ARB);
-			qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND2_RGB_ARB, GL_SRC_COLOR);
-			qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE2_ALPHA_ARB, GL_PREVIOUS_ARB);	
-			qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND2_ALPHA_ARB, GL_SRC_ALPHA);
+			glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE2_RGB_ARB, GL_PREVIOUS_ARB);
+			glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND2_RGB_ARB, GL_SRC_COLOR);
+			glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE2_ALPHA_ARB, GL_PREVIOUS_ARB);	
+			glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND2_ALPHA_ARB, GL_SRC_ALPHA);
 
 			switch (pass->blendDest) {
 			case GL_ONE:
-				qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE3_RGB_NV, GL_ZERO);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND3_RGB_NV, GL_ONE_MINUS_SRC_COLOR);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE3_ALPHA_NV, GL_ZERO);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND3_ALPHA_NV, GL_ONE_MINUS_SRC_ALPHA);
+				glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE3_RGB_NV, GL_ZERO);
+				glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND3_RGB_NV, GL_ONE_MINUS_SRC_COLOR);
+				glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE3_ALPHA_NV, GL_ZERO);
+				glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND3_ALPHA_NV, GL_ONE_MINUS_SRC_ALPHA);
 				break;
 			case GL_ZERO:
-				qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE3_RGB_NV, GL_ZERO);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND3_RGB_NV, GL_SRC_COLOR);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE3_ALPHA_NV, GL_ZERO);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND3_ALPHA_NV, GL_SRC_ALPHA);
+				glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE3_RGB_NV, GL_ZERO);
+				glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND3_RGB_NV, GL_SRC_COLOR);
+				glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE3_ALPHA_NV, GL_ZERO);
+				glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND3_ALPHA_NV, GL_SRC_ALPHA);
 				break;
 			case GL_SRC_COLOR:
-				qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE3_RGB_NV, GL_TEXTURE);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND3_RGB_NV, GL_SRC_COLOR);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE3_ALPHA_NV, GL_TEXTURE);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND3_ALPHA_NV, GL_SRC_ALPHA);
+				glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE3_RGB_NV, GL_TEXTURE);
+				glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND3_RGB_NV, GL_SRC_COLOR);
+				glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE3_ALPHA_NV, GL_TEXTURE);
+				glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND3_ALPHA_NV, GL_SRC_ALPHA);
 				break;
 			case GL_ONE_MINUS_SRC_COLOR:
-				qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE3_RGB_NV, GL_TEXTURE);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND3_RGB_NV, GL_ONE_MINUS_SRC_COLOR);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE3_ALPHA_NV, GL_TEXTURE);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND3_ALPHA_NV, GL_ONE_MINUS_SRC_ALPHA);
+				glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE3_RGB_NV, GL_TEXTURE);
+				glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND3_RGB_NV, GL_ONE_MINUS_SRC_COLOR);
+				glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE3_ALPHA_NV, GL_TEXTURE);
+				glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND3_ALPHA_NV, GL_ONE_MINUS_SRC_ALPHA);
 				break;
 			case GL_SRC_ALPHA:
-				qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE3_RGB_NV, GL_TEXTURE);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND3_RGB_NV, GL_SRC_ALPHA);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE3_ALPHA_NV, GL_TEXTURE);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND3_ALPHA_NV, GL_SRC_ALPHA);
+				glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE3_RGB_NV, GL_TEXTURE);
+				glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND3_RGB_NV, GL_SRC_ALPHA);
+				glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE3_ALPHA_NV, GL_TEXTURE);
+				glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND3_ALPHA_NV, GL_SRC_ALPHA);
 				break;
 			case GL_ONE_MINUS_SRC_ALPHA:
-				qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE3_RGB_NV, GL_TEXTURE);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND3_RGB_NV, GL_ONE_MINUS_SRC_ALPHA);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE3_ALPHA_NV, GL_TEXTURE);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND3_ALPHA_NV, GL_ONE_MINUS_SRC_ALPHA);
+				glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE3_RGB_NV, GL_TEXTURE);
+				glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND3_RGB_NV, GL_ONE_MINUS_SRC_ALPHA);
+				glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE3_ALPHA_NV, GL_TEXTURE);
+				glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND3_ALPHA_NV, GL_ONE_MINUS_SRC_ALPHA);
 				break;
 			case GL_DST_ALPHA:
-				qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE3_RGB_NV, GL_PREVIOUS_ARB);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND3_RGB_NV, GL_SRC_ALPHA);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE3_ALPHA_NV, GL_PREVIOUS_ARB);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND3_ALPHA_NV, GL_SRC_ALPHA);
+				glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE3_RGB_NV, GL_PREVIOUS_ARB);
+				glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND3_RGB_NV, GL_SRC_ALPHA);
+				glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE3_ALPHA_NV, GL_PREVIOUS_ARB);
+				glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND3_ALPHA_NV, GL_SRC_ALPHA);
 				break;
 			case GL_ONE_MINUS_DST_ALPHA:
-				qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE3_RGB_NV, GL_PREVIOUS_ARB);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND3_RGB_NV, GL_ONE_MINUS_SRC_ALPHA);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_SOURCE3_ALPHA_NV, GL_PREVIOUS_ARB);
-				qglTexEnvi (GL_TEXTURE_ENV, GL_OPERAND3_ALPHA_NV, GL_ONE_MINUS_SRC_ALPHA);
+				glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE3_RGB_NV, GL_PREVIOUS_ARB);
+				glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND3_RGB_NV, GL_ONE_MINUS_SRC_ALPHA);
+				glTexEnvi (GL_TEXTURE_ENV, GL_SOURCE3_ALPHA_NV, GL_PREVIOUS_ARB);
+				glTexEnvi (GL_TEXTURE_ENV, GL_OPERAND3_ALPHA_NV, GL_ONE_MINUS_SRC_ALPHA);
 				break;
 			default:
 				assert (0);
@@ -2288,12 +2288,12 @@ static void RB_SetupMaterialState (material_t *mat)
 
 	// Depth range
 	if (mat->flags & MAT_DEPTHRANGE) {
-		qglDepthRange (mat->depthNear, mat->depthFar);
+		glDepthRange (mat->depthNear, mat->depthFar);
 	}
 	else if (rb.curEntity->flags & RF_DEPTHHACK)
-		qglDepthRange (0, 0.3f);
+		glDepthRange (0, 0.3f);
 	else
-		qglDepthRange (0, 1);
+		glDepthRange (0, 1);
 
 	// Depth testing
 	// FIXME: MAT_NODEPTH option?
@@ -2314,21 +2314,21 @@ static inline void RB_SetOutlineColor (void)
 	case MBT_ALIAS:
 	case MBT_SP2:
 	case MBT_SKY:
-		qglColor4fv (Q_colorRed);
+		glColor4fv (Q_colorRed);
 		break;
 
 	case MBT_Q2BSP:
 	case MBT_Q3BSP:
 	case MBT_Q3BSP_FLARE:
-		qglColor4fv (Q_colorWhite);
+		glColor4fv (Q_colorWhite);
 		break;
 
 	case MBT_DECAL:
-		qglColor4fv (Q_colorYellow);
+		glColor4fv (Q_colorYellow);
 		break;
 
 	case MBT_POLY:
-		qglColor4fv (Q_colorGreen);
+		glColor4fv (Q_colorGreen);
 		break;
 
 	default:
@@ -2350,7 +2350,7 @@ static inline void RB_ShowTriangles (void)
 	// Set color
 	switch (gl_showtris->intVal) {
 	case 1:
-		qglColor4ub (255, 255, 255, 255);
+		glColor4ub (255, 255, 255, 255);
 		break;
 
 	case 2:
@@ -2360,12 +2360,12 @@ static inline void RB_ShowTriangles (void)
 
 	// Draw
 	for (i=0 ; i<rb.numIndexes ; i+=3) {
-		qglBegin (GL_LINE_STRIP);
-		qglArrayElement (rb.inIndices[i]);
-		qglArrayElement (rb.inIndices[i+1]);
-		qglArrayElement (rb.inIndices[i+2]);
-		qglArrayElement (rb.inIndices[i]);
-		qglEnd ();
+		glBegin (GL_LINE_STRIP);
+		glArrayElement (rb.inIndices[i]);
+		glArrayElement (rb.inIndices[i+1]);
+		glArrayElement (rb.inIndices[i+2]);
+		glArrayElement (rb.inIndices[i]);
+		glEnd ();
 	}
 }
 
@@ -2385,7 +2385,7 @@ static inline void RB_ShowNormals (void)
 	// Set color
 	switch (gl_shownormals->intVal) {
 	case 1:
-		qglColor4ub (255, 255, 255, 255);
+		glColor4ub (255, 255, 255, 255);
 		break;
 
 	case 2:
@@ -2394,16 +2394,16 @@ static inline void RB_ShowNormals (void)
 	}
 
 	// Draw
-	qglBegin (GL_LINES);
+	glBegin (GL_LINES);
 	for (i=0 ; i<rb.numVerts ; i++) {
-		qglVertex3f(rb.inVertices[i][0],
+		glVertex3f(rb.inVertices[i][0],
 					rb.inVertices[i][1],
 					rb.inVertices[i][2]);
-		qglVertex3f(rb.inVertices[i][0] + rb.inNormals[i][0]*2,
+		glVertex3f(rb.inVertices[i][0] + rb.inNormals[i][0]*2,
 					rb.inVertices[i][1] + rb.inNormals[i][1]*2,
 					rb.inVertices[i][2] + rb.inNormals[i][2]*2);
 	}
-	qglEnd ();
+	glEnd ();
 }
 
 /*
@@ -2480,10 +2480,10 @@ void RB_RenderMeshBuffer (meshBuffer_t *mb, qBool shadowPass)
 	// Setup vertices
 	if (rb.curMat->numDeforms) {
 		RB_DeformVertices ();
-		qglVertexPointer (3, GL_FLOAT, 0, rb_outVertexArray);
+		glVertexPointer (3, GL_FLOAT, 0, rb_outVertexArray);
 	}
 	else {
-		qglVertexPointer (3, GL_FLOAT, 0, rb.inVertices);
+		glVertexPointer (3, GL_FLOAT, 0, rb.inVertices);
 	}
 
 	if (!rb.numIndexes || shadowPass)
@@ -2564,7 +2564,7 @@ void RB_RenderMeshBuffer (meshBuffer_t *mb, qBool shadowPass)
 
 	// Reset the texture matrices
 	if (rb_matrixCoords)
-		qglMatrixMode (GL_MODELVIEW);
+		glMatrixMode (GL_MODELVIEW);
 
 	// Reset backend information
 	if (!rb_triangleOutlines)
@@ -2589,37 +2589,37 @@ void RB_FinishRendering (void)
 	texUnit_t		i;
 
 	if (rb_matrixCoords)
-		qglMatrixMode (GL_TEXTURE);
+		glMatrixMode (GL_TEXTURE);
 
 	for (i=ri.config.maxTexUnits-1 ; i>0 ; i--) {
 		RB_SelectTexture (i);
 		RB_TextureTarget (0);
-		qglDisable (GL_TEXTURE_GEN_S);
-		qglDisable (GL_TEXTURE_GEN_T);
-		qglDisable (GL_TEXTURE_GEN_R);
-		qglDisableClientState (GL_TEXTURE_COORD_ARRAY);
+		glDisable (GL_TEXTURE_GEN_S);
+		glDisable (GL_TEXTURE_GEN_T);
+		glDisable (GL_TEXTURE_GEN_R);
+		glDisableClientState (GL_TEXTURE_COORD_ARRAY);
 		RB_LoadIdentityTexMatrix ();
 	}
 
 	RB_SelectTexture (0);
 	RB_TextureTarget (GL_TEXTURE_2D);
-	qglDisable (GL_TEXTURE_GEN_S);
-	qglDisable (GL_TEXTURE_GEN_T);
-	qglDisable (GL_TEXTURE_GEN_R);
-	qglDisableClientState (GL_TEXTURE_COORD_ARRAY);
+	glDisable (GL_TEXTURE_GEN_S);
+	glDisable (GL_TEXTURE_GEN_T);
+	glDisable (GL_TEXTURE_GEN_R);
+	glDisableClientState (GL_TEXTURE_COORD_ARRAY);
 	RB_LoadIdentityTexMatrix ();
 
 	if (rb_matrixCoords)
-		qglMatrixMode (GL_MODELVIEW);
+		glMatrixMode (GL_MODELVIEW);
 
-	qglDisableClientState (GL_NORMAL_ARRAY);
-	qglDisableClientState (GL_COLOR_ARRAY);
+	glDisableClientState (GL_NORMAL_ARRAY);
+	glDisableClientState (GL_COLOR_ARRAY);
 
-	qglColorMask (GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+	glColorMask (GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 
 	RB_StateForBits (SB1_DEPTHMASK_ON|SB1_DEFAULT);
 
-	qglDepthFunc (GL_LEQUAL);
+	glDepthFunc (GL_LEQUAL);
 
 	rb_numOldPasses = 0;
 }
@@ -2644,7 +2644,7 @@ void RB_BeginTriangleOutlines (void)
 	RB_StateForBits (SB1_BLENDSRC_SRC_ALPHA|SB1_BLENDDST_ONE_MINUS_SRC_ALPHA);
 	RB_TextureTarget (0);
 
-	qglColor4ub (255, 255, 255, 255);
+	glColor4ub (255, 255, 255, 255);
 }
 
 
@@ -2735,7 +2735,7 @@ void RB_Init (void)
 	rb_triangleOutlines = false;
 	RB_ResetPointers ();
 
-	qglEnableClientState (GL_VERTEX_ARRAY);
+	glEnableClientState (GL_VERTEX_ARRAY);
 
 	// Build lookup tables
 	for (i=0 ; i<FTABLE_SIZE ; i++) {

@@ -54,10 +54,10 @@ void RB_DrawDLights (void)
 			//
 			// Radius
 			//
-			qglColor4f (light->color[0], light->color[1], light->color[2], 0.2f);
+			glColor4f (light->color[0], light->color[1], light->color[2], 0.2f);
 
-			qglBegin (GL_TRIANGLE_FAN);
-			qglVertex3f (light->origin[0] - (ri.def.viewAxis[0][0] * light->intensity),
+			glBegin (GL_TRIANGLE_FAN);
+			glVertex3f (light->origin[0] - (ri.def.viewAxis[0][0] * light->intensity),
 				light->origin[1] - (ri.def.viewAxis[0][1] * light->intensity),
 				light->origin[2] - (ri.def.viewAxis[0][2] * light->intensity));
 
@@ -67,109 +67,109 @@ void RB_DrawDLights (void)
 				v[0] = light->origin[0] + (-ri.def.viewAxis[1][0] * (float)cos (a) * light->intensity) + (ri.def.viewAxis[2][0] * (float)sin (a) * light->intensity);
 				v[1] = light->origin[1] + (-ri.def.viewAxis[1][1] * (float)cos (a) * light->intensity) + (ri.def.viewAxis[2][1] * (float)sin (a) * light->intensity);
 				v[2] = light->origin[2] + (-ri.def.viewAxis[1][2] * (float)cos (a) * light->intensity) + (ri.def.viewAxis[2][2] * (float)sin (a) * light->intensity);
-				qglVertex3fv (v);
+				glVertex3fv (v);
 			}
-			qglEnd ();
+			glEnd ();
 
 			//
 			// Box
 			//
-			qglColor4f (light->color[0], light->color[1], light->color[2], 1);
+			glColor4f (light->color[0], light->color[1], light->color[2], 1);
 
 			// Top
-			qglBegin (GL_LINES);
-			qglVertex3f (light->origin[0] + DEBUGLIGHT_SIZE, light->origin[1] + DEBUGLIGHT_SIZE, light->origin[2] + DEBUGLIGHT_SIZE);
-			qglVertex3f (light->origin[0] - DEBUGLIGHT_SIZE, light->origin[1] + DEBUGLIGHT_SIZE, light->origin[2] + DEBUGLIGHT_SIZE);
+			glBegin (GL_LINES);
+			glVertex3f (light->origin[0] + DEBUGLIGHT_SIZE, light->origin[1] + DEBUGLIGHT_SIZE, light->origin[2] + DEBUGLIGHT_SIZE);
+			glVertex3f (light->origin[0] - DEBUGLIGHT_SIZE, light->origin[1] + DEBUGLIGHT_SIZE, light->origin[2] + DEBUGLIGHT_SIZE);
 
-			qglVertex3f (light->origin[0] - DEBUGLIGHT_SIZE, light->origin[1] + DEBUGLIGHT_SIZE, light->origin[2] + DEBUGLIGHT_SIZE);
-			qglVertex3f (light->origin[0] - DEBUGLIGHT_SIZE, light->origin[1] - DEBUGLIGHT_SIZE, light->origin[2] + DEBUGLIGHT_SIZE);
+			glVertex3f (light->origin[0] - DEBUGLIGHT_SIZE, light->origin[1] + DEBUGLIGHT_SIZE, light->origin[2] + DEBUGLIGHT_SIZE);
+			glVertex3f (light->origin[0] - DEBUGLIGHT_SIZE, light->origin[1] - DEBUGLIGHT_SIZE, light->origin[2] + DEBUGLIGHT_SIZE);
 
-			qglVertex3f (light->origin[0] - DEBUGLIGHT_SIZE, light->origin[1] - DEBUGLIGHT_SIZE, light->origin[2] + DEBUGLIGHT_SIZE);
-			qglVertex3f (light->origin[0] + DEBUGLIGHT_SIZE, light->origin[1] - DEBUGLIGHT_SIZE, light->origin[2] + DEBUGLIGHT_SIZE);
+			glVertex3f (light->origin[0] - DEBUGLIGHT_SIZE, light->origin[1] - DEBUGLIGHT_SIZE, light->origin[2] + DEBUGLIGHT_SIZE);
+			glVertex3f (light->origin[0] + DEBUGLIGHT_SIZE, light->origin[1] - DEBUGLIGHT_SIZE, light->origin[2] + DEBUGLIGHT_SIZE);
 
-			qglVertex3f (light->origin[0] + DEBUGLIGHT_SIZE, light->origin[1] - DEBUGLIGHT_SIZE, light->origin[2] + DEBUGLIGHT_SIZE);
-			qglVertex3f (light->origin[0] + DEBUGLIGHT_SIZE, light->origin[1] + DEBUGLIGHT_SIZE, light->origin[2] + DEBUGLIGHT_SIZE);
-			qglEnd ();
+			glVertex3f (light->origin[0] + DEBUGLIGHT_SIZE, light->origin[1] - DEBUGLIGHT_SIZE, light->origin[2] + DEBUGLIGHT_SIZE);
+			glVertex3f (light->origin[0] + DEBUGLIGHT_SIZE, light->origin[1] + DEBUGLIGHT_SIZE, light->origin[2] + DEBUGLIGHT_SIZE);
+			glEnd ();
 
 			// Bottom
-			qglBegin (GL_LINES);
-			qglVertex3f (light->origin[0] + DEBUGLIGHT_SIZE, light->origin[1] + DEBUGLIGHT_SIZE, light->origin[2] - DEBUGLIGHT_SIZE);
-			qglVertex3f (light->origin[0] - DEBUGLIGHT_SIZE, light->origin[1] + DEBUGLIGHT_SIZE, light->origin[2] - DEBUGLIGHT_SIZE);
+			glBegin (GL_LINES);
+			glVertex3f (light->origin[0] + DEBUGLIGHT_SIZE, light->origin[1] + DEBUGLIGHT_SIZE, light->origin[2] - DEBUGLIGHT_SIZE);
+			glVertex3f (light->origin[0] - DEBUGLIGHT_SIZE, light->origin[1] + DEBUGLIGHT_SIZE, light->origin[2] - DEBUGLIGHT_SIZE);
 
-			qglVertex3f (light->origin[0] - DEBUGLIGHT_SIZE, light->origin[1] + DEBUGLIGHT_SIZE, light->origin[2] - DEBUGLIGHT_SIZE);
-			qglVertex3f (light->origin[0] - DEBUGLIGHT_SIZE, light->origin[1] - DEBUGLIGHT_SIZE, light->origin[2] - DEBUGLIGHT_SIZE);
+			glVertex3f (light->origin[0] - DEBUGLIGHT_SIZE, light->origin[1] + DEBUGLIGHT_SIZE, light->origin[2] - DEBUGLIGHT_SIZE);
+			glVertex3f (light->origin[0] - DEBUGLIGHT_SIZE, light->origin[1] - DEBUGLIGHT_SIZE, light->origin[2] - DEBUGLIGHT_SIZE);
 
-			qglVertex3f (light->origin[0] - DEBUGLIGHT_SIZE, light->origin[1] - DEBUGLIGHT_SIZE, light->origin[2] - DEBUGLIGHT_SIZE);
-			qglVertex3f (light->origin[0] + DEBUGLIGHT_SIZE, light->origin[1] - DEBUGLIGHT_SIZE, light->origin[2] - DEBUGLIGHT_SIZE);
+			glVertex3f (light->origin[0] - DEBUGLIGHT_SIZE, light->origin[1] - DEBUGLIGHT_SIZE, light->origin[2] - DEBUGLIGHT_SIZE);
+			glVertex3f (light->origin[0] + DEBUGLIGHT_SIZE, light->origin[1] - DEBUGLIGHT_SIZE, light->origin[2] - DEBUGLIGHT_SIZE);
 
-			qglVertex3f (light->origin[0] + DEBUGLIGHT_SIZE, light->origin[1] - DEBUGLIGHT_SIZE, light->origin[2] - DEBUGLIGHT_SIZE);
-			qglVertex3f (light->origin[0] + DEBUGLIGHT_SIZE, light->origin[1] + DEBUGLIGHT_SIZE, light->origin[2] - DEBUGLIGHT_SIZE);
-			qglEnd ();
+			glVertex3f (light->origin[0] + DEBUGLIGHT_SIZE, light->origin[1] - DEBUGLIGHT_SIZE, light->origin[2] - DEBUGLIGHT_SIZE);
+			glVertex3f (light->origin[0] + DEBUGLIGHT_SIZE, light->origin[1] + DEBUGLIGHT_SIZE, light->origin[2] - DEBUGLIGHT_SIZE);
+			glEnd ();
 
 			// Corners
-			qglBegin (GL_LINES);
-			qglVertex3f (light->origin[0] + DEBUGLIGHT_SIZE, light->origin[1] + DEBUGLIGHT_SIZE, light->origin[2] + DEBUGLIGHT_SIZE);
-			qglVertex3f (light->origin[0] + DEBUGLIGHT_SIZE, light->origin[1] + DEBUGLIGHT_SIZE, light->origin[2] - DEBUGLIGHT_SIZE);
+			glBegin (GL_LINES);
+			glVertex3f (light->origin[0] + DEBUGLIGHT_SIZE, light->origin[1] + DEBUGLIGHT_SIZE, light->origin[2] + DEBUGLIGHT_SIZE);
+			glVertex3f (light->origin[0] + DEBUGLIGHT_SIZE, light->origin[1] + DEBUGLIGHT_SIZE, light->origin[2] - DEBUGLIGHT_SIZE);
 
-			qglVertex3f (light->origin[0] - DEBUGLIGHT_SIZE, light->origin[1] + DEBUGLIGHT_SIZE, light->origin[2] + DEBUGLIGHT_SIZE);
-			qglVertex3f (light->origin[0] - DEBUGLIGHT_SIZE, light->origin[1] + DEBUGLIGHT_SIZE, light->origin[2] - DEBUGLIGHT_SIZE);
+			glVertex3f (light->origin[0] - DEBUGLIGHT_SIZE, light->origin[1] + DEBUGLIGHT_SIZE, light->origin[2] + DEBUGLIGHT_SIZE);
+			glVertex3f (light->origin[0] - DEBUGLIGHT_SIZE, light->origin[1] + DEBUGLIGHT_SIZE, light->origin[2] - DEBUGLIGHT_SIZE);
 
-			qglVertex3f (light->origin[0] - DEBUGLIGHT_SIZE, light->origin[1] - DEBUGLIGHT_SIZE, light->origin[2] + DEBUGLIGHT_SIZE);
-			qglVertex3f (light->origin[0] - DEBUGLIGHT_SIZE, light->origin[1] - DEBUGLIGHT_SIZE, light->origin[2] - DEBUGLIGHT_SIZE);
+			glVertex3f (light->origin[0] - DEBUGLIGHT_SIZE, light->origin[1] - DEBUGLIGHT_SIZE, light->origin[2] + DEBUGLIGHT_SIZE);
+			glVertex3f (light->origin[0] - DEBUGLIGHT_SIZE, light->origin[1] - DEBUGLIGHT_SIZE, light->origin[2] - DEBUGLIGHT_SIZE);
 
-			qglVertex3f (light->origin[0] + DEBUGLIGHT_SIZE, light->origin[1] - DEBUGLIGHT_SIZE, light->origin[2] + DEBUGLIGHT_SIZE);
-			qglVertex3f (light->origin[0] + DEBUGLIGHT_SIZE, light->origin[1] - DEBUGLIGHT_SIZE, light->origin[2] - DEBUGLIGHT_SIZE);
-			qglEnd ();
+			glVertex3f (light->origin[0] + DEBUGLIGHT_SIZE, light->origin[1] - DEBUGLIGHT_SIZE, light->origin[2] + DEBUGLIGHT_SIZE);
+			glVertex3f (light->origin[0] + DEBUGLIGHT_SIZE, light->origin[1] - DEBUGLIGHT_SIZE, light->origin[2] - DEBUGLIGHT_SIZE);
+			glEnd ();
 
 			//
 			// Bounds
 			//
-			qglColor4f (light->color[0], light->color[1], light->color[2], 1);
+			glColor4f (light->color[0], light->color[1], light->color[2], 1);
 
 			// Top
-			qglBegin (GL_LINES);
-			qglVertex3f (light->maxs[0], light->maxs[1], light->maxs[2]);
-			qglVertex3f (light->mins[0], light->maxs[1], light->maxs[2]);
+			glBegin (GL_LINES);
+			glVertex3f (light->maxs[0], light->maxs[1], light->maxs[2]);
+			glVertex3f (light->mins[0], light->maxs[1], light->maxs[2]);
 
-			qglVertex3f (light->mins[0], light->maxs[1], light->maxs[2]);
-			qglVertex3f (light->mins[0], light->mins[1], light->maxs[2]);
+			glVertex3f (light->mins[0], light->maxs[1], light->maxs[2]);
+			glVertex3f (light->mins[0], light->mins[1], light->maxs[2]);
 
-			qglVertex3f (light->mins[0], light->mins[1], light->maxs[2]);
-			qglVertex3f (light->maxs[0], light->mins[1], light->maxs[2]);
+			glVertex3f (light->mins[0], light->mins[1], light->maxs[2]);
+			glVertex3f (light->maxs[0], light->mins[1], light->maxs[2]);
 
-			qglVertex3f (light->maxs[0], light->mins[1], light->maxs[2]);
-			qglVertex3f (light->maxs[0], light->maxs[1], light->maxs[2]);
-			qglEnd ();
+			glVertex3f (light->maxs[0], light->mins[1], light->maxs[2]);
+			glVertex3f (light->maxs[0], light->maxs[1], light->maxs[2]);
+			glEnd ();
 
 			// Bottom
-			qglBegin (GL_LINES);
-			qglVertex3f (light->maxs[0], light->maxs[1], light->mins[2]);
-			qglVertex3f (light->mins[0], light->maxs[1], light->mins[2]);
+			glBegin (GL_LINES);
+			glVertex3f (light->maxs[0], light->maxs[1], light->mins[2]);
+			glVertex3f (light->mins[0], light->maxs[1], light->mins[2]);
 
-			qglVertex3f (light->mins[0], light->maxs[1], light->mins[2]);
-			qglVertex3f (light->mins[0], light->mins[1], light->mins[2]);
+			glVertex3f (light->mins[0], light->maxs[1], light->mins[2]);
+			glVertex3f (light->mins[0], light->mins[1], light->mins[2]);
 
-			qglVertex3f (light->mins[0], light->mins[1], light->mins[2]);
-			qglVertex3f (light->maxs[0], light->mins[1], light->mins[2]);
+			glVertex3f (light->mins[0], light->mins[1], light->mins[2]);
+			glVertex3f (light->maxs[0], light->mins[1], light->mins[2]);
 
-			qglVertex3f (light->maxs[0], light->mins[1], light->mins[2]);
-			qglVertex3f (light->maxs[0], light->maxs[1], light->mins[2]);
-			qglEnd ();
+			glVertex3f (light->maxs[0], light->mins[1], light->mins[2]);
+			glVertex3f (light->maxs[0], light->maxs[1], light->mins[2]);
+			glEnd ();
 
 			// Corners
-			qglBegin (GL_LINES);
-			qglVertex3f (light->maxs[0], light->maxs[1], light->maxs[2]);
-			qglVertex3f (light->maxs[0], light->maxs[1], light->mins[2]);
+			glBegin (GL_LINES);
+			glVertex3f (light->maxs[0], light->maxs[1], light->maxs[2]);
+			glVertex3f (light->maxs[0], light->maxs[1], light->mins[2]);
 
-			qglVertex3f (light->mins[0], light->maxs[1], light->maxs[2]);
-			qglVertex3f (light->mins[0], light->maxs[1], light->mins[2]);
+			glVertex3f (light->mins[0], light->maxs[1], light->maxs[2]);
+			glVertex3f (light->mins[0], light->maxs[1], light->mins[2]);
 
-			qglVertex3f (light->mins[0], light->mins[1], light->maxs[2]);
-			qglVertex3f (light->mins[0], light->mins[1], light->mins[2]);
+			glVertex3f (light->mins[0], light->mins[1], light->maxs[2]);
+			glVertex3f (light->mins[0], light->mins[1], light->mins[2]);
 
-			qglVertex3f (light->maxs[0], light->mins[1], light->maxs[2]);
-			qglVertex3f (light->maxs[0], light->mins[1], light->mins[2]);
-			qglEnd ();
+			glVertex3f (light->maxs[0], light->mins[1], light->maxs[2]);
+			glVertex3f (light->maxs[0], light->mins[1], light->mins[2]);
+			glEnd ();
 		}
 
 		RB_StateForBits (SB1_DEPTHMASK_ON|SB1_DEFAULT);
@@ -185,26 +185,26 @@ void RB_DrawDLights (void)
 
 	for (light=ri.scn.dLightList, i=0 ; i<ri.scn.numDLights ; i++, light++) {
 		rad = light->intensity * 0.7f;
-		qglBegin (GL_TRIANGLE_FAN);
+		glBegin (GL_TRIANGLE_FAN);
 
-		qglColor3f (light->color[0] * 0.2f, light->color[1] * 0.2f, light->color[2] * 0.2f);
+		glColor3f (light->color[0] * 0.2f, light->color[1] * 0.2f, light->color[2] * 0.2f);
 
 		v[0] = light->origin[0] - (ri.def.viewAxis[0][0] * rad);
 		v[1] = light->origin[1] - (ri.def.viewAxis[0][1] * rad);
 		v[2] = light->origin[2] - (ri.def.viewAxis[0][2] * rad);
-		qglVertex3fv (v);
+		glVertex3fv (v);
 
-		qglColor3f (0, 0, 0);
+		glColor3f (0, 0, 0);
 		for (k=32 ; k>=0 ; k--) {
 			a = (k / 32.0f) * (M_PI * 2.0f);
 
 			v[0] = light->origin[0] + (ri.def.rightVec[0] * (float)cos (a) * rad) + (ri.def.viewAxis[2][0] * (float)sin (a) * rad);
 			v[1] = light->origin[1] + (ri.def.rightVec[1] * (float)cos (a) * rad) + (ri.def.viewAxis[2][1] * (float)sin (a) * rad);
 			v[2] = light->origin[2] + (ri.def.rightVec[2] * (float)cos (a) * rad) + (ri.def.viewAxis[2][2] * (float)sin (a) * rad);
-			qglVertex3fv (v);
+			glVertex3fv (v);
 		}
 
-		qglEnd ();
+		glEnd ();
 	}
 
 	RB_StateForBits (SB1_DEPTHMASK_ON|SB1_DEFAULT);

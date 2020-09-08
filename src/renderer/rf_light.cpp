@@ -861,7 +861,7 @@ dynamic:
 		surf->q2_lmTexNumActive = 0;
 	}
 
-	qglTexSubImage2D (GL_TEXTURE_2D, 0,
+	glTexSubImage2D (GL_TEXTURE_2D, 0,
 					surf->q2_lmCoords[0], surf->q2_lmCoords[1],
 					surf->q2_lmWidth, surf->q2_lmHeight,
 					GL_RGBA,

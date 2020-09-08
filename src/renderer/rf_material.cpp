@@ -2763,12 +2763,12 @@ static material_t *R_RegisterMaterial (char *name, qBool forceDefault, matRegTyp
 
 			// Add flowing if it's got the flag
 			if (surfParams & MAT_SURF_FLOWING) {
-				buffer = static_cast<byte*>(Mem_PoolAlloc (sizeof (matPass_t) + sizeof (tcMod_t), ri.matSysPool, 0));
+				buffer = reinterpret_cast<byte*>(Mem_PoolAlloc (sizeof (matPass_t) + sizeof (tcMod_t), ri.matSysPool, 0));
 				mat->passes = (matPass_t *)buffer;
 				buffer += sizeof (matPass_t);
 			}
 			else {
-				mat->passes = static_cast<byte*>(Mem_PoolAlloc (sizeof (matPass_t), ri.matSysPool, 0));
+				mat->passes = reinterpret_cast<matPass_t*>(Mem_PoolAlloc (sizeof (matPass_t), ri.matSysPool, 0));
 			}
 			mat->numPasses = 1;
 
@@ -2835,12 +2835,12 @@ static material_t *R_RegisterMaterial (char *name, qBool forceDefault, matRegTyp
 
 			// Add flowing if it's got the flag
 			if (surfParams & MAT_SURF_FLOWING) {
-				buffer = Mem_PoolAlloc (sizeof (matPass_t) * 2 + sizeof (tcMod_t), ri.matSysPool, 0);
+				buffer = reinterpret_cast<byte*>(Mem_PoolAlloc (sizeof (matPass_t) * 2 + sizeof (tcMod_t), ri.matSysPool, 0));
 				mat->passes = (matPass_t *)buffer;
 				buffer += sizeof (matPass_t) * 2;
 			}
 			else {
-				mat->passes = Mem_PoolAlloc (sizeof (matPass_t) * 2, ri.matSysPool, 0);
+				mat->passes = reinterpret_cast<matPass_t*>(Mem_PoolAlloc (sizeof (matPass_t) * 2, ri.matSysPool, 0));
 			}
 			mat->numPasses = 2;
 			mat->sizeBase = 1;
@@ -2891,12 +2891,12 @@ static material_t *R_RegisterMaterial (char *name, qBool forceDefault, matRegTyp
 			mat->flags = MAT_ENTITY_MERGABLE|MAT_DEPTHWRITE;
 			// Add flowing if it's got the flag
 			if (surfParams > 0 && surfParams & MAT_SURF_FLOWING) {
-				buffer = Mem_PoolAlloc (sizeof (matPass_t) + sizeof (tcMod_t), ri.matSysPool, 0);
+				buffer = reinterpret_cast<byte*>(Mem_PoolAlloc (sizeof (matPass_t) + sizeof (tcMod_t), ri.matSysPool, 0));
 				mat->passes = (matPass_t *)buffer;
 				buffer += sizeof (matPass_t);
 			}
 			else {
-				mat->passes = Mem_PoolAlloc (sizeof (matPass_t), ri.matSysPool, 0);
+				mat->passes = reinterpret_cast<matPass_t*>(Mem_PoolAlloc (sizeof (matPass_t), ri.matSysPool, 0));
 			}
 			mat->numPasses = 1;
 			mat->sizeBase = 0;
@@ -2934,13 +2934,13 @@ static material_t *R_RegisterMaterial (char *name, qBool forceDefault, matRegTyp
 		mat->cullType = MAT_CULL_NONE;
 		mat->features = MF_STCOORDS|MF_COLORS|MF_STATIC_MESH;
 		mat->flags = MAT_FLARE;
-		mat->passes = Mem_PoolAlloc (sizeof (matPass_t), ri.matSysPool, 0);
+		mat->passes = reinterpret_cast<matPass_t*>(Mem_PoolAlloc (sizeof (matPass_t), ri.matSysPool, 0));
 		mat->numPasses = 1;
 		mat->sizeBase = 0;
 		mat->sortKey = MAT_SORT_ADDITIVE;
 
 		pass = &mat->passes[0];
-		pass->animNames[pass->animNumNames] = Mem_PoolStrDup (fixedName, ri.matSysPool, 0);
+		pass->animNames[pass->animNumNames] = static_cast<char*>(Mem_PoolStrDup (fixedName, ri.matSysPool, 0));
 		pass->animTexFlags[pass->animNumNames] = texFlags;
 		pass->animImages[pass->animNumNames++] = image;
 		pass->flags = MAT_PASS_BLEND|MAT_PASS_NOCOLORARRAY;
@@ -2959,13 +2959,13 @@ static material_t *R_RegisterMaterial (char *name, qBool forceDefault, matRegTyp
 		mat->cullType = MAT_CULL_FRONT;
 		mat->features = MF_STCOORDS|MF_COLORS|MF_TRNORMALS|MF_STATIC_MESH;
 		mat->flags = MAT_DEPTHWRITE;
-		mat->passes = Mem_PoolAlloc (sizeof (matPass_t), ri.matSysPool, 0);
+		mat->passes = reinterpret_cast<matPass_t*>(Mem_PoolAlloc (sizeof (matPass_t), ri.matSysPool, 0));
 		mat->numPasses = 1;
 		mat->sizeBase = 0;
 		mat->sortKey = MAT_SORT_OPAQUE;
 
 		pass = &mat->passes[0];
-		pass->animNames[pass->animNumNames] = Mem_PoolStrDup (fixedName, ri.matSysPool, 0);
+		pass->animNames[pass->animNumNames] = static_cast<char*>(Mem_PoolStrDup (fixedName, ri.matSysPool, 0));
 		pass->animTexFlags[pass->animNumNames] = texFlags;
 		pass->animImages[pass->animNumNames++] = image;
 		pass->blendSource = GL_SRC_ALPHA;
@@ -2984,13 +2984,13 @@ static material_t *R_RegisterMaterial (char *name, qBool forceDefault, matRegTyp
 		mat->cullType = MAT_CULL_FRONT;
 		mat->features = MF_STCOORDS|MF_LMCOORDS|MF_TRNORMALS|MF_STATIC_MESH;
 		mat->flags = MAT_DEPTHWRITE;
-		mat->passes = Mem_PoolAlloc (sizeof (matPass_t) * 2, ri.matSysPool, 0);
+		mat->passes = reinterpret_cast<matPass_t*>(Mem_PoolAlloc (sizeof (matPass_t) * 2, ri.matSysPool, 0));
 		mat->numPasses = 2;
 		mat->sizeBase = 1;
 		mat->sortKey = MAT_SORT_OPAQUE;
 
 		pass = &mat->passes[0];
-		pass->animNames[pass->animNumNames++] = Mem_PoolStrDup ("$lightmap", ri.matSysPool, 0);
+		pass->animNames[pass->animNumNames++] = static_cast<char*>(Mem_PoolStrDup ("$lightmap", ri.matSysPool, 0));
 		pass->flags = MAT_PASS_DEPTHWRITE|MAT_PASS_LIGHTMAP|MAT_PASS_NOCOLORARRAY;
 		pass->tcGen = TC_GEN_LIGHTMAP;
 		pass->depthFunc = GL_LEQUAL;

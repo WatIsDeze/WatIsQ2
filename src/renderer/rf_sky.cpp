@@ -294,8 +294,8 @@ void R_DrawSky (meshBuffer_t *mb)
 			return;	// Nothing visible
 
 		// Rotation matrix
-		qglPushMatrix ();
-		qglRotatef (ri.def.time * r_skyState.rotation, r_skyState.axis[0], r_skyState.axis[1], r_skyState.axis[2]);
+		glPushMatrix ();
+		glRotatef (ri.def.time * r_skyState.rotation, r_skyState.axis[0], r_skyState.axis[1], r_skyState.axis[2]);
 	}
 
 	for (i=0 ; i<6 ; i++) {
@@ -324,7 +324,7 @@ void R_DrawSky (meshBuffer_t *mb)
 	}
 
 	if (r_skyState.rotation)
-		qglPopMatrix ();
+		glPopMatrix ();
 }
 
 

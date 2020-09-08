@@ -69,7 +69,7 @@ cVar_t	*gl_shadows;
 cVar_t	*gl_shownormals;
 cVar_t	*gl_showtris;
 
-cVar_t	*qgl_debug;
+cVar_t	*gl_debug;
 
 cVar_t	*r_caustics;
 cVar_t	*r_colorMipLevels;
@@ -482,71 +482,58 @@ GL_InitExtensions
 static void GL_InitExtensions (void)
 {
 	// Check for gl errors
-	GL_CheckForError ("GL_InitExtensions");
+	//GL_CheckForError ("GL_InitExtensions");
+	glewExperimental = GL_TRUE;
+	GLenum err = glewInit();
 
+	if (err != GLEW_OK) {
+		Com_Error (PRNT_ERROR, "%s", "renderer - glewInit failed...");
+		return;
+	}
+
+	if (!glewIsSupported("GL_VERSION_2_0")) {
+		Com_Error(PRNT_ERROR, "%s", "renderer - no OpenGL 2.0 compatible driver...");
+		return;
+	}
+	
 	/*
 	** GL_ARB_multitexture
 	** GL_SGIS_multitexture
 	*/
 	if (r_ext_multitexture->intVal) {
 		// GL_ARB_multitexture
-		if (ExtensionFound (ri.extensionString, "GL_ARB_multitexture")) {
-			qglActiveTextureARB = (PFNGLACTIVETEXTUREARBPROC)QGL_GetProcAddress ("glActiveTextureARB");
-			if (qglActiveTextureARB)	qglClientActiveTextureARB = (PFNGLCLIENTACTIVETEXTUREARBPROC)QGL_GetProcAddress ("glClientActiveTextureARB");
-
-			if (!qglClientActiveTextureARB) {
-				Com_Printf (PRNT_ERROR, "...GL_ARB_multitexture not properly supported!\n");
-				qglActiveTextureARB			= NULL;
-				qglClientActiveTextureARB	= NULL;
-			}
-			else {
+		if (glewIsSupported("GL_ARB_multitexture")) {
 				Com_Printf (0, "...enabling GL_ARB_multitexture\n");
 				ri.config.extArbMultitexture = true;
-			}
-		}
-		else
+		} else {
 			Com_Printf (0, "...GL_ARB_multitexture not found\n");
+		}
 
 		// GL_SGIS_multitexture
-		// if (!ri.config.extArbMultitexture) {
-		// 	Com_Printf (0, "...attempting GL_SGIS_multitexture\n");
+		if (!ri.config.extArbMultitexture) {
+		 	Com_Printf (0, "...attempting GL_SGIS_multitexture\n");
 
-		// 	if (ExtensionFound (ri.extensionString, "GL_SGIS_multitexture")) {
-		// 		qglSelectTextureSGIS = (SETTEXTURE)QGL_GetProcAddress ("glSelectTextureSGIS");
-
-		// 		if (!qglSelectTextureSGIS) {
-		// 			Com_Printf (PRNT_ERROR, "...GL_SGIS_multitexture not properly supported!\n");
-		// 			qglSelectTextureSGIS	= NULL;
-		// 		}
-		// 		else {
-		// 			Com_Printf (0, "...enabling GL_SGIS_multitexture\n");
-		// 			ri.config.extSGISMultiTexture = true;
-		// 		}
-		// 	}
-		// 	else
-		// 		Com_Printf (0, "...GL_SGIS_multitexture not found\n");
-		// }
+		 	if (glewIsSupported("GL_SGIS_multitexture")) {
+				Com_Printf (0, "...enabling GL_SGIS_multitexture\n");
+				ri.config.extSGISMultiTexture = true;
+			} else {
+				Com_Printf (0, "...GL_SGIS_multitexture not found\n");
+			}				
+		}
 	}
 	else {
-		qglActiveTextureARB			= NULL;
-		qglClientActiveTextureARB	= NULL;
-		qglSelectTextureSGIS		= NULL;
-
 		Com_Printf (0, "...ignoring GL_ARB/SGIS_multitexture\n");
 		Com_Printf (PRNT_WARNING, "WARNING: Disabling multitexture is not recommended!\n");
 	}
 
 	// Keep texture unit counts in check
 	if (ri.config.extSGISMultiTexture || ri.config.extArbMultitexture) {
-		qglGetIntegerv (GL_MAX_TEXTURE_UNITS, &ri.config.maxTexUnits);
+		glGetIntegerv (GL_MAX_TEXTURE_UNITS, &ri.config.maxTexUnits);
 
 		if (ri.config.maxTexUnits < 2) {
 			Com_Printf (0, "...not using GL_ARB/SGIS_multitexture, < 2 texture units\n");
 
 			ri.config.maxTexUnits = 1;
-			qglActiveTextureARB				= NULL;
-			qglClientActiveTextureARB		= NULL;
-			qglSelectTextureSGIS			= NULL;
 			ri.config.extArbMultitexture	= false;
 			ri.config.extSGISMultiTexture	= false;
 		}
@@ -578,7 +565,7 @@ static void GL_InitExtensions (void)
 		while (r_ext_textureCompression->intVal) {
 			switch (r_ext_textureCompression->intVal) {
 			case 1:
-				if (!ExtensionFound (ri.extensionString, "GL_ARB_texture_compression")) {
+				if (!glewIsSupported("GL_ARB_texture_compression")) {
 					Com_Printf (0, "...GL_ARB_texture_compression not found\n");
 					Cvar_VariableSetValue (r_ext_textureCompression, 2, true);
 					break;
@@ -595,7 +582,7 @@ static void GL_InitExtensions (void)
 			case 2:
 			case 3:
 			case 4:
-				if (!ExtensionFound (ri.extensionString, "GL_EXT_texture_compression_s3tc")) {
+				if (!glewIsSupported("GL_EXT_texture_compression_s3tc")) {
 					Com_Printf (0, "...GL_EXT_texture_compression_s3tc not found\n");
 					Cvar_VariableSetValue (r_ext_textureCompression, 5, true);
 					break;
@@ -625,7 +612,7 @@ static void GL_InitExtensions (void)
 				break;
 
 			case 5:
-				if (!ExtensionFound (ri.extensionString, "GL_S3_s3tc")) {
+				if (!glewIsSupported ("GL_S3_s3tc")) {
 					Com_Printf (0, "...GL_S3_s3tc not found\n");
 					Cvar_VariableSetValue (r_ext_textureCompression, 0, true);
 					break;
@@ -658,8 +645,8 @@ static void GL_InitExtensions (void)
 	** GL_ARB_texture_cube_map
 	*/
 	if (r_ext_textureCubeMap->intVal) {
-		if (ExtensionFound (ri.extensionString, "GL_ARB_texture_cube_map")) {
-			qglGetIntegerv (GL_MAX_CUBE_MAP_TEXTURE_SIZE_ARB, &ri.config.maxCMTexSize);
+		if (glewIsSupported ("GL_ARB_texture_cube_map")) {
+			glGetIntegerv (GL_MAX_CUBE_MAP_TEXTURE_SIZE_ARB, &ri.config.maxCMTexSize);
 
 			if (ri.config.maxCMTexSize <= 0) {
 				Com_Printf (PRNT_ERROR, "GL_ARB_texture_cube_map not properly supported!\n");
@@ -683,7 +670,7 @@ static void GL_InitExtensions (void)
 	** GL_ARB_texture_env_add
 	*/
 	if (r_ext_textureEnvAdd->intVal) {
-		if (ExtensionFound (ri.extensionString, "GL_ARB_texture_env_add")) {
+		if (glewIsSupported ("GL_ARB_texture_env_add")) {
 			if (ri.config.extSGISMultiTexture || ri.config.extArbMultitexture) {
 				Com_Printf (0, "...enabling GL_ARB_texture_env_add\n");
 				ri.config.extTexEnvAdd = true;
@@ -702,8 +689,8 @@ static void GL_InitExtensions (void)
 	** GL_EXT_texture_env_combine
 	*/
 	if (r_ext_textureEnvCombine->intVal) {
-		if (ExtensionFound (ri.extensionString, "GL_ARB_texture_env_combine") ||
-			ExtensionFound (ri.extensionString, "GL_EXT_texture_env_combine")) {
+		if (glewIsSupported ("GL_ARB_texture_env_combine") ||
+			glewIsSupported ("GL_EXT_texture_env_combine")) {
 			if (ri.config.extSGISMultiTexture || ri.config.extArbMultitexture) {
 				Com_Printf (0, "...enabling GL_ARB/EXT_texture_env_combine\n");
 				ri.config.extTexEnvCombine = true;
@@ -721,7 +708,7 @@ static void GL_InitExtensions (void)
 	** GL_NV_texture_env_combine4
 	*/
 	if (r_ext_textureEnvCombineNV4->intVal) {
-		if (ExtensionFound (ri.extensionString, "NV_texture_env_combine4")) {
+		if (glewIsSupported ("NV_texture_env_combine4")) {
 			if (ri.config.extTexEnvCombine) {
 				Com_Printf (0, "...enabling GL_NV_texture_env_combine4\n");
 				ri.config.extNVTexEnvCombine4 = true;
@@ -739,7 +726,7 @@ static void GL_InitExtensions (void)
 	** GL_ARB_texture_env_dot3
 	*/
 	if (r_ext_textureEnvDot3->intVal) {
-		if (ExtensionFound (ri.extensionString, "GL_ARB_texture_env_dot3")) {
+		if (glewIsSupported ("GL_ARB_texture_env_dot3")) {
 			if (ri.config.extTexEnvCombine) {
 				Com_Printf (0, "...enabling GL_ARB_texture_env_dot3\n");
 				ri.config.extTexEnvDot3 = true;
@@ -757,268 +744,165 @@ static void GL_InitExtensions (void)
 	** GL_ARB_vertex_program
 	*/
 	if (r_ext_vertexProgram->intVal) {
-		if (ExtensionFound (ri.extensionString, "GL_ARB_vertex_program")) {
-			qglVertexAttribPointerARB = QGL_GetProcAddress("glVertexAttribPointerARB");
-			if (qglVertexAttribPointerARB)		qglEnableVertexAttribArrayARB = QGL_GetProcAddress("glEnableVertexAttribArrayARB");
-			if (qglEnableVertexAttribArrayARB)	qglDisableVertexAttribArrayARB = QGL_GetProcAddress("glDisableVertexAttribArrayARB");
-			if (qglDisableVertexAttribArrayARB)	qglBindProgramARB = QGL_GetProcAddress("glBindProgramARB");
-			if (qglBindProgramARB)				qglDeleteProgramsARB = QGL_GetProcAddress("glDeleteProgramsARB");
-			if (qglDeleteProgramsARB)			qglGenProgramsARB = QGL_GetProcAddress("glGenProgramsARB");
-			if (qglGenProgramsARB)				qglProgramStringARB = QGL_GetProcAddress("glProgramStringARB");
-			if (qglProgramStringARB)			qglProgramEnvParameter4fARB = QGL_GetProcAddress("glProgramEnvParameter4fARB");
-			if (qglProgramEnvParameter4fARB)	qglProgramEnvParameter4fvARB = QGL_GetProcAddress("glProgramEnvParameter4fvARB");
-			if (qglProgramEnvParameter4fvARB)	qglProgramLocalParameter4fARB = QGL_GetProcAddress("glProgramLocalParameter4fARB");
-			if (qglProgramLocalParameter4fARB)	qglProgramLocalParameter4fvARB = QGL_GetProcAddress("glProgramLocalParameter4fvARB");
-			if (qglProgramLocalParameter4fvARB)	qglGetProgramivARB = QGL_GetProcAddress("glGetProgramivARB");
-
-			if (!qglGetProgramivARB) {
-				Com_Printf (PRNT_ERROR, "GL_ARB_vertex_program not properly supported!\n");
-				qglVertexAttribPointerARB		= NULL;
-				qglEnableVertexAttribArrayARB	= NULL;
-				qglDisableVertexAttribArrayARB	= NULL;
-				qglBindProgramARB				= NULL;
-				qglDeleteProgramsARB			= NULL;
-				qglGenProgramsARB				= NULL;
-				qglProgramStringARB				= NULL;
-				qglProgramEnvParameter4fARB		= NULL;
-				qglProgramEnvParameter4fvARB	= NULL;
-				qglProgramLocalParameter4fARB	= NULL;
-				qglProgramLocalParameter4fvARB	= NULL;
-				qglGetProgramivARB				= NULL;
-			}
-			else {
-				Com_Printf (0, "...enabling GL_ARB_vertex_program\n");
-				ri.config.extVertexProgram = true;
-			}
-		}
-		else
+		if (glewIsSupported ("GL_ARB_vertex_program")) {
+			Com_Printf (0, "...enabling GL_ARB_vertex_program\n");
+			ri.config.extVertexProgram = true;
+		} else {
 			Com_Printf (0, "...GL_ARB_vertex_program not found\n");
-	}
-	else
+		}
+	} else {
 		Com_Printf (0, "...ignoring GL_ARB_vertex_program\n");
+	}
 
 	/*
 	** GL_ARB_fragment_program
 	*/
 	if (r_ext_fragmentProgram->intVal) {
-		if (ExtensionFound (ri.extensionString, "GL_ARB_fragment_program")) {
-			qglGetIntegerv (GL_MAX_TEXTURE_COORDS_ARB, &ri.config.maxTexCoords);
-			qglGetIntegerv (GL_MAX_TEXTURE_IMAGE_UNITS_ARB, &ri.config.maxTexImageUnits);
+		if (glewIsSupported ("GL_ARB_fragment_program")) {
+			glGetIntegerv (GL_MAX_TEXTURE_COORDS_ARB, &ri.config.maxTexCoords);
+			glGetIntegerv (GL_MAX_TEXTURE_IMAGE_UNITS_ARB, &ri.config.maxTexImageUnits);
 
-			qglBindProgramARB = QGL_GetProcAddress("glBindProgramARB");
-			if (qglBindProgramARB)				qglDeleteProgramsARB = QGL_GetProcAddress("glDeleteProgramsARB");
-			if (qglDeleteProgramsARB)			qglGenProgramsARB = QGL_GetProcAddress("glGenProgramsARB");
-			if (qglGenProgramsARB)				qglProgramStringARB = QGL_GetProcAddress("glProgramStringARB");
-			if (qglProgramStringARB)			qglProgramEnvParameter4fARB = QGL_GetProcAddress("glProgramEnvParameter4fARB");
-			if (qglProgramEnvParameter4fARB)	qglProgramEnvParameter4fvARB = QGL_GetProcAddress("glProgramEnvParameter4fvARB");
-			if (qglProgramEnvParameter4fvARB)	qglProgramLocalParameter4fARB = QGL_GetProcAddress("glProgramLocalParameter4fARB");
-			if (qglProgramLocalParameter4fARB)	qglProgramLocalParameter4fvARB = QGL_GetProcAddress("glProgramLocalParameter4fvARB");
-			if (qglProgramLocalParameter4fvARB)	qglGetProgramivARB = QGL_GetProcAddress("glGetProgramivARB");
+			Com_Printf (0, "...enabling GL_ARB_fragment_program\n");
+			Com_Printf (0, "...* Max texture coordinates: %i\n", ri.config.maxTexCoords);
+			Com_Printf (0, "...* Max texture image units: %i\n", ri.config.maxTexImageUnits);
+			ri.config.extFragmentProgram = true;
 
-			if (!qglGetProgramivARB) {
-				Com_Printf (PRNT_ERROR, "GL_ARB_fragment_program not properly supported!\n");
-				qglBindProgramARB				= NULL;
-				qglDeleteProgramsARB			= NULL;
-				qglGenProgramsARB				= NULL;
-				qglProgramStringARB				= NULL;
-				qglProgramEnvParameter4fARB		= NULL;
-				qglProgramEnvParameter4fvARB	= NULL;
-				qglProgramLocalParameter4fARB	= NULL;
-				qglProgramLocalParameter4fvARB	= NULL;
-				qglGetProgramivARB				= NULL;
-			}
-			else {
-				Com_Printf (0, "...enabling GL_ARB_fragment_program\n");
-				Com_Printf (0, "...* Max texture coordinates: %i\n", ri.config.maxTexCoords);
-				Com_Printf (0, "...* Max texture image units: %i\n", ri.config.maxTexImageUnits);
-				ri.config.extFragmentProgram = true;
-			}
-		}
-		else
+		} else {
 			Com_Printf (0, "...GL_ARB_fragment_program not found\n");
-	}
-	else
+		}
+	} else {
 		Com_Printf (0, "...ignoring GL_ARB_fragment_program\n");
+	}
 
 	/*
 	** GL_ARB_vertex_buffer_object
 	*/
 	if (r_ext_vertexBufferObject->intVal) {
-		if (ExtensionFound (ri.extensionString, "GL_ARB_vertex_buffer_object")) {
-			qglBindBufferARB = QGL_GetProcAddress ("glBindBufferARB");
-			if (qglBindBufferARB)		qglDeleteBuffersARB = QGL_GetProcAddress ("glDeleteBuffersARB");
-			if (qglDeleteBuffersARB)	qglGenBuffersARB = QGL_GetProcAddress ("glGenBuffersARB");
-			if (qglGenBuffersARB)		qglIsBufferARB = QGL_GetProcAddress ("glIsBufferARB");
-			if (qglIsBufferARB)			qglMapBufferARB = QGL_GetProcAddress ("glMapBufferARB");
-			if (qglMapBufferARB)		qglUnmapBufferARB = QGL_GetProcAddress ("glUnmapBufferARB");
-			if (qglUnmapBufferARB)		qglBufferDataARB = QGL_GetProcAddress ("glBufferDataARB");
-			if (qglBufferDataARB)		qglBufferSubDataARB = QGL_GetProcAddress ("glBufferSubDataARB");
-
-			if (!qglBufferSubDataARB) {
-				Com_Printf (PRNT_ERROR, "GL_ARB_vertex_buffer_object not properly supported!\n");
-				qglBindBufferARB	= NULL;
-				qglDeleteBuffersARB	= NULL;
-				qglGenBuffersARB	= NULL;
-				qglIsBufferARB		= NULL;
-				qglMapBufferARB		= NULL;
-				qglUnmapBufferARB	= NULL;
-				qglBufferDataARB	= NULL;
-				qglBufferSubDataARB	= NULL;
-			}
-			else {
-				Com_Printf (0, "...enabling GL_ARB_vertex_buffer_object\n");
-				ri.config.extVertexBufferObject = true;
-			}
-		}
-		else
+		if (glewIsSupported ("GL_ARB_vertex_buffer_object")) {
+			Com_Printf (0, "...enabling GL_ARB_vertex_buffer_object\n");
+			ri.config.extVertexBufferObject = true;
+		} else {
 			Com_Printf (0, "...GL_ARB_vertex_buffer_object not found\n");
-	}
-	else
+		}
+	} else {
 		Com_Printf (0, "...ignoring GL_ARB_vertex_buffer_object\n");
+	}
 
 	/*
 	** GL_EXT_bgra
 	*/
 	if (r_ext_BGRA->intVal) {
-		if (ExtensionFound (ri.extensionString, "GL_EXT_bgra")) {
+		if (glewIsSupported ("GL_EXT_bgra")) {
 			Com_Printf (0, "...enabling GL_EXT_bgra\n");
 			ri.config.extBGRA = true;
-		}
-		else
+		} else {
 			Com_Printf (0, "...GL_EXT_bgra not found\n");
-	}
-	else
+		}
+	} else {
 		Com_Printf (0, "...ignoring GL_EXT_bgra\n");
+	}
 
 	/*
 	** GL_EXT_compiled_vertex_array
 	** GL_SGI_compiled_vertex_array
 	*/
 	if (r_ext_compiledVertexArray->intVal) {
-		if (ExtensionFound (ri.extensionString, "GL_EXT_compiled_vertex_array")
-		|| ExtensionFound (ri.extensionString, "GL_SGI_compiled_vertex_array")) {
+		if (glewIsSupported ("GL_EXT_compiled_vertex_array") 
+			|| glewIsSupported ("GL_SGI_compiled_vertex_array")) 
+		{
 			if (r_ext_compiledVertexArray->intVal != 2
-			&& (ri.renderClass == REND_CLASS_INTEL || ri.renderClass == REND_CLASS_S3 || ri.renderClass == REND_CLASS_SIS)) {
+				&& (ri.renderClass == REND_CLASS_INTEL || ri.renderClass == REND_CLASS_S3 || ri.renderClass == REND_CLASS_SIS)) 
+			{
 				Com_Printf (PRNT_WARNING, "...forcibly ignoring GL_EXT/SGI_compiled_vertex_array\n"
 								"...* Your card is known for not supporting it properly\n"
 								"...* If you would like it enabled, set r_ext_compiledVertexArray to 2\n");
+			} else {
+				Com_Printf (0, "...enabling GL_EXT/SGI_compiled_vertex_array\n");
+				ri.config.extCompiledVertArray = true;
 			}
-			else {
-				qglLockArraysEXT = QGL_GetProcAddress ("glLockArraysEXT");
-				if (qglLockArraysEXT)	qglUnlockArraysEXT = QGL_GetProcAddress ("glUnlockArraysEXT");
-
-				if (!qglUnlockArraysEXT) {
-					Com_Printf (PRNT_ERROR, "...GL_EXT/SGI_compiled_vertex_array not properly supported!\n");
-					qglLockArraysEXT	= NULL;
-					qglUnlockArraysEXT	= NULL;
-				}
-				else {
-					Com_Printf (0, "...enabling GL_EXT/SGI_compiled_vertex_array\n");
-					ri.config.extCompiledVertArray = true;
-				}
-			}
-		}
-		else
+		} else {
 			Com_Printf (0, "...GL_EXT/SGI_compiled_vertex_array not found\n");
-	}
-	else
+		}
+	} else {
 		Com_Printf (0, "...ignoring GL_EXT/SGI_compiled_vertex_array\n");
+	}
 
 	/*
 	** GL_EXT_draw_range_elements
 	*/
 	if (r_ext_drawRangeElements->intVal) {
-		if (ExtensionFound (ri.extensionString, "GL_EXT_draw_range_elements")) {
+		if (glewIsSupported ("GL_EXT_draw_range_elements")) {
 			// These are not actual maximums, but rather recommendations for performance...
-			qglGetIntegerv (GL_MAX_ELEMENTS_VERTICES_EXT, &ri.config.maxElementVerts);
-			qglGetIntegerv (GL_MAX_ELEMENTS_INDICES_EXT, &ri.config.maxElementIndices);
+			glGetIntegerv (GL_MAX_ELEMENTS_VERTICES_EXT, &ri.config.maxElementVerts);
+			glGetIntegerv (GL_MAX_ELEMENTS_INDICES_EXT, &ri.config.maxElementIndices);
 
 			if (ri.config.maxElementVerts > 0 && ri.config.maxElementIndices > 0) {
-				qglDrawRangeElementsEXT = QGL_GetProcAddress ("glDrawRangeElementsEXT");
-				if (!qglDrawRangeElementsEXT)
-					qglDrawRangeElementsEXT = QGL_GetProcAddress ("glDrawRangeElements");
-			}
-
-			if (!qglDrawRangeElementsEXT) {
-				Com_Printf (PRNT_ERROR, "...GL_EXT_draw_range_elements not properly supported!\n");
-				qglDrawRangeElementsEXT		= NULL;
-				ri.config.maxElementIndices	= 0;
-				ri.config.maxElementVerts	= 0;
-			}
-			else {
 				Com_Printf (0, "...enabling GL_EXT_draw_range_elements\n");
 				Com_Printf (0, "...* Max element vertices: %i\n", ri.config.maxElementVerts);
 				Com_Printf (0, "...* Max element indices: %i\n", ri.config.maxElementIndices);
 				ri.config.extDrawRangeElements = true;
 			}
-		}
-		else
+		} else {
 			Com_Printf (0, "...GL_EXT_draw_range_elements not found\n");
-	}
-	else
+		}
+	} else {
 		Com_Printf (0, "...ignoring GL_EXT_draw_range_elements\n");
+	}
 
 	/*
 	** GL_EXT_texture3D
 	*/
 	if (r_ext_texture3D->intVal) {
-		if (ExtensionFound (ri.extensionString, "GL_EXT_texture3D")) {
-			qglTexImage3D = QGL_GetProcAddress ("glTexImage3D");
-			if (qglTexImage3D) qglTexSubImage3D = QGL_GetProcAddress ("glTexSubImage3D");
-			if (qglTexSubImage3D) qglGetIntegerv (GL_MAX_3D_TEXTURE_SIZE, &ri.config.max3DTexSize);
+		if (glewIsSupported ("GL_EXT_texture3D")) {
+			glGetIntegerv (GL_MAX_3D_TEXTURE_SIZE, &ri.config.max3DTexSize);
 
 			if (!ri.config.max3DTexSize) {
 				Com_Printf (PRNT_ERROR, "...GL_EXT_texture3D not properly supported!\n");
-				qglTexImage3D		= NULL;
-				qglTexSubImage3D	= NULL;
-			}
-			else {
+			} else {
 				Com_Printf (0, "...enabling GL_EXT_texture3D\n");
 				ri.config.extTex3D = true;
 			}
-		}
-		else
+		} else {
 			Com_Printf (0, "...GL_EXT_texture3D not found\n");
-	}
-	else
+		}
+	} else {
 		Com_Printf (0, "...ignoring GL_EXT_texture3D\n");
+	}
 
 	/*
 	** GL_EXT_texture_edge_clamp
 	*/
 	if (r_ext_textureEdgeClamp->intVal) {
-		if (ExtensionFound (ri.extensionString, "GL_EXT_texture_edge_clamp")) {
+		if (glewIsSupported ("GL_EXT_texture_edge_clamp")) {
 			Com_Printf (0, "...enabling GL_EXT_texture_edge_clamp\n");
 			ri.config.extTexEdgeClamp = true;
-		}
-		else
+		} else {
 			Com_Printf (0, "...GL_EXT_texture_edge_clamp not found\n");
-	}
-	else
+		}
+	} else {
 		Com_Printf (0, "...ignoring GL_EXT_texture_edge_clamp\n");
+	}
 
 	/*
 	** GL_EXT_texture_filter_anisotropic
 	*/
 	if (r_ext_textureFilterAnisotropic->intVal) {
-		if (ExtensionFound (ri.extensionString, "GL_EXT_texture_filter_anisotropic")) {
-			qglGetIntegerv (GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &ri.config.maxAniso);
+		if (glewIsSupported ("GL_EXT_texture_filter_anisotropic")) {
+			glGetIntegerv (GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &ri.config.maxAniso);
 			if (ri.config.maxAniso <= 0) {
 				Com_Printf (PRNT_ERROR, "...GL_EXT_texture_filter_anisotropic not properly supported!\n");
 				ri.config.maxAniso = 0;
-			}
-			else {
+			} else {
 				Com_Printf (0, "...enabling GL_EXT_texture_filter_anisotropic\n");
 				Com_Printf (0, "...* Max texture anisotropy: %i\n", ri.config.maxAniso);
 				ri.config.extTexFilterAniso = true;
 			}
-		}
-		else
+		} else {
 			Com_Printf (0, "...GL_EXT_texture_filter_anisotropic not found\n");
-	}
-	else {
-		if (ExtensionFound (ri.extensionString, "GL_EXT_texture_filter_anisotropic"))
-			qglGetIntegerv (GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &ri.config.maxAniso);
+		}
+	} else {
+		if (glewIsSupported ("GL_EXT_texture_filter_anisotropic"))
+			glGetIntegerv (GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &ri.config.maxAniso);
 
 		Com_Printf (0, "...ignoring GL_EXT_texture_filter_anisotropic\n");
 	}
@@ -1027,7 +911,7 @@ static void GL_InitExtensions (void)
 	** GL_SGIS_generate_mipmap
 	*/
 	if (r_ext_generateMipmap->intVal) {
-		if (ExtensionFound (ri.extensionString, "GL_SGIS_generate_mipmap")) {
+		if (glewIsSupported ("GL_SGIS_generate_mipmap")) {
 			if (r_ext_generateMipmap->intVal != 2
 			&& (ri.renderClass == REND_CLASS_ATI || ri.renderClass == REND_CLASS_ATI_RADEON)) {
 				Com_Printf (PRNT_WARNING, "...forcibly ignoring GL_SGIS_generate_mipmap\n"
@@ -1043,88 +927,40 @@ static void GL_InitExtensions (void)
 					ri.config.extSGISGenMipmap = true;
 				}
 			}
-		}
-		else
+		} else {
 			Com_Printf (0, "...GL_SGIS_generate_mipmap not found\n");
-	}
-	else
+		}
+	} else {
 		Com_Printf (0, "...ignoring GL_SGIS_generate_mipmap\n");
+	}
 
 	/*
 	** GL_EXT_stencil_two_side
 	*/
 	if (r_ext_stencilTwoSide->intVal) {
-		if (ExtensionFound (ri.extensionString, "GL_EXT_stencil_two_side")) {
-			qglActiveStencilFaceEXT = QGL_GetProcAddress ("glActiveStencilFaceEXT");
-
-			if (!qglActiveStencilFaceEXT) {
-				Com_Printf (PRNT_ERROR, "...GL_EXT_stencil_two_side not properly supported!\n");
-				qglActiveStencilFaceEXT		= NULL;
-			}
-			else {
-				Com_Printf (0, "...enabling GL_EXT_stencil_two_side\n");
-				ri.config.extStencilTwoSide = true;
-			}
-		}
-		else
+		if (glewIsSupported ("GL_EXT_stencil_two_side")) {
+			Com_Printf (0, "...enabling GL_EXT_stencil_two_side\n");
+			ri.config.extStencilTwoSide = true;
+		} else {
 			Com_Printf (0, "...GL_EXT_stencil_two_side not found\n");
-	}
-	else
+		}
+	} else {
 		Com_Printf (0, "...ignoring GL_EXT_stencil_two_side\n");
+	}
 
 	/*
 	** GL_EXT_stencil_wrap
 	*/
 	if (r_ext_stencilWrap->intVal) {
-		if (ExtensionFound (ri.extensionString, "GL_EXT_stencil_wrap")) {
+		if (glewIsSupported ("GL_EXT_stencil_wrap")) {
 			Com_Printf (0, "...enabling GL_EXT_stencil_wrap\n");
 			ri.config.extStencilWrap = true;
-		}
-		else
+		} else {
 			Com_Printf (0, "...GL_EXT_stencil_wrap not found\n");
-	}
-	else
+		}
+	} else {
 		Com_Printf (0, "...ignoring GL_EXT_stencil_wrap\n");
-
-#ifdef _WIN32
-	/*
-	** WGL_3DFX_gamma_control
-	*/
-	if (ExtensionFound (ri.extensionString, "WGL_3DFX_gamma_control")) {
-		qwglGetDeviceGammaRamp3DFX = QGL_GetProcAddress ("wglGetDeviceGammaRamp3DFX");
-		if (qwglGetDeviceGammaRamp3DFX) qwglSetDeviceGammaRamp3DFX = QGL_GetProcAddress ("wglSetDeviceGammaRamp3DFX");
-
-		if (!qwglSetDeviceGammaRamp3DFX) {
-			Com_Printf (PRNT_ERROR, "...WGL_3DFX_gamma_control not properly supported!\n");
-			qwglGetDeviceGammaRamp3DFX		= NULL;
-			qwglSetDeviceGammaRamp3DFX		= NULL;
-		}
 	}
-
-	/*
-	** WGL_EXT_swap_control
-	*/
-	if (r_ext_swapInterval->intVal) {
-		if (ExtensionFound (ri.extensionString, "WGL_EXT_swap_control")) {
-			if (!ri.config.extWinSwapInterval) {
-				qwglSwapIntervalEXT = QGL_GetProcAddress ("wglSwapIntervalEXT");
-
-				if (!qwglSwapIntervalEXT) {
-					Com_Printf (PRNT_ERROR, "...WGL_EXT_swap_control not properly supported!\n");
-					qwglSwapIntervalEXT		= NULL;
-				}
-				else {
-					Com_Printf (0, "...enabling WGL_EXT_swap_control\n");
-					ri.config.extWinSwapInterval = true;
-				}
-			}
-		}
-		else
-			Com_Printf (0, "...WGL_EXT_swap_control not found\n");
-	}
-	else
-		Com_Printf (0, "...ignoring WGL_EXT_swap_control\n");
-#endif // _WIN32
 }
 
 
@@ -1186,7 +1022,7 @@ static void R_Register (void)
 	gl_shownormals		= Cvar_Register ("gl_shownormals",		"0",			CVAR_CHEAT);
 	gl_showtris			= Cvar_Register ("gl_showtris",			"0",			CVAR_CHEAT);
 
-	qgl_debug			= Cvar_Register ("qgl_debug",			"0",			0);
+	gl_debug			= Cvar_Register ("gl_debug",			"0",			0);
 
 	r_caustics			= Cvar_Register ("r_caustics",			"1",			CVAR_ARCHIVE);
 	r_colorMipLevels	= Cvar_Register ("r_colorMipLevels",	"0",			CVAR_CHEAT|CVAR_LATCH_VIDEO);
@@ -1340,11 +1176,11 @@ rInit_t R_Init (void)
 	ri.matSysPool = Mem_CreatePool ("Refresh: Material system");
 
 	// Initialize our QGL dynamic bindings
-	if (!QGL_Init (GL_DRIVERNAME)) {
-		Com_Printf (PRNT_ERROR, "...could not load \"%s\"\n", GL_DRIVERNAME);
-		QGL_Shutdown ();
-		return R_INIT_QGL_FAIL;
-	}
+//	if (!QGL_Init (GL_DRIVERNAME)) {
+//		Com_Printf (PRNT_ERROR, "...could not load \"%s\"\n", GL_DRIVERNAME);
+//		QGL_Shutdown ();
+//		return R_INIT_QGL_FAIL;
+//	}
 
 	// Initialize OS-specific parts of OpenGL
 	if (!GLimp_Init ()) {
@@ -1360,26 +1196,29 @@ rInit_t R_Init (void)
 		return R_INIT_MODE_FAIL;
 	}
 
+	// Initialize glew.
+
+
 	// Vendor string
-	ri.vendorString = qglGetString (GL_VENDOR);
+	ri.vendorString = glGetString (GL_VENDOR);
 	Com_Printf (0, "GL_VENDOR: %s\n", ri.vendorString);
 
 	vendorBuffer = Mem_PoolStrDup ((char *)ri.vendorString, ri.genericPool, 0);
 	Q_strlwr (vendorBuffer);
 
 	// Renderer string
-	ri.rendererString = qglGetString (GL_RENDERER);
+	ri.rendererString = glGetString (GL_RENDERER);
 	Com_Printf (0, "GL_RENDERER: %s\n", ri.rendererString);
 
 	rendererBuffer = Mem_PoolStrDup ((char *)ri.rendererString, ri.genericPool, 0);
 	Q_strlwr (rendererBuffer);
 
 	// Version string
-	ri.versionString = qglGetString (GL_VERSION);
+	ri.versionString = glGetString (GL_VERSION);
 	Com_Printf (0, "GL_VERSION: %s\n", ri.versionString);
 
 	// Extension string
-	ri.extensionString = qglGetString (GL_EXTENSIONS);
+	ri.extensionString = glGetString (GL_EXTENSIONS);
 
 	// Decide on a renderer class
 	if (strstr (rendererBuffer, "glint"))			ri.renderClass = REND_CLASS_3DLABS_GLINT_MX;
@@ -1461,7 +1300,7 @@ rInit_t R_Init (void)
 		Com_Printf (0, "Using forced maximum texture size of: %ix%i\n", ri.config.maxTexSize, ri.config.maxTexSize);
 	}
 	else {
-		qglGetIntegerv (GL_MAX_TEXTURE_SIZE, &ri.config.maxTexSize);
+		glGetIntegerv (GL_MAX_TEXTURE_SIZE, &ri.config.maxTexSize);
 		Q_NearestPow (&ri.config.maxTexSize, true);
 		if (ri.config.maxTexSize < 256) {
 			Com_Printf (0, "Maximum texture size forced up to 256x256 from %i\n", ri.config.maxTexSize);

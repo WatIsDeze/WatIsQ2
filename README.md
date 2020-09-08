@@ -15,8 +15,10 @@ Planned engine changes in the future are:
 - possible physics(maybe?)
 
 ## Features
-- All features of EGL 0.3.1 (Client and Server game .dll/.so)
-- CMake
-- SDL
+- All features of EGL 0.3.1
+- CMake support
+- SDL(1.2) [windowing, user input]
+- SDL and OpenAL audio
 - C++
-- Linux
+- Glew for OpenGL extensions. And a minimal requirement for OpenGL 2.0. No more qgl function pointer mess.
+- Linux support. (FreeBSD code is there, but untested.)

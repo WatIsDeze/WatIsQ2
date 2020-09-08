@@ -223,9 +223,9 @@ RB_DrawShadowVolume
 static void RB_DrawShadowVolume (void)
 {
 	if (ri.config.extDrawRangeElements)
-		qglDrawRangeElementsEXT (GL_TRIANGLES, 0, rb.numVerts * 2, rb_numShadowVolTris * 3, GL_UNSIGNED_INT, rb_shadowVolIndexes);
+		glDrawRangeElementsEXT (GL_TRIANGLES, 0, rb.numVerts * 2, rb_numShadowVolTris * 3, GL_UNSIGNED_INT, rb_shadowVolIndexes);
 	else
-		qglDrawElements (GL_TRIANGLES, rb_numShadowVolTris * 3, GL_UNSIGNED_INT, rb_shadowVolIndexes);
+		glDrawElements (GL_TRIANGLES, rb_numShadowVolTris * 3, GL_UNSIGNED_INT, rb_shadowVolIndexes);
 }
 
 
@@ -286,34 +286,34 @@ static void RB_CastShadowVolume (refEntity_t *ent, vec3_t mins, vec3_t maxs, flo
 	if (gl_shadows->intVal == SHADOW_VOLUMES) {
 		if (ri.useStencil) {
 			if (ri.config.extStencilTwoSide) {
-				qglEnable (GL_STENCIL_TEST_TWO_SIDE_EXT);
+				glEnable (GL_STENCIL_TEST_TWO_SIDE_EXT);
 
-				qglActiveStencilFaceEXT (GL_BACK);
-				qglStencilOp (GL_KEEP, GL_INCR, GL_KEEP);
-				qglActiveStencilFaceEXT (GL_FRONT);
-				qglStencilOp (GL_KEEP, GL_DECR, GL_KEEP);
+				glActiveStencilFaceEXT (GL_BACK);
+				glStencilOp (GL_KEEP, GL_INCR, GL_KEEP);
+				glActiveStencilFaceEXT (GL_FRONT);
+				glStencilOp (GL_KEEP, GL_DECR, GL_KEEP);
 
 				RB_DrawShadowVolume ();
 
-				qglDisable (GL_STENCIL_TEST_TWO_SIDE_EXT);
+				glDisable (GL_STENCIL_TEST_TWO_SIDE_EXT);
 			}
 			else {
-				qglCullFace (GL_BACK);		// Quake is backwards, this culls front faces
-				qglStencilOp (GL_KEEP, GL_INCR, GL_KEEP);
+				glCullFace (GL_BACK);		// Quake is backwards, this culls front faces
+				glStencilOp (GL_KEEP, GL_INCR, GL_KEEP);
 				RB_DrawShadowVolume ();
 
 				// Decrement stencil if frontface is behind depthbuffer
-				qglCullFace (GL_FRONT);		// Quake is backwards, this culls back faces
-				qglStencilOp (GL_KEEP, GL_DECR, GL_KEEP);
+				glCullFace (GL_FRONT);		// Quake is backwards, this culls back faces
+				glStencilOp (GL_KEEP, GL_DECR, GL_KEEP);
 				RB_DrawShadowVolume ();
 			}
 		}
 		else {
-			qglCullFace (GL_BACK);		// Quake is backwards, this culls front faces
+			glCullFace (GL_BACK);		// Quake is backwards, this culls front faces
 			RB_DrawShadowVolume ();
 
 			// Decrement stencil if frontface is behind depthbuffer
-			qglCullFace (GL_FRONT);		// Quake is backwards, this culls back faces
+			glCullFace (GL_FRONT);		// Quake is backwards, this culls back faces
 			RB_DrawShadowVolume ();
 		}
 	}
@@ -343,16 +343,16 @@ void RB_SetShadowState (qBool start)
 		case 1:
 			RB_StateForBits (SB1_CULL_FRONT|SB1_BLEND_ON|SB1_DEFAULT);
 
-			qglColor4f (0, 0, 0, SHADOW_ALPHA);
+			glColor4f (0, 0, 0, SHADOW_ALPHA);
 
-			qglDepthFunc (GL_LEQUAL);
+			glDepthFunc (GL_LEQUAL);
 
 			if (!ri.useStencil)
 				break;
-			qglEnable (GL_STENCIL_TEST);
-			qglStencilFunc (GL_EQUAL, 128, 0xFF);
-			qglStencilOp (GL_KEEP, GL_KEEP, GL_INCR);
-			qglStencilMask (255);
+			glEnable (GL_STENCIL_TEST);
+			glStencilFunc (GL_EQUAL, 128, 0xFF);
+			glStencilOp (GL_KEEP, GL_KEEP, GL_INCR);
+			glStencilMask (255);
 			break;
 
 #ifdef SHADOW_VOLUMES
@@ -362,29 +362,29 @@ void RB_SetShadowState (qBool start)
 			else
 				RB_StateForBits (SB1_CULL_FRONT|SB1_BLEND_ON|SB1_DEFAULT);
 
-			qglColor4f (1, 1, 1, 1);
-			qglColorMask (GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+			glColor4f (1, 1, 1, 1);
+			glColorMask (GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 
-			qglDepthFunc (GL_LESS);
+			glDepthFunc (GL_LESS);
 
 			if (!ri.useStencil)
 				break;
-			qglEnable (GL_STENCIL_TEST);
-			qglStencilFunc (GL_ALWAYS, 128, 255);
-			qglStencilOp (GL_KEEP, GL_KEEP, GL_KEEP);
-			qglStencilMask (255);
+			glEnable (GL_STENCIL_TEST);
+			glStencilFunc (GL_ALWAYS, 128, 255);
+			glStencilOp (GL_KEEP, GL_KEEP, GL_KEEP);
+			glStencilMask (255);
 			break;
 
 		case 3:
 			RB_StateForBits (SB1_DEPTHTEST_ON|SB1_BLEND_ON|SB1_BLENDSRC_ONE|SB1_BLENDDST_ONE);
 
-			qglColor3f (1.0f, 0.1f, 0.1f);
+			glColor3f (1.0f, 0.1f, 0.1f);
 
-			qglDepthFunc (GL_LEQUAL);
+			glDepthFunc (GL_LEQUAL);
 
 			if (!ri.useStencil)
 				break;
-			qglDisable (GL_STENCIL_TEST);
+			glDisable (GL_STENCIL_TEST);
 			break;
 #endif
 		}
@@ -396,18 +396,18 @@ void RB_SetShadowState (qBool start)
 	case 1:
 		if (!ri.useStencil)
 			break;
-		qglDisable (GL_STENCIL_TEST);
+		glDisable (GL_STENCIL_TEST);
 		break;
 
 #ifdef SHADOW_VOLUMES
 	case SHADOW_VOLUMES:
-		qglColorMask (GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-		qglDepthFunc (GL_LEQUAL);
+		glColorMask (GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+		glDepthFunc (GL_LEQUAL);
 
 		if (!ri.useStencil)
 			break;
-		qglStencilOp (GL_KEEP, GL_KEEP, GL_KEEP);
-		qglDisable (GL_STENCIL_TEST);
+		glStencilOp (GL_KEEP, GL_KEEP, GL_KEEP);
+		glDisable (GL_STENCIL_TEST);
 		break;
 
 	default:
@@ -461,33 +461,33 @@ void RB_ShadowBlend (void)
 	if (gl_shadows->intVal != SHADOW_VOLUMES || !ri.useStencil)
 		return;
 
-	qglMatrixMode (GL_PROJECTION);
-    qglLoadIdentity ();
-	qglOrtho (0, 1, 1, 0, -99999, 99999);
+	glMatrixMode (GL_PROJECTION);
+    glLoadIdentity ();
+	glOrtho (0, 1, 1, 0, -99999, 99999);
 
-	qglMatrixMode (GL_MODELVIEW);
-    qglLoadIdentity ();
+	glMatrixMode (GL_MODELVIEW);
+    glLoadIdentity ();
 
 	RB_StateForBits (SB1_BLEND_ON|SB1_BLENDSRC_SRC_ALPHA|SB1_BLENDDST_ONE_MINUS_SRC_ALPHA);
 	RB_TextureTarget (0);
 
-	qglColor4f (0, 0, 0, SHADOW_ALPHA);
+	glColor4f (0, 0, 0, SHADOW_ALPHA);
 
-	qglEnable (GL_STENCIL_TEST);
-	qglStencilFunc (GL_NOTEQUAL, 128, 255);
-	qglStencilOp (GL_KEEP, GL_KEEP, GL_KEEP);
+	glEnable (GL_STENCIL_TEST);
+	glStencilFunc (GL_NOTEQUAL, 128, 255);
+	glStencilOp (GL_KEEP, GL_KEEP, GL_KEEP);
 
-	qglBegin (GL_TRIANGLES);
-	qglVertex2f (-5, -5);
-	qglVertex2f (10, -5);
-	qglVertex2f (-5, 10);
-	qglEnd ();
+	glBegin (GL_TRIANGLES);
+	glVertex2f (-5, -5);
+	glVertex2f (10, -5);
+	glVertex2f (-5, 10);
+	glEnd ();
 
 	RB_StateForBits (SB1_CULL_FRONT|SB1_DEFAULT);
-	qglDisable (GL_STENCIL_TEST);
+	glDisable (GL_STENCIL_TEST);
 	RB_TextureTarget (GL_TEXTURE_2D);
 
-	qglColor4f (1, 1, 1, 1);
+	glColor4f (1, 1, 1, 1);
 }
 #endif
 
@@ -516,15 +516,15 @@ void RB_SimpleShadow (refEntity_t *ent, vec3_t shadowSpot)
 	for (i=0 ; i<rb.numVerts ; i++)
 		rb.inVertices[i][2] = height + 1;
 
-	qglColor4f (0, 0, 0, SHADOW_ALPHA);
+	glColor4f (0, 0, 0, SHADOW_ALPHA);
 
 	// Draw it
 	RB_LockArrays (rb.numVerts);
 
 	if (ri.config.extDrawRangeElements)
-		qglDrawRangeElementsEXT (GL_TRIANGLES, 0, rb.numVerts, rb.numIndexes, GL_UNSIGNED_INT, rb.inIndices);
+		glDrawRangeElementsEXT (GL_TRIANGLES, 0, rb.numVerts, rb.numIndexes, GL_UNSIGNED_INT, rb.inIndices);
 	else
-		qglDrawElements (GL_TRIANGLES, rb.numIndexes, GL_UNSIGNED_INT, rb.inIndices);
+		glDrawElements (GL_TRIANGLES, rb.numIndexes, GL_UNSIGNED_INT, rb.inIndices);
 
 	RB_UnlockArrays ();
 	RB_ResetPointers ();

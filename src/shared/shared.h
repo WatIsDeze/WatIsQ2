@@ -47,6 +47,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 #ifdef _WIN32
 
+// TODO: Maybe only required for VC++? No use for it in clang/mingw
 //# pragma intrinsic(memcmp)
 
 # define NO_RETURN __declspec(noreturn)
@@ -54,10 +55,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 # define GL_DRIVERNAME		"opengl32.dll"
 # define AL_DRIVERNAME		"openal32.dll"
 
-# define HAVE___INLINE
-# define HAVE__SNPRINTF
+// TODO: Maybe only required for VC++? No use for it in clang/mingw
+//# define HAVE___INLINE
+//# define HAVE__SNPRINTF
 # define HAVE__STRICMP
-# define HAVE__VSNPRINTF
+//# define HAVE__VSNPRINTF
 
 # define BUILDSTRING		"Win32"
 

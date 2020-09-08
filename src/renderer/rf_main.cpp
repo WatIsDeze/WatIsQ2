@@ -220,9 +220,9 @@ static void R_UpdateCvars (void)
 		gl_drawbuffer->modified = false;
 		if (!ri.cameraSeparation || !ri.config.stereoEnabled) {
 			if (!Q_stricmp (gl_drawbuffer->string, "GL_FRONT"))
-				qglDrawBuffer (GL_FRONT);
+				glDrawBuffer (GL_FRONT);
 			else
-				qglDrawBuffer (GL_BACK);
+				glDrawBuffer (GL_BACK);
 		}
 	}
 
@@ -307,7 +307,7 @@ void R_RenderToList (refDef_t *rd, meshList_t *list)
 	RB_DrawDLights ();
 
 	if (ri.scn.mirrorView || ri.scn.portalView)
-		qglDisable (GL_CLIP_PLANE0);
+		glDisable (GL_CLIP_PLANE0);
 
 	if (r_times->intVal)
 		ri.pc.timeAddToList += Sys_UMilliseconds () - startTime;
@@ -332,7 +332,7 @@ void R_RenderScene (refDef_t *rd)
 	ri.scn.portalView = false;
 
 	if (gl_finish->intVal)
-		qglFinish ();
+		glFinish ();
 
 	R_RenderToList (rd, &r_worldList);
 	R_SetLightLevel ();
@@ -362,8 +362,8 @@ void R_BeginFrame (float cameraSeparation)
 	QGL_LogBeginFrame ();
 
 	// Debugging
-	if (qgl_debug->modified) {
-		qgl_debug->modified = false;
+	if (gl_debug->modified) {
+		gl_debug->modified = false;
 		QGL_ToggleDebug ();
 	}
 
@@ -629,7 +629,7 @@ void GL_CheckForError (char *where)
 {
 	GLenum		error;
 
-	error = qglGetError ();
+	error = glGetError ();
 	if (error != GL_NO_ERROR) {
 		Com_Printf (PRNT_ERROR, "GL_ERROR: '%s' (0x%x)", GetGLErrorString (error), error);
 		if (where)

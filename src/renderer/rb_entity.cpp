@@ -45,7 +45,7 @@ ala Vic
 void RB_LoadModelIdentity (void)
 {
 	Matrix4_Copy (ri.scn.worldViewMatrix, ri.scn.modelViewMatrix);
-	qglLoadMatrixf (ri.scn.worldViewMatrix);
+	glLoadMatrixf (ri.scn.worldViewMatrix);
 }
 
 
@@ -65,7 +65,7 @@ void RB_RotateForEntity (refEntity_t *ent)
 		Matrix4_Scale (objectMatrix, ent->scale, ent->scale, ent->scale);
 	Matrix4_MultiplyFast (ri.scn.worldViewMatrix, objectMatrix, ri.scn.modelViewMatrix);
 
-	qglLoadMatrixf (ri.scn.modelViewMatrix);
+	glLoadMatrixf (ri.scn.modelViewMatrix);
 }
 
 
@@ -104,7 +104,7 @@ void RB_RotateForAliasShadow (refEntity_t *ent)
 
 	Matrix4_MultiplyFast (ri.scn.worldViewMatrix, objectMatrix, ri.scn.modelViewMatrix);
 
-	qglLoadMatrixf (ri.scn.modelViewMatrix);
+	glLoadMatrixf (ri.scn.modelViewMatrix);
 }
 
 
@@ -127,7 +127,7 @@ void RB_TranslateForEntity (refEntity_t *ent)
 
 	Matrix4_MultiplyFast (ri.scn.worldViewMatrix, objectMatrix, ri.scn.modelViewMatrix);
 
-	qglLoadMatrixf (ri.scn.modelViewMatrix);
+	glLoadMatrixf (ri.scn.modelViewMatrix);
 }
 
 
@@ -172,19 +172,19 @@ static void RB_DrawNullModel (refEntity_t *ent)
 	else
 		R_LightPoint (ent->origin, shadelight);
 
-	qglColor3fv (shadelight);
+	glColor3fv (shadelight);
 
-	qglBegin (GL_TRIANGLE_FAN);
-	qglVertex3f (0, 0, -16);
+	glBegin (GL_TRIANGLE_FAN);
+	glVertex3f (0, 0, -16);
 	for (i=0 ; i<=4 ; i++)
-		qglVertex3f (16 * (float)cos (i * (M_PI / 2.0f)), 16 * (float)sin (i * (M_PI / 2.0f)), 0);
-	qglEnd ();
+		glVertex3f (16 * (float)cos (i * (M_PI / 2.0f)), 16 * (float)sin (i * (M_PI / 2.0f)), 0);
+	glEnd ();
 
-	qglBegin (GL_TRIANGLE_FAN);
-	qglVertex3f (0, 0, 16);
+	glBegin (GL_TRIANGLE_FAN);
+	glVertex3f (0, 0, 16);
 	for (i=4 ; i>=0 ; i--)
-		qglVertex3f (16 * (float)cos (i * (M_PI / 2.0f)), 16 * (float)sin (i * (M_PI / 2.0f)), 0);
-	qglEnd ();
+		glVertex3f (16 * (float)cos (i * (M_PI / 2.0f)), 16 * (float)sin (i * (M_PI / 2.0f)), 0);
+	glEnd ();
 }
 
 
@@ -220,7 +220,7 @@ void RB_DrawNullModelList (void)
 	RB_TextureTarget (GL_TEXTURE_2D);
 	RB_StateForBits (SB1_DEFAULT);
 
-	qglColor4f (1, 1, 1, 1);
+	glColor4f (1, 1, 1, 1);
 
 	RB_LoadModelIdentity ();
 	rb_numNullEntities = 0;

@@ -105,21 +105,21 @@ static qBool R_UploadProgram (char *name, GLenum target, const char *buffer, GLs
 	int			errorPos;
 
 	// Generate a progNum
-	qglGenProgramsARB (1, progNum);
-	qglBindProgramARB (target, *progNum);
+	glGenProgramsARB (1, progNum);
+	glBindProgramARB (target, *progNum);
 	if (!*progNum) {
 		Program_Printf (PRNT_ERROR, "R_UploadProgram: could not allocate a progNum!\n");
 		return false;
 	}
 
 	// Upload
-	qglProgramStringARB (target, GL_PROGRAM_FORMAT_ASCII_ARB, bufferLen, buffer);
+	glProgramStringARB (target, GL_PROGRAM_FORMAT_ASCII_ARB, bufferLen, buffer);
 
 	// Check for errors
-	qglGetIntegerv (GL_PROGRAM_ERROR_POSITION_ARB, &errorPos);
+	glGetIntegerv (GL_PROGRAM_ERROR_POSITION_ARB, &errorPos);
 	if (errorPos != -1) {
 		// Error thrown
-		errorString = qglGetString (GL_PROGRAM_ERROR_STRING_ARB);
+		errorString = glGetString (GL_PROGRAM_ERROR_STRING_ARB);
 		switch (target) {
 		case GL_VERTEX_PROGRAM_ARB:
 			if (errorPos == bufferLen) {
@@ -143,12 +143,12 @@ static qBool R_UploadProgram (char *name, GLenum target, const char *buffer, GLs
 		}
 		Program_Printf (PRNT_ERROR, "GL_PROGRAM_ERROR_STRING: %s\n", errorString);
 
-		qglDeleteProgramsARB (1, progNum);
+		glDeleteProgramsARB (1, progNum);
 		return false;
 	}
 
-	qglGetProgramivARB (target, GL_PROGRAM_INSTRUCTIONS_ARB, upInstructions);
-	qglGetProgramivARB (target, GL_PROGRAM_UNDER_NATIVE_LIMITS_ARB, upNative);
+	glGetProgramivARB (target, GL_PROGRAM_INSTRUCTIONS_ARB, upInstructions);
+	glGetProgramivARB (target, GL_PROGRAM_UNDER_NATIVE_LIMITS_ARB, upNative);
 	return true;
 }
 
@@ -550,16 +550,16 @@ void R_ProgramShutdown (void)
 
 	// Shut the programs down
 	if (ri.config.extVertexProgram)
-		qglBindProgramARB (GL_VERTEX_PROGRAM_ARB, 0);
+		glBindProgramARB (GL_VERTEX_PROGRAM_ARB, 0);
 	if (ri.config.extFragmentProgram)
-		qglBindProgramARB (GL_FRAGMENT_PROGRAM_ARB, 0);
+		glBindProgramARB (GL_FRAGMENT_PROGRAM_ARB, 0);
 
 	for (i=0, prog=r_programList ; i<r_numPrograms ; i++, prog++) {
 		if (!prog->progNum)
 			continue;	// Free r_programList slot
 
 		// Free it
-		qglDeleteProgramsARB (1, &prog->progNum);
+		glDeleteProgramsARB (1, &prog->progNum);
 	}
 
 	r_numPrograms = 0;

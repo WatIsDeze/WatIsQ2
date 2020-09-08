@@ -51,19 +51,19 @@ void RB_StateForBits (uint32 bits1)
 		if (diff & SB1_ATEST_BITS) {
 			switch (bits1 & SB1_ATEST_BITS) {
 			case 0:
-				qglDisable (GL_ALPHA_TEST);
+				glDisable (GL_ALPHA_TEST);
 				break;
 			case SB1_ATEST_GT0:
-				qglEnable (GL_ALPHA_TEST);
-				qglAlphaFunc (GL_GREATER, 0);
+				glEnable (GL_ALPHA_TEST);
+				glAlphaFunc (GL_GREATER, 0);
 				break;
 			case SB1_ATEST_LT128:
-				qglEnable (GL_ALPHA_TEST);
-				qglAlphaFunc (GL_LESS, 0.5f);
+				glEnable (GL_ALPHA_TEST);
+				glAlphaFunc (GL_LESS, 0.5f);
 				break;
 			case SB1_ATEST_GE128:
-				qglEnable (GL_ALPHA_TEST);
-				qglAlphaFunc (GL_GEQUAL, 0.5f);
+				glEnable (GL_ALPHA_TEST);
+				glAlphaFunc (GL_GEQUAL, 0.5f);
 				break;
 			default:
 				assert (0);
@@ -76,9 +76,9 @@ void RB_StateForBits (uint32 bits1)
 		// Blending
 		if (diff & SB1_BLEND_ON) {
 			if (bits1 & SB1_BLEND_ON)
-				qglEnable (GL_BLEND);
+				glEnable (GL_BLEND);
 			else
-				qglDisable (GL_BLEND);
+				glDisable (GL_BLEND);
 			ri.pc.stateChanges++;
 		}
 
@@ -111,7 +111,7 @@ void RB_StateForBits (uint32 bits1)
 			default:								assert (0);							break;
 			}
 
-			qglBlendFunc (sFactor, dFactor);
+			glBlendFunc (sFactor, dFactor);
 			ri.pc.stateChanges++;
 		}
 
@@ -119,15 +119,15 @@ void RB_StateForBits (uint32 bits1)
 		if (diff & SB1_CULL_BITS) {
 			switch (bits1 & SB1_CULL_BITS) {
 			case 0:
-				qglDisable (GL_CULL_FACE);
+				glDisable (GL_CULL_FACE);
 				break;
 			case SB1_CULL_FRONT:
-				qglCullFace (GL_FRONT);
-				qglEnable (GL_CULL_FACE);
+				glCullFace (GL_FRONT);
+				glEnable (GL_CULL_FACE);
 				break;
 			case SB1_CULL_BACK:
-				qglCullFace (GL_BACK);
-				qglEnable (GL_CULL_FACE);
+				glCullFace (GL_BACK);
+				glEnable (GL_CULL_FACE);
 				break;
 			default:
 				assert (0);
@@ -139,29 +139,29 @@ void RB_StateForBits (uint32 bits1)
 		// Depth masking
 		if (diff & SB1_DEPTHMASK_ON) {
 			if (bits1 & SB1_DEPTHMASK_ON)
-				qglDepthMask (GL_TRUE);
+				glDepthMask (GL_TRUE);
 			else
-				qglDepthMask (GL_FALSE);
+				glDepthMask (GL_FALSE);
 			ri.pc.stateChanges++;
 		}
 
 		// Depth testing
 		if (diff & SB1_DEPTHTEST_ON) {
 			if (bits1 & SB1_DEPTHTEST_ON)
-				qglEnable (GL_DEPTH_TEST);
+				glEnable (GL_DEPTH_TEST);
 			else
-				qglDisable (GL_DEPTH_TEST);
+				glDisable (GL_DEPTH_TEST);
 			ri.pc.stateChanges++;
 		}
 
 		// Polygon offset
 		if (diff & SB1_POLYOFFSET_ON) {
 			if (bits1 & SB1_POLYOFFSET_ON) {
-				qglEnable (GL_POLYGON_OFFSET_FILL);
-				qglPolygonOffset (r_offsetFactor->intVal, r_offsetUnits->intVal);
+				glEnable (GL_POLYGON_OFFSET_FILL);
+				glPolygonOffset (r_offsetFactor->intVal, r_offsetUnits->intVal);
 			}
 			else
-				qglDisable (GL_POLYGON_OFFSET_FILL);
+				glDisable (GL_POLYGON_OFFSET_FILL);
 			ri.pc.stateChanges++;
 		}
 
@@ -195,7 +195,7 @@ void RB_BindTexture (image_t *image)
 	rb_glState.texBound[rb_glState.texUnit] = image;
 
 	// Nope, bind it
-	qglBindTexture (image->target, image->texNum);
+	glBindTexture (image->target, image->texNum);
 
 	// Performance counters
 	if (r_speeds->intVal) {
@@ -226,11 +226,11 @@ void RB_SelectTexture (texUnit_t texUnit)
 	// Select the unit
 	rb_glState.texUnit = texUnit;
 	if (ri.config.extArbMultitexture) {
-		qglActiveTextureARB (texUnit + GL_TEXTURE0_ARB);
-		qglClientActiveTextureARB (texUnit + GL_TEXTURE0_ARB);
+		glActiveTextureARB (texUnit + GL_TEXTURE0_ARB);
+		glClientActiveTextureARB (texUnit + GL_TEXTURE0_ARB);
 	}
 	else if (ri.config.extSGISMultiTexture) {
-		qglSelectTextureSGIS (texUnit + GL_TEXTURE0_SGIS);
+		glSelectTextureSGIS (texUnit + GL_TEXTURE0_SGIS);
 	}
 	else {
 		return;
@@ -252,7 +252,7 @@ void RB_TextureEnv (GLfloat mode)
 		mode = GL_MODULATE;
 
 	if (mode != rb_glState.texEnvModes[rb_glState.texUnit]) {
-		qglTexEnvf (GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, mode);
+		glTexEnvf (GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, mode);
 		rb_glState.texEnvModes[rb_glState.texUnit] = mode;
 
 		// Performance counter
@@ -265,7 +265,7 @@ void RB_TextureEnv (GLfloat mode)
 ===============
 RB_TextureTarget
 
-Supplements qglEnable/qglDisable on GL_TEXTURE_1D/2D/3D/CUBE_MAP_ARB.
+Supplements glEnable/glDisable on GL_TEXTURE_1D/2D/3D/CUBE_MAP_ARB.
 ===============
 */
 void RB_TextureTarget (GLenum target)
@@ -274,12 +274,12 @@ void RB_TextureTarget (GLenum target)
 		return;
 
 	if (rb_glState.texTarget[rb_glState.texUnit])
-		qglDisable (rb_glState.texTarget[rb_glState.texUnit]);
+		glDisable (rb_glState.texTarget[rb_glState.texUnit]);
 
 	rb_glState.texTarget[rb_glState.texUnit] = target;
 
 	if (target)
-		qglEnable (target);
+		glEnable (target);
 }
 
 
@@ -290,7 +290,7 @@ RB_LoadTexMatrix
 */
 void RB_LoadTexMatrix (mat4x4_t m)
 {
-	qglLoadMatrixf (m);
+	glLoadMatrixf (m);
 	rb_glState.texMatIdentity[rb_glState.texUnit] = false;
 }
 
@@ -303,7 +303,7 @@ RB_LoadIdentityTexMatrix
 void RB_LoadIdentityTexMatrix (void)
 {
 	if (!rb_glState.texMatIdentity[rb_glState.texUnit]) {
-		qglLoadIdentity ();
+		glLoadIdentity ();
 		rb_glState.texMatIdentity[rb_glState.texUnit] = true;
 	}
 }
@@ -329,7 +329,7 @@ void RB_BindProgram (program_t *program)
 			return;
 		rb_glState.boundFragProgram = program->progNum;
 
-		qglBindProgramARB (GL_FRAGMENT_PROGRAM_ARB, program->progNum);
+		glBindProgramARB (GL_FRAGMENT_PROGRAM_ARB, program->progNum);
 		break;
 
 	case GL_VERTEX_PROGRAM_ARB:
@@ -337,7 +337,7 @@ void RB_BindProgram (program_t *program)
 			return;
 		rb_glState.boundVertProgram = program->progNum;
 
-		qglBindProgramARB (GL_VERTEX_PROGRAM_ARB, program->progNum);
+		glBindProgramARB (GL_VERTEX_PROGRAM_ARB, program->progNum);
 		break;
 
 #ifdef _DEBUG
@@ -366,18 +366,18 @@ void RB_SetupGL2D (void)
 	// State
 	rb_glState.in2D = true;
 	rb_glState.stateBits1 &= ~SB1_DEPTHMASK_ON;
-	qglDepthMask (GL_FALSE);
+	glDepthMask (GL_FALSE);
 
 	// Set 2D virtual screen size
-	qglViewport (0, 0, ri.config.vidWidth, ri.config.vidHeight);
-	qglScissor (0, 0, ri.config.vidWidth, ri.config.vidHeight);
+	glViewport (0, 0, ri.config.vidWidth, ri.config.vidHeight);
+	glScissor (0, 0, ri.config.vidWidth, ri.config.vidHeight);
 
-	qglMatrixMode (GL_PROJECTION);
-	qglLoadIdentity ();
-	qglOrtho (0, ri.config.vidWidth, ri.config.vidHeight, 0, -99999, 99999);
+	glMatrixMode (GL_PROJECTION);
+	glLoadIdentity ();
+	glOrtho (0, ri.config.vidWidth, ri.config.vidHeight, 0, -99999, 99999);
 
-	qglMatrixMode (GL_MODELVIEW);
-	qglLoadIdentity ();
+	glMatrixMode (GL_MODELVIEW);
+	glLoadIdentity ();
 }
 
 
@@ -391,13 +391,13 @@ void RB_SetupGL3D (void)
 	// State
 	rb_glState.in2D = false;
 	rb_glState.stateBits1 |= SB1_DEPTHMASK_ON;
-	qglDepthMask (GL_TRUE);
+	glDepthMask (GL_TRUE);
 
 	// Set up viewport
 	if (!ri.scn.mirrorView && !ri.scn.portalView) {
-		qglScissor (ri.def.x, ri.config.vidHeight - ri.def.height - ri.def.y, ri.def.width, ri.def.height);
-		qglViewport (ri.def.x, ri.config.vidHeight - ri.def.height - ri.def.y, ri.def.width, ri.def.height);
-		qglClear (GL_DEPTH_BUFFER_BIT);
+		glScissor (ri.def.x, ri.config.vidHeight - ri.def.height - ri.def.y, ri.def.width, ri.def.height);
+		glViewport (ri.def.x, ri.config.vidHeight - ri.def.height - ri.def.y, ri.def.width, ri.def.height);
+		glClear (GL_DEPTH_BUFFER_BIT);
 	}
 
 	// Set up projection matrix
@@ -405,14 +405,14 @@ void RB_SetupGL3D (void)
 	if (ri.scn.mirrorView)
 		ri.scn.projectionMatrix[0] = -ri.scn.projectionMatrix[0];
 
-	qglMatrixMode (GL_PROJECTION);
-	qglLoadMatrixf (ri.scn.projectionMatrix);
+	glMatrixMode (GL_PROJECTION);
+	glLoadMatrixf (ri.scn.projectionMatrix);
 
 	// Set up the world view matrix
 	R_SetupModelviewMatrix (&ri.def, ri.scn.worldViewMatrix);
 
-	qglMatrixMode (GL_MODELVIEW);
-	qglLoadMatrixf (ri.scn.worldViewMatrix);
+	glMatrixMode (GL_MODELVIEW);
+	glLoadMatrixf (ri.scn.worldViewMatrix);
 
 	// Handle portal/mirror rendering
 	if (ri.scn.mirrorView || ri.scn.portalView) {
@@ -423,8 +423,8 @@ void RB_SetupGL3D (void)
 		clip[2] = ri.scn.clipPlane.normal[2];
 		clip[3] = -ri.scn.clipPlane.dist;
 
-		qglClipPlane (GL_CLIP_PLANE0, clip);
-		qglEnable (GL_CLIP_PLANE0);
+		glClipPlane (GL_CLIP_PLANE0, clip);
+		glEnable (GL_CLIP_PLANE0);
 	}
 }
 
@@ -440,18 +440,18 @@ void RB_ClearBuffers (void)
 
 	clearBits = GL_DEPTH_BUFFER_BIT;
 	if (gl_clear->intVal) {
-		qglClearColor (0.5f, 0.5f, 0.5f, 1.0f);
+		glClearColor (0.5f, 0.5f, 0.5f, 1.0f);
 		clearBits |= GL_COLOR_BUFFER_BIT;
 	}
 
 	if (ri.useStencil && gl_shadows->intVal) {
-		qglClearStencil (128);
+		glClearStencil (128);
 		clearBits |= GL_STENCIL_BUFFER_BIT;
 	}
 
-	qglClear (clearBits);
+	glClear (clearBits);
 
-	qglDepthRange (0, 1);
+	glDepthRange (0, 1);
 }
 
 
@@ -468,15 +468,15 @@ void RB_SetDefaultState (void)
 
 	rb_glState.stateBits1 = 0;
 
-	qglFinish ();
+	glFinish ();
 
-	qglColor4f (1, 1, 1, 1);
-	qglClearColor (0.5f, 0.5f, 0.5f, 1.0f);
+	glColor4f (1, 1, 1, 1);
+	glClearColor (0.5f, 0.5f, 0.5f, 1.0f);
 
-	qglEnable (GL_SCISSOR_TEST);
+	glEnable (GL_SCISSOR_TEST);
 
-	qglPolygonMode (GL_FRONT_AND_BACK, GL_FILL);
-	qglPolygonOffset (0, 0);
+	glPolygonMode (GL_FRONT_AND_BACK, GL_FILL);
+	glPolygonOffset (0, 0);
 
 	// Texture-unit specific
 	for (i=MAX_TEXUNITS-1 ; i>=0 ; i--) {
@@ -489,71 +489,71 @@ void RB_SetDefaultState (void)
 		// Texture
 		RB_SelectTexture (i);
 
-		qglDisable (GL_TEXTURE_1D);
-		qglBindTexture (GL_TEXTURE_1D, 0);
+		glDisable (GL_TEXTURE_1D);
+		glBindTexture (GL_TEXTURE_1D, 0);
 
 		if (ri.config.extTex3D) {
-			qglDisable (GL_TEXTURE_3D);
-			qglBindTexture (GL_TEXTURE_3D, 0);
+			glDisable (GL_TEXTURE_3D);
+			glBindTexture (GL_TEXTURE_3D, 0);
 		}
 		if (ri.config.extTexCubeMap) {
-			qglDisable (GL_TEXTURE_CUBE_MAP_ARB);
-			qglBindTexture (GL_TEXTURE_CUBE_MAP_ARB, 0);
+			glDisable (GL_TEXTURE_CUBE_MAP_ARB);
+			glBindTexture (GL_TEXTURE_CUBE_MAP_ARB, 0);
 		}
 
 		if (i == 0) {
-			qglEnable (GL_TEXTURE_2D);
+			glEnable (GL_TEXTURE_2D);
 			rb_glState.texTarget[i] = GL_TEXTURE_2D;
 		}
 		else {
-			qglDisable (GL_TEXTURE_2D);
+			glDisable (GL_TEXTURE_2D);
 			rb_glState.texTarget[i] = 0;
 		}
-		qglBindTexture (GL_TEXTURE_2D, 0);
+		glBindTexture (GL_TEXTURE_2D, 0);
 
 		// Texgen
-		qglDisable (GL_TEXTURE_GEN_S);
-		qglDisable (GL_TEXTURE_GEN_T);
-		qglDisable (GL_TEXTURE_GEN_R);
-		qglDisable (GL_TEXTURE_GEN_Q);
+		glDisable (GL_TEXTURE_GEN_S);
+		glDisable (GL_TEXTURE_GEN_T);
+		glDisable (GL_TEXTURE_GEN_R);
+		glDisable (GL_TEXTURE_GEN_Q);
 	}
 
 	// Fragment programs
 	if (ri.config.extFragmentProgram)
-		qglDisable (GL_FRAGMENT_PROGRAM_ARB);
+		glDisable (GL_FRAGMENT_PROGRAM_ARB);
 
 	// Vertex programs
 	if (ri.config.extVertexProgram)
-		qglDisable (GL_VERTEX_PROGRAM_ARB);
+		glDisable (GL_VERTEX_PROGRAM_ARB);
 
 	// Stencil testing
 	if (ri.useStencil)
-		qglDisable (GL_STENCIL_TEST);
+		glDisable (GL_STENCIL_TEST);
 
 	// Polygon offset testing
-	qglDisable (GL_POLYGON_OFFSET_FILL);
+	glDisable (GL_POLYGON_OFFSET_FILL);
 
 	// Depth testing
-	qglDisable (GL_DEPTH_TEST);
-	qglDepthFunc (GL_LEQUAL);
-	qglDepthRange (0, 1);
+	glDisable (GL_DEPTH_TEST);
+	glDepthFunc (GL_LEQUAL);
+	glDepthRange (0, 1);
 
 	// Face culling
-	qglDisable (GL_CULL_FACE);
-	qglCullFace (GL_FRONT);
+	glDisable (GL_CULL_FACE);
+	glCullFace (GL_FRONT);
 	rb_glState.stateBits1 |= SB1_CULL_FRONT;
 
 	// Alpha testing
-	qglDisable (GL_ALPHA_TEST);
-	qglAlphaFunc (GL_GREATER, 0);
+	glDisable (GL_ALPHA_TEST);
+	glAlphaFunc (GL_GREATER, 0);
 
 	// Blending
-	qglDisable (GL_BLEND);
-	qglBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDisable (GL_BLEND);
+	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	rb_glState.stateBits1 |= SB1_BLENDSRC_SRC_ALPHA|SB1_BLENDDST_ONE_MINUS_SRC_ALPHA;
 
 	// Model shading
-	qglShadeModel (GL_SMOOTH);
+	glShadeModel (GL_SMOOTH);
 
 	// Check for errors
 	GL_CheckForError ("RB_SetDefaultState");
