@@ -34,7 +34,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #ifdef _WIN32
 
 # include "../renderer/r_local.h"
-# include "../client/sdl_glimpl.h"
+# include "../client/sdl_glimp.h"
 
 # define LOGPROC	(glState.oglLogFP)
 # define GL_GPA(a)	(void *)GetProcAddress (glState.hInstOpenGL, a)

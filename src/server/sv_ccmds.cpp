@@ -519,7 +519,7 @@ static void SV_GameMap_f (void)
 			** when the level is re-entered, the clients will spawn
 			** at spawn points instead of occupying body shells
 			*/
-			savedInuse = Mem_PoolAlloc (maxclients->intVal * sizeof (qBool), sv_genericPool, 0);
+			savedInuse = static_cast<qBool*>(Mem_PoolAlloc (maxclients->intVal * sizeof (qBool), sv_genericPool, 0));
 			for (i=0, cl=svs.clients ; i<maxclients->intVal ; i++, cl++) {
 				savedInuse[i] = cl->edict->inUse;
 				cl->edict->inUse = false;

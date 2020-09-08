@@ -47,7 +47,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 #ifdef _WIN32
 
-# pragma intrinsic(memcmp)
+//# pragma intrinsic(memcmp)
 
 # define NO_RETURN __declspec(noreturn)
 
@@ -138,12 +138,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #  ifdef NDEBUG
 #   ifdef __i386__
 #    define CPUSTRING		"i386"
+#	elif __x86_64__ || _M_AMD64
+#	 define CPUSTRING		"x86_64"
 #   elif defined(__alpha__)
 #    define CPUSTRING		"AXP"
 #   endif
 #  else // NDEBUG
 #   ifdef __i386__
 #    define CPUSTRING		"i386 Debug"
+#	elif __x86_64__ || _M_AMD64
+#	 define CPUSTRING		"x86_64 Debug"
 #   elif defined(__alpha__)
 #    define CPUSTRING		"AXP Debug"
 #   endif

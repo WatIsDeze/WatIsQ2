@@ -948,8 +948,8 @@ void R_Q2BSP_BeginBuildingLightmaps (void)
 	r_q2_lmSize = size;
 
 	// Allocate buffers and clear values
-	r_q2_lmAllocated = Mem_PoolAlloc (sizeof (int) * r_q2_lmSize, ri.lightSysPool, 0);
-	r_q2_lmBuffer = Mem_PoolAlloc (r_q2_lmSize*r_q2_lmSize*4, ri.lightSysPool, 0);
+	r_q2_lmAllocated = static_cast<int*>(Mem_PoolAlloc (sizeof (int) * r_q2_lmSize, ri.lightSysPool, 0));
+	r_q2_lmBuffer = static_cast<byte*>(Mem_PoolAlloc (r_q2_lmSize*r_q2_lmSize*4, ri.lightSysPool, 0));
 	memset (r_q2_lmBuffer, 255, r_q2_lmSize*r_q2_lmSize*4);
 
 	// Setup the base light styles
@@ -973,7 +973,7 @@ void R_Q2BSP_CreateSurfaceLightmap (mBspSurface_t *surf)
 	const size_t	surf_size = surf->q2_lmWidth * surf->q2_lmHeight;
 
 	r_q2_lmLargestSize = max(r_q2_lmLargestSize, surf_size * 4);
-	surf->q2_blockLights = Mem_PoolAlloc(surf_size * 3 * sizeof(float), ri.modelSysPool, ri.scn.worldModel->memTag);
+	surf->q2_blockLights = static_cast<float*>(Mem_PoolAlloc(surf_size * 3 * sizeof(float), ri.modelSysPool, ri.scn.worldModel->memTag));
 
 	if (!R_Q2BSP_AllocLMBlock (surf->q2_lmWidth, surf->q2_lmHeight, &surf->q2_lmCoords[0], &surf->q2_lmCoords[1])) {
 		R_Q2BSP_UploadLMBlock ();
@@ -1002,7 +1002,7 @@ R_Q2BSP_EndBuildingLightmaps
 void R_Q2BSP_EndBuildingLightmaps (void)
 {
 	// create scratches
-	r_q2_lightScratch = Mem_PoolAlloc(r_q2_lmLargestSize, ri.lightSysPool, 0);
+	r_q2_lightScratch = static_cast<byte*>(Mem_PoolAlloc(r_q2_lmLargestSize, ri.lightSysPool, 0));
 
 	// Upload the final block
 	R_Q2BSP_UploadLMBlock ();
@@ -1461,7 +1461,7 @@ static int R_Q3BSP_PackLightmaps (int num, int w, int h, int size, const byte *d
 	if (rectSize > r_q3_lmBufferSize) {
 		if (r_q3_lmBuffer)
 			Mem_Free (r_q3_lmBuffer);
-		r_q3_lmBuffer = Mem_PoolAlloc (rectSize, ri.lightSysPool, 0);
+		r_q3_lmBuffer = static_cast<byte*>(Mem_PoolAlloc (rectSize, ri.lightSysPool, 0));
 		memset (r_q3_lmBuffer, 255, rectSize);
 		r_q3_lmBufferSize = rectSize;
 	}
@@ -1507,7 +1507,7 @@ void R_Q3BSP_BuildLightmaps (int numLightmaps, int w, int h, const byte *data, m
 	r_q3_lmMaxBlockSize = size;
 	size = w * h * Q3LIGHTMAP_BYTES;
 	r_q3_lmBufferSize = w * h * 4;
-	r_q3_lmBuffer = Mem_PoolAlloc (r_q3_lmBufferSize, ri.lightSysPool, 0);
+	r_q3_lmBuffer = static_cast<byte*>(Mem_PoolAlloc (r_q3_lmBufferSize, ri.lightSysPool, 0));
 
 	for (i=0 ; i<numLightmaps ; )
 		i += R_Q3BSP_PackLightmaps (numLightmaps - i, w, h, size, data + i * size, &rects[i]);

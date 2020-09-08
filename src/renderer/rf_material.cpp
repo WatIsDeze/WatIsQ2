@@ -1949,7 +1949,7 @@ static void R_FinishMaterial (material_t *mat, char *fileName)
 
 	// Fill deforms
 	if (mat->numDeforms) {
-		mat->deforms = Mem_PoolAlloc (mat->numDeforms * sizeof (vertDeform_t), ri.matSysPool, 0);
+		mat->deforms = reinterpret_cast<vertDeform_t*>(Mem_PoolAlloc (mat->numDeforms * sizeof (vertDeform_t), ri.matSysPool, 0));
 		memcpy (mat->deforms, r_currDeforms, mat->numDeforms * sizeof (vertDeform_t));
 	}
 
@@ -1958,7 +1958,7 @@ static void R_FinishMaterial (material_t *mat, char *fileName)
 	for (i=0 ; i<mat->numPasses ; i++)
 		size += r_currPasses[i].numTCMods * sizeof (tcMod_t);
 	if (size) {
-		buffer = Mem_PoolAlloc (size, ri.matSysPool, 0);
+		buffer = static_cast<byte*>(Mem_PoolAlloc (size, ri.matSysPool, 0));
 
 		// Fill passes
 		mat->passes = (matPass_t *)buffer;

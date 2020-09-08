@@ -35,7 +35,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 # include <commctrl.h>
 #endif
 
-#define WINDOW_APP_NAME		"WatIsQ2 v"WATISQ2_VERSTR
+#define WINDOW_APP_NAME		"WatIsQ2 v" WATISQ2_VERSTR
 #define WINDOW_CLASS_NAME	"WatIsQ2"
 
 typedef struct winInfo_s {
