@@ -720,7 +720,6 @@ extern float		(*BigFloat) (float f);
 extern int			(*BigLong) (int l);
 extern int16		(*BigShort) (int16 s);
 
-
 void		Swap_Init (void);
 
 /*
@@ -770,22 +769,24 @@ typedef enum fsSeekOrigin_s {
 #define MAX_COMPRINT 4096
 
 // Com_Printf
-typedef enum {
+enum eComPrint_t{
 	PRNT_DEFAULT			= 0,
 	PRNT_WARNING			= 1 << 0,
 	PRNT_ERROR				= 1 << 1,
 	PRNT_CONSOLE			= 1 << 2,
 	PRNT_CHATHUD			= 1 << 3
-} comPrint_t;
-void	Com_Printf (int flags, char *fmt, ...);
-void	Com_DevPrintf (int flags, char *fmt, ...);
+};
+typedef int comPrint_t;
+void	Com_Printf (comPrint_t flags, char *fmt, ...);
+void	Com_DevPrintf (comPrint_t flags, char *fmt, ...);
 
 // Com_Error
-typedef enum {
+enum eComError_t {
 	ERR_FATAL,				// exit the entire game with a popup window
 	ERR_DROP,				// print to console and disconnect from game
 	ERR_DISCONNECT			// don't kill server
-} comError_t;
+};
+typedef int comError_t;
 NO_RETURN void	Com_Error (comError_t code, char *fmt, ...);
 
 //

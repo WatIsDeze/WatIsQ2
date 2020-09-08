@@ -30,7 +30,6 @@ INFANTRY
 
 void InfantryMachineGun (edict_t *self);
 
-
 static int	sound_pain1;
 static int	sound_pain2;
 static int	sound_die1;

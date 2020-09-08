@@ -270,10 +270,10 @@ void SP_turret_base (edict_t *self)
 Must NOT be on the team with the rest of the turret parts.
 Instead it must target the turret_breach.
 */
-
-void infantry_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damage);
+void infantry_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damage, vec3_t point);
 void infantry_stand (edict_t *self);
 void monster_use (edict_t *self, edict_t *other, edict_t *activator);
+
 
 void turret_driver_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damage, vec3_t point)
 {
@@ -292,7 +292,7 @@ void turret_driver_die (edict_t *self, edict_t *inflictor, edict_t *attacker, in
 	self->target_ent->owner = NULL;
 	self->target_ent->teammaster->owner = NULL;
 
-	infantry_die (self, inflictor, attacker, damage);
+	infantry_die (self, inflictor, attacker, damage, point);
 }
 
 qBool FindTarget (edict_t *self);

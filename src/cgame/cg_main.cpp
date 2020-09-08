@@ -665,7 +665,7 @@ void CG_Shutdown (void)
 
 //======================================================================
 
-#ifndef CGAME_HARD_LINKED
+#ifndef  
 /*
 ==================
 Com_Printf

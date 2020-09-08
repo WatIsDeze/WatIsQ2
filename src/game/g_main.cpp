@@ -145,7 +145,7 @@ gameExport_t *GetGameAPI (gameImport_t *import)
 #ifndef GAME_HARD_LINKED
 // this is only here so the functions in q_shared.c and q_shwin.c can link
 
-void Com_Printf (comPrint_t flags, char *fmt, ...)
+void Com_Printf (int flags, char *fmt, ...)
 {
 	va_list		argptr;
 	char		text[MAX_COMPRINT];
@@ -157,7 +157,7 @@ void Com_Printf (comPrint_t flags, char *fmt, ...)
 	gi.dprintf ("%s", text);
 }
 
-void Com_DevPrintf (comPrint_t flags, char *fmt, ...)
+void Com_DevPrintf (int flags, char *fmt, ...)
 {
 	va_list		argptr;
 	char		text[MAX_COMPRINT];
@@ -169,7 +169,7 @@ void Com_DevPrintf (comPrint_t flags, char *fmt, ...)
 	gi.dprintf ("%s", text);
 }
 
-NO_RETURN void Com_Error (comError_t code, char *fmt, ...)
+NO_RETURN void Com_Error (int code, char *fmt, ...)
 {
 	va_list		argptr;
 	char		text[MAX_COMPRINT];

@@ -22,14 +22,17 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // This file contains GL context related code and some glue
 //
 
+#ifndef _WIN32
 #include <termios.h>
 #include <sys/ioctl.h>
 #include <sys/stat.h>
+#include <dlfcn.h>
+#endif
 #include <stdarg.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <signal.h>
-#include <dlfcn.h>
+
 #include <SDL/SDL.h>
 
 #include "../renderer/r_local.h"

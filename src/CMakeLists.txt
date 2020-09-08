@@ -491,10 +491,10 @@ if(UNIX)
     )
 elseif(WIN32)
     list(APPEND WIQ2_SRC_ENGINE 
-        ${WIQ2_SRCDIR_WIN32}/win_console.cpp 
-        ${WIQ2_SRCDIR_WIN32}/win_main.cpp 
-        ${WIQ2_SRCDIR_WIN32}/win_snd_cd.cpp 
-        ${WIQ2_SRCDIR_WIN32}/win_sock.cpp 
+        #${WIQ2_SRCDIR_WIN32}/win_console.cpp 
+        #${WIQ2_SRCDIR_WIN32}/win_main.cpp 
+        #${WIQ2_SRCDIR_WIN32}/win_snd_cd.cpp 
+        #${WIQ2_SRCDIR_WIN32}/win_sock.cpp 
     )
 endif()
 
