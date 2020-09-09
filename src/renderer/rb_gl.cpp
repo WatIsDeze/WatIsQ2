@@ -39,8 +39,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #elif defined __unix__
 
 # include <dlfcn.h>
-# include <GL/gl.h>
-# include <GL/glx.h>
+//# include <GL/gl.h>
+//# include <GL/glx.h>
 # include "../renderer/r_local.h"
 # include "../client/sdl_glimp.h"
 

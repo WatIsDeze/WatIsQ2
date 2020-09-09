@@ -38,11 +38,13 @@ cVar_t	*zombietime;			// seconds to sink messages after disconnect
 
 cVar_t	*rcon_password;			// password for remote server commands
 
+#ifdef BUILD_DEDICATED
 cVar_t	*allow_download;
 cVar_t	*allow_download_players;
 cVar_t	*allow_download_models;
 cVar_t	*allow_download_sounds;
 cVar_t	*allow_download_maps;
+#endif
 
 cVar_t	*sv_airaccelerate;
 
@@ -1000,12 +1002,14 @@ void SV_ServerInit (void)
 	sv_noreload				= Cvar_Register ("sv_noreload",				"0",		0);
 	sv_airaccelerate		= Cvar_Register ("sv_airaccelerate",		"0",		CVAR_LATCH_SERVER);
 
+	#ifdef BUILD_DEDICATED
 	allow_download			= Cvar_Register ("allow_download",			"1",		CVAR_ARCHIVE);
 	allow_download_players	= Cvar_Register ("allow_download_players",	"0",		CVAR_ARCHIVE);
 	allow_download_models	= Cvar_Register ("allow_download_models",	"1",		CVAR_ARCHIVE);
 	allow_download_sounds	= Cvar_Register ("allow_download_sounds",	"1",		CVAR_ARCHIVE);
 	allow_download_maps		= Cvar_Register ("allow_download_maps",		"1",		CVAR_ARCHIVE);
-
+	#endif
+	
 	public_server			= Cvar_Register ("public",					"0",		0);
 
 	MSG_Init (&sv_netMessage, sv_netBuffer, sizeof (sv_netBuffer));

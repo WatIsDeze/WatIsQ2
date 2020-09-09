@@ -513,8 +513,6 @@ endif()
 
 # Build the game dynamic library
 if (${BUILD_WIQ2_GAME})
-    set(tname game)
-    set(tname ${tname}_${ARCH})
 	add_library(game_${ARCH} MODULE ${WIQ2_SRC_GAME})
 	set_target_properties(game_${ARCH} PROPERTIES
 			PREFIX ""
@@ -535,6 +533,8 @@ if(${BUILD_WIQ2})
         target_link_libraries(WIQ2_${ARCH}
             ${WIQ2_LINKER_FLAGS} 
             ${SDL_LIBRARY} 
+            ${OPENGL_LIBRARY}
+            ${GLEW_LIBRARIES}
             ${OPENAL_LIBRARY} 
             ${PNG_LIBRARIES} 
             ${JPEG_LIBRARIES} 

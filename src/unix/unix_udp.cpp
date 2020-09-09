@@ -32,6 +32,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <sys/param.h>
 #include <sys/ioctl.h>
 #include <sys/uio.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 #include <errno.h>
 
 #ifdef NeXT
@@ -336,7 +339,7 @@ int NET_SendPacket (netSrc_t sock, size_t length, void *data, netAdr_t *to)
 		break;
 	}
 
-	NET_NetadrToSockadr (&to, &addr);
+	NET_NetadrToSockadr (to, &addr);
 
 	ret = sendto (net_socket, data, length, 0, (struct sockaddr *)&addr, sizeof(addr));
 	if (ret == -1) {
@@ -488,7 +491,7 @@ int NET_Socket (char *net_interface, int port)
 	address.sin_port = (port == PORT_ANY)?0:htons((short)port);
 	address.sin_family = AF_INET;
 
-	if( bind (newsocket, (void *)&address, sizeof(address)) == -1)
+	if( bind (newsocket, (const sockaddr *)&address, sizeof(address)) == -1)
 	{
 		Com_Printf (0, "ERROR: UDP_OpenSocket: bind: %s\n", NET_ErrorString());
 		close (newsocket);

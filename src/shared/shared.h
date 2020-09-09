@@ -417,8 +417,8 @@ enum {
 
 // ===========================================================================
 
-void	seedMT (uint32 seed);
-uint32	randomMT (void);
+extern void seedMT(uint32 seed);
+extern uint32	randomMT (void);
 
 #define frand() (randomMT() * 0.00000000023283064365386962890625f)	// 0 to 1
 #define crand() (((int)randomMT() - 0x7FFFFFFF) * 0.000000000465661287307739257812f)	// -1 to 1

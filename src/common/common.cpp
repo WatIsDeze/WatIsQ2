@@ -654,7 +654,7 @@ void Com_Init (int argc, char **argv)
 	if (setjmp (abortframe))
 		Sys_Error ("Error during initialization");
 
-	seedMT ((unsigned long)time(0));
+	seedMT ((uint32)(time(0)));
 
 	// Memory init
 	Mem_Init ();

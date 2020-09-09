@@ -323,8 +323,8 @@ GLimp_GetGammaRamp
 */
 qBool GLimp_GetGammaRamp (uint16 *ramp)
 {
-	//return SCR_GetGammaRamp (ramp);
-	false;
+//	return SCR_GetGammaRamp (ramp);
+return false;
 }
 
 
@@ -335,5 +335,5 @@ GLimp_SetGammaRamp
 */
 void GLimp_SetGammaRamp (uint16 *ramp)
 {
-	//SCR_SetGammaRamp (ramp);
+//	SCR_SetGammaRamp (ramp);
 }

@@ -142,6 +142,7 @@ CDAudio_Init
 */
 qBool CDAudio_Init (void)
 {
+    return false;
 }
 
 

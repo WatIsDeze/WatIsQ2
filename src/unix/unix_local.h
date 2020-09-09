@@ -26,3 +26,5 @@ extern cVar_t	*s_speed;
 extern cVar_t	*s_channels;
 extern cVar_t	*s_system;
 
+extern void Sys_InitConsole (void);
+extern void Conbuf_AppendText (const char *pMsg);

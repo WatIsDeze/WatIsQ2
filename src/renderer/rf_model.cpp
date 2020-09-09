@@ -36,7 +36,7 @@ static byte			r_q3BspNoVis[Q3BSP_MAX_VIS];
 
 extern int			r_q2_lmSize;
 
-cVar_t	*flushmap;
+extern cVar_t	*flushmap;
 
 /*
 =================

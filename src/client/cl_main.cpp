@@ -72,7 +72,7 @@ cVar_t	*m_side;
 cVar_t	*rcon_clpassword;
 cVar_t	*rcon_address;
 
-cVar_t	*r_fontScale;
+//cVar_t	*r_fontScale; -- Has to be in renderer.
 
 cVar_t	*sensitivity;
 
@@ -1008,14 +1008,18 @@ void CL_Frame (int msec)
 
 		// Update the screen
 		SCR_UpdateScreen ();
+		Com_Printf(PRNT_DEFAULT, "3 TESTING\n");
 
 		// Advance local effects for next frame
 		CIN_RunCinematic ();
+		Com_Printf(PRNT_DEFAULT, "4 TESTING\n");
 
 		// Update audio orientation
+		Com_Printf(PRNT_DEFAULT, "5 TESTING\n");
 		if (Com_ClientState () != CA_ACTIVE || cl.cin.time > 0)
 			Snd_Update (NULL);
 
+Com_Printf(PRNT_DEFAULT, "6 TESTING\n");
 		if (miscFrame)
 			CDAudio_Update ();
 	}
@@ -1695,7 +1699,7 @@ static void CL_Register (void)
 	rcon_clpassword			= Cvar_Register ("rcon_password",			"",			0);
 	rcon_address			= Cvar_Register ("rcon_address",			"",			0);
 
-	r_fontScale				= Cvar_Register ("r_fontScale",				"1",		CVAR_ARCHIVE);
+	//r_fontScale				= Cvar_Register ("r_fontScale",				"1",		CVAR_ARCHIVE);
 
 	sensitivity				= Cvar_Register ("sensitivity",				"3",		CVAR_ARCHIVE);
 

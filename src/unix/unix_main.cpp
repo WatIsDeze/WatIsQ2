@@ -42,6 +42,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <dirent.h>
 
 #include "../common/common.h"
+#include "../renderer/r_local.h"
 #include "unix_local.h"
 
 #if defined(__FreeBSD__)
@@ -49,10 +50,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #endif
 
 uid_t	saved_euid;
-
-#ifndef DEDICATED_ONLY
-void X11_Shutdown (void);
-#endif
+int glob_match (char *pattern, char *text);
 
 /* Like glob_match, but match PATTERN against any final segment of TEXT.  */
 static int glob_match_after_star (char *pattern, char *text)
@@ -603,9 +601,9 @@ int Sys_FindFiles (char *path, char *pattern, char **fileList, int maxFiles, int
 ========================================================================
 */
 
-#if !defined(LIBARCH)
-#define LIBARCH
-#endif 
+//#if !defined(LIBARCH)
+#define LIBARCH "x86_64"
+//#endif 
 
 typedef struct libList_s {
 	const char		*title;
@@ -737,7 +735,7 @@ void *Sys_LoadLibrary (libType_t libType, void *parms)
 	}
 
 	// Find the API function
-	APIfunc = (void *)dlsym (*lib, sys_libList[libType].apiFuncName);
+	APIfunc = (void * (*)(void*))dlsym (*lib, sys_libList[libType].apiFuncName);
 	if (!APIfunc) {
 		Com_Error (ERR_FATAL, "dlopen (%s): does not provide %s \n", name, sys_libList[libType].apiFuncName);
 		Sys_UnloadLibrary (libType);
@@ -804,7 +802,7 @@ static void signal_handler (int sig)
 		printf ("Received signal %d, exiting...\n", sig);
 
 #ifndef DEDICATED_ONLY
-	GLimp_Shutdown ();
+	GLimp_Shutdown (true);
 //	X11_Shutdown ();
 #endif
 
