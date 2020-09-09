@@ -600,11 +600,6 @@ int Sys_FindFiles (char *path, char *pattern, char **fileList, int maxFiles, int
 
 ========================================================================
 */
-
-//#if !defined(LIBARCH)
-#define LIBARCH "x86_64"
-//#endif 
-
 typedef struct libList_s {
 	const char		*title;
 	void			*lib;
@@ -612,9 +607,10 @@ typedef struct libList_s {
 	const char		*apiFuncName;
 } libList_t;
 
+
 static libList_t sys_libList[LIB_MAX] = {
-	{ "LIB_CGAME",	NULL,	"cgame_" LIBARCH ".so",	"GetCGameAPI"	},
-	{ "LIB_GAME",	NULL,	"game_" LIBARCH ".so",		"GetGameAPI"	},
+	{ "LIB_CGAME",	NULL,	"cgame.so",	"GetCGameAPI"	},
+	{ "LIB_GAME",	NULL,	"game.so",	"GetGameAPI"	},
 };
 
 /*

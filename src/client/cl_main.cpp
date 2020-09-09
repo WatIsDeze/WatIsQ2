@@ -242,15 +242,17 @@ void CL_SetState (caState_t state)
 
 	// Apply any state-specific actions
 	switch (state) {
-	case CA_CONNECTING:
-		// FIXME: only call if last state was < CA_CONNECTING?
-		CL_CGModule_ForceMenuOff ();
-		Snd_StopAllSounds ();
-		break;
+		case CA_CONNECTING:
+			// FIXME: only call if last state was < CA_CONNECTING?
+			CL_CGModule_ForceMenuOff ();
+			Snd_StopAllSounds ();
+			break;
 
-	case CA_CONNECTED:
-		Cvar_FixCheatVars ();
-		break;
+		case CA_CONNECTED:
+			Cvar_FixCheatVars ();
+			break;
+		default:
+			break;
 	}
 }
 
@@ -382,17 +384,19 @@ static void CL_ClientConnect_CP (void)
 	int			i;
 
 	switch (Com_ClientState()) {
-	case CA_CONNECTED:
-		Com_DevPrintf (PRNT_WARNING, "Dup connect received. Ignored.\n");
-		return;
+		case CA_CONNECTED:
+			Com_DevPrintf (PRNT_WARNING, "Dup connect received. Ignored.\n");
+			return;
 
-	case CA_DISCONNECTED:
-		Com_DevPrintf (0, "Received connect when disconnected. Ignored.\n");
-		return;
+		case CA_DISCONNECTED:
+			Com_DevPrintf (0, "Received connect when disconnected. Ignored.\n");
+			return;
 
-	case CA_ACTIVE:
-		Com_DevPrintf (0, "Illegal connect when already connected! (q2msgs?). Ignored.\n");
-		return;
+		case CA_ACTIVE:
+			Com_DevPrintf (0, "Illegal connect when already connected! (q2msgs?). Ignored.\n");
+			return;
+		default:
+			break;
 	}
 
 	Com_DevPrintf (0, "client_connect: new\n");
@@ -1008,18 +1012,14 @@ void CL_Frame (int msec)
 
 		// Update the screen
 		SCR_UpdateScreen ();
-		Com_Printf(PRNT_DEFAULT, "3 TESTING\n");
 
 		// Advance local effects for next frame
 		CIN_RunCinematic ();
-		Com_Printf(PRNT_DEFAULT, "4 TESTING\n");
 
 		// Update audio orientation
-		Com_Printf(PRNT_DEFAULT, "5 TESTING\n");
 		if (Com_ClientState () != CA_ACTIVE || cl.cin.time > 0)
 			Snd_Update (NULL);
 
-Com_Printf(PRNT_DEFAULT, "6 TESTING\n");
 		if (miscFrame)
 			CDAudio_Update ();
 	}
@@ -1637,7 +1637,7 @@ static void CL_WriteConfig (void)
 	fprintf (f, "\n// console variables\n");
 	Cvar_WriteVariables (f);
 
-	fprintf (f, "\n\0");
+	fprintf (f, "\n"); //fprintf (f, "\n\0"); -- wtf?
 	fclose (f);
 	Com_Printf (0, "Saved to %s\n", path);
 }

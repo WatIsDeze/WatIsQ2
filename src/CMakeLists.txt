@@ -1,140 +1,5 @@
 cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 
-#############################################################################
-# Fetch architecture                                                        #
-#                                                                           #
-# Found at: https://github.com/axr/solar-cmake/blob/master/TargetArch.cmake #
-#############################################################################
-set(archdetect_c_code "
-#if defined(__arm__) || defined(__TARGET_ARCH_ARM)
-    #if defined(__ARM_ARCH_7__) \\
-        || defined(__ARM_ARCH_7A__) \\
-        || defined(__ARM_ARCH_7R__) \\
-        || defined(__ARM_ARCH_7M__) \\
-        || (defined(__TARGET_ARCH_ARM) && __TARGET_ARCH_ARM-0 >= 7)
-        #error cmake_ARCH armv7
-    #elif defined(__ARM_ARCH_6__) \\
-        || defined(__ARM_ARCH_6J__) \\
-        || defined(__ARM_ARCH_6T2__) \\
-        || defined(__ARM_ARCH_6Z__) \\
-        || defined(__ARM_ARCH_6K__) \\
-        || defined(__ARM_ARCH_6ZK__) \\
-        || defined(__ARM_ARCH_6M__) \\
-        || (defined(__TARGET_ARCH_ARM) && __TARGET_ARCH_ARM-0 >= 6)
-        #error cmake_ARCH armv6
-    #elif defined(__ARM_ARCH_5TEJ__) \\
-        || (defined(__TARGET_ARCH_ARM) && __TARGET_ARCH_ARM-0 >= 5)
-        #error cmake_ARCH armv5
-    #else
-        #error cmake_ARCH arm
-    #endif
-#elif defined(__i386) || defined(__i386__) || defined(_M_IX86)
-    #error cmake_ARCH i386
-#elif defined(__x86_64) || defined(__x86_64__) || defined(__amd64) || defined(_M_X64)
-    #error cmake_ARCH x86_64
-#elif defined(__ia64) || defined(__ia64__) || defined(_M_IA64)
-    #error cmake_ARCH ia64
-#elif defined(__ppc__) || defined(__ppc) || defined(__powerpc__) \\
-      || defined(_ARCH_COM) || defined(_ARCH_PWR) || defined(_ARCH_PPC)  \\
-      || defined(_M_MPPC) || defined(_M_PPC)
-    #if defined(__ppc64__) || defined(__powerpc64__) || defined(__64BIT__)
-        #error cmake_ARCH ppc64
-    #else
-        #error cmake_ARCH ppc
-    #endif
-#endif
-#error cmake_ARCH unknown
-")
-
-# Set ppc_support to TRUE before including this file or ppc and ppc64
-# will be treated as invalid architectures since they are no longer supported by Apple
-
-function(target_architecture output_var)
-    if(APPLE AND CMAKE_OSX_ARCHITECTURES)
-        # On OS X we use CMAKE_OSX_ARCHITECTURES *if* it was set
-        # First let's normalize the order of the values
-
-        # Note that it's not possible to compile PowerPC applications if you are using
-        # the OS X SDK version 10.6 or later - you'll need 10.4/10.5 for that, so we
-        # disable it by default
-        # See this page for more information:
-        # http://stackoverflow.com/questions/5333490/how-can-we-restore-ppc-ppc64-as-well-as-full-10-4-10-5-sdk-support-to-xcode-4
-
-        # Architecture defaults to i386 or ppc on OS X 10.5 and earlier, depending on the CPU type detected at runtime.
-        # On OS X 10.6+ the default is x86_64 if the CPU supports it, i386 otherwise.
-
-        foreach(osx_arch ${CMAKE_OSX_ARCHITECTURES})
-            if("${osx_arch}" STREQUAL "ppc" AND ppc_support)
-                set(osx_arch_ppc TRUE)
-            elseif("${osx_arch}" STREQUAL "i386")
-                set(osx_arch_i386 TRUE)
-            elseif("${osx_arch}" STREQUAL "x86_64")
-                set(osx_arch_x86_64 TRUE)
-            elseif("${osx_arch}" STREQUAL "ppc64" AND ppc_support)
-                set(osx_arch_ppc64 TRUE)
-            else()
-                message(FATAL_ERROR "Invalid OS X arch name: ${osx_arch}")
-            endif()
-        endforeach()
-
-        # Now add all the architectures in our normalized order
-        if(osx_arch_ppc)
-            list(APPEND ARCH ppc)
-        endif()
-
-        if(osx_arch_i386)
-            list(APPEND ARCH i386)
-        endif()
-
-        if(osx_arch_x86_64)
-            list(APPEND ARCH x86_64)
-        endif()
-
-        if(osx_arch_ppc64)
-            list(APPEND ARCH ppc64)
-        endif()
-    else()
-        file(WRITE "${CMAKE_BINARY_DIR}/arch.c" "${archdetect_c_code}")
-
-        enable_language(C)
-
-        # Detect the architecture in a rather creative way...
-        # This compiles a small C program which is a series of ifdefs that selects a
-        # particular #error preprocessor directive whose message string contains the
-        # target architecture. The program will always fail to compile (both because
-        # file is not a valid C program, and obviously because of the presence of the
-        # #error preprocessor directives... but by exploiting the preprocessor in this
-        # way, we can detect the correct target architecture even when cross-compiling,
-        # since the program itself never needs to be run (only the compiler/preprocessor)
-        try_run(
-            run_result_unused
-            compile_result_unused
-            "${CMAKE_BINARY_DIR}"
-            "${CMAKE_BINARY_DIR}/arch.c"
-            COMPILE_OUTPUT_VARIABLE ARCH
-            CMAKE_FLAGS CMAKE_OSX_ARCHITECTURES=${CMAKE_OSX_ARCHITECTURES}
-        )
-
-        # Parse the architecture name from the compiler output
-        string(REGEX MATCH "cmake_ARCH ([a-zA-Z0-9_]+)" ARCH "${ARCH}")
-
-        # Get rid of the value marker leaving just the architecture name
-        string(REPLACE "cmake_ARCH " "" ARCH "${ARCH}")
-
-        # If we are compiling with an unknown architecture this variable should
-        # already be set to "unknown" but in the case that it's empty (i.e. due
-        # to a typo in the code), then set it to unknown
-        if (NOT ARCH)
-            set(ARCH unknown)
-        endif()
-    endif()
-
-    set(${output_var} "${ARCH}" PARENT_SCOPE)
-endfunction()
-
-# Find arch and set arch variable.
-target_architecture(ARCH)
-
 # Enforce "Debug" as standard build type.
 if(NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel." FORCE)
@@ -148,10 +13,6 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/stuff/cmake/modules ${CMAKE_MODU
 
 # Add extended path for FreeBSD and Homebrew on OS X.
 list(APPEND CMAKE_PREFIX_PATH /usr/local)
-
-# Define LIBARCH to architecture found.
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}-DLIBARCH=\"${ARCH}\"")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}-DLIBARCH=\"${ARCH}\"")
 
 # Enforce C compiler flags:
 #  -Wall                -> More warnings
@@ -501,36 +362,36 @@ endif()
 
 # Build the cgame(client game) dynamic library
 if (${BUILD_WIQ2_CGAME})
-	add_library(cgame_${ARCH} MODULE ${WIQ2_SRC_CGAME})
-	set_target_properties(cgame_${ARCH} PROPERTIES
+	add_library(cgame MODULE ${WIQ2_SRC_CGAME})
+	set_target_properties(cgame PROPERTIES
 			PREFIX ""
 			LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/baseq2
 			RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/baseq2
 			SUFFIX ${CMAKE_SHARED_LIBRARY_SUFFIX}
 			)
-	target_link_libraries(cgame_${ARCH} ${WIQ2_LINKER_FLAGS})
+	target_link_libraries(cgame ${WIQ2_LINKER_FLAGS})
 endif()
 
 # Build the game dynamic library
 if (${BUILD_WIQ2_GAME})
-	add_library(game_${ARCH} MODULE ${WIQ2_SRC_GAME})
-	set_target_properties(game_${ARCH} PROPERTIES
+	add_library(game MODULE ${WIQ2_SRC_GAME})
+	set_target_properties(game PROPERTIES
 			PREFIX ""
 			LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/baseq2
 			RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/baseq2
 			SUFFIX ${CMAKE_SHARED_LIBRARY_SUFFIX}
 			)
-	target_link_libraries(game_${ARCH} ${WIQ2_LINKER_FLAGS})
+	target_link_libraries(game ${WIQ2_LINKER_FLAGS})
 endif()
 
 # Build the WIQ2 executable
 if(${BUILD_WIQ2})
-    add_executable(WIQ2_${ARCH} ${WIQ2_SRC_ENGINE})
-    set_target_properties(WIQ2_${ARCH} PROPERTIES
+    add_executable(WIQ2 ${WIQ2_SRC_ENGINE})
+    set_target_properties(WIQ2 PROPERTIES
             RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/
             )
     if(UNIX)
-        target_link_libraries(WIQ2_${ARCH}
+        target_link_libraries(WIQ2
             ${WIQ2_LINKER_FLAGS} 
             ${SDL_LIBRARY} 
             ${OPENGL_LIBRARY}
