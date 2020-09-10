@@ -368,7 +368,7 @@ static qBool R_LoadMD2Model (refModel_t *model)
 		outMesh->radius[i] = outFrame->radius;
 
 		// Model bounds
-		model->radius = max (model->radius, outFrame->radius);
+		model->radius = std::fmaxf (model->radius, outFrame->radius);
 		AddPointToBounds (outFrame->mins, model->mins, model->maxs);
 		AddPointToBounds (outFrame->maxs, model->mins, model->maxs);
 
@@ -752,7 +752,7 @@ static qBool R_LoadMD3Model (refModel_t *model)
 
 		AddPointToBounds (outFrame->mins, model->mins, model->maxs);
 		AddPointToBounds (outFrame->maxs, model->mins, model->maxs);
-		model->radius = max (model->radius, outFrame->radius);
+		model->radius = std::fmaxf(model->radius, outFrame->radius);
 	}
 
 	// Done
@@ -833,7 +833,7 @@ static qBool R_LoadSP2Model (refModel_t *model)
 
 		// For culling
 		outFrames->radius	= (float)sqrt ((outFrames->width*outFrames->width) + (outFrames->height*outFrames->height));
-		model->radius		= max (model->radius, outFrames->radius);
+		model->radius		= std::fmaxf (model->radius, outFrames->radius);
 
 		// Register the material
 		Q_strncpyz (outFrames->name, inFrames->name, sizeof (outFrames->name));
@@ -3076,7 +3076,7 @@ static mesh_t *R_CreateQ3BSPMeshForSurface (refModel_t *model, dQ3BspFace_t *in,
 			for (i=0 ; i<numVerts ; i++) {
 				VectorNormalizef (tempNormalsArray[i], mesh->normalsArray[i]);
 
-				f = max (max (colors2[i][0], colors2[i][1]), colors2[i][2]);
+				f = std::fmaxf (std::fmaxf (colors2[i][0], colors2[i][1]), colors2[i][2]);
 				if (f > 1.0f) {
 					f = 255.0f / f;
 					mesh->colorArray[i][0] = colors2[i][0] * f;
@@ -3675,7 +3675,7 @@ static qBool R_LoadQ3BSPEntities (refModel_t *model, byte *byteBase, const dQ3Bs
 			out->intensity = 300;
 		out->intensity += 15;
 
-		scale = max (max (out->color[0], out->color[1]), out->color[2]);
+		scale = std::fmaxf (std::fmaxf (out->color[0], out->color[1]), out->color[2]);
 		if (!scale) {
 			out->color[0] = 1;
 			out->color[1] = 1;

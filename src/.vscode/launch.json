@@ -8,7 +8,7 @@
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/WIQ2_x86_64",
+            "program": "${workspaceFolder}/build/WIQ2",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/build",

@@ -339,7 +339,7 @@ static qBool CIN_LoadPCX (char *name, byte **pic, byte **palette, int *width, in
 	}
 
 	// FIXME: Some images with weird dimensions will crash if I don't do this...
-	x = max (pcx->yMax+1, pcx->xMax+1);
+	x = std::max (pcx->yMax+1, pcx->xMax+1);
 	pix = out = static_cast<byte*>(Mem_PoolAlloc (x * x, cl_cinSysPool, 0));
 	if (pic)
 		*pic = out;

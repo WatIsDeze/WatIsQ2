@@ -163,7 +163,7 @@ byte FloatToByte (float x)
 	f2i.i &= 0x7FFFFF;
 
 	// Then read as integer and kill float bits...
-	return (byte)min(f2i.i, 255);
+	return (byte)std::min(f2i.i, (uint32)255);
 }
 
 
@@ -174,7 +174,7 @@ ColorNormalizef
 */
 float ColorNormalizef (const float *in, float *out)
 {
-	float	f = max (max (in[0], in[1]), in[2]);
+	float	f = std::fmax (std::fmax (in[0], in[1]), in[2]);
 
 	if (f > 1.0f) {
 		f = 1.0f / f;
@@ -199,7 +199,7 @@ ColorNormalizeb
 */
 float ColorNormalizeb (const float *in, byte *out)
 {
-	float	f = max (max (in[0], in[1]), in[2]);
+	float	f = std::fmax (std::fmax (in[0], in[1]), in[2]);
 
 	if (f > 1.0f) {
 		f = 1.0f / f;

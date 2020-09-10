@@ -25,16 +25,17 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #ifndef __SHARED_H__
 #define __SHARED_H__
 
-#include <assert.h>
-#include <math.h>
-#include <stdio.h>
-#include <stdarg.h>
-#include <string.h>
-#include <stdlib.h>
-#include <time.h>
-#include <ctype.h>
-#include <inttypes.h>
-#include <stddef.h>
+#include <cassert>
+#include <cmath>
+#include <cstdio>
+#include <cstdarg>
+#include <cstring>
+#include <cstdlib>
+#include <ctime>
+#include <cctype>
+#include <cinttypes>
+#include <cstddef>
+#include <algorithm>
 
 // =========================================================================
 
@@ -403,13 +404,13 @@ enum {
 #define ANGLE2BYTE(x)	((int)((x)*256/360) & 255)
 #define BYTE2ANGLE(x)	((x)*(360.0f/256))
 
-#ifndef max
-# define max(a,b)    (((a) > (b)) ? (a) : (b))
-#endif
+// #ifndef max
+// # define max(a,b)    (((a) > (b)) ? (a) : (b))
+// #endif
 
-#ifndef min
-# define min(a,b)    (((a) < (b)) ? (a) : (b))
-#endif
+// #ifndef min
+// # define min(a,b)    (((a) < (b)) ? (a) : (b))
+// #endif
 
 #define bound(a,b,c)	((a) >= (c) ? (a) : (b) < (a) ? (a) : (b) > (c) ? (c) : (b))
 #define clamp(a,b,c)	((b) >= (c) ? (b) : (a) < (b) ? (b) : (a) > (c) ? (c) : (a))

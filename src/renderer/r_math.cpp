@@ -59,7 +59,7 @@ static inline float R_CalcZFar (void)
 		forwardClip = viewDist;
 
 	// Bias by 256 pixels
-	return max (forwardClip - forwardDist + 256, ri.scn.zFar);
+	return std::max (forwardClip - forwardDist + 256, ri.scn.zFar);
 }
 void R_SetupProjectionMatrix (refDef_t *rd, mat4x4_t m)
 {

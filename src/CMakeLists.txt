@@ -67,11 +67,19 @@ find_package(JPEG REQUIRED)
 find_package(X11 REQUIRED)
 find_package(GLEW REQUIRED)
 
+# Lua
+find_package(Lua51 REQUIRED)
+include_directories(${LUA_INCLUDE_DIR})
+
 # Minizip..
 INCLUDE (FindPkgConfig)
 if (PKG_CONFIG_FOUND)
         PKG_CHECK_MODULES(UNZIP minizip)
 endif (PKG_CONFIG_FOUND)
+
+# RmlUI.
+include_directories(libraries/RmlUi/Include)
+link_directories(libraries/RmlUi/build)
 
 # General linker flags.
 set(WIQ2_LINKER_FLAGS "")
@@ -402,7 +410,13 @@ if(${BUILD_WIQ2})
             ${ZLIB_LIBRARIES} 
             ${UNZIP_LIBRARIES} 
             ${X11_LIBRARIES}
-        )# ws2_32 winmm)
+
+            ${LUA_LIBRARIES}
+            RmlCore
+            RmlDebugger
+            RmlLua
+            #shell
+        )
     elseif(WIN32)
         target_link_libraries(WIQ2_${ARCH}
             ${WIQ2_LINKER_FLAGS} 

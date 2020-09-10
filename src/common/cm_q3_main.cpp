@@ -129,7 +129,7 @@ static int Patch_FlatnessTest2 (float maxflat, vec4_t point0, vec4_t point1, vec
 	ft0 = Patch_FlatnessTest2 (maxflat, point0, v1, v3);
 	ft1 = Patch_FlatnessTest2 (maxflat, v3, v2, point2);
 
-	return 1 + (int)floor(max (ft0, ft1) + 0.5f);
+	return 1 + (int)floor(std::max (ft0, ft1) + 0.5f);
 }
 
 
@@ -148,18 +148,18 @@ static void Patch_GetFlatness2 (float maxflat, vec4_t *points, int *patch_cp, in
 			p = v * patch_cp[0] + u;
 
 			i = Patch_FlatnessTest2 (maxflat, points[p], points[p+1], points[p+2]);
-			flat[0] = max (flat[0], i);
+			flat[0] = std::max (flat[0], i);
 			i = Patch_FlatnessTest2 (maxflat, points[p+patch_cp[0]], points[p+patch_cp[0]+1], points[p+patch_cp[0]+2]);
-			flat[0] = max (flat[0], i);
+			flat[0] = std::max (flat[0], i);
 			i = Patch_FlatnessTest2 (maxflat, points[p+2*patch_cp[0]], points[p+2*patch_cp[0]+1], points[p+2*patch_cp[0]+2]);
-			flat[0] = max (flat[0], i);
+			flat[0] = std::max (flat[0], i);
 
 			i = Patch_FlatnessTest2 (maxflat, points[p], points[p+patch_cp[0]], points[p+2*patch_cp[0]]);
-			flat[1] = max (flat[1], i);
+			flat[1] = std::max (flat[1], i);
 			i = Patch_FlatnessTest2 (maxflat, points[p+1], points[p+patch_cp[0]+1], points[p+2*patch_cp[0]+1]);
-			flat[1] = max (flat[1], i);
+			flat[1] = std::max (flat[1], i);
 			i = Patch_FlatnessTest2 (maxflat, points[p+2], points[p+patch_cp[0]+2], points[p+2*patch_cp[0]+2]);
-			flat[1] = max (flat[1], i);
+			flat[1] = std::max (flat[1], i);
 		}
 	}
 }

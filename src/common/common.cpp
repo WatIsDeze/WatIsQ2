@@ -22,6 +22,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // Functions used in client and server
 //
 
+// Common include.
+// RmlUI.
+#define RMLUI_STATIC_LIB
+#include <RmlUi/Core.h>
+#include <RmlUi/Debugger.h>
+#include <RmlUi/Lua.h>
+
+#include "../rmlui/SystemInterface.h"
+#include "../rmlui/RenderInterface.h"
+
 #include "common.h"
 #include <setjmp.h>
 
@@ -759,7 +769,19 @@ void Com_Init (int argc, char **argv)
 #ifndef DEDICATED_ONLY
 	if (!dedicated->intVal) {
 		Sys_ShowConsole (0, false);
+
+		// Initialize the client. (video, network, input, and media loading).
 		CL_ClientInit ();
+
+		// Initialize Rml system interface.
+		
+
+		// Initialize Rml render interface.
+
+
+		// Initialize Rml.
+		Rml::Initialise();		
+		Rml::Lua::Initialise();
 	}
 #endif
 
@@ -841,5 +863,6 @@ Com_Shutdown
 */
 void Com_Shutdown (void)
 {
+	Rml::Shutdown();
 	NET_Shutdown ();
 }

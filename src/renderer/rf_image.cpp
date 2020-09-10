@@ -454,7 +454,7 @@ static void R_LoadPCX (char *name, byte **pic, byte **palette, int *width, int *
 	}
 
 	// FIXME: Some images with weird dimensions will crash if I don't do this...
-	x = max (pcx->yMax+1, pcx->xMax+1);
+	x = std::max (pcx->yMax+1, pcx->xMax+1);
 	pix = out = reinterpret_cast<byte*>(Mem_PoolAlloc (x * x, ri.imageSysPool, r_imageAllocTag));
 	if (pic)
 		*pic = out;
@@ -2801,7 +2801,7 @@ static void R_InitSpecialTextures (void)
 	for (y=0, ty=0.0f ; y<FOGTEX_HEIGHT ; y++, ty+=th) {
 		for (x=0, tx=0.0f ; x<FOGTEX_WIDTH ; x++, tx+=tw) {
 			t = sqrt (tx) * 255.0;
-			data[(x+y*FOGTEX_WIDTH)*4+3] = (byte)(min (t, 255.0));
+			data[(x+y*FOGTEX_WIDTH)*4+3] = (byte)(std::fmin (t, 255.0));
 		}
 
 		data[y*4+3] = 0;

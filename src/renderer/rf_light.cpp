@@ -972,7 +972,7 @@ void R_Q2BSP_CreateSurfaceLightmap (mBspSurface_t *surf)
 	byte			*base;
 	const size_t	surf_size = surf->q2_lmWidth * surf->q2_lmHeight;
 
-	r_q2_lmLargestSize = max(r_q2_lmLargestSize, surf_size * 4);
+	r_q2_lmLargestSize = std::max(r_q2_lmLargestSize, surf_size * 4);
 	surf->q2_blockLights = static_cast<float*>(Mem_PoolAlloc(surf_size * 3 * sizeof(float), ri.modelSysPool, ri.scn.worldModel->memTag));
 
 	if (!R_Q2BSP_AllocLMBlock (surf->q2_lmWidth, surf->q2_lmHeight, &surf->q2_lmCoords[0], &surf->q2_lmCoords[1])) {

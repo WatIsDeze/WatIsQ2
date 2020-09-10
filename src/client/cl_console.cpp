@@ -166,7 +166,7 @@ static void CL_ResizeConsole (console_t *console)
 		CL_ClearNotifyLines ();
 	}
 
-	console->currentLine = max (1, console->totalLines - 1);
+	console->currentLine = std::max (1, console->totalLines - 1);
 	console->display = console->currentLine;
 }
 
@@ -232,7 +232,7 @@ static void CL_PrintToConsole (console_t *console, int flags, const char *txt)
 			console->xOffset = 0;
 
 		if (console->carriageReturn) {
-			console->currentLine = max (1, console->currentLine - 1);
+			console->currentLine = std::max (1, console->currentLine - 1);
 			console->carriageReturn = false;
 		}
 
@@ -362,11 +362,11 @@ CL_ClearConsoleText_f
 static void CL_ClearConsoleText_f (void)
 {
 	// Reset line locations and clear the buffers
-	cl_console.currentLine = max (1, cl_console.totalLines - 1);
+	cl_console.currentLine = std::max (1, cl_console.totalLines - 1);
 	cl_console.display = cl_console.currentLine;
 	memset (cl_console.text, ' ', CON_TEXTSIZE);
 
-	cl_chatConsole.currentLine = max (1, cl_chatConsole.totalLines - 1);
+	cl_chatConsole.currentLine = std::max (1, cl_chatConsole.totalLines - 1);
 	cl_chatConsole.display = cl_chatConsole.currentLine;
 	memset (cl_chatConsole.text, ' ', CON_TEXTSIZE);
 }
