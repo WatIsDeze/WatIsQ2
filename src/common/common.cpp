@@ -22,25 +22,26 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // Functions used in client and server
 //
 
+// When including after common.h it collides with DotProduct somehow.
 // RmlUi Core includes.
 #define RMLUI_STATIC_LIB
 #include <RmlUi/Core.h>
 #include <RmlUi/Debugger.h>
 #include <RmlUi/Lua.h>
 
+// Common include.
+#include "common.h"
+#include <setjmp.h>
+
 // RmlUi include.
 #include "../rmlui/SystemInterface.h"
 #include "../rmlui/RenderInterface.h"
 #include "../rmlui/FileInterface.h"
 
-// Common include.
-#include "common.h"
-#include <setjmp.h>
-
 // RmlUi.
-static RmlUi_SystemInterface *rmSystemInterface = NULL;
-static RmlUi_RenderInterface *rmRenderInterface = NULL;
-static RmlUi_FileInterface   *rmFileInterface = NULL;
+static std::unique_ptr<RmlUi_SystemInterface> rmSystemInterface;
+static std::unique_ptr<RmlUi_RenderInterface> rmRenderInterface;
+static std::unique_ptr<RmlUi_FileInterface>   rmFileInterface;
 
 // FIXME: Old C code, I don't think we want to jmp around in C++.
 jmp_buf	abortframe;		// an ERR_DROP occured, exit the entire frame
@@ -784,24 +785,21 @@ void Com_Init (int argc, char **argv)
 		CL_ClientInit ();
 
 		// Initialize RmlUi engine binding interfaces.
-		rmFileInterface = new RmlUi_FileInterface();
-		rmSystemInterface = new RmlUi_SystemInterface();
-		rmRenderInterface = new RmlUi_RenderInterface();
+		rmSystemInterface = std::make_unique<RmlUi_SystemInterface>();
+		rmRenderInterface = std::make_unique<RmlUi_RenderInterface>();
+		rmFileInterface = std::make_unique<RmlUi_FileInterface>();
 		
 		// Initialize Rml.
-		Rml::SetFileInterface(rmFileInterface);
-		Rml::SetSystemInterface(rmSystemInterface);
-		Rml::SetRenderInterface(rmRenderInterface);
+		Rml::SetSystemInterface(rmSystemInterface.get());
+		Rml::SetRenderInterface(rmRenderInterface.get());
+		//Rml::SetFileInterface(rmFileInterface.get());
 		if (!Rml::Initialise()) {
 			Com_Error(eComError_t::ERR_FATAL, "%s", "Failed to initialize RmlUi library.");
 			return;
 		}
 
 		// Initialize Rml Lua bindings.
-		if (!Rml::Lua::Initialise()) {
-			Com_Error(eComError_t::ERR_FATAL, "%s", "Failed to initialize RmlUi Lua binding library.");
-			return;
-		}
+		Rml::Lua::Initialise();
 	}
 #endif
 
@@ -887,9 +885,9 @@ void Com_Shutdown (void)
 	Rml::Shutdown();
 
 	// Delete its interfaces from memory.
-	delete rmFileInterface;
-	delete rmSystemInterface;
-	delete rmRenderInterface;
+	rmFileInterface.reset();
+	rmSystemInterface.reset();
+	rmRenderInterface.reset();
 
 	NET_Shutdown ();
 }
