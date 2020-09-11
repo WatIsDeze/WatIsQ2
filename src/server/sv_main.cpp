@@ -966,7 +966,7 @@ void SV_Frame (int msec)
 ===============
 SV_ServerInit
 
-Only called at egl.exe startup, not for each game
+Only called at wiq2 executable startup, not for each game
 ===============
 */
 void SV_ServerInit (void)

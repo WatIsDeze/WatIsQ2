@@ -52,6 +52,7 @@ set(WiQ2_SRCDIR_CLIENT ${WiQ2_SRCDIR_ROOT_DIR}/client)
 set(WiQ2_SRCDIR_COMMON ${WiQ2_SRCDIR_ROOT_DIR}/common)
 set(WiQ2_SRCDIR_GAME ${WiQ2_SRCDIR_ROOT_DIR}/game)
 set(WiQ2_SRCDIR_RENDERER ${WiQ2_SRCDIR_ROOT_DIR}/renderer)
+set(WiQ2_SRCDIR_RMLUI ${WiQ2_SRCDIR_ROOT_DIR}/rmlui)
 set(WiQ2_SRCDIR_SERVER ${WiQ2_SRCDIR_ROOT_DIR}/server)
 set(WiQ2_SRCDIR_SHARED ${WiQ2_SRCDIR_ROOT_DIR}/shared)
 set(WiQ2_SRCDIR_UNIX ${WiQ2_SRCDIR_ROOT_DIR}/unix)
@@ -264,6 +265,7 @@ set(WiQ2_SRC_ENGINE
     ${WiQ2_SRCDIR_CLIENT}/cl_keys.cpp 
     ${WiQ2_SRCDIR_CLIENT}/cl_main.cpp 
     ${WiQ2_SRCDIR_CLIENT}/cl_parse.cpp 
+    ${WiQ2_SRCDIR_CLIENT}/cl_rmlui.cpp
     ${WiQ2_SRCDIR_CLIENT}/cl_screen.cpp 
     ${WiQ2_SRCDIR_CLIENT}/gui_cursor.cpp 
     ${WiQ2_SRCDIR_CLIENT}/gui_draw.cpp 
@@ -325,6 +327,10 @@ set(WiQ2_SRC_ENGINE
     ${WiQ2_SRCDIR_RENDERER}/rf_sky.cpp 
     ${WiQ2_SRCDIR_RENDERER}/rf_sprite.cpp 
     ${WiQ2_SRCDIR_RENDERER}/rf_world.cpp
+
+    ${WiQ2_SRCDIR_RMLUI}/SystemInterface.cpp
+    ${WiQ2_SRCDIR_RMLUI}/RenderInterface.cpp
+    ${WiQ2_SRCDIR_RMLUI}/FileInterface.cpp
 
     ${WiQ2_SRCDIR_SERVER}/sv_ccmds.cpp 
     ${WiQ2_SRCDIR_SERVER}/sv_ents.cpp 

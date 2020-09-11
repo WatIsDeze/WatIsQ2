@@ -22,26 +22,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // Functions used in client and server
 //
 
-// When including after common.h it collides with DotProduct somehow.
-// RmlUi Core includes.
-#define RMLUI_STATIC_LIB
-#include <RmlUi/Core.h>
-#include <RmlUi/Debugger.h>
-#include <RmlUi/Lua.h>
-
 // Common include.
 #include "common.h"
 #include <setjmp.h>
-
-// RmlUi include.
-#include "../rmlui/SystemInterface.h"
-#include "../rmlui/RenderInterface.h"
-#include "../rmlui/FileInterface.h"
-
-// RmlUi.
-static std::unique_ptr<RmlUi_SystemInterface> rmSystemInterface;
-static std::unique_ptr<RmlUi_RenderInterface> rmRenderInterface;
-static std::unique_ptr<RmlUi_FileInterface>   rmFileInterface;
 
 // FIXME: Old C code, I don't think we want to jmp around in C++.
 jmp_buf	abortframe;		// an ERR_DROP occured, exit the entire frame
@@ -589,7 +572,7 @@ Com_AddLateCommands
 
 Adds command line parameters as script statements
 Commands lead with a + and continue until another + or -
-egl +map amlev1 +
+wiq2 +map amlev1 +
 
 Returns true if any late commands were added, which
 will keep the demoloop from immediately starting
@@ -740,7 +723,7 @@ void Com_Init (int argc, char **argv)
 	if (!dedicated->intVal) {
 		Cbuf_AddText ("exec default.cfg\n");
 		Cbuf_AddText ("exec config.cfg\n");
-		Cbuf_AddText ("exec eglcfg.cfg\n");
+		Cbuf_AddText ("exec wiq2.cfg\n");
 	}
 #endif
 
@@ -783,23 +766,6 @@ void Com_Init (int argc, char **argv)
 
 		// Initialize the client. (video, network, input, and media loading).
 		CL_ClientInit ();
-
-		// Initialize RmlUi engine binding interfaces.
-		rmSystemInterface = std::make_unique<RmlUi_SystemInterface>();
-		rmRenderInterface = std::make_unique<RmlUi_RenderInterface>();
-		rmFileInterface = std::make_unique<RmlUi_FileInterface>();
-		
-		// Initialize Rml.
-		Rml::SetSystemInterface(rmSystemInterface.get());
-		Rml::SetRenderInterface(rmRenderInterface.get());
-		//Rml::SetFileInterface(rmFileInterface.get());
-		if (!Rml::Initialise()) {
-			Com_Error(eComError_t::ERR_FATAL, "%s", "Failed to initialize RmlUi library.");
-			return;
-		}
-
-		// Initialize Rml Lua bindings.
-		Rml::Lua::Initialise();
 	}
 #endif
 
@@ -881,13 +847,5 @@ Com_Shutdown
 */
 void Com_Shutdown (void)
 {
-	// Shutdown RmlUi.
-	Rml::Shutdown();
-
-	// Delete its interfaces from memory.
-	rmFileInterface.reset();
-	rmSystemInterface.reset();
-	rmRenderInterface.reset();
-
 	NET_Shutdown ();
 }

@@ -25,11 +25,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #ifdef DEDICATED_ONLY
 # error You should not be including this file in a dedicated server build
 #endif // DEDICATED_ONLY
-#include <math.h>
-#include <string.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include <cmath>
+#include <cstring>
+#include <cstdarg>
+#include <cstdio>
+#include <cstdlib>
 
 #include "../renderer/r_public.h"
 #include "snd_public.h"
@@ -449,6 +449,13 @@ void		CL_ClientShutdown (qBool error);
 extern char *cl_svcStrings[256];
 
 void		CL_ParseServerMessage (void);
+
+//
+// cl_rmlui.cpp
+//
+void		CL_RmlUI_Init();
+void		CL_RmlUI_Frame();
+void		CL_RmlUI_Shutdown();
 
 //
 // cl_screen.c

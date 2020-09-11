@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 #include "shared.h"
 
-// this file is included in both the game dll and egl, the game needs it to source shot
+// this file is included in both the game dll and wiq2, the game needs it to source shot
 // locations, the client needs it to position muzzle flashes
 vec3_t dumb_and_hacky_monster_MuzzFlashOffset [] = {
 	0.0f,			0.0f,			0.0f,			// not used							0

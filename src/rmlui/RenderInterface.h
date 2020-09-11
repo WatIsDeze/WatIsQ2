@@ -43,7 +43,7 @@ public:
 
 
 private:
-
+    std::map<Rml::TextureHandle, vec2_t> textureSizes;
 };
 
 #endif

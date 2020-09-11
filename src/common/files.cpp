@@ -889,7 +889,7 @@ void FS_CloseFile (fileHandle_t fileNum)
 ============
 FS_LoadFile
 
-Filename are reletive to the egl search path.
+Filename are reletive to the wiq2 search path.
 A NULL buffer will just return the file length without loading.
 -1 is returned if it wasn't found, 0 is returned if it's a blank file. In both cases a buffer is set to NULL.
 ============
@@ -956,7 +956,7 @@ void _FS_FreeFile (void *buffer, const char *fileName, const int fileLine)
 ============
 FS_FileExists
 
-Filename are reletive to the egl search path.
+Filename are reletive to the wiq2 search path.
 Just like calling FS_LoadFile with a NULL buffer.
 ============
 */
@@ -1351,7 +1351,7 @@ void FS_SetGamedir (char *dir, qBool firstTime)
 		if (!dedicated->intVal) {
 			Cbuf_AddText ("exec default.cfg\n");
 			Cbuf_AddText ("exec config.cfg\n");
-			Cbuf_AddText ("exec eglcfg.cfg\n");
+			Cbuf_AddText ("exec wiq2.cfg\n");
 			FS_ExecAutoexec ();
 			Cbuf_Execute ();
 			Cbuf_AddText ("vid_restart\nsnd_restart\n");

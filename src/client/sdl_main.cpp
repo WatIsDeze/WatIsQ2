@@ -464,11 +464,8 @@ void SDLGL_HandleEvents(void)
         if (!_windowed_mouse->intVal) {
             /* ungrab the pointer */
 			isWindowGrabbed = false;
-            SDL_WM_GrabInput(SDL_GRAB_OFF);
         } else {
 			isWindowGrabbed = true;
-            /* grab the pointer */
-            SDL_WM_GrabInput(SDL_GRAB_ON);
         }
     }
 
@@ -487,9 +484,13 @@ void SDLGL_HandleEvents(void)
 
 	// Warp mouse back to center.
 	if (isWindowGrabbed) {// && (xMove != 0 || yMove != 0)) {
-		SDL_EventState(SDL_MOUSEMOTION, SDL_IGNORE);
-		SDL_WarpMouse(ri.config.vidWidth / 2, ri.config.vidHeight / 2);
-		SDL_EventState(SDL_MOUSEMOTION, SDL_ENABLE);
+		Uint8 appState = SDL_GetAppState();
+
+		if ((appState & SDL_APPINPUTFOCUS) && (appState & SDL_APPACTIVE)) {
+			SDL_EventState(SDL_MOUSEMOTION, SDL_IGNORE);
+			SDL_WarpMouse(ri.config.vidWidth / 2, ri.config.vidHeight / 2);
+			SDL_EventState(SDL_MOUSEMOTION, SDL_ENABLE);
+		}
 	}
 }
 
@@ -537,6 +538,24 @@ void IN_Init (void)
 	Cmd_AddCommand ("force_centerview", Force_CenterView_f, "Force the screen to a center view");
 }
 
+/*
+=============
+IN_Frame
+=============
+*/
+void IN_Frame (void)
+{
+    if (!sdlwnd) {
+        return;
+	} else {
+		// Ungrab the mouse from window in case we are in the console or in a menu.
+		if (Key_GetDest() == KD_CONSOLE) {// || Key_GetDest() == KD_MENU) {
+			isWindowGrabbed = false;	
+		} else {
+			isWindowGrabbed = true;
+		}
+	}
+}
 
 /*
 =============
@@ -568,26 +587,4 @@ IN_Move
 void IN_Move (userCmd_t *cmd)
 {
 
-}
-
-
-/*
-=============
-IN_Frame
-=============
-*/
-void IN_Frame (void)
-{
-    if (!sdlwnd) {
-        return;
-	} else {
-		// Ungrab the mouse from window in case we are in the console or in a menu.
-		if (Key_GetDest() == KD_CONSOLE) {// || Key_GetDest() == KD_MENU) {
-			isWindowGrabbed = false;	
-			SDL_WM_GrabInput(SDL_GRAB_OFF);
-		} else {
-			isWindowGrabbed = true;
-			SDL_WM_GrabInput(SDL_GRAB_ON);
-		}
-	}
 }

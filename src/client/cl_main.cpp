@@ -21,9 +21,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // cl_main.c
 // Client main loop
 //
-
 #include "cl_local.h"
 
+// cVars.
 cVar_t *allow_download;
 cVar_t *allow_download_players;
 cVar_t *allow_download_models;
@@ -1621,7 +1621,7 @@ static void CL_WriteConfig (void)
 	if (Cmd_Argc () == 2)
 		Q_snprintfz (path, sizeof (path), "%s/%s", FS_Gamedir (), Cmd_Argv (1));
 	else
-		Q_snprintfz (path, sizeof (path), "%s/eglcfg.cfg", FS_Gamedir ());
+		Q_snprintfz (path, sizeof (path), "%s/wiq2.cfg", FS_Gamedir ());
 
 	f = fopen (path, "wt");
 	if (!f) {
@@ -1758,23 +1758,27 @@ void CL_ClientInit (void)
 	VID_Init (&cls.refConfig);
 
 	// Initialize the net buffer
-	MSG_Init (&cls.netMessage, cls.netBuffer, sizeof (cls.netBuffer));
+	MSG_Init(&cls.netMessage, cls.netBuffer, sizeof (cls.netBuffer));
 
-	CL_SetState (CA_DISCONNECTED);
-	cls.realTime = Sys_Milliseconds ();
+	CL_SetState(CA_DISCONNECTED);
+	cls.realTime = Sys_Milliseconds();
 	cls.disableScreen = true;
 
 	// Initialize subsystems
-	CDAudio_Init ();
-	CL_InputInit ();
-	IN_Init ();
+	CDAudio_Init();
+	CL_InputInit();
+	IN_Init();
 
 #ifdef CL_HTTPDL
-	CL_HTTPDL_Init ();
+	CL_HTTPDL_Init();
 #endif
 
-	// Load client media
-	CL_MediaInit ();
+	// Load client game media
+	CL_MediaInit();
+
+	// Load client gui/menu media.
+	CL_RmlUI_Init();
+	
 	GUI_Init ();
 	CL_CGModule_MainMenu ();
 
@@ -1802,17 +1806,23 @@ void CL_ClientShutdown (qBool error)
 	isDown = true;
 
 #ifdef CL_HTTPDL
-	CL_HTTPDL_Cleanup (true);
+	CL_HTTPDL_Cleanup(true);
 #endif
 
 	if (!error)
-		CL_WriteConfig ();
+		CL_WriteConfig();
 
-	CL_CGameAPI_Shutdown ();
+	// Client game API shutdown.
+	CL_CGameAPI_Shutdown();
 
-	CDAudio_Shutdown ();
-	Snd_Shutdown ();
+	// RmlUI shutdown.
+	CL_RmlUI_Shutdown();
 
+	// Audio shutdown.
+	CDAudio_Shutdown();
+	Snd_Shutdown();
+
+	// Video/Window(input) shutdown.
 	IN_Shutdown ();
 	VID_Shutdown ();
 }

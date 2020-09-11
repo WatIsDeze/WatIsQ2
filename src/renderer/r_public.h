@@ -152,6 +152,10 @@ size_t		R_DrawStringLen (struct font_s *font, float x, float y, float xScale, fl
 // rf_image.c
 //
 
+void		R_LoadJPG (char *name, byte **pic, int *width, int *height);
+void		R_LoadPNG (char *name, byte **pic, int *width, int *height, int *samples);
+void		R_LoadTGA (char *name, byte **pic, int *width, int *height, int *samples);
+
 qBool		R_UpdateTexture (char *name, byte *data, int width, int height);
 void		R_GetImageSize (struct material_s *mat, int *width, int *height);
 

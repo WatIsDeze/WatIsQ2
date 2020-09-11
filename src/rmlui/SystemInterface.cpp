@@ -89,7 +89,7 @@ bool RmlUi_SystemInterface::LogMessage(Rml::Log::Type type, const Rml::String& m
     outputString += message.c_str(); // (Or so, I assume )
 
     // Last but not least, output our message.
-    Com_Printf(outputTarget, "%s", outputString.c_str());
+    Com_Printf(outputTarget, "%s\n", outputString.c_str());
 
     return true;
 }

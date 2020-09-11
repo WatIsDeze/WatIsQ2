@@ -268,7 +268,7 @@ R_LoadJPG
 ala Vic
 =============
 */
-static void R_LoadJPG (char *name, byte **pic, int *width, int *height)
+void R_LoadJPG (char *name, byte **pic, int *width, int *height)
 {
     int		fileLen, components;
     byte	*img, *scan, *buffer, *dummy;
@@ -529,7 +529,7 @@ void PngReadFunc (png_struct *Png, png_bytep buf, png_size_t size)
 R_LoadPNG
 =============
 */
-static void R_LoadPNG (char *name, byte **pic, int *width, int *height, int *samples)
+void R_LoadPNG (char *name, byte **pic, int *width, int *height, int *samples)
 {
 	png_structp		png_ptr;
 	png_infop		info_ptr;
@@ -708,7 +708,7 @@ Loads type 1, 2, 3, 9, 10, 11 TARGA images.
 Type 32 and 33 are unsupported.
 =============
 */
-static void R_LoadTGA (char *name, byte **pic, int *width, int *height, int *samples)
+void R_LoadTGA (char *name, byte **pic, int *width, int *height, int *samples)
 {
 	int			i, columns, rows, rowInc, row, col;
 	byte		*buf_p, *buffer, *pixbuf, *targaRGBA;

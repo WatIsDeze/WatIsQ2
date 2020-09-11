@@ -137,6 +137,8 @@ void SCR_UpdateScreen (void)
 		}
 
 		CL_DrawConsole ();
+
+		CL_RmlUI_Frame();
 	}
 
 	R_EndFrame ();

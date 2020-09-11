@@ -34,7 +34,6 @@ public:
     // Returns the current position of the file pointer.
     size_t Tell(Rml::FileHandle file);
 
-
 private:
 
 };
