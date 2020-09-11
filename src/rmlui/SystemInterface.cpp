@@ -31,6 +31,8 @@ Log RmlUi messages with Com_Printf as PRNT_WARNING or PRNT_DEFAULT.
 bool RmlUi_SystemInterface::LogMessage(Rml::Log::Type type, const Rml::String& message) {
     // Default outputTarget.
     comPrint_t outputTarget = logOutputTarget;
+
+    // Empty output string.
     std::string outputString = "";
 
     switch(type) {
@@ -56,6 +58,7 @@ bool RmlUi_SystemInterface::LogMessage(Rml::Log::Type type, const Rml::String& m
                 outputString = "[RmlUi - Warning]: ";
             break;
         default:
+            outputTarget = eComPrint_t::PRNT_WARNING;
             outputString = "[RmlUi - UNKNOWN]: Unknown log type";
             break;
     }
