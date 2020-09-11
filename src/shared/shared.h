@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #ifndef __SHARED_H__
 #define __SHARED_H__
 
+// C Standard Library.
 #include <cassert>
 #include <cmath>
 #include <cstdio>
@@ -37,13 +38,24 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #include <cstddef>
 #include <algorithm>
 
+// C++ Standard Library.
+#include <memory>
+
+
 // =========================================================================
 
 //R1Q2 SPECIFC
 #define SVF_NOPREDICTION		0x00000008
 //R1Q2 SPECIFC
 
-// =========================================================================
+
+/*
+=============================================================================
+
+	PLATFORM - Specify buildstring, etc.
+
+=============================================================================
+*/
 // Windows
 //
 #ifdef _WIN32
@@ -160,6 +172,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 #endif	// __unix__
 
+/*
+=============================================================================
+
+	TYPEDEFS
+
+=============================================================================
+*/
+// Signed/Unsigned integer typedefs.
 typedef int16_t				int16;
 typedef int32_t				int32;
 typedef int64_t				int64;
@@ -167,8 +187,17 @@ typedef uint16_t			uint16;
 typedef uint32_t			uint32;
 typedef uint64_t			uint64;
 
-// =========================================================================
+// Char and Bool typedefs.
+typedef unsigned char			byte;
+typedef int						qBool;
 
+/*
+=============================================================================
+
+	STRINGS - Ensure certain string functions are properly set.
+
+=============================================================================
+*/
 #ifdef HAVE___INLINE
 # ifndef inline
 #  define inline __inline
@@ -227,10 +256,6 @@ typedef uint64_t			uint64;
 #error No CPU string, need to fix
 #endif
 
-// =========================================================================
-
-typedef unsigned char			byte;
-typedef int						qBool;
 
 /*
 =============================================================================

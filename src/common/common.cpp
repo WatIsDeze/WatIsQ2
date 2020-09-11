@@ -22,21 +22,30 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // Functions used in client and server
 //
 
-// Common include.
-// RmlUI.
+// RmlUi Core includes.
 #define RMLUI_STATIC_LIB
 #include <RmlUi/Core.h>
 #include <RmlUi/Debugger.h>
 #include <RmlUi/Lua.h>
 
+// RmlUi include.
 #include "../rmlui/SystemInterface.h"
 #include "../rmlui/RenderInterface.h"
+#include "../rmlui/FileInterface.h"
 
+// Common include.
 #include "common.h"
 #include <setjmp.h>
 
+// RmlUi.
+static RmlUi_SystemInterface *rmSystemInterface = NULL;
+static RmlUi_RenderInterface *rmRenderInterface = NULL;
+static RmlUi_FileInterface   *rmFileInterface = NULL;
+
+// FIXME: Old C code, I don't think we want to jmp around in C++.
 jmp_buf	abortframe;		// an ERR_DROP occured, exit the entire frame
 
+// CVars.
 cVar_t	nullCvar;
 
 cVar_t	*developer = &nullCvar;
@@ -48,6 +57,7 @@ cVar_t	*fixedtime;
 cVar_t	*logfile;		// 1 = buffer log, 2 = flush after each print
 cVar_t	*dedicated;
 
+// com_ Vars.
 static qBool	com_initialized;
 static FILE		*com_logFile;
 static uint32	com_numErrors;
@@ -773,15 +783,25 @@ void Com_Init (int argc, char **argv)
 		// Initialize the client. (video, network, input, and media loading).
 		CL_ClientInit ();
 
-		// Initialize Rml system interface.
+		// Initialize RmlUi engine binding interfaces.
+		rmFileInterface = new RmlUi_FileInterface();
+		rmSystemInterface = new RmlUi_SystemInterface();
+		rmRenderInterface = new RmlUi_RenderInterface();
 		
-
-		// Initialize Rml render interface.
-
-
 		// Initialize Rml.
-		Rml::Initialise();		
-		Rml::Lua::Initialise();
+		Rml::SetFileInterface(rmFileInterface);
+		Rml::SetSystemInterface(rmSystemInterface);
+		Rml::SetRenderInterface(rmRenderInterface);
+		if (!Rml::Initialise()) {
+			Com_Error(eComError_t::ERR_FATAL, "%s", "Failed to initialize RmlUi library.");
+			return;
+		}
+
+		// Initialize Rml Lua bindings.
+		if (!Rml::Lua::Initialise()) {
+			Com_Error(eComError_t::ERR_FATAL, "%s", "Failed to initialize RmlUi Lua binding library.");
+			return;
+		}
 	}
 #endif
 
@@ -863,6 +883,13 @@ Com_Shutdown
 */
 void Com_Shutdown (void)
 {
+	// Shutdown RmlUi.
 	Rml::Shutdown();
+
+	// Delete its interfaces from memory.
+	delete rmFileInterface;
+	delete rmSystemInterface;
+	delete rmRenderInterface;
+
 	NET_Shutdown ();
 }

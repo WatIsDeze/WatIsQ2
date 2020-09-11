@@ -10,6 +10,28 @@ static const comPrint_t logOutputTarget = eComPrint_t::PRNT_DEFAULT;
 
 /*
 ==================
+RmlUi_SystemInterface::RmlUi_SystemInterface
+
+Constructor.
+==================
+*/
+RmlUi_SystemInterface::RmlUi_SystemInterface() {
+
+}
+
+/*
+==================
+RmlUi_SystemInterface::RmlUi_SystemInterface
+
+Destructor.
+==================
+*/
+RmlUi_SystemInterface::~RmlUi_SystemInterface() {
+    
+}
+
+/*
+==================
 RmlUi_SystemInterface::GetElapsedTime
 
 Calls Sys_Milliseconds and returns its value.
